@@ -1,0 +1,769 @@
+.RDZApproveRejectButton {
+    position: float;
+    text-align: right;
+}
+.btn {
+    margin: 1px;
+    border: 1px solid #212529;
+    border-radius: 5px;
+}
+/*Set input filter css error*/
+.input-error {
+    /* outline: 1px solid red; */
+    text-decoration-color: red;
+}
+
+/* Style the tab */
+.tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+    background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+    background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+}
+
+/*untuk mobile*/
+@media screen and (max-width: 750px) and (orientation: portrait) {
+    .RDZlogout {
+        background-color: red;
+        color: white;
+        text-align: center;
+    }
+
+    .RDZApproveRejectButton {
+        position: float;
+        text-align: center;
+    }
+
+    /*biar ga outside*/
+    .RDZOverflow {
+        overflow: scroll !important;
+    }
+
+    .RDZMobilePaddingLR0 {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+
+    .RDZNavBrandCenter {
+        width: 100%;
+        text-align: center;
+        margin-right: 0px;
+    }
+
+    .RDZNavContenCenter {
+        width: 100%;
+        text-align: center;
+        margin-right: 0px;
+    }
+
+    .RDZNavContenCenter > li {
+        margin: 0px !important;
+        margin-top: 7px !important;
+        padding-bottom: 5px;
+        border-bottom: 1px solid;
+    }
+
+    .NameWindows {
+        display: none;
+    }
+
+    .NameAndroid {
+        display: block !important;
+    }
+
+    .RDZUnderLine {
+        border-bottom: 1px solid;
+    }
+
+    table {
+        font-size: 83%;
+    }
+
+    .RDZPaddingTable {
+        padding-left: 1px !important;
+        padding-right: 1px !important;
+    }
+
+    .RDZCenterTable {
+        text-align: center !important;
+    }
+
+    .RDZFilter {
+        display: block !important;
+        margin-right: 0px !important;
+    }
+
+    .RDZCheckBoxSize {
+        width: 20px !important;
+        height: 20px !important;
+    }
+
+    .RDZcardSize {
+        width: 40% !important;
+    }
+    .RDZFRMINPT {
+        width: 100%;
+        display: block;
+    }
+}
+
+@media screen and (max-width: 750) and (orientation: landscape) {
+    .sticky-top {
+        position: relative;
+    }
+
+    .RDZlogout {
+        background-color: red;
+        color: white;
+        text-align: center;
+    }
+
+    .RDZEditDelTBL {
+        margin: 1px;
+        border: 1px solid #212529;
+        border-radius: 5px;
+    }
+
+    .RDZApproveRejectButton {
+        position: float;
+        text-align: center;
+    }
+
+    /*biar ga outside*/
+    .RDZOverflow {
+        overflow: scroll !important;
+    }
+
+    .RDZMobilePaddingLR0 {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+
+    .RDZNavBrandCenter {
+        width: 100%;
+        text-align: center;
+        margin-right: 0px;
+    }
+
+    .RDZNavContenCenter {
+        width: 100%;
+        text-align: center;
+        margin-right: 0px;
+    }
+
+    .RDZNavContenCenter > li {
+        margin: 0px !important;
+        margin-top: 7px !important;
+        padding-bottom: 5px;
+        border-bottom: 1px solid;
+    }
+
+    .NameWindows {
+        display: none;
+    }
+
+    .NameAndroid {
+        display: block !important;
+    }
+
+    .RDZUnderLine {
+        border-bottom: 1px solid;
+    }
+
+    table {
+        font-size: 83%;
+    }
+
+    .RDZPaddingTable {
+        padding-left: 1px !important;
+        padding-right: 1px !important;
+    }
+
+    .RDZCenterTable {
+        text-align: center !important;
+    }
+
+    .RDZFilter {
+        display: block !important;
+        margin-right: 0px !important;
+    }
+
+    .RDZCheckBoxSize {
+        width: 20px !important;
+        height: 20px !important;
+    }
+}
+
+/*size windows*/
+.RDZCheckBoxSize {
+    width: 20px !important;
+    height: 20px !important;
+}
+
+.RDZFRMINPT {
+    width: 25% !important;
+    display: inline;
+}
+
+.RDZPaddingTableCheckBox {
+    padding-left: 15px !important;
+}
+
+.RDZCard {
+    margin-bottom: 1px;
+    border-bottom: 1px solid black;
+}
+
+.RDZCard2 {
+    margin-bottom: 1px;
+    /*border-bottom: 1px solid black;*/
+    /*background-color: #abaaaa;*/
+    /*color: white;*/
+}
+
+.RDZButtonCard {
+    text-align: center;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+/*----------------------------------------------------------------------------------------------------------*/
+/*style tabel biar melengkung*/
+table {
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+}
+
+table tr th,
+table tr td {
+    border-right: 1px solid #212529 !important;
+    border-bottom: 1px solid #212529 !important;
+}
+
+table tr th:first-child,
+table tr td:first-child {
+    border-left: 1px solid #212529 !important;
+}
+
+table tr th {
+    border-top: 1px solid #212529 !important;
+}
+
+/* top-left border-radius */
+table tr:first-child th:first-child {
+    border-top-left-radius: 0.25rem !important;
+}
+
+/* top-right border-radius */
+table tr:first-child th:last-child {
+    border-top-right-radius: 0.25rem !important;
+}
+
+/* bottom-left border-radius */
+table tr:last-child td:first-child {
+    border-bottom-left-radius: 0.25rem !important;
+}
+
+/* bottom-right border-radius */
+table tr:last-child td:last-child {
+    border-bottom-right-radius: 0.25rem !important;
+}
+
+/*--------------------------------------------------------------------------*/
+/*loading screen*/
+.loader {
+    border: 16px solid #f3f3f3;
+    /* Light grey */
+    border-top: 16px solid #3498db;
+    /* Blue */
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/*--------------------------------------------------------------------------*/
+/*warna table*/
+.table-striped > tbody > tr:nth-child(odd) > td,
+.table-striped > tbody > tr:nth-child(odd) > th {
+    background-color: #fff;
+    /*Choose your own color here*/
+}
+
+.table-striped > tbody > tr:nth-child(even) > td,
+.table-striped > tbody > tr:nth-child(even) > th {
+    background-color: #abaaaa;
+    /*Choose your own color here*/
+}
+
+/*---------------------------------------------------------------------------------*/
+/*untuk icon*/
+.RDZIconPassword {
+    cursor: pointer;
+    user-select: none;
+}
+
+/* untuk dropdown menu */
+/* dari W3school */
+/* .RDZNavbarMenu{
+
+  }
+  .navbar-collapse a:hover, .dropdown:hover,.dropdown-item:hover {
+    background-color: rgb(110, 105, 105);
+    color: white;
+  }
+
+  .dropdown:hover .dropdown-content {
+    display: block;
+  } */
+
+.navbar-collapse a:hover,
+.dropdown:hover,
+.dropdown-item:hover {
+    cursor: pointer;
+    user-select: none;
+    text-decoration: none;
+}
+
+.dropdown-menu li {
+    position: relative;
+}
+
+.dropdown-menu .dropdown-submenu {
+    display: none;
+    position: absolute;
+    left: 100%;
+    top: -10px;
+}
+
+.dropdown-menu .dropdown-submenu-left {
+    right: 100%;
+    left: auto;
+}
+
+.dropdown-menu > li:hover > .dropdown-submenu {
+    display: block;
+    text-decoration: none;
+}
+
+/* ------------------------------------------------------------------------------------------------------------------------- */
+
+/*CSS MENGGUNAKAN TELEPORTHQ */
+/*CSS SIZE*/
+.acs-home-container {
+    width: 100%;
+    display: flex;
+    overflow: auto;
+    min-height: 100vh;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.acs-home-container1 {
+    flex: 0 0 auto;
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+}
+
+.acs-home-form {
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.acs-home-text {
+    align-self: center;
+    text-align: left;
+    margin-left: var(--dl-space-space-halfunit);
+    margin-right: var(--dl-space-space-halfunit);
+}
+
+.acs-home-textinput {
+    width: 500px;
+    align-self: flex-start;
+}
+
+.acs-home-text1 {
+    align-self: center;
+    margin-left: var(--dl-space-space-twounits);
+    margin-right: var(--dl-space-space-halfunit);
+}
+
+.acs-home-textinput1 {
+    align-self: flex-start;
+}
+#dropdownMenuButton:focus,
+#dropdownMenuButton:hover {
+    background-color: #f1f1f1;
+}
+/*CSS STYLE*/
+:root {
+    --dl-color-gray-500: #595959;
+    --dl-color-gray-700: #999999;
+    --dl-color-gray-900: #d9d9d9;
+    --dl-size-size-large: 144px;
+    --dl-size-size-small: 48px;
+    --dl-color-danger-300: #a22020;
+    --dl-color-danger-500: #bf2626;
+    --dl-color-danger-700: #e14747;
+    --dl-color-gray-black: #000000;
+    --dl-color-gray-white: #ffffff;
+    --dl-size-size-medium: 96px;
+    --dl-size-size-xlarge: 192px;
+    --dl-size-size-xsmall: 16px;
+    --dl-space-space-unit: 16px;
+    --dl-color-primary-100: #003eb3;
+    --dl-color-primary-300: #0074f0;
+    --dl-color-primary-500: #14a9ff;
+    --dl-color-primary-700: #85dcff;
+    --dl-color-success-300: #199033;
+    --dl-color-success-500: #32a94c;
+    --dl-color-success-700: #4cc366;
+    --dl-size-size-xxlarge: 288px;
+    --dl-size-size-maxwidth: 1400px;
+    --dl-radius-radius-round: 50%;
+    --dl-space-space-halfunit: 8px;
+    --dl-space-space-sixunits: 96px;
+    --dl-space-space-twounits: 32px;
+    --dl-radius-radius-radius2: 2px;
+    --dl-radius-radius-radius4: 4px;
+    --dl-radius-radius-radius8: 8px;
+    --dl-space-space-fiveunits: 80px;
+    --dl-space-space-fourunits: 64px;
+    --dl-space-space-threeunits: 48px;
+    --dl-space-space-oneandhalfunits: 24px;
+}
+
+.acs-button {
+    color: var(--dl-color-gray-black);
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-color: var(--dl-color-gray-black);
+    border-width: 1px;
+    border-radius: 4px;
+    background-color: var(--dl-color-gray-white);
+}
+
+.acs-input {
+    color: var(--dl-color-gray-black);
+    cursor: auto;
+    padding: 0.5rem 1rem;
+    border-color: var(--dl-color-gray-black);
+    border-width: 1px;
+    border-radius: 4px;
+    background-color: var(--dl-color-gray-white);
+}
+
+.acs-textarea {
+    color: var(--dl-color-gray-black);
+    cursor: auto;
+    padding: 0.5rem;
+    border-color: var(--dl-color-gray-black);
+    border-width: 1px;
+    border-radius: 4px;
+    background-color: var(--dl-color-gray-white);
+}
+
+.acs-list {
+    width: 100%;
+    margin: 1em 0px 1em 0px;
+    display: block;
+    padding: 0px 0px 0px 1.5rem;
+    list-style-type: none;
+    list-style-position: outside;
+}
+
+.acs-list-item {
+    display: list-item;
+}
+
+.acs-teleport-show {
+    display: flex !important;
+    transform: none !important;
+}
+
+.acs-Content {
+    font-size: 16px;
+    font-family: Inter;
+    font-weight: 400;
+    line-height: 1.15;
+    text-transform: none;
+    text-decoration: none;
+}
+
+.acs-Heading {
+    font-size: 32px;
+    font-family: Inter;
+    font-weight: 700;
+    line-height: 1.15;
+    text-transform: none;
+    text-decoration: none;
+}
+
+.acs-icon-btn {
+    width: 50px;
+    height: 50px;
+    border: 1px solid #cdcdcd;
+    background: white;
+    border-radius: 25px;
+    overflow: hidden;
+    position: relative;
+    transition: width 0.2s ease-in-out;
+    font-weight: 500;
+    font-family: inherit;
+    z-index: 10;
+}
+
+.acs-add-btn:hover {
+    width: 170px;
+    cursor: pointer;
+}
+
+.acs-add-btn::before,
+.acs-add-btn::after {
+    transition: width 0.2s ease-in-out, border-radius 0.2s ease-in-out;
+    content: "";
+    position: absolute;
+    height: 4px;
+    width: 10px;
+    top: calc(50% - 2px);
+    background: black;
+}
+
+.acs-add-btn::after {
+    right: 14px;
+    overflow: hidden;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+}
+
+.acs-add-btn::before {
+    left: 14px;
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
+}
+
+.acs-icon-btn:focus {
+    outline: none;
+}
+
+.acs-btn-txt {
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.acs-add-btn:hover::before,
+.acs-add-btn:hover::after {
+    width: 4px;
+    border-radius: 2px;
+}
+
+.acs-add-btn:hover .acs-btn-txt {
+    opacity: 1;
+    /* padding: 1%; */
+}
+
+.acs-add-icon::after,
+.acs-add-icon::before {
+    transition: all 0.2s ease-in-out;
+    content: "";
+    position: absolute;
+    height: 20px;
+    width: 2px;
+    top: calc(50% - 10px);
+    background: black;
+    overflow: hidden;
+}
+
+.acs-add-icon::before {
+    left: 22px;
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
+}
+
+.acs-add-icon::after {
+    right: 22px;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+}
+
+.acs-add-btn:hover .acs-add-icon::before {
+    left: 15px;
+    height: 4px;
+    top: calc(50% - 2px);
+}
+
+.acs-add-btn:hover .acs-add-icon::after {
+    right: 15px;
+    height: 4px;
+    top: calc(50% - 2px);
+}
+
+.acs-float {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    border-radius: 50px;
+    text-align: center;
+    box-shadow: 2px 2px 3px #999;
+}
+
+.acs-my-float {
+    margin-top: 22px;
+}
+
+/* Cards CSS */
+.acs-link {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    width: 240px;
+    height: 220px;
+    border: rgb(250, 250, 250) 0.2em solid;
+    border-radius: 8px;
+    /* tambahkan properti ini */
+    margin: auto;
+    text-align: center;
+    padding: 1%;
+    display: inline;
+    overflow: hidden;
+    color: black;
+    text-decoration: none;
+    transition: all 300ms;
+}
+.acs-card {
+    width: 100%;
+    height: 100%;
+}
+.acs-img-card {
+    image-rendering: pixelated;
+    max-width: 100%;
+    max-height: 70%;
+    object-fit: cover;
+}
+
+.acs-txt-card {
+    text-transform: uppercase;
+    margin-bottom: 1%;
+    object-fit: cover;
+}
+
+/* Add grid layout */
+.acs-grid-container {
+    margin: 2%;
+    display: grid;
+    grid-template-columns: repeat(5, 20%);
+    grid-row-gap: 5%;
+}
+
+/* Add hover effects to cards */
+.acs-link:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    opacity: 0.8;
+    border: #006fff 0.2em solid;
+    text-decoration: none;
+    color: black;
+}
+
+/* Add hover effects on SP table*/
+.acs-tr-hover:hover {
+    cursor: pointer;
+    background-color: #999;
+}
+.acs-input-table {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+.acs-input-table:focus {
+    outline: none;
+}
+.RDZDetailTable:hover {
+    cursor: pointer;
+}
+
+/* Responsive design */
+@media screen and (max-width: 767px) {
+    .acs-grid-container {
+        grid-template-columns: repeat(1, 1fr);
+        grid-gap: 10%;
+    }
+
+    .acs-card {
+        width: 150px;
+        height: 94px;
+    }
+
+    .acs-txt-card {
+        text-transform: uppercase;
+        font-size: x-large;
+    }
+
+    .acs-img-card {
+        max-width: 50%;
+        max-height: 50%;
+    }
+}
+
+@media screen and (max-width: 991px) {
+    .acs-grid-container {
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 10%;
+    }
+
+    .acs-card {
+        width: 100%;
+        height: 100%;
+    }
+
+    .acs-txt-card {
+        text-transform: uppercase;
+        font-size: x-large;
+    }
+
+    .acs-img-card {
+        max-width: 70%;
+        max-height: 70%;
+    }
+}
