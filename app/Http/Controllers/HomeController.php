@@ -71,4 +71,15 @@ class HomeController extends Controller
             return redirect('home')->with('status','Anda Tidak Memiliki Hak Akses Program Contoh!');
         }
     }
+
+    public function COA()
+    {
+        $result = (new HakAksesController)->HakAksesProgram('COA');
+        $access = (new HakAksesController)->HakAksesFiturMaster('COA');
+        if ($result > 0) {
+            return view('layouts.appCOA', compact('access'));
+        } else {
+            return redirect('home')->with('status','Anda Tidak Memiliki Hak Akses Program Contoh!');
+        }
+    }
 }

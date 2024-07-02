@@ -11,6 +11,8 @@ use App\Http\Controllers\QC\QCKoreksiAfalanController;
 use App\Http\Controllers\QC\QCCircularTropodoController;
 use App\Http\Controllers\QC\QCExtruderTropodoController;
 use App\Http\Controllers\QC\QCCircularMojosariController;
+
+use App\Http\Controllers\COA\StartController;
 use function PHPUnit\Framework\assertDirectoryIsReadable;
 
 /*
@@ -66,4 +68,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('QC', 'App\Http\Controllers\HomeController@QC');
     Route::resource('ExtruderD', QCExtruderDController::class);
+
+    Route::get('COA', 'App\Http\Controllers\HomeController@COA');
+    Route::resource('COAnalyst', StartController::class);
 });
