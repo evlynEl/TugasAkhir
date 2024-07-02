@@ -1,9 +1,17 @@
 <?php
 use function foo\func;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-use function PHPUnit\Framework\assertDirectoryIsReadable;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\QC\QCController;
 use App\Http\Controllers\Contoh\ContohController;
+use App\Http\Controllers\QC\QCExtruderBController;
+use App\Http\Controllers\QC\QCExtruderDController;
+use App\Http\Controllers\QC\QCInputAfalanController;
+use App\Http\Controllers\QC\QCKoreksiAfalanController;
+use App\Http\Controllers\QC\QCCircularTropodoController;
+use App\Http\Controllers\QC\QCExtruderTropodoController;
+use App\Http\Controllers\QC\QCCircularMojosariController;
+use function PHPUnit\Framework\assertDirectoryIsReadable;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,4 +42,28 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('Contoh', 'App\Http\Controllers\HomeController@Contoh');
     Route::resource('ContohFitur', ContohController::class);
+
+    Route::get('QC', 'App\Http\Controllers\HomeController@QC');
+    Route::resource('QCFitur', QCController::class);
+
+    Route::get('QC', 'App\Http\Controllers\HomeController@QC');
+    Route::resource('InputAfalanQC', QCInputAfalanController::class);
+
+    Route::get('QC', 'App\Http\Controllers\HomeController@QC');
+    Route::resource('KoreksiAfalanQC', QCKoreksiAfalanController::class);
+
+    Route::get('QC', 'App\Http\Controllers\HomeController@QC');
+    Route::resource('CircularTropodo', QCCircularTropodoController::class);
+
+    Route::get('QC', 'App\Http\Controllers\HomeController@QC');
+    Route::resource('CircularMojosari', QCCircularMojosariController::class);
+
+    Route::get('QC', 'App\Http\Controllers\HomeController@QC');
+    Route::resource('ExtruderTropodo', QCExtruderTropodoController::class);
+
+    Route::get('QC', 'App\Http\Controllers\HomeController@QC');
+    Route::resource('ExtruderB', QCExtruderBController::class);
+
+    Route::get('QC', 'App\Http\Controllers\HomeController@QC');
+    Route::resource('ExtruderD', QCExtruderDController::class);
 });
