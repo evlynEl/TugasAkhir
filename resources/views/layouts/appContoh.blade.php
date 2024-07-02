@@ -126,9 +126,19 @@
                                 @endif
                             @endforeach
                             @if ($cekSubMenuPrint == 1)
+                                @foreach ($access['AccessFitur'] as $subMenuItem)
+                                    @if ($subMenuItem->Id_Menu === $menuItem->IdMenu)
+                                        <li>
+                                            <a style="color: black;font-size: 15px;display: block" class="dropdown-item"
+                                                tabindex="-1"
+                                                href="{{ url($subMenuItem->Route) }}">{{ $subMenuItem->NamaFitur }}
+                                            </a>
+                                        </li>
+                                    @endif
+                                @endforeach
                     </ul>
                     @endif
-                    @if ($print == 1 && $printSecond == 0)
+                    @if ($print == 1 && $printSecond == 0 && $cekSubMenuPrint == 0)
                         <ul class="dropdown-menu">
                             @foreach ($access['AccessFitur'] as $subMenuItem)
                                 @if ($subMenuItem->Id_Menu === $menuItem->IdMenu)
@@ -158,9 +168,11 @@
                     </div>
                     <li><a class="RDZlogout" style="color: black;font-size: 15px;display: block;"
                             href="{{ route('logout') }}"
-                            onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+                            onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
                             {{ __('Logout') }}
                         </a>
+
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                             @csrf
                         </form>
