@@ -46,7 +46,7 @@ class HomeController extends Controller
         if ($result > 0) {
             return view('layouts.appContoh', compact('access'));
         } else {
-            return redirect('home')->with('status','Anda Tidak Memiliki Hak Akses Program Contoh!');
+            return redirect('home')->with('status', 'Anda Tidak Memiliki Hak Akses Program Contoh!');
         }
     }
 
@@ -57,7 +57,7 @@ class HomeController extends Controller
         if ($result > 0) {
             return view('layouts.appQC', compact('access'));
         } else {
-            return redirect('home')->with('status','Anda Tidak Memiliki Hak Akses Program Contoh!');
+            return redirect('home')->with('status', 'Anda Tidak Memiliki Hak Akses Program Contoh!');
         }
     }
 
@@ -67,8 +67,17 @@ class HomeController extends Controller
         $access = (new HakAksesController)->HakAksesFiturMaster('QC');
         if ($result > 0) {
             return view('layouts.appQC', compact('access'));
+        }
+    }
+    
+    public function COA()
+    {
+        $result = (new HakAksesController)->HakAksesProgram('COA');
+        $access = (new HakAksesController)->HakAksesFiturMaster('COA');
+        if ($result > 0) {
+            return view('layouts.appCOA', compact('access'));
         } else {
-            return redirect('home')->with('status','Anda Tidak Memiliki Hak Akses Program Contoh!');
+            return redirect('home')->with('status', 'Anda Tidak Memiliki Hak Akses Program Contoh!');
         }
     }
 }

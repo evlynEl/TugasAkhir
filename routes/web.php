@@ -42,28 +42,4 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('Contoh', 'App\Http\Controllers\HomeController@Contoh');
     Route::resource('ContohFitur', ContohController::class);
-
-    Route::get('QC', 'App\Http\Controllers\HomeController@QC');
-    Route::resource('QCFitur', QCController::class);
-
-    Route::get('QC', 'App\Http\Controllers\HomeController@QC');
-    Route::resource('InputAfalanQC', QCInputAfalanController::class);
-
-    Route::get('QC', 'App\Http\Controllers\HomeController@QC');
-    Route::resource('KoreksiAfalanQC', QCKoreksiAfalanController::class);
-
-    Route::get('QC', 'App\Http\Controllers\HomeController@QC');
-    Route::resource('CircularTropodo', QCCircularTropodoController::class);
-
-    Route::get('QC', 'App\Http\Controllers\HomeController@QC');
-    Route::resource('CircularMojosari', QCCircularMojosariController::class);
-
-    Route::get('QC', 'App\Http\Controllers\HomeController@QC');
-    Route::resource('ExtruderTropodo', QCExtruderTropodoController::class);
-
-    Route::get('QC', 'App\Http\Controllers\HomeController@QC');
-    Route::resource('ExtruderB', QCExtruderBController::class);
-
-    Route::get('QC', 'App\Http\Controllers\HomeController@QC');
-    Route::resource('ExtruderD', QCExtruderDController::class);
 });
