@@ -14,7 +14,7 @@
                     </div>
                 @endif
                 <div class="card">
-                    <div class="card-header">COA</div>
+                    <div class="card-header">COA Result</div>
                     <div class="card-body RDZOverflow RDZMobilePaddingLR0">
                         <div class="acs-div-container">
                             <div class="acs-div-container1">

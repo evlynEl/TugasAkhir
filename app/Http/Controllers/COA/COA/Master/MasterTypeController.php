@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\COA;
+namespace App\Http\Controllers\COA\COA\Master;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Controllers\HakAksesController;
 
-class StartController extends Controller
+class MasterTypeController extends Controller
 {
     public function index()
     {
         $access = (new HakAksesController)->HakAksesFiturMaster('COA');
-        $data = 'MISI';
-        return view('COA.COAnalyst', compact('data', 'access'));
+        $data = 'MasterType';
+        return view('COA.Master.MasterType', compact('data', 'access'));
     }
 
     public function create()

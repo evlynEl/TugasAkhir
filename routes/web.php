@@ -12,7 +12,16 @@ use App\Http\Controllers\QC\QCCircularTropodoController;
 use App\Http\Controllers\QC\QCExtruderTropodoController;
 use App\Http\Controllers\QC\QCCircularMojosariController;
 
-use App\Http\Controllers\COA\StartController;
+use App\Http\Controllers\COA\COA\Master\MasterPartController;
+use App\Http\Controllers\COA\COA\Master\MasterMaterialController;
+use App\Http\Controllers\COA\COA\Master\MasterTypeController;
+use App\Http\Controllers\COA\COA\ResultController;
+use App\Http\Controllers\COA\FIBC\Input\InputDetailController;
+use App\Http\Controllers\COA\FIBC\Input\InputTestController;
+use App\Http\Controllers\COA\FIBC\ACC\ACCQCManController;
+use App\Http\Controllers\COA\FIBC\ACC\ACCQCSpvController;
+
+
 use function PHPUnit\Framework\assertDirectoryIsReadable;
 
 /*
@@ -45,6 +54,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('Contoh', 'App\Http\Controllers\HomeController@Contoh');
     Route::resource('ContohFitur', ContohController::class);
 
+    // QC
     Route::get('QC', 'App\Http\Controllers\HomeController@QC');
     Route::resource('QCFitur', QCController::class);
 
@@ -69,6 +79,29 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('QC', 'App\Http\Controllers\HomeController@QC');
     Route::resource('ExtruderD', QCExtruderDController::class);
 
+
+    // COA
     Route::get('COA', 'App\Http\Controllers\HomeController@COA');
-    Route::resource('COAnalyst', StartController::class);
+    Route::resource('FrmMasterPart', MasterPartController::class);
+
+    Route::get('COA', 'App\Http\Controllers\HomeController@COA');
+    Route::resource('FrmMasterMaterial', MasterMaterialController::class);
+    
+    Route::get('COA', 'App\Http\Controllers\HomeController@COA');
+    Route::resource('FrmMasterType', MasterTypeController::class);
+
+    Route::get('COA', 'App\Http\Controllers\HomeController@COA');
+    Route::resource('FrmInputFIBC', InputDetailController::class);
+
+    Route::get('COA', 'App\Http\Controllers\HomeController@COA');
+    Route::resource('FrmInputTest', InputTestController::class);
+
+    Route::get('COA', 'App\Http\Controllers\HomeController@COA');
+    Route::resource('FrmACCMng_FIBC', ACCQCManController::class);
+
+    Route::get('COA', 'App\Http\Controllers\HomeController@COA');
+    Route::resource('FrmACCFIBC', ACCQCSpvController::class);
+
+    Route::get('COA', 'App\Http\Controllers\HomeController@COA');
+    Route::resource('FrmResult', ResultController::class);
 });
