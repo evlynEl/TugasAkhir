@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\QC;
+namespace App\Http\Controllers\QC\Circular;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Controllers\HakAksesController;
 
-class QCInputAfalanController extends Controller
+class QCCircularTropodoController extends Controller
 {
     public function index()
     {
         $access = (new HakAksesController)->HakAksesFiturMaster('QC');
         $data = 'Goyang dulu';
-        return view('QC.Afalan.InputAfalanQC', compact('data', 'access'));
+        return view('QC.Circular.CircularTropodo', compact('data', 'access'));
     }
 
     public function create()

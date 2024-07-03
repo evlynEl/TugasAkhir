@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\QC;
+namespace App\Http\Controllers\QC\Extruder;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Controllers\HakAksesController;
 
-class QCKoreksiAfalanController extends Controller
+class QCExtruderBController extends Controller
 {
     public function index()
     {
         $access = (new HakAksesController)->HakAksesFiturMaster('QC');
         $data = 'Goyang dulu';
-        return view('QC.Afalan.KoreksiAfalan', compact('data', 'access'));
+        return view('QC.Extruder.ExtruderB', compact('data', 'access'));
     }
 
     public function create()

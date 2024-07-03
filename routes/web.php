@@ -4,13 +4,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\QC\QCController;
 use App\Http\Controllers\Contoh\ContohController;
-use App\Http\Controllers\QC\QCExtruderBController;
-use App\Http\Controllers\QC\QCExtruderDController;
-use App\Http\Controllers\QC\QCInputAfalanController;
-use App\Http\Controllers\QC\QCKoreksiAfalanController;
-use App\Http\Controllers\QC\QCCircularTropodoController;
-use App\Http\Controllers\QC\QCExtruderTropodoController;
-use App\Http\Controllers\QC\QCCircularMojosariController;
+use App\Http\Controllers\QC\Extruder\QCExtruderBController;
+use App\Http\Controllers\QC\Extruder\QCExtruderDController;
+use App\Http\Controllers\QC\Afalan\QCInputAfalanController;
+use App\Http\Controllers\QC\Afalan\QCKoreksiAfalanController;
+use App\Http\Controllers\QC\Circular\QCCircularTropodoController;
+use App\Http\Controllers\QC\Extruder\QCExtruderTropodoController;
+use App\Http\Controllers\QC\Circular\QCCircularMojosariController;
 
 use App\Http\Controllers\COA\COA\Master\MasterPartController;
 use App\Http\Controllers\COA\COA\Master\MasterMaterialController;
@@ -58,26 +58,26 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('QC', 'App\Http\Controllers\HomeController@QC');
     Route::resource('QCFitur', QCController::class);
 
-    Route::get('QC', 'App\Http\Controllers\HomeController@QC');
-    Route::resource('InputAfalanQC', QCInputAfalanController::class);
+    Route::get('InputAfalanQC', 'App\Http\Controllers\QC\Afalan\QCInputAfalanController@index');
+    // Route::resource('InputAfalanQC', QCInputAfalanController::class);
 
-    Route::get('QC', 'App\Http\Controllers\HomeController@QC');
-    Route::resource('KoreksiAfalanQC', QCKoreksiAfalanController::class);
+    Route::get('KoreksiAfalan', 'App\Http\Controllers\QC\Afalan\QCKoreksiAfalanController@index');
+    // Route::resource('KoreksiAfalan', QCKoreksiAfalanController::class);
 
-    Route::get('QC', 'App\Http\Controllers\HomeController@QC');
-    Route::resource('CircularTropodo', QCCircularTropodoController::class);
+    Route::get('CircularTropodo', 'App\Http\Controllers\QC\Circular\QCCircularTropodoController@index');
+    // Route::resource('CircularTropodo', QCCircularTropodoController::class);
 
-    Route::get('QC', 'App\Http\Controllers\HomeController@QC');
-    Route::resource('CircularMojosari', QCCircularMojosariController::class);
+    Route::get('CircularMojosari', 'App\Http\Controllers\QC\Circular\QCCircularMojosariController@index');
+    // Route::resource('CircularMojosari', QCCircularMojosariController::class);
 
-    Route::get('QC', 'App\Http\Controllers\HomeController@QC');
-    Route::resource('ExtruderTropodo', QCExtruderTropodoController::class);
+    Route::get('ExtruderTropodo', 'App\Http\Controllers\QC\Extruder\QCExtruderTropodoController@index');
+    // Route::resource('ExtruderTropodo', QCExtruderTropodoController::class);
 
-    Route::get('QC', 'App\Http\Controllers\HomeController@QC');
-    Route::resource('ExtruderB', QCExtruderBController::class);
+    Route::get('ExtruderB', 'App\Http\Controllers\QC\Extruder\QCExtruderBController@index');
+    // Route::resource('ExtruderB', QCExtruderBController::class);
 
-    Route::get('QC', 'App\Http\Controllers\HomeController@QC');
-    Route::resource('ExtruderD', QCExtruderDController::class);
+    Route::get('ExtruderD', 'App\Http\Controllers\QC\Extruder\QCExtruderDController@index');
+    // Route::resource('ExtruderD', QCExtruderDController::class);
 
 
     // COA
