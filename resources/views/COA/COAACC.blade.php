@@ -14,7 +14,7 @@
                     </div>
                 @endif
                 <div class="card">
-                    <div class="card-header">Master Type Section</div>
+                    <div class="card-header">COA ACC</div>
                     <div class="card-body RDZOverflow RDZMobilePaddingLR0">
                         <div class="acs-div-container">
                             <div class="acs-div-container1">

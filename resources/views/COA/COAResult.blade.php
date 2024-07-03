@@ -1,4 +1,4 @@
-@extends('layouts.appContoh')
+@extends('layouts.appCOA')
 @section('content')
     <div class="container-fluid">
         <link href="{{ asset('css/Contoh/contoh.css') }}" rel="stylesheet">

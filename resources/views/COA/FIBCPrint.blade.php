@@ -1,4 +1,4 @@
-@extends('layouts.appContoh')
+@extends('layouts.appCOA')
 @section('content')
     <div class="container-fluid">
         <link href="{{ asset('css/Contoh/contoh.css') }}" rel="stylesheet">
@@ -14,11 +14,11 @@
                     </div>
                 @endif
                 <div class="card">
-                    <div class="card-header">PROGRAM CONTOH</div>
+                    <div class="card-header">FIBC Print</div>
                     <div class="card-body RDZOverflow RDZMobilePaddingLR0">
                         <div class="acs-div-container">
                             <div class="acs-div-container1">
-                                <img src="{{ asset('/images/Contoh1.png') }}" alt="">
+                                {{-- <img src="{{ asset('/images/Contoh1.png') }}" alt=""> --}}
                             </div>
                         </div>
                     </div>

@@ -1,26 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\COA\COA\Master;
+namespace App\Http\Controllers\COA\COA;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Controllers\HakAksesController;
-use Illuminate\Support\Facades\DB;
 
-class MasterPartController extends Controller
+class PrintController extends Controller
 {
     public function index()
     {
         $access = (new HakAksesController)->HakAksesFiturMaster('COA');
-        $data = 'MasterPart';
-
-        return view('COA.Master.MasterPart', compact('data', 'access'));
-    }
-
-    public function display(){
-        $parts = DB::connection('ConnTestQC')->table('Master_Part_Section')->get();
-        return response()->json($parts);
-
+        $data = 'Print';
+        return view('COA.COAPrint', compact('data', 'access'));
     }
 
     public function create()

@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\Contoh;
+namespace App\Http\Controllers\COA\FIBC;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Controllers\HakAksesController;
 
-class ContohController extends Controller
+class FIBCPrintController extends Controller
 {
     public function index()
     {
-        $access = (new HakAksesController)->HakAksesFiturMaster('Contoh');
-        $data = 'Goyang dulu';
-        return view('Contoh.home', compact('data', 'access'));
+        $access = (new HakAksesController)->HakAksesFiturMaster('COA');
+        $data = 'FIBCPrint';
+        return view('COA.FIBCPrint', compact('data', 'access'));
     }
 
     public function create()
