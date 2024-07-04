@@ -58,8 +58,15 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('QC', 'App\Http\Controllers\HomeController@QC');
     Route::resource('QCFitur', QCController::class);
 
+<<<<<<< Updated upstream
     // Route::get('InputAfalanQC', 'App\Http\Controllers\QC\Afalan\QCInputAfalanController@index');
     Route::resource('InputAfalanQC', QCInputAfalanController::class);
+=======
+    Route::resource('InputAfalanQC', QCInputAfalanController::class);
+    // Route::get('InputAfalanQC', 'App\Http\Controllers\QC\Afalan\QCInputAfalanController@index');
+    // Route::get('InputAfalanQC/data', 'App\Http\Controllers\QC\Afalan\QCInputAfalanController@showData');
+    // Route::resource('InputAfalanQC', QCInputAfalanController::class);
+>>>>>>> Stashed changes
 
     Route::get('KoreksiAfalan', 'App\Http\Controllers\QC\Afalan\QCKoreksiAfalanController@index');
     // Route::resource('KoreksiAfalan', QCKoreksiAfalanController::class);
