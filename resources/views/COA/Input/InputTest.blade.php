@@ -1,7 +1,6 @@
 @extends('layouts.appCOA')
 @section('content')
     <div class="container-fluid">
-        <link href="{{ asset('css/Contoh/contoh.css') }}" rel="stylesheet">
         <div class="row justify-content-center">
             <div class="col-md-10 RDZMobilePaddingLR0">
                 @if (Session::has('success'))
@@ -26,5 +25,4 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="{{ asset('js/Sales/permohonan-sp.js') }}"></script>
 @endsection

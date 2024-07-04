@@ -81,11 +81,11 @@ Route::group(['middleware' => ['auth']], function () {
 
 
     // COA
-    Route::get('FrmMasterPart', 'App\Http\Controllers\COA\COA\Master\MasterPartController@index');
-    // Route::resource('FrmMasterPart', MasterPartController::class);
+    Route::get('COA', 'App\Http\Controllers\HomeController@COA');
+    Route::resource('FrmMasterPart', MasterPartController::class);
 
-    Route::get('FrmMasterMaterial', 'App\Http\Controllers\COA\COA\Master\MasterMaterialController@index');
-    // Route::resource('FrmMasterMaterial', MasterMaterialController::class);
+    Route::get('COA', 'App\Http\Controllers\HomeController@COA');
+    Route::resource('FrmMasterMaterial', MasterMaterialController::class);
 
     Route::get('FrmMasterType', 'App\Http\Controllers\COA\COA\Master\MasterTypeController@index');
     // Route::resource('FrmMasterType', MasterTypeController::class);
