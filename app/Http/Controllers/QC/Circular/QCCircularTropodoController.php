@@ -11,8 +11,7 @@ class QCCircularTropodoController extends Controller
     public function index()
     {
         $access = (new HakAksesController)->HakAksesFiturMaster('QC');
-        $data = 'Goyang dulu';
-        return view('QC.Circular.CircularTropodo', compact('data', 'access'));
+        return view('QC.Circular.CircularTropodo', compact('access'));
     }
 
     public function create()

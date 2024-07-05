@@ -38,10 +38,8 @@ class QCInputAfalanController extends Controller
     public function show($id, Request $request)
     {
         if ($id == 'getDataNoRoll') {
-            // Fetch the customer data
             $listNoRoll = DB::connection('ConnInventory')
                 ->select('exec SP_1273_INV_Ambil_noRoll');
-            // Convert the data into an array that DataTables can consume
             $dataNoRoll = [];
             foreach ($listNoRoll as $NoRoll) {
                 $dataNoRoll[] = [
@@ -75,8 +73,23 @@ class QCInputAfalanController extends Controller
 
     public function update(Request $request, $id)
     {
-        //
+        if ($id == 'inputDataAfalan') {
+            $kode = $request->input('kode');
+            $item_number = $request->input('item_number');
+            $no_roll = $request->input('no_roll');
+            $meter_netto = $request->input('meter_netto');
+    
+            try {
+                DB::connection('ConnInventory')->statement('exec SP_1273_INV_KoreksiAfalan @Kode_Barang = ?, @item_number = ?, @NoRoll = ?, @MeterNetto = ?', [$kode, $item_number, $no_roll, $meter_netto]);
+    
+                return response()->json(['success' => 'Data inserted successfully'], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Failed to insert data: ' . $e->getMessage()], 500);
+            }
+        }
     }
+    
+
 
     public function destroy($id)
     {

@@ -65,6 +65,15 @@ Route::group(['middleware' => ['auth']], function () {
     // Route::get('InputAfalanQC/data', 'App\Http\Controllers\QC\Afalan\QCInputAfalanController@showData');
     // Route::resource('InputAfalanQC', QCInputAfalanController::class);
 
+    // Route::get('InputAfalanQC', 'App\Http\Controllers\QC\Afalan\QCInputAfalanController@index');
+    Route::resource('InputAfalanQC', QCInputAfalanController::class);
+
+    // Route::resource('InputAfalanQC', QCInputAfalanController::class);
+    // Route::get('InputAfalanQC', 'App\Http\Controllers\QC\Afalan\QCInputAfalanController@index');
+    // Route::get('InputAfalanQC/data', 'App\Http\Controllers\QC\Afalan\QCInputAfalanController@showData');
+    // Route::resource('InputAfalanQC', QCInputAfalanController::class);
+
+
     Route::get('KoreksiAfalan', 'App\Http\Controllers\QC\Afalan\QCKoreksiAfalanController@index');
     // Route::resource('KoreksiAfalan', QCKoreksiAfalanController::class);
 

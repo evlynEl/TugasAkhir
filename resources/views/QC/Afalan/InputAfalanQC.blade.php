@@ -60,9 +60,9 @@
                                     <div class="form-group">
                                         <label for="afalan">Afalan (Angka)</label>
                                         <input type="double" id="afalan" name="afalan" class="form-control"
-                                            placeholder="0" min="0">
+                                            placeholder="0" min="0" required>
                                     </div>
-                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                    <button id="btn_submit" class="btn btn-primary">Submit</button>
                                 </form>
                             </div>
                         </div>
