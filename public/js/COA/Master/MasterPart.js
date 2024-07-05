@@ -102,6 +102,7 @@ btn_proses.addEventListener("click", function (e) {
                     _token: csrfToken,
                     part: part
                 },
+                timeout: 30000,
                 success: function (response) {
                     if (response.success) {
                         Swal.fire({

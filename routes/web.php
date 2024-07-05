@@ -58,15 +58,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('QC', 'App\Http\Controllers\HomeController@QC');
     Route::resource('QCFitur', QCController::class);
 
-<<<<<<< Updated upstream
     // Route::get('InputAfalanQC', 'App\Http\Controllers\QC\Afalan\QCInputAfalanController@index');
     Route::resource('InputAfalanQC', QCInputAfalanController::class);
-=======
-    Route::resource('InputAfalanQC', QCInputAfalanController::class);
+
     // Route::get('InputAfalanQC', 'App\Http\Controllers\QC\Afalan\QCInputAfalanController@index');
     // Route::get('InputAfalanQC/data', 'App\Http\Controllers\QC\Afalan\QCInputAfalanController@showData');
     // Route::resource('InputAfalanQC', QCInputAfalanController::class);
->>>>>>> Stashed changes
 
     Route::get('KoreksiAfalan', 'App\Http\Controllers\QC\Afalan\QCKoreksiAfalanController@index');
     // Route::resource('KoreksiAfalan', QCKoreksiAfalanController::class);
@@ -89,18 +86,9 @@ Route::group(['middleware' => ['auth']], function () {
 
     // COA
     Route::get('COA', 'App\Http\Controllers\HomeController@COA');
-    Route::resource('FrmMasterPart', MasterPartController::class);
+    Route::resource('FrmInputFIBC', InputDetailController::class);
 
     Route::get('COA', 'App\Http\Controllers\HomeController@COA');
-    Route::resource('FrmMasterMaterial', MasterMaterialController::class);
-
-    Route::get('FrmMasterType', 'App\Http\Controllers\COA\COA\Master\MasterTypeController@index');
-    // Route::resource('FrmMasterType', MasterTypeController::class);
-
-    Route::get('FrmInputFIBC', 'App\Http\Controllers\COA\FIBC\Input\InputDetailController@index');
-    // Route::resource('FrmInputFIBC', InputDetailController::class);
-
-    Route::get('FrmInputTest', 'App\Http\Controllers\COA\FIBC\Input\InputTestController@index');
     // Route::resource('FrmInputTest', InputTestController::class);
 
     Route::get('FrmACCMng_FIBC', 'App\Http\Controllers\COA\FIBC\ACC\ACCQCManController@index');
@@ -109,6 +97,21 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('FrmACCFIBC', 'App\Http\Controllers\COA\FIBC\ACC\ACCQCSpvController@index');
     // Route::resource('FrmACCFIBC', ACCQCSpvController::class);
 
+    Route::get('FrmPrintFIBC', 'App\Http\Controllers\COA\FIBC\FIBCPrintController@index');
+    // Route::resource('FrmPrintFIBC', FIBCPrintController::class);
+
+
+
+    //tidak dipake
+    Route::get('COA', 'App\Http\Controllers\HomeController@COA');
+    Route::resource('FrmMasterPart', MasterPartController::class);
+
+    Route::get('COA', 'App\Http\Controllers\HomeController@COA');
+    Route::resource('FrmMasterMaterial', MasterMaterialController::class);
+
+    Route::get('FrmMasterType', 'App\Http\Controllers\COA\COA\Master\MasterTypeController@index');
+    // Route::resource('FrmMasterType', MasterTypeController::class);
+
     Route::get('FrmResult', 'App\Http\Controllers\COA\COA\ResultController@index');
     // Route::resource('FrmResult', ResultController::class);
 
@@ -116,8 +119,7 @@ Route::group(['middleware' => ['auth']], function () {
     // Route::resource('FrmPrintResult', PrintController::class);
 
     Route::get('FrmACCResult', 'App\Http\Controllers\COA\COA\ACCController@index');
-    // Route::resource('FrmACCResult', ACCController::class);
+    Route::resource('FrmACCResult', ACCController::class);
 
-    Route::get('FrmPrintFIBC', 'App\Http\Controllers\COA\FIBC\FIBCPrintController@index');
-    // Route::resource('FrmPrintFIBC', FIBCPrintController::class);
+
 });

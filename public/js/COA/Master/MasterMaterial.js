@@ -4,7 +4,6 @@ var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
 var btn_lihat = document.getElementById('btn_lihat');
 var btn_proses = document.getElementById('btn_proses');
 
-// Event listener for btn_lihat (Select Material)
 btn_lihat.addEventListener("click", function (e) {
     try {
         Swal.fire({
@@ -63,7 +62,6 @@ btn_lihat.addEventListener("click", function (e) {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                // Assuming the selectedData is an object with fields Id and Material
                 selectPart(result.value.Id, result.value.Material);
             }
         });
@@ -72,14 +70,12 @@ btn_lihat.addEventListener("click", function (e) {
     }
 });
 
-// Function to populate ID and Material fields
 function selectPart(Id, Material) {
     document.getElementById("id").value = Id;
     document.getElementById("material").value = Material;
     Swal.close();
 }
 
-// Event listener for btn_proses (Process Button)
 btn_proses.addEventListener("click", function (e) {
     try {
         var material = document.getElementById("material").value.trim();
@@ -103,6 +99,7 @@ btn_proses.addEventListener("click", function (e) {
                     _token: csrfToken,
                     material: material
                 },
+                timeout: 30000,
                 success: function (response) {
                     if (response.success) {
                         Swal.fire({
