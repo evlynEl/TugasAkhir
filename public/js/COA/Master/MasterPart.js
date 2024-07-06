@@ -1,8 +1,8 @@
 var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 //button
-btn_lihat = document.getElementById('btn_lihat');
-btn_proses = document.getElementById('btn_proses');
+var btn_lihat = document.getElementById('btn_lihat');
+var btn_proses = document.getElementById('btn_proses');
 
 
 btn_lihat.addEventListener("click", function (e) {
