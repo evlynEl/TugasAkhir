@@ -64,9 +64,7 @@ btn_noRoll.addEventListener("click", function (e) {
                         ],
                     });
                     $("#table_noRoll tbody").on("click", "tr", function () {
-                        // Remove 'selected' class from all rows
                         table.$("tr.selected").removeClass("selected");
-                        // Add 'selected' class to the clicked row
                         $(this).addClass("selected");
                     });
                 });

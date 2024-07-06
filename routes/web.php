@@ -61,24 +61,12 @@ Route::group(['middleware' => ['auth']], function () {
     // Route::get('InputAfalanQC', 'App\Http\Controllers\QC\Afalan\QCInputAfalanController@index');
     Route::resource('InputAfalanQC', QCInputAfalanController::class);
 
-    // Route::get('InputAfalanQC', 'App\Http\Controllers\QC\Afalan\QCInputAfalanController@index');
-    // Route::get('InputAfalanQC/data', 'App\Http\Controllers\QC\Afalan\QCInputAfalanController@showData');
-    // Route::resource('InputAfalanQC', QCInputAfalanController::class);
-
-    // Route::get('InputAfalanQC', 'App\Http\Controllers\QC\Afalan\QCInputAfalanController@index');
-    Route::resource('InputAfalanQC', QCInputAfalanController::class);
-
-    // Route::resource('InputAfalanQC', QCInputAfalanController::class);
-    // Route::get('InputAfalanQC', 'App\Http\Controllers\QC\Afalan\QCInputAfalanController@index');
-    // Route::get('InputAfalanQC/data', 'App\Http\Controllers\QC\Afalan\QCInputAfalanController@showData');
-    // Route::resource('InputAfalanQC', QCInputAfalanController::class);
-
 
     Route::get('KoreksiAfalan', 'App\Http\Controllers\QC\Afalan\QCKoreksiAfalanController@index');
     // Route::resource('KoreksiAfalan', QCKoreksiAfalanController::class);
 
-    Route::get('CircularTropodo', 'App\Http\Controllers\QC\Circular\QCCircularTropodoController@index');
-    // Route::resource('CircularTropodo', QCCircularTropodoController::class);
+    // Route::get('CircularTropodo', 'App\Http\Controllers\QC\Circular\QCCircularTropodoController@index');
+    Route::resource('CircularTropodo', QCCircularTropodoController::class);
 
     Route::get('CircularMojosari', 'App\Http\Controllers\QC\Circular\QCCircularMojosariController@index');
     // Route::resource('CircularMojosari', QCCircularMojosariController::class);

@@ -13,17 +13,8 @@ class QCInputAfalanController extends Controller
     public function index()
     {
         $access = (new HakAksesController)->HakAksesFiturMaster('QC');
-        // $data = DB::connection('ConnInventory')->select('exec [SP_1273_INV_Ambil_noRoll]');
-        // return view('QC.Afalan.InputAfalanQC', compact('data', 'access'));
         return view('QC.Afalan.InputAfalanQC', compact('access'));
     }
-
-    // public function showData()
-    // {
-    //     $access = (new HakAksesController)->HakAksesFiturMaster('QC');
-    //     $dataInside = DB::connection('ConnInventory')->select('exec [SP_1273_INV_CekDataGelondongan1]');
-    //     return view('QC.Afalan.InputAfalanQC', compact('data', 'access'));
-    // }
 
     public function create()
     {
@@ -78,17 +69,17 @@ class QCInputAfalanController extends Controller
             $item_number = $request->input('item_number');
             $no_roll = $request->input('no_roll');
             $meter_netto = $request->input('meter_netto');
-    
+
             try {
                 DB::connection('ConnInventory')->statement('exec SP_1273_INV_KoreksiAfalan @Kode_Barang = ?, @item_number = ?, @NoRoll = ?, @MeterNetto = ?', [$kode, $item_number, $no_roll, $meter_netto]);
-    
+
                 return response()->json(['success' => 'Data inserted successfully'], 200);
             } catch (\Exception $e) {
                 return response()->json(['error' => 'Failed to insert data: ' . $e->getMessage()], 500);
             }
         }
     }
-    
+
 
 
     public function destroy($id)

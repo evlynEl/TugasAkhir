@@ -17,34 +17,29 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <strong>Potong Gelondongan Circular Tropodo</strong>
-                        <div class="form-group d-flex align-items-center">
+                        <form id="dateForm" class="form-inline d-flex align-items-center">
                             <label for="tanggal" class="mr-2">Tanggal:</label>
-                            <input type="date" id="tanggal" name="tanggal" class="form-control">
-                        </div>
-                    </div>
+                            <input type="date" id="tanggal" name="tanggal" class="form-control mr-2">
+                            <button type="submit" id="btn_tanggal" class="btn btn-primary">Search</button>
+                        </form>
+                    </div>               
 
                     <div class="card-body RDZOverflow RDZMobilePaddingLR0">
                         <div class="acs-div-container">
                             <div class="container">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered">
+                                    <table id="tableDataByDate" class="display" style="width:100%">
                                         <thead>
                                             <tr>
-                                                <th scope="col" style="width: 10%;">Mesin</th>
-                                                <th scope="col" style="width: 10%;">Shift</th>
-                                                <th scope="col" style="width: 10%;">Id Log</th>
-                                                <th scope="col" style="width: 70%;">Nama Barang</th>
+                                                <th style="width: 10%">Mesin</th>
+                                                <th style="width: 10%">Shift</th>
+                                                <th style="width: 10%">Id Log</th>
+                                                <th style="width: 70%">Nama Barang</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Mesin 1</td>
-                                                <td>Shift 1</td>
-                                                <td>Id Log 1</td>
-                                                <td>Barang 1</td>
-                                            </tr>
-                                        </tbody>
+                                        <tbody></tbody>
                                     </table>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -127,8 +122,8 @@
                                     <input type="text" id="idLog" name="idLog" class="form-control mb-1" readonly>
                                 </div>
                                 <div class="col-sm-2">
-                                    <label for="ukuranLembar">Ukuran (Lembar)</label>
-                                    <input type="text" id="ukuranLembar" name="ukuranLembar"
+                                    <label for="ukuranLebar">Ukuran (Lebar)</label>
+                                    <input type="text" id="ukuranLebar" name="ukuranLebar"
                                         class="form-control mb-1">
                                 </div>
                                 <div class="col-sm-2">
@@ -321,4 +316,6 @@
 
 
     <script type="text/javascript" src="{{ asset('js/QC/Circular/CircularTropodo.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('css/sweetalert2.min.css') }}">
+    <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>
 @endsection
