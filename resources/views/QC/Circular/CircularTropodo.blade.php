@@ -26,7 +26,7 @@
 
                     <div class="card-body RDZOverflow RDZMobilePaddingLR0">
                         <div class="acs-div-container">
-                            <div class="container">
+                            <div c1lass="container">
                                 <div class="table-responsive">
                                     <table id="tableDataByDate" class="display" style="width:100%">
                                         <thead>
@@ -141,7 +141,7 @@
                                         class="form-control mb-1" readonly>
                                 </div>
                                 <div class="col-sm-2 d-flex align-items-end">
-                                    <button type="button" class="btn btn-primary mb-1">Proses</button>
+                                    <button type="button" class="btn btn-primary mb-1" id="prosesButton">Proses</button>
                                 </div>
                             </div>
                         </div>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\QC\Circular;
 
+use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -22,17 +23,17 @@ class QCCircularTropodoController extends Controller
 
     public function store(Request $request)
     {
-        //
+        // 
     }
 
     public function show($id, Request $request)
     {
+        // dd(Auth::user()->NomorUser);
         if ($id == 'getDataFromDate') {
             $tgl = $request->input('TglLog');
 
             $listDataDate = DB::connection('ConnCircular')
                 ->select('exec [SP_1273_QC_LIST_QC] @Kode= ?, @TglLog= ?', [1, $tgl]);
-
             $dataDate = [];
             foreach ($listDataDate as $dateSelected) {
                 $dataDate[] = [
@@ -43,9 +44,7 @@ class QCCircularTropodoController extends Controller
                 ];
             }
             return datatables($dataDate)->make(true);
-        }
-
-        else if ($id == 'showDetailByLog') {
+        } else if ($id == 'showDetailByLog') {
             $IdLog = $request->input('IdLog');
             $listDetailByLog = DB::connection('ConnCircular')
                 ->select('exec [SP_1273_QC_LIST_QC] @Kode= ?, @IdLog= ?', [2, $IdLog]);
@@ -62,8 +61,9 @@ class QCCircularTropodoController extends Controller
                     'weftBenang' => $detail->BngWeft,
                     'waftDenier' => $detail->DenierWA,
                     'weftDenier' => $detail->DenierWE,
-                    'ukuranLebar' => $detail->Lebar,
-                    // kurang dtek9 sama jenis karung
+                    'Lebar' => $detail->Lebar,
+                    'D_Tek9' => $detail->D_TEK9,
+                    'JenisKrg' => $detail->JenisKrg
                 ];
             }
             // dd($dataDetailByLog);
@@ -78,7 +78,77 @@ class QCCircularTropodoController extends Controller
 
     public function update(Request $request, $id)
     {
-        //
+        if ($id == 'prosesIsiData') {
+            $IdLog = $request->input('IdLog');
+            $Tanggal = $request->input('Tanggal');
+            $Ukuran = $request->input('Ukuran');
+            $UkuranSTD = $request->input('UkuranSTD');
+            $Potongan = $request->input('Potongan');
+            $BeratSTD = $request->input('BeratSTD');
+            $Berat = $request->input('Berat');
+            $UserInput = Auth::user()->NomorUser;
+            $UserInput = trim($UserInput);
+            $StWarp = $request->input('StWarp');
+            $ElgWarp = $request->input('ElgWarp');
+            $StWeft = $request->input('StWeft');
+            $ElgWeft = $request->input('ElgWeft');
+            $StReinforced = $request->input('StReinforced');
+            $ElgReinforced = $request->input('ElgReinforced');
+            $BeratReinforced = $request->input('BeratReinforced');
+            $StandartWA = $request->input('StandartWA');
+            $StandartWE = $request->input('StandartWE');
+            $StandartElgWA = $request->input('StandartElgWA');
+            $StandartElgWE = $request->input('StandartElgWE');
+
+            try {
+                DB::connection('ConnCircular')
+                    ->statement('exec [SP_1273_QC_MAINT_QC] 
+                @Kode = ?, 
+                @IdLog = ?, 
+                @Tanggal = ?, 
+                @Ukuran = ?, 
+                @UkuranSTD = ?,
+                @Potongan = ?,
+                @BeratSTD = ?, 
+                @Berat = ?, 
+                @UserInput = ?, 
+                @StWarp = ?, 
+                @ElgWarp = ?, 
+                @StWeft = ?, 
+                @ElgWeft = ?, 
+                @StReinforced = ?, 
+                @ElgReinforced = ?, 
+                @BeratReinforced = ?, 
+                @StandartWA = ?, 
+                @StandartWE = ?, 
+                @StandartElgWA = ?, 
+                @StandartElgWE = ?', [
+                        1,
+                        $IdLog,
+                        $Tanggal,
+                        $Ukuran,
+                        $UkuranSTD,
+                        $Potongan,
+                        $BeratSTD,
+                        $Berat,
+                        $UserInput,
+                        $StWarp,
+                        $ElgWarp,
+                        $StWeft,
+                        $ElgWeft,
+                        $StReinforced,
+                        $ElgReinforced,
+                        $BeratReinforced,
+                        $StandartWA,
+                        $StandartWE,
+                        $StandartElgWA,
+                        $StandartElgWE,
+                    ]);
+                return response()->json(['success' => 'Data sudah diSIMPAN'], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Data gagal diSIMPAN: ' . $e->getMessage()], 500);
+            }
+        }
     }
 
     public function destroy($id)
