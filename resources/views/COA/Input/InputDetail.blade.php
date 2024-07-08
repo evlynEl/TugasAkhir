@@ -43,6 +43,7 @@
                             </div>
                         </div>
 
+
                         {{-- FIBC Detail --}}
                         <label for="FIBC_Detail">FIBC Detail</label>
                         <div class="form-row" style="border: 1px solid #ddd">
@@ -119,24 +120,22 @@
                                 <div class="form-group text-center">
                                     <div>
                                         <div class="form-check-inline">
-                                            <input class="form-check-input" type="radio" name="weight" id="weight1"
-                                                value="weight1">
+                                            <input class="form-check-input" type="radio" name="weight" id="weight1" value="weight1">
                                             <label class="form-check-label" for="weight1">Weight 1</label>
                                         </div>
                                         <div class="form-check-inline">
-                                            <input class="form-check-input" type="radio" name="weight" id="weight2"
-                                                value="weight2">
+                                            <input class="form-check-input" type="radio" name="weight" id="weight2" value="weight2">
                                             <label class="form-check-label" for="weight2">Weight 2</label>
                                         </div>
                                     </div>
-                                    <label for="weight-label" id="weight-label" class="text-center mt-2">Weight 1</label>
+                                    <label for="weightLabel" id="weightLabel" class="text-center mt-2">Weight 1</label>
                                 </div>
 
-                                <div class="row">
+                                <div class="row" id="formWeight1">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="length">Panjang :</label>
-                                            <input type="text" class="form-control" id="length" name="length">
+                                            <label for="length1">Panjang 1:</label>
+                                            <input type="text" class="form-control" id="length1" name="length1">
                                         </div>
                                         <div class="form-group">
                                             <label for="waft1">Waft :</label>
@@ -144,32 +143,67 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="denier-waft1">Denier Waft :</label>
-                                            <input type="text" class="form-control" id="denier-waft1"
-                                                name="denier-waft1">
+                                            <input type="text" class="form-control" id="denier-waft1" name="denier-waft1">
                                         </div>
                                         <div class="form-group">
                                             <label for="weight1">Weight :</label>
                                             <div class="input-group">
-                                                <input type="text" class="form-control" id="weight1"
-                                                    name="weight1">
+                                                <input type="text" class="form-control" id="weightInput1" name="weight1">
                                                 <span class="ml-1">gms</span>
                                             </div>
-
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="width">Lebar :</label>
-                                            <input type="text" class="form-control" id="width" name="width">
+                                            <label for="width1">Lebar :</label>
+                                            <input type="text" class="form-control" id="width1" name="width1">
                                         </div>
                                         <div class="form-group">
-                                            <label for="weft">Weft :</label>
-                                            <input type="text" class="form-control" id="weft" name="weft">
+                                            <label for="weft1">Weft :</label>
+                                            <input type="text" class="form-control" id="weft1" name="weft1">
                                         </div>
                                         <div class="form-group">
-                                            <label for="denier-weft">Denier Weft :</label>
-                                            <input type="text" class="form-control" id="denier-weft"
-                                                name="denier-weft">
+                                            <label for="denier-weft1">Denier Weft :</label>
+                                            <input type="text" class="form-control" id="denier-weft1" name="denier-weft1">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Form untuk Weight 2 (default hidden) -->
+                                <div class="row" id="formWeight2" style="display: none;">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="length2">Panjang 2:</label>
+                                            <input type="text" class="form-control" id="length2" name="length2">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="waft2">Waft :</label>
+                                            <input type="text" class="form-control" id="waft2" name="waft2">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="denier-waft2">Denier Waft :</label>
+                                            <input type="text" class="form-control" id="denier-waft2" name="denier-waft2">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="weight2">Weight :</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="weightInput2" name="weight2">
+                                                <span class="ml-1">gms</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="width2">Lebar :</label>
+                                            <input type="text" class="form-control" id="width2" name="width2">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="weft2">Weft :</label>
+                                            <input type="text" class="form-control" id="weft2" name="weft2">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="denier-weft2">Denier Weft :</label>
+                                            <input type="text" class="form-control" id="denier-weft2" name="denier-weft2">
                                         </div>
                                     </div>
                                 </div>
@@ -217,6 +251,8 @@
                                 </div>
                             </div>
                         </div>
+
+
 
 
                         {{-- Bag Detail --}}
@@ -309,64 +345,64 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group" id="sewingMethod">
                                     <label>C. Sewing Method</label>
                                     <div class="ml-3">
                                         <div class="form-check-inline">
-                                            <input class="form-check-input" type="checkbox" name="sewing"
+                                            <input class="form-check-input" type="checkbox" name="Mitsumaki"
                                                 id="sewingMitsumaki" value="Mitsumaki">
                                             <label class="form-check-label" for="sewingMitsumaki">Mitsumaki</label>
                                         </div>
                                         <div class="form-check-inline">
-                                            <input class="form-check-input" type="checkbox" name="sewing"
+                                            <input class="form-check-input" type="checkbox" name="HalfMitsumaki"
                                                 id="sewingHalfMitsumaki" value="Half Mitsumaki">
                                             <label class="form-check-label" for="sewingHalfMitsumaki">Half
                                                 Mitsumaki</label>
                                         </div>
                                         <div class="form-check-inline">
-                                            <input class="form-check-input" type="checkbox" name="sewing"
+                                            <input class="form-check-input" type="checkbox" name="Ogami"
                                                 id="sewingOgami" value="Ogami">
                                             <label class="form-check-label" for="sewingOgami">Ogami</label>
                                         </div>
                                         <div class="form-check-inline">
-                                            <input class="form-check-input" type="checkbox" name="sewing"
+                                            <input class="form-check-input" type="checkbox" name="Other"
                                                 id="sewingOther" value="Other">
                                             <label class="form-check-label" for="sewingOther">Other</label>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group" id="stitchApprox">
                                     <label>D. Stitch Approx.</label>
                                     <div class="ml-3">
                                         <div class="form-check-inline">
-                                            <input class="form-check-input" type="checkbox" name="stitch"
+                                            <input class="form-check-input" type="checkbox" name="Bottom"
                                                 id="stitchBottom" value="yes">
                                             <label class="form-check-label" for="stitchBottom">Bottom</label>
                                         </div>
                                         <div class="form-check-inline">
-                                            <input class="form-check-input" type="checkbox" name="stitch"
+                                            <input class="form-check-input" type="checkbox" name="Side"
                                                 id="stitchSide" value="no">
                                             <label class="form-check-label" for="stitchSide">Side Body</label>
                                         </div>
                                         <div class="form-check-inline">
-                                            <input class="form-check-input" type="checkbox" name="stitch"
+                                            <input class="form-check-input" type="checkbox" name="Lift"
                                                 id="stitchLift" value="yes">
                                             <label class="form-check-label" for="stitchLift">Lifting Belt</label>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group" id="fitDraw">
                                     <label>E. Fit to drawing spec.?</label>
                                     <div class="ml-3">
                                         <div class="form-check-inline">
-                                            <input class="form-check-input" type="checkbox" name="fit-to-drawing"
+                                            <input class="form-check-input" type="checkbox" name="Yesfit-to-drawing"
                                                 id="fit-to-drawing-yes" value="yes">
                                             <label class="form-check-label" for="fit-to-drawing-yes">Yes</label>
                                         </div>
                                         <div class="form-check-inline">
-                                            <input class="form-check-input" type="checkbox" name="fit-to-drawing"
+                                            <input class="form-check-input" type="checkbox" name="Nofit-to-drawing"
                                                 id="fit-to-drawing-no" value="no">
                                             <label class="form-check-label" for="fit-to-drawing-no">No</label>
                                         </div>

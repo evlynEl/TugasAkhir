@@ -1,7 +1,10 @@
 var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
+// var currentDate = new Date();
+// var inputDate = new Date(tanggal);
+
+var tanggal = document.getElementById('tanggal');
 var currentDate = new Date();
-var inputDate = new Date(tanggal);
 
 // button
 var btn_RefNo = document.getElementById('btn_RefNo');
@@ -15,23 +18,22 @@ var btn_hapus = document.getElementById('btn_hapus');
 //weight form
 var weight1 = document.getElementById('weight1');
 var weight2 = document.getElementById('weight2');
+var weightLabel = document.getElementById('weightLabel');
 
 // attribut
-var tanggal = document.getElementById('tanggal').value;
-var year = document.getElementById('year').value;
-var reffNo = document.getElementById('reffNo').value;
-var refNo = document.getElementById('refNo').value;
-var customer = document.getElementById('customer').value;
-var bagCode = document.getElementById('bag-code').value;
-var bagType = document.getElementById('bag-type').value;
-var poNo = document.getElementById('po-no').value;
-var prodDate = document.getElementById('prod-date').value;
-var testingDate = document.getElementById('testing-date').value;
-var size = document.getElementById('size').value;
-var reinforced = document.getElementById('reinforced').value;
-var colour = document.getElementById('colour').value;
-var swl = document.getElementById('swl').value;
-var sf = document.getElementById('sf').value;
+var reffNo = document.getElementById('reffNo');
+var refNo = document.getElementById('refNo');
+var customer = document.getElementById('customer');
+var bagCode = document.getElementById('bag-code');
+var bagType = document.getElementById('bag-type');
+var poNo = document.getElementById('po-no');
+var prodDate = document.getElementById('prod-date');
+var testingDate = document.getElementById('testing-date');
+var size = document.getElementById('size');
+var reinforced = document.getElementById('reinforced');
+var colour = document.getElementById('colour');
+var swl = document.getElementById('swl');
+var sf = document.getElementById('sf');
 
 var liftBagType = document.getElementById('liftBagType').value;
 var sewingThreadType = document.getElementById('sewingThreadType').value;
@@ -55,19 +57,18 @@ var bottomE2 = document.getElementById('bottomE2').value;
 var bottomE3 = document.getElementById('bottomE3').value;
 var bottomE4 = document.getElementById('bottomE4').value;
 var bottomE5 = document.getElementById('bottomE5').value;
-var length = document.getElementById('length').value;
+var length = document.getElementById('length1').value;
 var waft1 = document.getElementById('waft1').value;
 var denierWaft1 = document.getElementById('denier-waft1').value;
-var weight1 = document.getElementById('weight1').value;
-var width = document.getElementById('width').value;
-var weft = document.getElementById('weft').value;
-var denierWeft = document.getElementById('denier-weft').value;
+var width1 = document.getElementById('width1').value;
+var weft1 = document.getElementById('weft1').value;
+var denierWeft1 = document.getElementById('denier-weft1').value;
 
+var modeIsi = false;
 
-
+// get year
 function getYearFromInput() {
-    var tanggal = document.getElementById('tanggal').value;
-    var inputDate = new Date(tanggal);
+    var inputDate = new Date(tanggal.value);
 
     if (isNaN(inputDate.getTime())) {
         console.error('Format tanggal tidak valid');
@@ -76,7 +77,6 @@ function getYearFromInput() {
     var year = inputDate.getFullYear();
     document.getElementById('year').value = year;
 }
-
 
 // ref no
 btn_RefNo.addEventListener("click", function (e) {
@@ -146,8 +146,8 @@ btn_RefNo.addEventListener("click", function (e) {
 });
 
 function selectRefNo(Reference_No, Tanggal) {
-    document.getElementById("reffNo").value = Reference_No;
-    document.getElementById("refNo").value = Tanggal;
+    reffNo.value = Reference_No;
+    refNo.value = Tanggal;
     Swal.close();
 }
 
@@ -223,42 +223,294 @@ function selectBageCode(Bag_Code) {
     Swal.close();
 }
 
-weight1.addEventListener('change', function () {
-    if (weight1.checked) {
-        document.getElementById('weight-label').textContent = "Weight 1";
-    }
+// label weight for radio button
+document.querySelectorAll('input[name="weight"]').forEach(function(radio) {
+    radio.addEventListener('change', function() {
+        if (weight2.checked) {
+            document.getElementById('formWeight2').style.display = 'block';
+            document.getElementById('formWeight1').style.display = 'none';
+            weightLabel.textContent = "Weight 2";
+        } else {
+            document.getElementById('formWeight1').style.display = 'block';
+            document.getElementById('formWeight2').style.display = 'none';
+            weightLabel.textContent = "Weight 1";
+        }
+    });
 });
 
-weight2.addEventListener('change', function () {
-    if (weight2.checked) {
-        document.getElementById('weight-label').textContent = "Weight 2";
+
+// cek checkbox
+function checkCheckboxChecked(elementId) {
+    var element = document.getElementById(elementId);
+
+    if (!element) {
+        console.error('Element with ID ' + elementId + ' not found.');
+        return false;
     }
+
+    var checkboxes = element.querySelectorAll('input[type="checkbox"]');
+
+    for (var i = 0; i < checkboxes.length; i++) {
+        if (checkboxes[i].checked) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function checkAllGroups() {
+    var sewingChecked = checkCheckboxChecked('sewingMethod');
+    var stitchChecked = checkCheckboxChecked('stitchApprox');
+    var fitChecked = checkCheckboxChecked('fitDraw');
+
+    if (!sewingChecked && !stitchChecked && !fitChecked) {
+        Swal.fire({
+            icon: 'question',
+            text: 'Apakah Data Sewing Method Mau Anda Lengkapi?',
+            showCancelButton: true,
+            confirmButtonText: 'Ya',
+            cancelButtonText: 'Tidak'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                return;
+            } else {
+                Swal.fire({
+                    icon: 'question',
+                    text: 'Apakah Data Stitch Approx Mau Anda Lengkapi?',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya',
+                    cancelButtonText: 'Tidak'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        return;
+                    } else {
+                        Swal.fire({
+                            icon: 'question',
+                            text: 'Apakah Data Fit to Drawing Spec. Mau Anda Lengkapi?',
+                            showCancelButton: true,
+                            confirmButtonText: 'Ya',
+                            cancelButtonText: 'Tidak'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                return;
+                            } else {
+                                console.log('User canceled.');
+                            }
+                        });
+                    }
+                });
+            }
+        });
+
+    } else if (!sewingChecked && !stitchChecked) {
+        Swal.fire({
+            icon: 'question',
+            text: 'Apakah Data Sewing Method Mau Anda Lengkapi?',
+            showCancelButton: true,
+            confirmButtonText: 'Ya',
+            cancelButtonText: 'Tidak'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                return;
+            } else {
+                Swal.fire({
+                    icon: 'question',
+                    text: 'Apakah Data Stitch Approx Mau Anda Lengkapi?',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya',
+                    cancelButtonText: 'Tidak'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        return;
+                    } else {
+                        console.log('User canceled.');
+                    }
+                });
+            }
+        });
+
+    } else if (!sewingChecked && !fitChecked) {
+        Swal.fire({
+            icon: 'question',
+            text: 'Apakah Data Sewing Method Mau Anda Lengkapi?',
+            showCancelButton: true,
+            confirmButtonText: 'Ya',
+            cancelButtonText: 'Tidak'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                return;
+            } else {
+                Swal.fire({
+                    icon: 'question',
+                    text: 'Apakah Data Fit to Drawing Spec. Mau Anda Lengkapi?',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya',
+                    cancelButtonText: 'Tidak'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        return;
+                    } else {
+                        console.log('User canceled.');
+                    }
+                });
+            }
+        });
+
+
+
+    } else if (!stitchChecked && !fitChecked) {
+        Swal.fire({
+            icon: 'question',
+            text: 'Apakah Data Stitch Approx Mau Anda Lengkapi?',
+            showCancelButton: true,
+            confirmButtonText: 'Ya',
+            cancelButtonText: 'Tidak'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                return;
+            } else {
+                Swal.fire({
+                    icon: 'question',
+                    text: 'Apakah Data Fit to Drawing Spec. Mau Anda Lengkapi?',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya',
+                    cancelButtonText: 'Tidak'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        return;
+                    } else {
+                        console.log('User canceled.');
+                    }
+                });
+            }
+        });
+
+    } else if (!sewingChecked) {
+        Swal.fire({
+            icon: 'question',
+            text: 'Apakah Data Sewing Method Mau Anda Lengkapi?',
+            showCancelButton: true,
+            confirmButtonText: 'Ya',
+            cancelButtonText: 'Tidak'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                return;
+            } else {
+                console.log('User canceled.');
+            }
+        });
+
+    } else if (!stitchChecked) {
+        Swal.fire({
+            icon: 'question',
+            text: 'Apakah Data Stitch Approx Mau Anda Lengkapi?',
+            showCancelButton: true,
+            confirmButtonText: 'Ya',
+            cancelButtonText: 'Tidak'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                return;
+            } else {
+                console.log('User canceled.');
+            }
+        });
+    } else if (!fitChecked) {
+        Swal.fire({
+            icon: 'question',
+            text: 'Apakah Data Fit to Drawing Spec. Mau Anda Lengkapi?',
+            showCancelButton: true,
+            confirmButtonText: 'Ya',
+            cancelButtonText: 'Tidak'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                return;
+            } else {
+                console.log('User canceled.');
+            }
+        });
+    }
+}
+
+
+
+// cek form != null
+function noNullDetail() {
+    var inputs = [
+        { name: 'Customer', element: customer },
+        { name: 'Bag Code', element: bagCode },
+        { name: 'Bag Type', element: bagType },
+        { name: 'PO No', element: poNo },
+        { name: 'Prod. Date', element: prodDate },
+        { name: 'Testing Date', element: testingDate },
+        { name: 'Size', element: size },
+        { name: 'Reinforced', element: reinforced },
+        { name: 'Colour', element: colour },
+        { name: 'SWL', element: swl },
+        { name: 'S.F.', element: sf },
+
+    ];
+
+    for (var i = 0; i < inputs.length; i++) {
+        // Check for empty inputs
+        if (inputs[i].element.value.trim() === '') {
+            // Skip PO No for alert and handle it separately
+            if (inputs[i].name !== 'PO No') {
+                alert('Inputkan ' + inputs[i].name + ' Terlebih Dahulu !');
+                return false;
+            } else {
+                // Handle specific case for PO No
+                if (inputs[i].element.value.trim() === '') {
+                    inputs[i].element.value = 'UNKNOWN';
+                }
+            }
+        }
+    }
+    return true;
+}
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    const inputs = Array.from(document.querySelectorAll('.card-body input[type="text"]:not([readonly])'));
+
+    inputs.forEach((input, index) => {
+        input.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                if (index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                }
+            }
+        });
+    });
 });
+
 
 // simpan
-
 btn_simpan.addEventListener("click", function (e) {
     try {
         e.preventDefault();
+        console.log(tanggal.valueAsDate, currentDate);
 
-        if (tanggal === '') {
-            // console.error('Tanggal tidak boleh kosong');
-            // return;
-            Swal.fire({
-                icon: 'warning',
-                title: 'Data is not complete',
-                text: 'Tanggal tidak boleh kosong',
-            });
-        } else if (inputDate > currentDate) {
-            console.error('Tanggal Lebih Besar Dari Tanggal Sekarang');
-            return;
+        if (tanggal.value == '') {
+            alert("Tanggal tidak boleh kosong");
+        } else if (tanggal.valueAsDate > currentDate) {
+            alert("Tanggal Lebih Besar Dari Tanggal Sekarang");
+        } else if (reffNo.value == '') {
+            alert("Inputkan No Reference Terlebih Dahulu !");
+        } else if (refNo.value == '') {
+            alert("Lengkapi Data No Reference Terlebih Dahulu !");
+        } else if (!noNullDetail()) {
+            alert("Data Belum Lengkap Terisi");
         } else {
+            checkAllGroups();
+            // if noNullDetail true jalankan code ini
             $.ajax({
                 type: 'POST',
                 url: 'FrmInputFIBC',
                 data: {
                     _token: csrfToken,
-                    tanggal: tanggal
+                    tanggal: tanggal,
+                    refNo: refNo,
+                    reffNo: reffNo
 
                 },
                 timeout: 30000,
