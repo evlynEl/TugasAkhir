@@ -1,10 +1,8 @@
 var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-// var currentDate = new Date();
-// var inputDate = new Date(tanggal);
-
 var tanggal = document.getElementById('tanggal');
 var currentDate = new Date();
+var year = document.getElementById('year');
 
 // button
 var btn_RefNo = document.getElementById('btn_RefNo');
@@ -14,10 +12,9 @@ var btn_simpan = document.getElementById('btn_simpan');
 var btn_koreksi = document.getElementById('btn_koreksi');
 var btn_hapus = document.getElementById('btn_hapus');
 
-
 //weight form
-var weight1 = document.getElementById('weight1');
-var weight2 = document.getElementById('weight2');
+var radioWeight1 = document.getElementById('radioWeight1');
+var radioWeight1 = document.getElementById('radioWeight2');
 var weightLabel = document.getElementById('weightLabel');
 
 // attribut
@@ -35,7 +32,7 @@ var colour = document.getElementById('colour');
 var swl = document.getElementById('swl');
 var sf = document.getElementById('sf');
 
-var liftBagType = document.getElementById('liftBagType').value;
+var liftBeltType = document.getElementById('liftBeltType').value;
 var sewingThreadType = document.getElementById('sewingThreadType').value;
 var topS1 = document.getElementById('topS1').value;
 var topS2 = document.getElementById('topS2').value;
@@ -57,14 +54,50 @@ var bottomE2 = document.getElementById('bottomE2').value;
 var bottomE3 = document.getElementById('bottomE3').value;
 var bottomE4 = document.getElementById('bottomE4').value;
 var bottomE5 = document.getElementById('bottomE5').value;
-var length = document.getElementById('length1').value;
-var waft1 = document.getElementById('waft1').value;
-var denierWaft1 = document.getElementById('denier-waft1').value;
-var width1 = document.getElementById('width1').value;
-var weft1 = document.getElementById('weft1').value;
-var denierWeft1 = document.getElementById('denier-weft1').value;
 
-var modeIsi = false;
+var inputIds1 = ['panjang1', 'lebar1', 'waft1', 'danierWaft1', 'weft1', 'danierWeft1'];
+var inputs1 = inputIds1.map(id => document.getElementById(id));
+
+// var panjang1 = document.getElementById('panjang1');
+// var waft1 = document.getElementById('waft1');
+// var denierWaft1 = document.getElementById('denier-waft1');
+// var lebar1 = document.getElementById('lebar1');
+// var weft1 = document.getElementById('weft1');
+// var denierWeft1 = document.getElementById('denier-weft1');
+var weight1 = document.getElementById('weight1');
+
+var inputIds2 = ['panjang2', 'lebar2', 'waft2', 'danierWaft2', 'weft2', 'danierWeft2'];
+var inputs2 = inputIds2.map(id => document.getElementById(id));
+
+// var panjang2 = document.getElementById('panjang2');
+// var waft2 = document.getElementById('waft2');
+// var denierWaft2 = document.getElementById('denier-waft2');
+// var lebar2 = document.getElementById('lebar2');
+// var weft2 = document.getElementById('weft2');
+// var denierWeft2 = document.getElementById('denier-weft2');
+var weight2 = document.getElementById('weight2');
+
+
+var fixRefNo = '';
+
+const inputs = Array.from(document.querySelectorAll('.card-body input[type="text"]:not([readonly])'));
+const inputAll = Array.from(document.querySelectorAll('.card-body input[type="text"]'));
+
+inputs.forEach((masuk, index) => {
+    masuk.addEventListener('keypress', function (event) {
+        if (event.key === 'Enter') {
+            // console.log(masuk.id)
+            if (masuk.value.trim() === '') {
+                event.preventDefault();
+                if (masuk.id == 'po-no') {
+                    masuk.value = 'UNKNOWN';
+                }
+            } else if (index < inputs.length - 1) {
+                inputs[index + 1].focus();
+            }
+        }
+    });
+});
 
 // get year
 function getYearFromInput() {
@@ -74,8 +107,8 @@ function getYearFromInput() {
         console.error('Format tanggal tidak valid');
         return;
     }
-    var year = inputDate.getFullYear();
-    document.getElementById('year').value = year;
+
+    year.value = inputDate.getFullYear();
 }
 
 // ref no
@@ -224,11 +257,11 @@ function selectBageCode(Bag_Code) {
 }
 
 // label weight for radio button
-document.querySelectorAll('input[name="weight"]').forEach(function(radio) {
-    radio.addEventListener('change', function() {
-        if (weight2.checked) {
-            document.getElementById('formWeight2').style.display = 'block';
+document.querySelectorAll('input[name="weight"]').forEach(function (radio) {
+    radio.addEventListener('change', function () {
+        if (radioWeight2.checked) {
             document.getElementById('formWeight1').style.display = 'none';
+            document.getElementById('formWeight2').style.display = 'block';
             weightLabel.textContent = "Weight 2";
         } else {
             document.getElementById('formWeight1').style.display = 'block';
@@ -237,7 +270,6 @@ document.querySelectorAll('input[name="weight"]').forEach(function(radio) {
         }
     });
 });
-
 
 // cek checkbox
 function checkCheckboxChecked(elementId) {
@@ -258,230 +290,143 @@ function checkCheckboxChecked(elementId) {
     return false;
 }
 
-function checkAllGroups() {
-    var sewingChecked = checkCheckboxChecked('sewingMethod');
-    var stitchChecked = checkCheckboxChecked('stitchApprox');
-    var fitChecked = checkCheckboxChecked('fitDraw');
+// function showDataCompletionPrompt(stringJenis) {
+//     var checkboxesToCheck = [];
 
-    if (!sewingChecked && !stitchChecked && !fitChecked) {
-        Swal.fire({
-            icon: 'question',
-            text: 'Apakah Data Sewing Method Mau Anda Lengkapi?',
-            showCancelButton: true,
-            confirmButtonText: 'Ya',
-            cancelButtonText: 'Tidak'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                return;
-            } else {
-                Swal.fire({
-                    icon: 'question',
-                    text: 'Apakah Data Stitch Approx Mau Anda Lengkapi?',
-                    showCancelButton: true,
-                    confirmButtonText: 'Ya',
-                    cancelButtonText: 'Tidak'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        return;
-                    } else {
-                        Swal.fire({
-                            icon: 'question',
-                            text: 'Apakah Data Fit to Drawing Spec. Mau Anda Lengkapi?',
-                            showCancelButton: true,
-                            confirmButtonText: 'Ya',
-                            cancelButtonText: 'Tidak'
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                return;
-                            } else {
-                                console.log('User canceled.');
-                            }
-                        });
-                    }
-                });
-            }
-        });
+//     if (!checkCheckboxChecked('sewingMethod')) {
+//         checkboxesToCheck.push('sewingMethod');
+//     } else if (!checkCheckboxChecked('stitchApprox')) {
+//         checkboxesToCheck.push('stitchApprox');
+//     } else if (!checkCheckboxChecked('fitDraw')) {
+//         checkboxesToCheck.push('fitDraw');
+//     }
 
-    } else if (!sewingChecked && !stitchChecked) {
-        Swal.fire({
-            icon: 'question',
-            text: 'Apakah Data Sewing Method Mau Anda Lengkapi?',
-            showCancelButton: true,
-            confirmButtonText: 'Ya',
-            cancelButtonText: 'Tidak'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                return;
-            } else {
-                Swal.fire({
-                    icon: 'question',
-                    text: 'Apakah Data Stitch Approx Mau Anda Lengkapi?',
-                    showCancelButton: true,
-                    confirmButtonText: 'Ya',
-                    cancelButtonText: 'Tidak'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        return;
-                    } else {
-                        console.log('User canceled.');
-                    }
-                });
-            }
-        });
+//     if (checkboxesToCheck.length > 0) {
+//         Swal.fire({
+//             icon: 'question',
+//             text: 'Apakah Data ' + stringJenis + ' Mau Anda Lengkapi?',
+//             showCancelButton: true,
+//             confirmButtonText: 'Ya',
+//             cancelButtonText: 'Tidak'
+//         }).then((result) => {
+//             if (result.isConfirmed) {
+//                 return;
+//             } else {
+//                 var nextCheckboxId = checkboxesToCheck.shift();
+//                 if (nextCheckboxId) {
+//                     document.getElementById(nextCheckboxId).scrollIntoView({
+//                         behavior: 'smooth',
+//                         block: 'start'
+//                     });
+//                 }
+//                 console.log('Next checkbox.');
+//             }
+//         });
+//     } else {
+//         console.log('All checkboxes are already checked.');
+//     }
+//     return true;
+// }
 
-    } else if (!sewingChecked && !fitChecked) {
-        Swal.fire({
-            icon: 'question',
-            text: 'Apakah Data Sewing Method Mau Anda Lengkapi?',
-            showCancelButton: true,
-            confirmButtonText: 'Ya',
-            cancelButtonText: 'Tidak'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                return;
-            } else {
-                Swal.fire({
-                    icon: 'question',
-                    text: 'Apakah Data Fit to Drawing Spec. Mau Anda Lengkapi?',
-                    showCancelButton: true,
-                    confirmButtonText: 'Ya',
-                    cancelButtonText: 'Tidak'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        return;
-                    } else {
-                        console.log('User canceled.');
-                    }
-                });
-            }
-        });
+// var stringJenis = '';
+
+// function checkAllGroups() {
+//     var jenis = checkCheckboxChecked('jenis');
+//     var sewingChecked = checkCheckboxChecked('sewingMethod');
+//     var stitchChecked = checkCheckboxChecked('stitchApprox');
+//     var fitChecked = checkCheckboxChecked('fitDraw');
+
+//     if (!jenis) {
+//         Swal.fire({
+//             icon: 'error',
+//             title: 'Error',
+//             text: `Pilih Jenis FIBC Terlebih Dahulu !`
+//         });
+//     }
+
+//     if (!sewingChecked) {
+//         stringJenis += 'Sewing Method ';
+//     }
+//     if (!stitchChecked) {
+//         stringJenis += 'Stitch Approx ';
+//     }
+//     if (!fitChecked) {
+//         stringJenis += 'Fit to Drawing Spec.';
+//     }
+//     return stringJenis;
+// }
 
 
 
-    } else if (!stitchChecked && !fitChecked) {
-        Swal.fire({
-            icon: 'question',
-            text: 'Apakah Data Stitch Approx Mau Anda Lengkapi?',
-            showCancelButton: true,
-            confirmButtonText: 'Ya',
-            cancelButtonText: 'Tidak'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                return;
-            } else {
-                Swal.fire({
-                    icon: 'question',
-                    text: 'Apakah Data Fit to Drawing Spec. Mau Anda Lengkapi?',
-                    showCancelButton: true,
-                    confirmButtonText: 'Ya',
-                    cancelButtonText: 'Tidak'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        return;
-                    } else {
-                        console.log('User canceled.');
-                    }
-                });
-            }
-        });
-
-    } else if (!sewingChecked) {
-        Swal.fire({
-            icon: 'question',
-            text: 'Apakah Data Sewing Method Mau Anda Lengkapi?',
-            showCancelButton: true,
-            confirmButtonText: 'Ya',
-            cancelButtonText: 'Tidak'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                return;
-            } else {
-                console.log('User canceled.');
-            }
-        });
-
-    } else if (!stitchChecked) {
-        Swal.fire({
-            icon: 'question',
-            text: 'Apakah Data Stitch Approx Mau Anda Lengkapi?',
-            showCancelButton: true,
-            confirmButtonText: 'Ya',
-            cancelButtonText: 'Tidak'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                return;
-            } else {
-                console.log('User canceled.');
-            }
-        });
-    } else if (!fitChecked) {
-        Swal.fire({
-            icon: 'question',
-            text: 'Apakah Data Fit to Drawing Spec. Mau Anda Lengkapi?',
-            showCancelButton: true,
-            confirmButtonText: 'Ya',
-            cancelButtonText: 'Tidak'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                return;
-            } else {
-                console.log('User canceled.');
-            }
-        });
-    }
-}
-
-
-
-// cek form != null
-function noNullDetail() {
-    var inputs = [
-        { name: 'Customer', element: customer },
-        { name: 'Bag Code', element: bagCode },
-        { name: 'Bag Type', element: bagType },
-        { name: 'PO No', element: poNo },
-        { name: 'Prod. Date', element: prodDate },
-        { name: 'Testing Date', element: testingDate },
-        { name: 'Size', element: size },
-        { name: 'Reinforced', element: reinforced },
-        { name: 'Colour', element: colour },
-        { name: 'SWL', element: swl },
-        { name: 'S.F.', element: sf },
-
-    ];
-
-    for (var i = 0; i < inputs.length; i++) {
-        // Check for empty inputs
-        if (inputs[i].element.value.trim() === '') {
-            // Skip PO No for alert and handle it separately
-            if (inputs[i].name !== 'PO No') {
-                alert('Inputkan ' + inputs[i].name + ' Terlebih Dahulu !');
-                return false;
-            } else {
-                // Handle specific case for PO No
-                if (inputs[i].element.value.trim() === '') {
-                    inputs[i].element.value = 'UNKNOWN';
-                }
-            }
+// cek form yang kosong
+function allInputsFilled() {
+    for (const input of inputAll) {
+        if (input.value.trim() === '') {
+            console.log(input);
+            const label = input.previousElementSibling.innerText.trim();
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: `Inputkan ${label} Terlebih Dahulu!`
+            }).then(() => {
+                input.focus();
+            });
+            return false;
         }
     }
     return true;
 }
 
+// hitung weight
+function calculateWeight() {
+    var input1Values = inputs1.map(input1 => parseFloat(input1.value));
+    var input2Values = inputs2.map(input2 => parseFloat(input2.value));
 
-document.addEventListener('DOMContentLoaded', function () {
-    const inputs = Array.from(document.querySelectorAll('.card-body input[type="text"]:not([readonly])'));
+    if (weightLabel.textContent === 'Weight 1') {
+        if (input1Values.every(value => !isNaN(value))) {
+            var weight = input1Values[0] * input1Values[1] * ((input1Values[2] * input1Values[3]) + (input1Values[4] * input1Values[5])) / 1143000 / 2;
+            weight = Math.round(weight * 10) / 10;
 
-    inputs.forEach((input, index) => {
-        input.addEventListener('keydown', function (event) {
-            if (event.key === 'Enter') {
-                if (index < inputs.length - 1) {
-                    inputs[index + 1].focus();
-                }
-            }
+            weight1.value = weight;
+        } else {
+            weight1.value = '';
+        }
+    } else {
+        if (input2Values.every(value => !isNaN(value))) {
+            var weight = input2Values[0] * input2Values[1] * ((input2Values[2] * input2Values[3]) + (input2Values[4] * input2Values[5])) / 1143000 / 2;
+            weight = Math.round(weight * 10) / 10;
+
+            weight2.value = weight;
+        } else {
+            weight2.value = '';
+        }
+    }
+}
+
+
+
+inputs1.forEach(input => input.addEventListener('input', calculateWeight));
+inputs2.forEach(input => input.addEventListener('input', calculateWeight));
+
+
+function showDataCompletionPrompt(arrayJenis) {
+    // Create a chain of promises for each SweetAlert prompt
+    let chain = Promise.resolve();
+
+    arrayJenis.forEach((jenis) => {
+        // Append each Swal.fire call to the chain
+        chain = chain.then(() => {
+            return Swal.fire({
+                title: `Data ${jenis}`,
+                icon: 'info',
+                confirmButtonText: 'OK'
+            });
         });
     });
-});
+
+    // Return the final promise chain
+    return chain;
+}
 
 
 // simpan
@@ -489,20 +434,73 @@ btn_simpan.addEventListener("click", function (e) {
     try {
         e.preventDefault();
         console.log(tanggal.valueAsDate, currentDate);
+        let jenis = checkCheckboxChecked('jenis');
 
         if (tanggal.value == '') {
-            alert("Tanggal tidak boleh kosong");
-        } else if (tanggal.valueAsDate > currentDate) {
-            alert("Tanggal Lebih Besar Dari Tanggal Sekarang");
-        } else if (reffNo.value == '') {
-            alert("Inputkan No Reference Terlebih Dahulu !");
-        } else if (refNo.value == '') {
-            alert("Lengkapi Data No Reference Terlebih Dahulu !");
-        } else if (!noNullDetail()) {
-            alert("Data Belum Lengkap Terisi");
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: `Tanggal tidak boleh kosong`,
+                returnFocus: false
+            }).then(() => {
+                tanggal.focus()
+            });
+            // } else if (tanggal.valueAsDate > currentDate) {
+            //     Swal.fire({
+            //         icon: 'error',
+            //         title: 'Error',
+            //         text: `Tanggal Lebih Besar Dari Tanggal Sekarang`
+            //     });
+            // } else if (reffNo.value == '') {
+            //     Swal.fire({
+            //         icon: 'error',
+            //         title: 'Error',
+            //         text: `Inputkan No Reference Terlebih Dahulu !`
+            //     });
+            // } else if (refNo.value == '') {
+            //     Swal.fire({
+            //         icon: 'error',
+            //         title: 'Error',
+            //         text: `Lengkapi Data No Reference Terlebih Dahulu !`
+            //     });
+            // } else if (!allInputsFilled()) {
+            //     return;
+        } else if (!jenis) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: `Pilih Jenis FIBC Terlebih Dahulu !`,
+                returnFocus: false
+            }).then(() => {
+                document.getElementById("sample").focus()
+            });
+
+            return;
         } else {
-            checkAllGroups();
-            // if noNullDetail true jalankan code ini
+            // checkAllGroups();
+
+            let sewingChecked = checkCheckboxChecked('sewingMethod');
+            let stitchChecked = checkCheckboxChecked('stitchApprox');
+            let fitChecked = checkCheckboxChecked('fitDraw');
+            let stringJenis = []
+
+            if (!sewingChecked) {
+                let result = Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: `Pilih Jenis FIBC Terlebih Dahulu !`,
+                    returnFocus: false
+                }).then(() => {
+                    document.getElementById("sample").focus()
+                });
+                if (!stitchChecked) {
+                    if (!fitChecked) {
+
+                    }
+                }
+            }
+
+            showDataCompletionPrompt(stringJenis);
             $.ajax({
                 type: 'POST',
                 url: 'FrmInputFIBC',
@@ -510,7 +508,8 @@ btn_simpan.addEventListener("click", function (e) {
                     _token: csrfToken,
                     tanggal: tanggal,
                     refNo: refNo,
-                    reffNo: reffNo
+                    reffNo: reffNo,
+
 
                 },
                 timeout: 30000,
@@ -522,8 +521,7 @@ btn_simpan.addEventListener("click", function (e) {
                             text: response.success,
                         });
 
-                        // Reset nilai input part setelah berhasil disimpan
-                        document.getElementById("part").value = '';
+                        inputAll.forEach(input => { input.value = ''; });
                     }
                 },
                 error: function (xhr, status, error) {
@@ -542,3 +540,4 @@ btn_simpan.addEventListener("click", function (e) {
 });
 
 
+fixRefNo = refNo.value + "/KRR-QC/" + reffNo.value + "/" + year.value

@@ -85,7 +85,9 @@
                                     <label for="size">Size :</label>
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="size" name="size">
-                                        <span class="ml-1">cm</span>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">cm</span>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -106,9 +108,10 @@
                                     <label for="swl">SWL :</label>
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="swl" name="swl">
-                                        <span class="ml-1">kg</span>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">kg</span>
+                                        </div>
                                     </div>
-
                                 </div>
                                 <div class="form-group">
                                     <label for="sf">S.F. :</label>
@@ -116,101 +119,160 @@
                                 </div>
                             </div>
 
+
                             <div class="col-md-4 mt-3">
                                 <div class="form-group text-center">
                                     <div>
                                         <div class="form-check-inline">
-                                            <input class="form-check-input" type="radio" name="weight" id="weight1" value="weight1">
-                                            <label class="form-check-label" for="weight1">Weight 1</label>
+                                            <input class="form-check-input" type="radio" name="weight"
+                                                id="radioWeight1" value="radioWeight1">
+                                            <label class="form-check-label" for="radioWeight1">Weight 1</label>
                                         </div>
                                         <div class="form-check-inline">
-                                            <input class="form-check-input" type="radio" name="weight" id="weight2" value="weight2">
-                                            <label class="form-check-label" for="weight2">Weight 2</label>
+                                            <input class="form-check-input" type="radio" name="weight"
+                                                id="radioWeight2" value="radioWeight2">
+                                            <label class="form-check-label" for="radioWeight2">Weight 2</label>
                                         </div>
                                     </div>
-                                    <label for="weightLabel" id="weightLabel" class="text-center mt-2">Weight 1</label>
+                                    <label for="weightLabel" id="weightLabel" class="text-center mt-2">Weight
+                                        1</label>
                                 </div>
-
-                                <div class="row" id="formWeight1">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="length1">Panjang 1:</label>
-                                            <input type="text" class="form-control" id="length1" name="length1">
+                                {{-- weight tabel --}}
+                                <div id="formWeight1">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <div class="form-group">
+                                                <label for="panjang1">Panjang 1:</label>
+                                                <input type="text" class="form-control" id="panjang1"
+                                                    name="panjang1">
+                                            </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label for="waft1">Waft :</label>
-                                            <input type="text" class="form-control" id="waft1" name="waft1">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="denier-waft1">Denier Waft :</label>
-                                            <input type="text" class="form-control" id="denier-waft1" name="denier-waft1">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="weight1">Weight :</label>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control" id="weightInput1" name="weight1">
-                                                <span class="ml-1">gms</span>
+                                        <div class="col-md-6 mb-3">
+                                            <div class="form-group">
+                                                <label for="lebar1">Lebar 1:</label>
+                                                <input type="text" class="form-control" id="lebar1"
+                                                    name="lebar1">
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="width1">Lebar :</label>
-                                            <input type="text" class="form-control" id="width1" name="width1">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <div class="form-group">
+                                                <label for="waft1">Waft:</label>
+                                                <input type="text" class="form-control" id="waft1"
+                                                    name="waft1">
+                                            </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label for="weft1">Weft :</label>
-                                            <input type="text" class="form-control" id="weft1" name="weft1">
+                                        <div class="col-md-6 mb-3">
+                                            <div class="form-group">
+                                                <label for="weft1">Weft:</label>
+                                                <input type="text" class="form-control" id="weft1"
+                                                    name="weft1">
+                                            </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label for="denier-weft1">Denier Weft :</label>
-                                            <input type="text" class="form-control" id="denier-weft1" name="denier-weft1">
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <div class="form-group">
+                                                <label for="danierWaft1">Danier Waft:</label>
+                                                <input type="text" class="form-control" id="danierWaft1"
+                                                    name="danierWaft1">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <div class="form-group">
+                                                <label for="danierWeft1">Danier Weft:</label>
+                                                <input type="text" class="form-control" id="danierWeft1"
+                                                    name="danierWeft1">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <div class="form-group">
+                                                <label for="weight1">Weight:</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" id="weight1"
+                                                        name="weight1" readonly>
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text">gsm</span>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
 
                                 <!-- Form untuk Weight 2 (default hidden) -->
-                                <div class="row" id="formWeight2" style="display: none;">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="length2">Panjang 2:</label>
-                                            <input type="text" class="form-control" id="length2" name="length2">
+                                <div id="formWeight2" style="display: none;">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <div class="form-group">
+                                                <label for="panjang2">Panjang 2:</label>
+                                                <input type="text" class="form-control" id="panjang2"
+                                                    name="panjang2">
+                                            </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label for="waft2">Waft :</label>
-                                            <input type="text" class="form-control" id="waft2" name="waft2">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="denier-waft2">Denier Waft :</label>
-                                            <input type="text" class="form-control" id="denier-waft2" name="denier-waft2">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="weight2">Weight :</label>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control" id="weightInput2" name="weight2">
-                                                <span class="ml-1">gms</span>
+                                        <div class="col-md-6 mb-3">
+                                            <div class="form-group">
+                                                <label for="lebar2">Lebar 2:</label>
+                                                <input type="text" class="form-control" id="lebar2"
+                                                    name="lebar2">
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="width2">Lebar :</label>
-                                            <input type="text" class="form-control" id="width2" name="width2">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <div class="form-group">
+                                                <label for="waft2">Waft:</label>
+                                                <input type="text" class="form-control" id="waft2"
+                                                    name="waft2">
+                                            </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label for="weft2">Weft :</label>
-                                            <input type="text" class="form-control" id="weft2" name="weft2">
+                                        <div class="col-md-6 mb-3">
+                                            <div class="form-group">
+                                                <label for="weft2">Weft:</label>
+                                                <input type="text" class="form-control" id="weft2"
+                                                    name="weft2">
+                                            </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label for="denier-weft2">Denier Weft :</label>
-                                            <input type="text" class="form-control" id="denier-weft2" name="denier-weft2">
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <div class="form-group">
+                                                <label for="danierWaft2">Danier Waft:</label>
+                                                <input type="text" class="form-control" id="danierWaft2"
+                                                    name="danierWaft2">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <div class="form-group">
+                                                <label for="danierWeft2">Danier Weft:</label>
+                                                <input type="text" class="form-control" id="danierWeft2"
+                                                    name="danierWeft2">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <div class="form-group">
+                                                <label for="weight2">Weight:</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" id="weight2"
+                                                        name="weight2" readonly>
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text">gms</span>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="form-row mt-3 mb-3 text-center" style="border: 1px solid #ddd; padding: 10px 10px;">
+                        <div class="form-row mt-3 mb-3 text-center" id="jenis"
+                            style="border: 1px solid #ddd; padding: 10px 10px;">
                             <div class="col-md-2">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" id="sample" name="sample">
@@ -259,10 +321,10 @@
                         <label for="Bag_Detail">Bag Detail</label>
                         <div class="form-row mb-3" style="border: 1px solid #ddd">
                             <div class="col-md-12 mt-3">
-                                <label for="liftBagType">A. Lifting Bag</label>
+                                <label for="liftBeltType">A. Lifting Belt</label>
                                 <div class="form-group">
                                     <label>Type :</label>
-                                    <input type="text" class="form-control" id="liftBagType" name="liftBagType">
+                                    <input type="text" class="form-control" id="liftBeltType" name="liftBeltType">
                                 </div>
 
                                 <label>B. Sewing Thread</label>
