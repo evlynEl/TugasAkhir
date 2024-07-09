@@ -20,7 +20,7 @@
                         <form id="dateForm" class="form-inline d-flex align-items-center">
                             <label for="tanggal" class="mr-2">Tanggal:</label>
                             <input type="date" id="tanggal" name="tanggal" class="form-control mr-2">
-                            <button type="submit" id="btn_tanggal" class="btn btn-primary">Search</button>
+                            {{-- <button type="submit" id="btn_tanggal" class="btn btn-primary">Search</button> --}}
                         </form>
                     </div>               
 
@@ -248,7 +248,7 @@
                                 <div class="row">
                                     <div class="col-sm-10">
                                         <div class="table-responsive">
-                                            <table class="table table-bordered">
+                                            <table class="table table-bordered" id="tableQcData">
                                                 <thead>
                                                     <tr>
                                                         <th scope="col">Mesin</th>
@@ -260,9 +260,11 @@
                                                         <th scope="col">Berat STD</th>
                                                         <th scope="col">Keterangan</th>
                                                         <th scope="col">StWarp</th>
+                                                        <th scope="col">ElgWarp</th>
                                                         <th scope="col">StWeft</th>
                                                         <th scope="col">ElgWeft</th>
                                                         <th scope="col">StReinf</th>
+                                                        <th scope="col">ElgReinf</th>
                                                         <th scope="col">BeratReinf</th>
                                                         <th scope="col">Standart St Warp</th>
                                                         <th scope="col">Standart St Weft</th>
@@ -271,37 +273,18 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr>
-                                                        <td>Mesin 1</td>
-                                                        <td>Shift 1</td>
-                                                        <td>Id Log 1</td>
-                                                        <td>Ukuran 1</td>
-                                                        <td>Potongan 1</td>
-                                                        <td>Berat 1</td>
-                                                        <td>Berat STD 1</td>
-                                                        <td>Keterangan 1</td>
-                                                        <td>StWarp 1</td>
-                                                        <td>StWeft 1</td>
-                                                        <td>ElgWeft 1</td>
-                                                        <td>StReinf 1</td>
-                                                        <td>BeratReinf 1</td>
-                                                        <td>Standart St Warp 1</td>
-                                                        <td>Standart St Weft 1</td>
-                                                        <td>Standart Elg Warp 1</td>
-                                                        <td>Standart Elg Weft 1</td>
-                                                    </tr>
                                                 </tbody>
                                             </table>
                                         </div>
                                     </div>
                                     <div class="col-sm-1">
-                                        <button class="btn btn-primary btn-block btn-sm">REFRESH</button>
+                                        <button class="btn btn-primary btn-block btn-sm" id="refreshButton">REFRESH</button>
                                     </div>
                                     <div class="col-sm-1">
-                                        <button class="btn btn-primary btn-block btn-sm">ISI</button>
-                                        <button class="btn btn-primary btn-block btn-sm">KOREKSI</button>
-                                        <button class="btn btn-primary btn-block btn-sm">HAPUS</button>
-                                        <button class="btn btn-primary btn-block btn-sm">BATAL</button>
+                                        <button class="btn btn-primary btn-block btn-sm" id="isiButton">ISI</button>
+                                        <button class="btn btn-primary btn-block btn-sm" id="koreksiButton">KOREKSI</button>
+                                        <button class="btn btn-primary btn-block btn-sm" id="hapusButton">HAPUS</button>
+                                        <button class="btn btn-primary btn-block btn-sm" id="batalButton">BATAL</button>
                                     </div>
                                 </div>
                             </div>

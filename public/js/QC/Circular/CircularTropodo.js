@@ -1,6 +1,6 @@
 // Button
 var dateForm = document.getElementById('dateForm');
-var prosesButton = document.getElementById('prosesButton');
+// var prosesButton = document.getElementById('prosesButton');
 
 // realita dan atasnya
 var tanggal = document.getElementById('tanggal');
@@ -35,8 +35,14 @@ var standartElgWeft = document.getElementById('standartElgWeft');
 
 // new variable
 var Lebar;
-var D_Tek9;
+var D_TEK9;
 var JenisKrg;
+var Id_QC;
+var Ket;
+
+// 1=ISI, 2=KOREKSI, 3=DELETE
+var nomorButton;
+var refreshed;
 
 // token
 var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -44,18 +50,34 @@ var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
 standartElgWarp.value = '25-30';
 standartElgWeft.value = '25-30';
 
+// FUNCTION
 // All function
 document.addEventListener('DOMContentLoaded', function () {
+
+    // Variable untuk button dan keypress
     const inputs = Array.from(document.querySelectorAll('.card-body input[type="text"]:not([readonly])'));
     const inputAll = Array.from(document.querySelectorAll('.card-body input[type="text"]'));
     const prosesButton = document.getElementById('prosesButton');
+
+    const isiButton = document.getElementById('isiButton');
+    const koreksiButton = document.getElementById('koreksiButton');
+    const hapusButton = document.getElementById('hapusButton');
+    const batalButton = document.getElementById('batalButton');
+    const refreshButton = document.getElementById('refreshButton');
 
     // Today's date
     var dateNow = document.getElementById('tanggal');
     var today = new Date().toISOString().slice(0, 10);
     dateNow.value = today;
 
-    // table by date datas
+    // submit date (tidak dipakai), kalau mau pakai submit button, pakai ini
+    $('#dateForm').on('submit', function (event) {
+        event.preventDefault();
+        tableByDate.ajax.reload();
+        tableQcData.ajax.reload();
+    });
+
+    // table by date data
     const tableByDate = $('#tableDataByDate').DataTable({
         responsive: true,
         processing: true,
@@ -63,7 +85,9 @@ document.addEventListener('DOMContentLoaded', function () {
         ajax: {
             url: 'CircularTropodo/getDataFromDate',
             data: function (d) {
-                d.TglLog = $('#tanggal').val();
+                if (nomorButton === 1 || nomorButton === 2 || nomorButton === 3 || refreshed === 1) {
+                    d.TglLog = $('#tanggal').val();
+                }
             },
             dataType: 'json',
             type: 'GET'
@@ -77,13 +101,7 @@ document.addEventListener('DOMContentLoaded', function () {
         order: [[0, 'asc']]
     });
 
-    // submit date
-    $('#dateForm').on('submit', function (event) {
-        event.preventDefault();
-        tableByDate.ajax.reload();
-    });
-
-    // isi tabel data by date
+    // select isi tabel data by date
     $("#tableDataByDate tbody").on("click", "tr", async function () {
         panjangPotongan.value = 100;
 
@@ -124,7 +142,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 standartStWarp.value = FormatNumber(4.5 * (waftRajutan.value * 2) * waftDenier.value / 1000, 2);
                 standartStWeft.value = FormatNumber(4.5 * (weftRajutan.value * 2) * weftDenier.value / 1000, 2)
                 Lebar = response[0].Lebar.trim();
-                D_Tek9 = response[0].D_Tek9.trim();
+                D_TEK9 = response[0].D_TEK9.trim();
                 JenisKrg = response[0].JenisKrg.trim();
             } else {
                 console.error("No data found for the specified IdLog:", IdLog);
@@ -136,6 +154,107 @@ document.addEventListener('DOMContentLoaded', function () {
         tableByDate.$("tr.selected").removeClass("selected");
         $(this).addClass("selected");
     });
+
+    // table qc data (bawah)
+    const tableQcData = $('#tableQcData').DataTable({
+        responsive: true,
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: 'CircularTropodo/getQcData',
+            data: function (d) {
+                if (nomorButton === 1 || nomorButton === 2 || nomorButton === 3 || refreshed === 1) {
+                    d.TglLog = $('#tanggal').val();
+                }
+            },
+            dataType: 'json',
+            type: 'GET'
+        },
+        columns: [
+            { data: 'Nama_Mesin' },
+            { data: 'Shift' },
+            { data: 'Id_Log' },
+            { data: 'R_Ukuran' },
+            { data: 'R_Potongan' },
+            { data: 'R_Berat' },
+            { data: 'R_BeratSTD' },
+            { data: 'Keterangan' },
+            { data: 'St_Warp' },
+            { data: 'Elg_Warp' },
+            { data: 'St_Weft' },
+            { data: 'Elg_Weft' },
+            { data: 'St_Reinforced' },
+            { data: 'Elg_Reinforced' },
+            { data: 'Berat_Reinforced' },
+            { data: 'Standart_WA' },
+            { data: 'Standart_WE' },
+            { data: 'Standart_ElgWA' },
+            { data: 'Standart_ElgWE' }
+        ],
+        order: [[0, 'asc']]
+    });
+
+    // Select Qc Data
+    $("#tableQcData tbody").on("click", "tr", async function () {
+        var data = tableQcData.row(this).data();
+        var IdLog = data.Id_Log;
+
+        if (data) {
+            mesin.value = data.Nama_Mesin;
+            idLog.value = data.Id_Log;
+            ukuran.value = data.R_Ukuran;
+            ukuranLebar.value = data.R_Ukuran;
+            panjangPotongan.value = data.R_Potongan;
+            beratBarang.value = data.R_Berat;
+            beratReinforced.value = data.Berat_Reinforced;
+            beratStandart.value = data.R_BeratSTD;
+
+            actualStWarp.value = data.St_Warp;
+            actualElgWarp.value = data.Elg_Warp;
+            actualStWeft.value = data.St_Weft;
+            actualElgWeft.value = data.Elg_Weft;
+            actualStReinf.value = data.St_Reinforced;
+            actualElgReinf.value = data.Elg_Reinforced;
+
+            standartStWarp.value = data.Standart_WA;
+            standartStWeft.value = data.Standart_WE;
+            standartElgWarp.value = data.Standart_ElgWA;
+            standartElgWeft.value = data.Standart_ElgWE;
+            Id_QC = data.Id_QC;
+            Ket = data.Keterangan;
+        }
+
+        // ada data waft dan weft yang tidak ada di table, FETCH DATA WAFT&WEFT
+        try {
+            const response = await $.ajax({
+                url: 'CircularTropodo/getWaftWeft',
+                type: 'GET',
+                data: { IdLog: IdLog },
+                dataType: 'json'
+            });
+
+            if (response.length > 0) {
+                waftRajutan.value = response[0].Waft_Rajutan.trim();
+                weftRajutan.value = response[0].Weft_Rajutan.trim();
+                waftBenang.value = response[0].Waft_Benang.trim();
+                weftBenang.value = response[0].Weft_Benang.trim();
+                waftDenier.value = response[0].Waft_Denier.trim();
+                weftDenier.value = response[0].Weft_Denier.trim();
+                Lebar = response[0].Lebar;
+                JenisKrg = response[0].JenisKrg;
+                D_TEK9 = response[0].D_TEK9;
+            }
+            else {
+                console.error("No data found for the specified IdLog:", IdLog);
+            }
+        } catch (error) {
+            console.error("Error fetching Waft & Weft data:", error);
+        }
+
+        tableQcData.$("tr.selected").removeClass("selected");
+        $(this).addClass("selected");
+    });
+
 
     // buat keypress enter tiap input
     inputs.forEach((input, index) => {
@@ -176,6 +295,11 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    // update berat reinforced tiap ganti panjang
+    panjangPotongan.addEventListener('input', function () {
+        updateBeratReinforced();
+    });
+
     // format angka 2 desimal
     function FormatNumber(num, decimalPlaces) {
         return num.toFixed(decimalPlaces);
@@ -183,14 +307,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // update berat reinforced
     function updateBeratReinforced() {
-        let totalReinforced = FormatNumber((panjangPotongan.value * Lebar * (waftRajutan.value * waftDenier.value) / (1143000 * D_Tek9)) / 2, 2);
+        let totalReinforced = FormatNumber((panjangPotongan.value * Lebar * (waftRajutan.value * waftDenier.value) / (1143000 * D_TEK9)) / 2, 2);
         beratReinforced.value = totalReinforced;
     }
-
-    // update berat reinforced tiap ganti panjang
-    panjangPotongan.addEventListener('input', function () {
-        updateBeratReinforced();
-    });
 
     // update berat standart (kalau belom ada) BLOM SELESAI
     function updateBeratStandart() {
@@ -221,57 +340,206 @@ document.addEventListener('DOMContentLoaded', function () {
         return true;
     }
 
+    // button untuk refresh table qc
+    refreshButton.addEventListener('click', async () => {
+        refreshed = 1;
+
+        if (nomorButton == 1 || nomorButton == 2 || nomorButton == 3) {
+            prosesButton.disabled = false;
+        }
+        else{
+            prosesButton.disabled = true;
+        }
+
+        tableQcData.ajax.reload();
+    });
+
+    // saat salah satu dipencet (harus salah satu dipencet agar bisa batal)
+    function disableButtons() {
+        isiButton.disabled = true;
+        koreksiButton.disabled = true;
+        hapusButton.disabled = true;
+        prosesButton.disabled = false;
+    }
+
+    // saat tekan batal
+    function enableButtons() {
+        isiButton.disabled = false;
+        koreksiButton.disabled = false;
+        hapusButton.disabled = false;
+    }
+
+    // Inisialisasi status tombol
+    enableButtons();
+
+    // Event listener untuk tombol ISI
+    isiButton.addEventListener('click', async () => {
+        nomorButton = 1;
+        tableByDate.ajax.reload();
+        tableQcData.ajax.reload();
+        disableButtons();
+    });
+
+    // Event listener untuk tombol KOREKSI
+    koreksiButton.addEventListener('click', async () => {
+        nomorButton = 2;
+        tableQcData.ajax.reload();
+        disableButtons();
+    });
+
+    // Event listener untuk tombol DELETE
+    hapusButton.addEventListener('click', async () => {
+        nomorButton = 3;
+        tableQcData.ajax.reload();
+        disableButtons();
+    });
+
+    // Event listener untuk tombol BATAL
+    batalButton.addEventListener('click', async () => {
+        enableButtons();
+        nomorButton = 0;
+        refreshed = 0;
+        tableByDate.clear().draw();
+        tableQcData.clear().draw();
+    });
+
     // button proses ISI
     prosesButton.addEventListener('click', async () => {
+
         if (!allInputsFilled()) {
             return;
         }
 
-        $.ajax({
-            type: 'PUT', //update
-            url: 'CircularTropodo/prosesIsiData', //update
-            data: {
-                _token: csrfToken,
-                IdLog: idLog.value,
-                Tanggal: tanggal.value,
-                Ukuran: ukuranLebar.value,
-                UkuranSTD: ukuran.value,
-                Potongan: panjangPotongan.value,
-                BeratSTD: beratStandart.value,
-                Berat: beratBarang.value,
-                StWarp: actualStWarp.value,
-                ElgWarp: actualElgWarp.value,
-                StWeft: actualStWeft.value,
-                ElgWeft: actualElgWeft.value,
-                StReinforced: actualStReinf.value,
-                ElgReinforced: actualElgReinf.value,
-                BeratReinforced: beratReinforced.value,
-                StandartWA: standartStWarp.value,
-                StandartWE: standartStWeft.value,
-                StandartElgWA: standartElgWarp.value,
-                StandartElgWE: standartElgWeft.value,
-            },
-            success: function (response) {
-                if (response.success) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success',
-                        text: response.success,
-                    });
+        // ISI
+        if (nomorButton == 1) {
+            $.ajax({
+                type: 'PUT', //update
+                url: 'CircularTropodo/prosesIsiData', //update
+                data: {
+                    _token: csrfToken,
+                    IdLog: idLog.value,
+                    Tanggal: tanggal.value,
+                    Ukuran: ukuranLebar.value,
+                    UkuranSTD: ukuran.value,
+                    Potongan: panjangPotongan.value,
+                    BeratSTD: beratStandart.value,
+                    Berat: beratBarang.value,
+                    StWarp: actualStWarp.value,
+                    ElgWarp: actualElgWarp.value,
+                    StWeft: actualStWeft.value,
+                    ElgWeft: actualElgWeft.value,
+                    StReinforced: actualStReinf.value,
+                    ElgReinforced: actualElgReinf.value,
+                    BeratReinforced: beratReinforced.value,
+                    StandartWA: standartStWarp.value,
+                    StandartWE: standartStWeft.value,
+                    StandartElgWA: standartElgWarp.value,
+                    StandartElgWE: standartElgWeft.value,
+                },
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.success,
+                        });
 
-                    inputAll.forEach(input => {
-                        if (input.id !== 'standartElgWarp' && input.id !== 'standartElgWeft') {
-                            input.value = '';
-                        }
-                    });
+                        inputAll.forEach(input => {
+                            if (input.id !== 'standartElgWarp' && input.id !== 'standartElgWeft') {
+                                input.value = '';
+                            }
+                        });
 
-                    tableByDate.ajax.reload(); // Refresh table data
+                        tableByDate.ajax.reload();
+                        tableQcData.ajax.reload();
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
                 }
-            },
-            error: function (xhr, status, error) {
-                console.error(error);
-            }
-        });
+            });
+        }
+
+        // KOREKSI ---- BLOM JADI
+        else if (nomorButton == 2) {
+            $.ajax({
+                type: 'PUT', 
+                url: 'CircularTropodo/prosesKoreksiData', 
+                data: {
+                    _token: csrfToken,
+                    Ukuran: ukuranLebar.value,
+                    Potongan: panjangPotongan.value,
+                    BeratSTD: beratStandart.value,
+                    Berat: beratBarang.value,
+                    Ket: Ket,
+                    StWarp: actualStWarp.value,
+                    ElgWarp: actualElgWarp.value,
+                    StWeft: actualStWeft.value,
+                    ElgWeft: actualElgWeft.value,
+                    StReinforced: actualStReinf.value,
+                    ElgReinforced: actualElgReinf.value,
+                    BeratReinforced: beratReinforced.value,
+                    StandartWA: standartStWarp.value,
+                    StandartWE: standartStWeft.value,
+                    StandartElgWA: standartElgWarp.value,
+                    StandartElgWE: standartElgWeft.value,
+                },
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.success,
+                        });
+
+                        inputAll.forEach(input => {
+                            if (input.id !== 'standartElgWarp' && input.id !== 'standartElgWeft') {
+                                input.value = '';
+                            }
+                        });
+
+                        tableByDate.ajax.reload();
+                        tableQcData.ajax.reload();
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        }
+
+        // HAPUS
+        else if (nomorButton == 3) {
+            $.ajax({
+                type: 'DELETE',
+                url: 'CircularTropodo/hapusData',
+                data: {
+                    _token: csrfToken,
+                    Id_QC: Id_QC
+                },
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.success,
+                        });
+
+                        inputAll.forEach(input => {
+                            if (input.id !== 'standartElgWarp' && input.id !== 'standartElgWeft') {
+                                input.value = '';
+                            }
+                        });
+
+                        tableQcData.ajax.reload();
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        }
+
     });
 
 });
