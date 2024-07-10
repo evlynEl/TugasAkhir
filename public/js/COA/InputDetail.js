@@ -32,49 +32,35 @@ var colour = document.getElementById('colour');
 var swl = document.getElementById('swl');
 var sf = document.getElementById('sf');
 
-var liftBeltType = document.getElementById('liftBeltType').value;
-var sewingThreadType = document.getElementById('sewingThreadType').value;
-var topS1 = document.getElementById('topS1').value;
-var topS2 = document.getElementById('topS2').value;
-var topS3 = document.getElementById('topS3').value;
-var topS4 = document.getElementById('topS4').value;
-var topS5 = document.getElementById('topS5').value;
-var topE1 = document.getElementById('topE1').value;
-var topE2 = document.getElementById('topE2').value;
-var topE3 = document.getElementById('topE3').value;
-var topE4 = document.getElementById('topE4').value;
-var topE5 = document.getElementById('topE5').value;
-var bottomS1 = document.getElementById('bottomS1').value;
-var bottomS2 = document.getElementById('bottomS2').value;
-var bottomS3 = document.getElementById('bottomS3').value;
-var bottomS4 = document.getElementById('bottomS4').value;
-var bottomS5 = document.getElementById('bottomS5').value;
-var bottomE1 = document.getElementById('bottomE1').value;
-var bottomE2 = document.getElementById('bottomE2').value;
-var bottomE3 = document.getElementById('bottomE3').value;
-var bottomE4 = document.getElementById('bottomE4').value;
-var bottomE5 = document.getElementById('bottomE5').value;
+var liftBeltType = document.getElementById('liftBeltType');
+var sewingThreadType = document.getElementById('sewingThreadType');
+var topS1 = document.getElementById('topS1');
+var topS2 = document.getElementById('topS2');
+var topS3 = document.getElementById('topS3');
+var topS4 = document.getElementById('topS4');
+var topS5 = document.getElementById('topS5');
+var topE1 = document.getElementById('topE1');
+var topE2 = document.getElementById('topE2');
+var topE3 = document.getElementById('topE3');
+var topE4 = document.getElementById('topE4');
+var topE5 = document.getElementById('topE5');
+var bottomS1 = document.getElementById('bottomS1');
+var bottomS2 = document.getElementById('bottomS2');
+var bottomS3 = document.getElementById('bottomS3');
+var bottomS4 = document.getElementById('bottomS4');
+var bottomS5 = document.getElementById('bottomS5');
+var bottomE1 = document.getElementById('bottomE1');
+var bottomE2 = document.getElementById('bottomE2');
+var bottomE3 = document.getElementById('bottomE3');
+var bottomE4 = document.getElementById('bottomE4');
+var bottomE5 = document.getElementById('bottomE5');
 
-var inputIds1 = ['panjang1', 'lebar1', 'waft1', 'danierWaft1', 'weft1', 'danierWeft1'];
+var inputIds1 = ['panjang1', 'lebar1', 'waft1', 'denierWaft1', 'weft1', 'denierWeft1'];
 var inputs1 = inputIds1.map(id => document.getElementById(id));
-
-// var panjang1 = document.getElementById('panjang1');
-// var waft1 = document.getElementById('waft1');
-// var denierWaft1 = document.getElementById('denier-waft1');
-// var lebar1 = document.getElementById('lebar1');
-// var weft1 = document.getElementById('weft1');
-// var denierWeft1 = document.getElementById('denier-weft1');
 var weight1 = document.getElementById('weight1');
 
-var inputIds2 = ['panjang2', 'lebar2', 'waft2', 'danierWaft2', 'weft2', 'danierWeft2'];
+var inputIds2 = ['panjang2', 'lebar2', 'waft2', 'denierWaft2', 'weft2', 'denierWeft2'];
 var inputs2 = inputIds2.map(id => document.getElementById(id));
-
-// var panjang2 = document.getElementById('panjang2');
-// var waft2 = document.getElementById('waft2');
-// var denierWaft2 = document.getElementById('denier-waft2');
-// var lebar2 = document.getElementById('lebar2');
-// var weft2 = document.getElementById('weft2');
-// var denierWeft2 = document.getElementById('denier-weft2');
 var weight2 = document.getElementById('weight2');
 
 
@@ -83,21 +69,56 @@ var fixRefNo = '';
 const inputs = Array.from(document.querySelectorAll('.card-body input[type="text"]:not([readonly])'));
 const inputAll = Array.from(document.querySelectorAll('.card-body input[type="text"]'));
 
+const notReq = [
+    'topS1',
+    'topS2',
+    'topS3',
+    'topS4',
+    'topS5',
+    'topE1',
+    'topE2',
+    'topE3',
+    'topE4',
+    'topE5',
+    'bottomS1',
+    'bottomS2',
+    'bottomS3',
+    'bottomS4',
+    'bottomS5',
+    'bottomE1',
+    'bottomE2',
+    'bottomE3',
+    'bottomE4',
+    'bottomE5'
+];
+
 inputs.forEach((masuk, index) => {
     masuk.addEventListener('keypress', function (event) {
         if (event.key === 'Enter') {
-            // console.log(masuk.id)
+            console.log(masuk.id);
             if (masuk.value.trim() === '') {
                 event.preventDefault();
-                if (masuk.id == 'po-no') {
+
+                if (masuk.id === 'po-no') {
                     masuk.value = 'UNKNOWN';
+                } else {
+                    if (notReq.includes(masuk.id)) {
+                        if (index < inputs.length - 1) {
+                            inputs[index + 1].focus();
+                        }
+                    }
                 }
+
+            } else if (masuk.id === 'denierWeft1') {
+                liftBeltType.focus();
+
             } else if (index < inputs.length - 1) {
                 inputs[index + 1].focus();
             }
         }
     });
 });
+
 
 // get year
 function getYearFromInput() {
@@ -256,105 +277,96 @@ function selectBageCode(Bag_Code) {
     Swal.close();
 }
 
-// label weight for radio button
-document.querySelectorAll('input[name="weight"]').forEach(function (radio) {
-    radio.addEventListener('change', function () {
-        if (radioWeight2.checked) {
-            document.getElementById('formWeight1').style.display = 'none';
-            document.getElementById('formWeight2').style.display = 'block';
-            weightLabel.textContent = "Weight 2";
-        } else {
-            document.getElementById('formWeight1').style.display = 'block';
-            document.getElementById('formWeight2').style.display = 'none';
-            weightLabel.textContent = "Weight 1";
-        }
+let isWeight1Selected = true; // Default is Weight 1 selected
+
+// weight radio button
+function setupWeightRadio() {
+    document.querySelectorAll('input[name="weight"]').forEach(function (radio) {
+        radio.addEventListener('change', function () {
+            if (radio.checked) {
+                if (radio.value === 'radioWeight2') {
+                    document.getElementById('formWeight1').style.display = 'none';
+                    document.getElementById('formWeight2').style.display = 'block';
+                    weightLabel.textContent = "Weight 2";
+                    isWeight1Selected = false;
+                } else {
+                    document.getElementById('formWeight1').style.display = 'block';
+                    document.getElementById('formWeight2').style.display = 'none';
+                    weightLabel.textContent = "Weight 1";
+                    isWeight1Selected = true;
+                }
+            }
+            // console.log(isWeight1Selected);
+        });
     });
-});
 
-// cek checkbox
-function checkCheckboxChecked(elementId) {
-    var element = document.getElementById(elementId);
-
-    if (!element) {
-        console.error('Element with ID ' + elementId + ' not found.');
-        return false;
-    }
-
-    var checkboxes = element.querySelectorAll('input[type="checkbox"]');
-
-    for (var i = 0; i < checkboxes.length; i++) {
-        if (checkboxes[i].checked) {
-            return true;
-        }
-    }
-    return false;
+    weightLabel.textContent = "Weight 1";
+    return isWeight1Selected;
 }
 
-// function showDataCompletionPrompt(stringJenis) {
-//     var checkboxesToCheck = [];
+isWeight1Selected = setupWeightRadio();
 
-//     if (!checkCheckboxChecked('sewingMethod')) {
-//         checkboxesToCheck.push('sewingMethod');
-//     } else if (!checkCheckboxChecked('stitchApprox')) {
-//         checkboxesToCheck.push('stitchApprox');
-//     } else if (!checkCheckboxChecked('fitDraw')) {
-//         checkboxesToCheck.push('fitDraw');
+
+// cek checkbox
+// function checkCheckboxChecked(elementId) {
+//     var element = document.getElementById(elementId);
+
+//     if (!element) {
+//         console.error('Element with ID ' + elementId + ' not found.');
+//         return false;
 //     }
 
-//     if (checkboxesToCheck.length > 0) {
-//         Swal.fire({
-//             icon: 'question',
-//             text: 'Apakah Data ' + stringJenis + ' Mau Anda Lengkapi?',
-//             showCancelButton: true,
-//             confirmButtonText: 'Ya',
-//             cancelButtonText: 'Tidak'
-//         }).then((result) => {
-//             if (result.isConfirmed) {
-//                 return;
-//             } else {
-//                 var nextCheckboxId = checkboxesToCheck.shift();
-//                 if (nextCheckboxId) {
-//                     document.getElementById(nextCheckboxId).scrollIntoView({
-//                         behavior: 'smooth',
-//                         block: 'start'
-//                     });
-//                 }
-//                 console.log('Next checkbox.');
-//             }
-//         });
-//     } else {
-//         console.log('All checkboxes are already checked.');
+//     var checkboxes = element.querySelectorAll('input[type="checkbox"]');
+
+//     for (var i = 0; i < checkboxes.length; i++) {
+//         if (checkboxes[i].checked) {
+//             return true;
+//         }
 //     }
-//     return true;
+//     return false;
 // }
+// let jenis = checkCheckboxChecked('jenis');
+// let sewingChecked = checkCheckboxChecked('sewingMethod');
+// let stitchChecked = checkCheckboxChecked('stitchApprox');
+// let fitChecked = checkCheckboxChecked('fitDraw');
 
-// var stringJenis = '';
 
-// function checkAllGroups() {
-//     var jenis = checkCheckboxChecked('jenis');
-//     var sewingChecked = checkCheckboxChecked('sewingMethod');
-//     var stitchChecked = checkCheckboxChecked('stitchApprox');
-//     var fitChecked = checkCheckboxChecked('fitDraw');
+function setupWeightCheckbox() {
+    var checkedNames = [];
 
-//     if (!jenis) {
-//         Swal.fire({
-//             icon: 'error',
-//             title: 'Error',
-//             text: `Pilih Jenis FIBC Terlebih Dahulu !`
-//         });
-//     }
+    document.querySelectorAll('input[name="weight"]').forEach(function(checkbox) {
+        checkbox.addEventListener('change', function(event) {
+            var checkboxName = event.target.name;
+            var isChecked = event.target.checked;
 
-//     if (!sewingChecked) {
-//         stringJenis += 'Sewing Method ';
-//     }
-//     if (!stitchChecked) {
-//         stringJenis += 'Stitch Approx ';
-//     }
-//     if (!fitChecked) {
-//         stringJenis += 'Fit to Drawing Spec.';
-//     }
-//     return stringJenis;
-// }
+            if (isChecked) {
+                checkedNames.push(checkboxName);
+            } else {
+                var index = checkedNames.indexOf(checkboxName);
+                if (index !== -1) {
+                    checkedNames.splice(index, 1);
+                }
+            }
+
+            console.log('Checked checkboxes:', checkedNames);
+        });
+    });
+}
+
+// Call setupWeightCheckbox to initialize event listeners
+setupWeightCheckbox();
+
+
+// Contoh penggunaan:
+let checkedJenis = checkCheckboxChecked('jenis');
+console.log('Info checkbox jenis:', checkedJenis);
+let sewingChecked = checkCheckboxChecked('sewingMethod');
+console.log('Info checkbox sewing:', sewingChecked);
+let stitchChecked = checkCheckboxChecked('stitchApprox');
+console.log('Info checkbox stitch:', stitchChecked);
+let fitChecked = checkCheckboxChecked('fitDraw');
+console.log('Info checkbox fit:', fitChecked);
+
 
 
 
@@ -362,16 +374,39 @@ function checkCheckboxChecked(elementId) {
 function allInputsFilled() {
     for (const input of inputAll) {
         if (input.value.trim() === '') {
-            console.log(input);
-            const label = input.previousElementSibling.innerText.trim();
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: `Inputkan ${label} Terlebih Dahulu!`
-            }).then(() => {
-                input.focus();
-            });
-            return false;
+            // membiarkan input weight tidak terpilih exclude dari inputAll
+            if (isWeight1Selected) {
+                selectWeight = !inputIds2.includes(input.id);
+            } else {
+                selectWeight = !inputIds1.includes(input.id);
+            }
+            // skip input pada div id
+            if (input.closest('#jenis, #sewingMethod, #stitchApprox, #fitDraw')) {
+                continue
+            } else {
+                if (!notReq.includes(input.id) && input.id !== 'refNo' && selectWeight) {
+                    const label = input.previousElementSibling.innerText.trim();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: `Inputkan ${label} Terlebih Dahulu!`,
+                        returnFocus: false
+                    }).then(() => {
+                        input.focus();
+                    });
+                    return false;
+                } else if (input.id == 'refNo') {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: `Lengkapi Data No Reference Terlebih Dahulu!`,
+                        returnFocus: false
+                    }).then(() => {
+                        input.focus();
+                    });
+                    return false;
+                }
+            }
         }
     }
     return true;
@@ -382,21 +417,24 @@ function calculateWeight() {
     var input1Values = inputs1.map(input1 => parseFloat(input1.value));
     var input2Values = inputs2.map(input2 => parseFloat(input2.value));
 
-    if (weightLabel.textContent === 'Weight 1') {
+    if (isWeight1Selected) {
         if (input1Values.every(value => !isNaN(value))) {
             var weight = input1Values[0] * input1Values[1] * ((input1Values[2] * input1Values[3]) + (input1Values[4] * input1Values[5])) / 1143000 / 2;
             weight = Math.round(weight * 10) / 10;
 
             weight1.value = weight;
+            input2Values.every(value => value == '')
         } else {
             weight1.value = '';
         }
     } else {
+
         if (input2Values.every(value => !isNaN(value))) {
             var weight = input2Values[0] * input2Values[1] * ((input2Values[2] * input2Values[3]) + (input2Values[4] * input2Values[5])) / 1143000 / 2;
             weight = Math.round(weight * 10) / 10;
 
             weight2.value = weight;
+            input1Values.every(value => value == '')
         } else {
             weight2.value = '';
         }
@@ -405,36 +443,26 @@ function calculateWeight() {
 
 
 
+// panggil function hitung weight
 inputs1.forEach(input => input.addEventListener('input', calculateWeight));
 inputs2.forEach(input => input.addEventListener('input', calculateWeight));
 
 
-function showDataCompletionPrompt(arrayJenis) {
-    // Create a chain of promises for each SweetAlert prompt
-    let chain = Promise.resolve();
 
-    arrayJenis.forEach((jenis) => {
-        // Append each Swal.fire call to the chain
-        chain = chain.then(() => {
-            return Swal.fire({
-                title: `Data ${jenis}`,
-                icon: 'info',
-                confirmButtonText: 'OK'
-            });
-        });
-    });
-
-    // Return the final promise chain
-    return chain;
-}
-
-
-// simpan
+// button simpan
 btn_simpan.addEventListener("click", function (e) {
     try {
         e.preventDefault();
+
         console.log(tanggal.valueAsDate, currentDate);
         let jenis = checkCheckboxChecked('jenis');
+        let sewingChecked = checkCheckboxChecked('sewingMethod');
+        let stitchChecked = checkCheckboxChecked('stitchApprox');
+        let fitChecked = checkCheckboxChecked('fitDraw');
+
+        fixRefNo = refNo.value + "/KRR-QC/" + reffNo.value + "/" + year.value;
+
+
 
         if (tanggal.value == '') {
             Swal.fire({
@@ -449,33 +477,149 @@ btn_simpan.addEventListener("click", function (e) {
             //     Swal.fire({
             //         icon: 'error',
             //         title: 'Error',
-            //         text: `Tanggal Lebih Besar Dari Tanggal Sekarang`
+            //         text: `Tanggal Lebih Besar Dari Tanggal Sekarang`,
+            //         returnFocus: false
+            //     }).then(() => {
+            //         tanggal.focus()
             //     });
-            // } else if (reffNo.value == '') {
-            //     Swal.fire({
-            //         icon: 'error',
-            //         title: 'Error',
-            //         text: `Inputkan No Reference Terlebih Dahulu !`
-            //     });
-            // } else if (refNo.value == '') {
-            //     Swal.fire({
-            //         icon: 'error',
-            //         title: 'Error',
-            //         text: `Lengkapi Data No Reference Terlebih Dahulu !`
-            //     });
-            // } else if (!allInputsFilled()) {
-            //     return;
-        } else if (!jenis) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: `Pilih Jenis FIBC Terlebih Dahulu !`,
-                returnFocus: false
-            }).then(() => {
-                document.getElementById("sample").focus()
-            });
-
+        } else if (!allInputsFilled()) {
             return;
+            // } else if (!jenis) {
+            //     Swal.fire({
+            //         icon: 'error',
+            //         title: 'Error',
+            //         text: `Pilih Jenis FIBC Terlebih Dahulu !`,
+            //         returnFocus: false
+            //     }).then(() => {
+            //         document.getElementById("sample").focus()
+            //     });
+
+            //     return;
+        } else if (!sewingChecked) {
+            Swal.fire({
+                icon: 'question',
+                text: 'Apakah Data Sewing Method Mau Anda Lengkapi?',
+                showCancelButton: true,
+                confirmButtonText: 'Ya',
+                cancelButtonText: 'Tidak'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    return;
+                } else {
+                    if (!stitchChecked) {
+                        Swal.fire({
+                            icon: 'question',
+                            text: 'Apakah Data Stitch Approx Mau Anda Lengkapi?',
+                            showCancelButton: true,
+                            confirmButtonText: 'Ya',
+                            cancelButtonText: 'Tidak'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                return;
+                            } else {
+                                if (!fitChecked) {
+                                    Swal.fire({
+                                        icon: 'question',
+                                        text: 'Apakah Data Fit to Drawing Spec. Mau Anda Lengkapi?',
+                                        showCancelButton: true,
+                                        confirmButtonText: 'Ya',
+                                        cancelButtonText: 'Tidak'
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            return;
+                                        } else {
+                                            $.ajax({
+                                                type: 'POST',
+                                                url: 'FrmInputFIBC',
+                                                data: {
+                                                    _token: csrfToken,
+                                                    // controller: isi
+
+                                                    tanggal: tanggal,
+                                                    fixRefNo: fixRefNo,
+                                                    customer: customer.value,
+                                                    bagCode: bagCode.value,
+                                                    bagType: bagType.value,
+                                                    poNo: poNo.value,
+                                                    prodDate: prodDate.value,
+                                                    testingDate: testingDate.value,
+                                                    size: size.value,
+                                                    reinforced: reinforced.value,
+                                                    colour: colour.value,
+                                                    panjang1: inputs1[0].value,
+                                                    lebar1: inputs1[1].value,
+                                                    waft1: inputs1[2].value,
+                                                    denierWaft1: inputs1[3].value,
+                                                    weft1: inputs1[4].value,
+                                                    denierWeft1: inputs1[5].value,
+                                                    weight1: weight1.value,
+                                                    swl: swl.value,
+                                                    sf: sf.value,
+                                                    jenis: jenis.value, // jenisnya apa? blm di passing
+                                                    liftBeltType: liftBeltType.value,
+                                                    sewingThreadType: sewingThreadType.value,
+                                                    // sewing method, stitch spprox, fit to draw apa? blm di passing
+                                                    //user input
+                                                    currentDate: currentDate,
+                                                    panjang2: inputs2[0].value,
+                                                    lebar2: inputs2[1].value,
+                                                    waft2: inputs2[2].value,
+                                                    denierWaft2: inputs2[3].value,
+                                                    weft2: inputs2[4].value,
+                                                    denierWeft2: inputs2[5].value,
+                                                    weight2: weight2,
+                                                    //copyref no
+
+                                                    topS1: topS1.value,
+                                                    topS2: topS2.value,
+                                                    topS3: topS3.value,
+                                                    topS4: topS4.value,
+                                                    topS5: topS5.value,
+                                                    topE1: topE1.value,
+                                                    topE2: topE2.value,
+                                                    topE3: topE3.value,
+                                                    topE4: topE4.value,
+                                                    topE5: topE5.value,
+                                                    bottomS1: bottomS1.value,
+                                                    bottomS2: bottomS2.value,
+                                                    bottomS3: bottomS3.value,
+                                                    bottomS4: bottomS4.value,
+                                                    bottomS5: bottomS5.value,
+                                                    bottomE1: bottomE1.value,
+                                                    bottomE2: bottomE2.value,
+                                                    bottomE3: bottomE3.value,
+                                                    bottomE4: bottomE4.value,
+                                                    bottomE5: bottomE5.value
+                                                },
+                                                timeout: 30000,
+                                                success: function (response) {
+                                                    if (response.success) {
+                                                        Swal.fire({
+                                                            icon: 'success',
+                                                            title: 'Success',
+                                                            text: 'Data Telah Tersimpan',
+                                                        });
+
+                                                        inputAll.forEach(input => { input.value = ''; });
+                                                    }
+                                                },
+                                                error: function (xhr, status, error) {
+                                                    console.error('AJAX Error:', error);
+                                                    Swal.fire({
+                                                        icon: 'error',
+                                                        title: 'Error',
+                                                        text: 'Data Belum Lengkap Terisi',
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    })
+                                }
+                            }
+                        })
+                    }
+                }
+            })
         } else {
             // checkAllGroups();
 
@@ -518,7 +662,7 @@ btn_simpan.addEventListener("click", function (e) {
                         Swal.fire({
                             icon: 'success',
                             title: 'Success',
-                            text: response.success,
+                            text: 'Data Telah Tersimpan',
                         });
 
                         inputAll.forEach(input => { input.value = ''; });
@@ -529,7 +673,7 @@ btn_simpan.addEventListener("click", function (e) {
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: 'Failed to save data. Please try again.',
+                        text: 'Data Belum Lengkap Terisi',
                     });
                 }
             });
@@ -540,4 +684,3 @@ btn_simpan.addEventListener("click", function (e) {
 });
 
 
-fixRefNo = refNo.value + "/KRR-QC/" + reffNo.value + "/" + year.value

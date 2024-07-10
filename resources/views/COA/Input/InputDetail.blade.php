@@ -31,6 +31,7 @@
                         <div class="form-row">
                             <div class="form-group col-md-2">
                                 <label>Ref No :</label>
+                                <label style="display: none">No Reference</label>
                                 <input type="text" id="reffNo" name="reffNo" class="form-control">
                             </div>
                             <div class="form-group col-md-10" style="margin-top: 31px;">
@@ -49,11 +50,12 @@
                         <div class="form-row" style="border: 1px solid #ddd">
                             <div class="col-md-4 mt-3">
                                 <div class="form-group">
-                                    <label for="customer">Customer :</label>
+                                    <label for="customer">Customer</label>
+                                    <label style="display: none">Nama Customer</label>
                                     <input type="text" class="form-control" id="customer" name="customer">
                                 </div>
                                 <div class="form-group">
-                                    <label for="bag-code">Bag Code :</label>
+                                    <label for="bag-code">Bag Code</label>
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="bag-code" name="bag-code">
                                         <div class="input-group-append">
@@ -63,26 +65,26 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="bag-type">Bag Type :</label>
+                                    <label for="bag-type">Bag Type</label>
                                     <input type="text" class="form-control" id="bag-type" name="bag-type">
                                 </div>
                                 <div class="form-group">
-                                    <label for="po-no">PO No :</label>
+                                    <label for="po-no">PO No</label>
                                     <input type="text" class="form-control" id="po-no" name="po-no">
                                 </div>
                                 <div class="form-group">
-                                    <label for="prod-date">Prod. Date :</label>
+                                    <label for="prod-date">Prod. Date</label>
                                     <input type="date" class="form-control" id="prod-date" name="prod-date">
                                 </div>
                                 <div class="form-group">
-                                    <label for="testing-date">Testing Date :</label>
+                                    <label for="testing-date">Testing Date</label>
                                     <input type="date" class="form-control" id="testing-date" name="testing-date">
                                 </div>
                             </div>
 
                             <div class="col-md-4 mt-3">
                                 <div class="form-group">
-                                    <label for="size">Size :</label>
+                                    <label for="size">Size</label>
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="size" name="size">
                                         <div class="input-group-append">
@@ -92,7 +94,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="reinforced">Reinforced :</label>
+                                    <label for="reinforced">Reinforcedx</label>
                                     <select class="form-control" id="reinforced" name="reinforced">
                                         <option value="yes">Yes</option>
                                         <option value="no">No</option>
@@ -100,12 +102,12 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="colour">Colour :</label>
+                                    <label for="colour">Colour</label>
                                     <input type="text" class="form-control" id="colour" name="colour">
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="swl">SWL :</label>
+                                    <label for="swl">SWL</label>
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="swl" name="swl">
                                         <div class="input-group-append">
@@ -114,12 +116,12 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="sf">S.F. :</label>
+                                    <label for="sf">S.F.</label>
                                     <input type="text" class="form-control" id="sf" name="sf">
                                 </div>
                             </div>
 
-
+                            {{-- weight --}}
                             <div class="col-md-4 mt-3">
                                 <div class="form-group text-center">
                                     <div>
@@ -134,22 +136,21 @@
                                             <label class="form-check-label" for="radioWeight2">Weight 2</label>
                                         </div>
                                     </div>
-                                    <label for="weightLabel" id="weightLabel" class="text-center mt-2">Weight
-                                        1</label>
+                                    <label for="weightLabel" id="weightLabel" class="text-center mt-2"></label>
                                 </div>
                                 {{-- weight tabel --}}
                                 <div id="formWeight1">
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
                                             <div class="form-group">
-                                                <label for="panjang1">Panjang 1:</label>
+                                                <label for="panjang1">Panjang 1</label>
                                                 <input type="text" class="form-control" id="panjang1"
                                                     name="panjang1">
                                             </div>
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <div class="form-group">
-                                                <label for="lebar1">Lebar 1:</label>
+                                                <label for="lebar1">Lebar</label>
                                                 <input type="text" class="form-control" id="lebar1"
                                                     name="lebar1">
                                             </div>
@@ -158,14 +159,14 @@
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
                                             <div class="form-group">
-                                                <label for="waft1">Waft:</label>
+                                                <label for="waft1">Waft</label>
                                                 <input type="text" class="form-control" id="waft1"
                                                     name="waft1">
                                             </div>
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <div class="form-group">
-                                                <label for="weft1">Weft:</label>
+                                                <label for="weft1">Weft</label>
                                                 <input type="text" class="form-control" id="weft1"
                                                     name="weft1">
                                             </div>
@@ -174,23 +175,23 @@
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
                                             <div class="form-group">
-                                                <label for="danierWaft1">Danier Waft:</label>
-                                                <input type="text" class="form-control" id="danierWaft1"
-                                                    name="danierWaft1">
+                                                <label for="denierWaft1">Denier Waft</label>
+                                                <input type="text" class="form-control" id="denierWaft1"
+                                                    name="denierWaft1">
                                             </div>
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <div class="form-group">
-                                                <label for="danierWeft1">Danier Weft:</label>
-                                                <input type="text" class="form-control" id="danierWeft1"
-                                                    name="danierWeft1">
+                                                <label for="denierWeft1">Denier Weft</label>
+                                                <input type="text" class="form-control" id="denierWeft1"
+                                                    name="denierWeft1">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
                                             <div class="form-group">
-                                                <label for="weight1">Weight:</label>
+                                                <label for="weight1">Weight</label>
                                                 <div class="input-group">
                                                     <input type="text" class="form-control" id="weight1"
                                                         name="weight1" readonly>
@@ -208,14 +209,14 @@
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
                                             <div class="form-group">
-                                                <label for="panjang2">Panjang 2:</label>
+                                                <label for="panjang2">Panjang 2</label>
                                                 <input type="text" class="form-control" id="panjang2"
                                                     name="panjang2">
                                             </div>
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <div class="form-group">
-                                                <label for="lebar2">Lebar 2:</label>
+                                                <label for="lebar2">Lebar</label>
                                                 <input type="text" class="form-control" id="lebar2"
                                                     name="lebar2">
                                             </div>
@@ -224,14 +225,14 @@
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
                                             <div class="form-group">
-                                                <label for="waft2">Waft:</label>
+                                                <label for="waft2">Waft</label>
                                                 <input type="text" class="form-control" id="waft2"
                                                     name="waft2">
                                             </div>
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <div class="form-group">
-                                                <label for="weft2">Weft:</label>
+                                                <label for="weft2">Weft</label>
                                                 <input type="text" class="form-control" id="weft2"
                                                     name="weft2">
                                             </div>
@@ -240,23 +241,23 @@
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
                                             <div class="form-group">
-                                                <label for="danierWaft2">Danier Waft:</label>
-                                                <input type="text" class="form-control" id="danierWaft2"
-                                                    name="danierWaft2">
+                                                <label for="denierWaft2">Denier Waft</label>
+                                                <input type="text" class="form-control" id="denierWaft2"
+                                                    name="denierWaft2">
                                             </div>
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <div class="form-group">
-                                                <label for="danierWeft2">Danier Weft:</label>
-                                                <input type="text" class="form-control" id="danierWeft2"
-                                                    name="danierWeft2">
+                                                <label for="denierWeft2">Denier Weft</label>
+                                                <input type="text" class="form-control" id="denierWeft2"
+                                                    name="denierWeft2">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
                                             <div class="form-group">
-                                                <label for="weight2">Weight:</label>
+                                                <label for="weight2">Weight</label>
                                                 <div class="input-group">
                                                     <input type="text" class="form-control" id="weight2"
                                                         name="weight2" readonly>
@@ -271,6 +272,7 @@
                             </div>
                         </div>
 
+                        {{-- jenis FIBC --}}
                         <div class="form-row mt-3 mb-3 text-center" id="jenis"
                             style="border: 1px solid #ddd; padding: 10px 10px;">
                             <div class="col-md-2">
@@ -324,46 +326,91 @@
                                 <label for="liftBeltType">A. Lifting Belt</label>
                                 <div class="form-group">
                                     <label>Type :</label>
+                                    <label style="display: none">Type Lifting Belt</label>
                                     <input type="text" class="form-control" id="liftBeltType" name="liftBeltType">
                                 </div>
 
                                 <label>B. Sewing Thread</label>
                                 <div class="form-group">
                                     <label for="sewingThreadType">Type :</label>
+                                    <label style="display: none">Type Sewing Thread</label>
                                     <input type="text" class="form-control" id="sewingThreadType"
                                         name="sewingThreadType">
                                 </div>
 
+                                {{-- top & bottom --}}
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <label>Strength / Elo :</label>
                                         <div class="row">
-                                            <div class="col-md-5">
-                                                <label>Top</label>
+                                            <div class="col-12">
+                                                <label>Strength / Elo :</label>
+                                            </div>
+                                            <div class="col-6">
+                                                <label for="top">Top</label>
                                                 <div class="form-group">
                                                     <input type="text" class="form-control mb-2" id="topS1"
                                                         name="topS1" placeholder="kg">
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="form-group">
+                                                    <label for="top">&nbsp;</label>
+                                                    <input type="text" class="form-control mb-2" id="topE1"
+                                                        name="topE1" placeholder="%">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="form-group">
                                                     <input type="text" class="form-control mb-2" id="topS2"
                                                         name="topS2" placeholder="kg">
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control mb-2" id="topE2"
+                                                        name="topE2" placeholder="%">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="form-group">
                                                     <input type="text" class="form-control mb-2" id="topS3"
                                                         name="topS3" placeholder="kg">
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control mb-2" id="topE3"
+                                                        name="topE3" placeholder="%">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="form-group">
                                                     <input type="text" class="form-control mb-2" id="topS4"
                                                         name="topS4" placeholder="kg">
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control mb-2" id="topE4"
+                                                        name="topE4" placeholder="%">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="form-group">
                                                     <input type="text" class="form-control mb-2" id="topS5"
                                                         name="topS5" placeholder="kg">
                                                 </div>
                                             </div>
-                                            <div class="col-md-5">
-                                                <label>&nbsp;</label>
+                                            <div class="col-6">
                                                 <div class="form-group">
-                                                    <input type="text" class="form-control mb-2" id="topE1"
-                                                        name="topE1" placeholder="%">
-                                                    <input type="text" class="form-control mb-2" id="topE2"
-                                                        name="topE2" placeholder="%">
-                                                    <input type="text" class="form-control mb-2" id="topE3"
-                                                        name="topE3" placeholder="%">
-                                                    <input type="text" class="form-control mb-2" id="topE4"
-                                                        name="topE4" placeholder="%">
                                                     <input type="text" class="form-control mb-2" id="topE5"
                                                         name="topE5" placeholder="%">
                                                 </div>
@@ -371,34 +418,76 @@
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <label>&nbsp;</label>
                                         <div class="row">
-                                            <div class="col-md-6">
-                                                <label>Bottom</label>
+                                            <div class="col-12">
+                                                <label>&nbsp;</label>
+                                            </div>
+                                            <div class="col-6">
+                                                <label for="bottom">Bottom</label>
                                                 <div class="form-group">
                                                     <input type="text" class="form-control mb-2" id="bottomS1"
                                                         name="bottomS1" placeholder="kg">
-                                                    <input type="text" class="form-control mb-2" id="bottomS2"
-                                                        name="bottomS2" placeholder="kg">
-                                                    <input type="text" class="form-control mb-2" id="bottomS3"
-                                                        name="bottomS3" placeholder="kg">
-                                                    <input type="text" class="form-control mb-2" id="bottomS4"
-                                                        name="bottomS4" placeholder="kg">
-                                                    <input type="text" class="form-control mb-2" id="bottomS5"
-                                                        name="bottomS5" placeholder="kg">
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-6">
                                                 <label>&nbsp;</label>
                                                 <div class="form-group">
                                                     <input type="text" class="form-control mb-2" id="bottomE1"
                                                         name="bottomE1" placeholder="%">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control mb-2" id="bottomS2"
+                                                        name="bottomS2" placeholder="kg">
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="form-group">
                                                     <input type="text" class="form-control mb-2" id="bottomE2"
                                                         name="bottomE2" placeholder="%">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control mb-2" id="bottomS3"
+                                                        name="bottomS3" placeholder="kg">
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="form-group">
                                                     <input type="text" class="form-control mb-2" id="bottomE3"
                                                         name="bottomE3" placeholder="%">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control mb-2" id="bottomS4"
+                                                        name="bottomS4" placeholder="kg">
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="form-group">
                                                     <input type="text" class="form-control mb-2" id="bottomE4"
                                                         name="bottomE4" placeholder="%">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control mb-2" id="bottomS5"
+                                                        name="bottomS5" placeholder="kg">
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="form-group">
                                                     <input type="text" class="form-control mb-2" id="bottomE5"
                                                         name="bottomE5" placeholder="%">
                                                 </div>

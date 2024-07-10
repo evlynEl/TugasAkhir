@@ -28,83 +28,127 @@ class InputDetailController extends Controller
         //     'material' => 'required|string|max:100',
         // ]);
 
-        $Reference_No = $request->input('reffNo');
+        $Reference_No = $request->input('fixRefNo');
         $Tanggal = $request->input('tanggal');
         $Customer = $request->input('customer');
-        $Bag_Code = $request->input('bag-code');
-        $Bag_Type = $request->input('bag-type');
-        $PO_No = $request->input('po-no');
-        $Tanggal_Prod = $request->input('prod-date');
-        $Tanggal_Testing = $request->input('testing-date');
+        $Bag_Code = $request->input('bagCode');
+        $Bag_Type = $request->input('bagType');
+        $PO_No = $request->input('poNo');
+        $Tanggal_Prod = $request->input('prodDate');
+        $Tanggal_Testing = $request->input('testingDate');
         $Size = $request->input('size');
         $Reinforced = $request->input('reinforced');
         $Colour = $request->input('colour');
         $SWL = $request->input('swl');
         $sf = $request->input('sf');
-        $Panjang = $request->input('');
-        $Lebar = $request->input('');
-        $Waft = $request->input('');
-        $Weft = $request->input('');
-        $Denier_Waft = $request->input('');
-        $Denier_Weft = $request->input('');
-        $Weight = $request->input('');
-        $Jenis_FIBC = $request->input('');
-        $LiftingBelt_Type = $request->input('');
-        $SewingThread_Type = $request->input('');
-        $LiftingBelt_Type = $request->input('');
-        $Sewing_Method = $request->input('');
-        $Stitch_Approx = $request->input('');
-        $Fit_to_Draw = $request->input('');
-        $UserInput = $request->input('');
-        $TimeInput = $request->input('');
-        $Panjang2 = $request->input('');
-        $Lebar2 = $request->input('');
-        $Waft2 = $request->input('');
-        $Weft2 = $request->input('');
-        $Denier_Waft2 = $request->input('');
-        $Denier_Weft2 = $request->input('');
-        $Weight2 = $request->input('');
-        $Copy_RefNo = $request->input('');
+        $Panjang = $request->input('panjang1');
+        $Lebar = $request->input('lebar1');
+        $Waft = $request->input('waft1');
+        $Weft = $request->input('weft1');
+        $Denier_Waft = $request->input('denierWaft1');
+        $Denier_Weft = $request->input('denierWeft1');
+        $Weight = $request->input('weight1');
+        // $Jenis_FIBC = $request->input('jenis');
+        $LiftingBelt_Type = $request->input('liftBeltType');
+        $SewingThread_Type = $request->input('sewingThreadType');
+        // $Sewing_Method = $request->input('sewingMethod');
+        // $Stitch_Approx = $request->input('stitchApprox');
+        // $Fit_to_Draw = $request->input('fitToDraw');
+        // $UserInput = $request->input('userInput'); // Misalnya, jika ada input dengan nama 'userInput'
+        $TimeInput = $request->input('currentDate');
+        $Panjang2 = $request->input('panjang2');
+        $Lebar2 = $request->input('lebar2');
+        $Waft2 = $request->input('waft2');
+        $Weft2 = $request->input('weft2');
+        $Denier_Waft2 = $request->input('denierWaft2');
+        $Denier_Weft2 = $request->input('denierWeft2');
+        $Weight2 = $request->input('weight2');
+        // $Copy_RefNo = $request->input('copyRefNo');
 
-        $Top_KG_1 = $request->input('');
-        $Top_KG_2 = $request->input('');
-        $Top_KG_3 = $request->input('');
-        $Top_KG_4 = $request->input('');
-        $Top_KG_5 = $request->input('');
-        $Top_Persen_1 = $request->input('');
-        $Top_Persen_2 = $request->input('');
-        $Top_Persen_3 = $request->input('');
-        $Top_Persen_4 = $request->input('');
-        $Top_Persen_5 = $request->input('');
-        $Bottom_KG_1 = $request->input('');
-        $Bottom_KG_2 = $request->input('');
-        $Bottom_KG_3 = $request->input('');
-        $Bottom_KG_4 = $request->input('');
-        $Bottom_KG_5 = $request->input('');
-        $Bottom_Persen_1 = $request->input('');
-        $Bottom_Persen_2 = $request->input('');
-        $Bottom_Persen_3 = $request->input('');
-        $Bottom_Persen_4 = $request->input('');
-        $Bottom_Persen_5 = $request->input('');
+        $Top_KG_1 = $request->input('topS1');
+        $Top_KG_2 = $request->input('topS2');
+        $Top_KG_3 = $request->input('topS3');
+        $Top_KG_4 = $request->input('topS4');
+        $Top_KG_5 = $request->input('topS5');
+        $Top_Persen_1 = $request->input('topE1');
+        $Top_Persen_2 = $request->input('topE2');
+        $Top_Persen_3 = $request->input('topE3');
+        $Top_Persen_4 = $request->input('topE4');
+        $Top_Persen_5 = $request->input('topE5');
+        $Bottom_KG_1 = $request->input('bottomS1');
+        $Bottom_KG_2 = $request->input('bottomS2');
+        $Bottom_KG_3 = $request->input('bottomS3');
+        $Bottom_KG_4 = $request->input('bottomS4');
+        $Bottom_KG_5 = $request->input('bottomS5');
+        $Bottom_Persen_1 = $request->input('bottomE1');
+        $Bottom_Persen_2 = $request->input('bottomE2');
+        $Bottom_Persen_3 = $request->input('bottomE3');
+        $Bottom_Persen_4 = $request->input('bottomE4');
+        $Bottom_Persen_5 = $request->input('bottomE5');
+
 
 
 
         try {
             $process = DB::connection('ConnTestQC')->statement(
-                'exec [SP_1273_QTC_MAINT_FIBC] @Kode = 1,
-                @Reference_No = ?,
-                @Tanggal = ?,
-                @Customer = ?,
-                @Bag_Code = ?,
-                @Bag_Type = ?,
-                @PO_No = ?,
-                @Tanggal_Prod = ?,
-                @Tanggal_Testing = ?,
-                @Size = ?,
-                @Reinforced = ?,
-                @Colour = ?,
-                @SWL = ?,
-                @sf = ?',
+                'exec SP_1273_QTC_MAINT_FIBC
+                    @Kode = 1,
+                    @RefNo = ?,
+                    @Tanggal = ?,
+                    @Cust = ?,
+                    @BagCode = ?,
+                    @BagType = ?,
+                    @PO_No = ?,
+                    @TglProd = ?,
+                    @TglTest = ?,
+                    @Size = ?,
+                    @Reinf = ?,
+                    @Colour = ?,
+                    @Panjang = ?,
+                    @Lebar = ?,
+                    @Waft = ?,
+                    @Weft = ?,
+                    @DenierWA = ?,
+                    @DenierWE = ?,
+                    @Weight = ?,
+                    @SWL = ?,
+                    @SF = ?,
+                    @Jenis = ?,
+                    @LiftingType = ?,
+                    @SewingType = ?,
+                    @SewingMethod = ?,
+                    @StitchApprox = ?,
+                    @FitDrawing = ?,
+                    @UserInput = ?,
+                    @CurrentDate = ?,
+                    @Panjang2 = ?,
+                    @Lebar2 = ?,
+                    @Waft2 = ?,
+                    @Weft2 = ?,
+                    @DenierWA2 = ?,
+                    @DenierWE2 = ?,
+                    @Weight2 = ?,
+                    @RefCopy = ?,
+                    @TopKG1 = ?,
+                    @TopKG2 = ?,
+                    @TopKG3 = ?,
+                    @TopKG4 = ?,
+                    @TopKG5 = ?,
+                    @TopPersen1 = ?,
+                    @TopPersen2 = ?,
+                    @TopPersen3 = ?,
+                    @TopPersen4 = ?,
+                    @TopPersen5 = ?,
+                    @BottomKG1 = ?,
+                    @BottomKG2 = ?,
+                    @BottomKG3 = ?,
+                    @BottomKG4 = ?,
+                    @BottomKG5 = ?,
+                    @BottomPersen1 = ?,
+                    @BottomPersen2 = ?,
+                    @BottomPersen3 = ?,
+                    @BottomPersen4 = ?,
+                    @BottomPersen5 = ?',
                 [
                     $Reference_No,
                     $Tanggal,
@@ -117,8 +161,51 @@ class InputDetailController extends Controller
                     $Size,
                     $Reinforced,
                     $Colour,
+                    $Panjang,
+                    $Lebar,
+                    $Waft,
+                    $Weft,
+                    $Denier_Waft,
+                    $Denier_Weft,
+                    $Weight,
                     $SWL,
-                    $sf
+                    $sf,
+                    // $Jenis_FIBC,
+                    $LiftingBelt_Type,
+                    $SewingThread_Type,
+                    // $Sewing_Method,
+                    // $Stitch_Approx,
+                    // $Fit_to_Draw,
+                    // $UserInput,
+                    $TimeInput,
+                    $Panjang2,
+                    $Lebar2,
+                    $Waft2,
+                    $Weft2,
+                    $Denier_Waft2,
+                    $Denier_Weft2,
+                    $Weight2,
+                    // $Copy_RefNo,
+                    $Top_KG_1,
+                    $Top_KG_2,
+                    $Top_KG_3,
+                    $Top_KG_4,
+                    $Top_KG_5,
+                    $Top_Persen_1,
+                    $Top_Persen_2,
+                    $Top_Persen_3,
+                    $Top_Persen_4,
+                    $Top_Persen_5,
+                    $Bottom_KG_1,
+                    $Bottom_KG_2,
+                    $Bottom_KG_3,
+                    $Bottom_KG_4,
+                    $Bottom_KG_5,
+                    $Bottom_Persen_1,
+                    $Bottom_Persen_2,
+                    $Bottom_Persen_3,
+                    $Bottom_Persen_4,
+                    $Bottom_Persen_5
                 ]
             );
 
