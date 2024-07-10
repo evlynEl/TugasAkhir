@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function () {
         processing: true,
         serverSide: true,
         ajax: {
-            url: 'CircularTropodo/getDataFromDate',
+            url: 'CircularMojosari/getDataFromDate',
             data: function (d) {
                 if (nomorButton === 1 || nomorButton === 2 || nomorButton === 3 || refreshed === 1) {
                     d.TglLog = $('#tanggal').val();
@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         try {
             const response = await $.ajax({
-                url: "CircularTropodo/showDetailByLog",
+                url: "CircularMojosari/showDetailByLog",
                 type: "GET",
                 data: { IdLog: IdLog },
             });
@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function () {
         processing: true,
         serverSide: true,
         ajax: {
-            url: 'CircularTropodo/getQcData',
+            url: 'CircularMojosari/getQcData',
             data: function (d) {
                 if (nomorButton === 1 || nomorButton === 2 || nomorButton === 3 || refreshed === 1) {
                     d.TglLog = $('#tanggal').val();
@@ -234,7 +234,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // ada data waft dan weft yang tidak ada di table, FETCH DATA WAFT&WEFT
         try {
             const response = await $.ajax({
-                url: 'CircularTropodo/getWaftWeft',
+                url: 'CircularMojosari/getWaftWeft',
                 type: 'GET',
                 data: { IdLog: IdLog },
                 dataType: 'json'
@@ -340,7 +340,7 @@ document.addEventListener('DOMContentLoaded', function () {
     async function ambilBeratStandart() {
         try {
             const response = await $.ajax({
-                url: 'CircularTropodo/ambilBeratStandart',
+                url: 'CircularMojosari/ambilBeratStandart',
                 type: 'GET',
                 data: { IdLog: idLog.value },
                 dataType: 'json'
@@ -466,7 +466,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (nomorButton == 1) {
             $.ajax({
                 type: 'PUT', //update
-                url: 'CircularTropodo/prosesIsiData', //update
+                url: 'CircularMojosari/prosesIsiData', //update
                 data: {
                     _token: csrfToken,
                     IdLog: idLog.value,
@@ -511,7 +511,7 @@ document.addEventListener('DOMContentLoaded', function () {
         else if (nomorButton == 2) {
             $.ajax({
                 type: 'PUT',
-                url: 'CircularTropodo/prosesKoreksiData',
+                url: 'CircularMojosari/prosesKoreksiData',
                 data: {
                     _token: csrfToken,
                     Ukuran: ukuranLebar.value,
@@ -553,7 +553,7 @@ document.addEventListener('DOMContentLoaded', function () {
         else if (nomorButton == 3) {
             $.ajax({
                 type: 'DELETE',
-                url: 'CircularTropodo/hapusData',
+                url: 'CircularMojosari/hapusData',
                 data: {
                     _token: csrfToken,
                     Id_QC: Id_QC

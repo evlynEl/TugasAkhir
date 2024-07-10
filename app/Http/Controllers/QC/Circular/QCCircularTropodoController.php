@@ -28,7 +28,6 @@ class QCCircularTropodoController extends Controller
 
     public function show($id, Request $request)
     {
-        // dd(Auth::user()->NomorUser);
 
         // Tampil data pada hari itu yg belom masuk QC
         if ($id == 'getDataFromDate') {
@@ -37,9 +36,8 @@ class QCCircularTropodoController extends Controller
             $listDataDate = DB::connection('ConnCircular')
                 ->select('exec [SP_1273_QC_LIST_QC] @Kode= ?, @TglLog= ?', [1, $tgl]);
             $dataDate = [];
-            // dd($listDataDate);
             foreach ($listDataDate as $dateSelected) {
-                $dataDate[] = [
+            $dataDate[] = [
                     'Id_Log' => $dateSelected->Id_Log,
                     'Nama_Mesin' => $dateSelected->Nama_mesin,
                     'NAMA_BRG' => $dateSelected->NAMA_BRG,
@@ -72,7 +70,6 @@ class QCCircularTropodoController extends Controller
                     'JenisKrg' => $detail->JenisKrg
                 ];
             }
-            // dd($dataDetailByLog);
             return response()->json($dataDetailByLog);
         }
 
@@ -83,7 +80,6 @@ class QCCircularTropodoController extends Controller
             $listDataQc = DB::connection('ConnCircular')
                 ->select('exec [SP_1273_QC_LIST_QC] @Kode= ?, @TglLog= ?', [3, $tgl]);
             $QcData = [];
-            // dd($listDataQc);
             foreach ($listDataQc as $QcSelected) {
                 $QcData[] = [
                     'Nama_Mesin' => $QcSelected->Nama_mesin,
@@ -107,17 +103,18 @@ class QCCircularTropodoController extends Controller
                     'Standart_ElgWE' => $QcSelected->Standart_ElgWE,
 
                     'Id_QC' => $QcSelected->Id_QC
-
                 ];
             }
             return datatables($QcData)->make(true);
-        } else if ($id == 'getWaftWeft') {
+        }
+        
+        // ambil data yang kurang dari table qc
+        else if ($id == 'getWaftWeft') {
             $IdLog = $request->input('IdLog');
 
             $listWaftWeft = DB::connection('ConnCircular')
                 ->select('exec [SP_1273_QC_LIST_QC] @Kode= ?, @IdLog= ?', [2, $IdLog]);
             $WaftWeftData = [];
-            // dd($listWaftWeft);
             foreach ($listWaftWeft as $selectedWaftWeft) {
                 $WaftWeftData[] = [
                     'Waft_Rajutan' => $selectedWaftWeft->R_WA,
@@ -131,8 +128,22 @@ class QCCircularTropodoController extends Controller
                     'JenisKrg' => $selectedWaftWeft->JenisKrg
                 ];
             }
-            // dd($WaftWeftData);
             return response()->json($WaftWeftData);
+        }
+
+        // ambil berat standart kalau sudah ada
+        else if ($id == 'ambilBeratStandart') {
+            $IdLog = $request->input('IdLog');
+
+            $dataBeratStd = DB::connection('ConnCircular')
+                ->select('exec [SP_1273_QC_LIST_QC] @Kode= ?, @IdLog= ?', [5, $IdLog]);
+            $beratStdArr = [];
+            foreach ($dataBeratStd as $ambilBerat) {
+                $beratStdArr[] = [
+                    'beratStandart' => $ambilBerat->BERAT_TOTAL,
+                ];
+            }
+            return response()->json($beratStdArr);
         }
     }
 
@@ -223,7 +234,6 @@ class QCCircularTropodoController extends Controller
             $Potongan = $request->input('Potongan');
             $BeratSTD = $request->input('BeratSTD');
             $Berat = $request->input('Berat');
-            $Ket = $request->input('Ket');
 
             $UserInput = Auth::user()->NomorUser;
             $UserInput = trim($UserInput);
@@ -240,7 +250,8 @@ class QCCircularTropodoController extends Controller
             $StandartElgWA = $request->input('StandartElgWA');
             $StandartElgWE = $request->input('StandartElgWE');
 
-            // dd($request->all());
+            $Id_QC = $request->input('Id_QC');
+
             try {
                 DB::connection('ConnCircular')
                     ->statement('exec [SP_1273_QC_MAINT_QC] 
@@ -249,8 +260,7 @@ class QCCircularTropodoController extends Controller
                 @Potongan = ?,
                 @BeratSTD = ?, 
                 @Berat = ?, 
-                @UserInput = ?, 
-                @Ket = ?, 
+                @UserInput = ?,  
                 @StWarp = ?, 
                 @ElgWarp = ?, 
                 @StWeft = ?, 
@@ -261,14 +271,14 @@ class QCCircularTropodoController extends Controller
                 @StandartWA = ?, 
                 @StandartWE = ?, 
                 @StandartElgWA = ?, 
-                @StandartElgWE = ?', [
+                @StandartElgWE = ?,
+                @IdQC = ?', [
                         2,
                         $Ukuran,
                         $Potongan,
                         $BeratSTD,
                         $Berat,
                         $UserInput,
-                        $Ket,
                         $StWarp,
                         $ElgWarp,
                         $StWeft,
@@ -280,9 +290,11 @@ class QCCircularTropodoController extends Controller
                         $StandartWE,
                         $StandartElgWA,
                         $StandartElgWE,
+                        $Id_QC
                     ]);
                 return response()->json(['success' => 'Data sudah diKOREKSI'], 200);
-            } catch (\Exception $e) {
+            }
+            catch (\Exception $e) {
                 return response()->json(['error' => 'Data gagal diKOREKSI: ' . $e->getMessage()], 500);
             }
         }
