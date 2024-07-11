@@ -52,6 +52,7 @@ class QCInputAfalanController extends Controller
                     'Qty_Sekunder' => trim($NoRoll->Qty_Sekunder),
                     'Qty' => trim($NoRoll->Qty),
                 ];
+                
             }
             return response()->json($dataDetailNoRoll);
         }
