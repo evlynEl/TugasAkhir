@@ -16,7 +16,7 @@
                     <div class="card-header">Input FIBC Detail</div>
                     <div class="card-body RDZOverflow RDZMobilePaddingLR0">
                         <div class="form-group">
-                            <label for="current-date">Tanggal :</label>
+                            <label>Tanggal :</label>
                             <div class="input-group">
                                 <input type="date" class="form-control" id="tanggal" name="tanggal"
                                     onchange="getYearFromInput()">
@@ -32,13 +32,13 @@
                             <div class="form-group col-md-2">
                                 <label>Ref No :</label>
                                 <label style="display: none">No Reference</label>
-                                <input type="text" id="reffNo" name="reffNo" class="form-control">
+                                <input type="text" id="No" name="No" class="form-control">
                             </div>
                             <div class="form-group col-md-10" style="margin-top: 31px;">
                                 <div class="input-group">
                                     <input type="text" id="refNo" name="refNo" class="form-control">
                                     <div class="input-group-append">
-                                        <button type="button" id="btn_RefNo" class="btn btn-info">...</button>
+                                        <button type="button" id="btn_RefNo" class="btn btn-info" >...</button>
                                     </div>
                                 </div>
                             </div>
@@ -46,7 +46,7 @@
 
 
                         {{-- FIBC Detail --}}
-                        <label for="FIBC_Detail">FIBC Detail</label>
+                        <label>FIBC Detail</label>
                         <div class="form-row" style="border: 1px solid #ddd">
                             <div class="col-md-4 mt-3">
                                 <div class="form-group">
@@ -136,7 +136,7 @@
                                             <label class="form-check-label" for="radioWeight2">Weight 2</label>
                                         </div>
                                     </div>
-                                    <label for="weightLabel" id="weightLabel" class="text-center mt-2"></label>
+                                    <label id="weightLabel" class="text-center mt-2"></label>
                                 </div>
                                 {{-- weight tabel --}}
                                 <div id="formWeight1">
@@ -320,7 +320,7 @@
 
 
                         {{-- Bag Detail --}}
-                        <label for="Bag_Detail">Bag Detail</label>
+                        <label>Bag Detail</label>
                         <div class="form-row mb-3" style="border: 1px solid #ddd">
                             <div class="col-md-12 mt-3">
                                 <label for="liftBeltType">A. Lifting Belt</label>
@@ -346,7 +346,7 @@
                                                 <label>Strength / Elo :</label>
                                             </div>
                                             <div class="col-6">
-                                                <label for="top">Top</label>
+                                                <label>Top</label>
                                                 <div class="form-group">
                                                     <input type="text" class="form-control mb-2" id="topS1"
                                                         name="topS1" placeholder="kg">
@@ -354,7 +354,7 @@
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
-                                                    <label for="top">&nbsp;</label>
+                                                    <label>&nbsp;</label>
                                                     <input type="text" class="form-control mb-2" id="topE1"
                                                         name="topE1" placeholder="%">
                                                 </div>
@@ -423,7 +423,7 @@
                                                 <label>&nbsp;</label>
                                             </div>
                                             <div class="col-6">
-                                                <label for="bottom">Bottom</label>
+                                                <label>Bottom</label>
                                                 <div class="form-group">
                                                     <input type="text" class="form-control mb-2" id="bottomS1"
                                                         name="bottomS1" placeholder="kg">
@@ -501,24 +501,24 @@
                                     <div class="ml-3">
                                         <div class="form-check-inline">
                                             <input class="form-check-input" type="checkbox" name="Mitsumaki"
-                                                id="sewingMitsumaki" value="Mitsumaki">
-                                            <label class="form-check-label" for="sewingMitsumaki">Mitsumaki</label>
+                                                id="Mitsumaki" value="Mitsumaki">
+                                            <label class="form-check-label" for="Mitsumaki">Mitsumaki</label>
                                         </div>
                                         <div class="form-check-inline">
                                             <input class="form-check-input" type="checkbox" name="HalfMitsumaki"
-                                                id="sewingHalfMitsumaki" value="Half Mitsumaki">
-                                            <label class="form-check-label" for="sewingHalfMitsumaki">Half
+                                                id="HalfMitsumaki" value="HalfMitsumaki">
+                                            <label class="form-check-label" for="HalfMitsumaki">Half
                                                 Mitsumaki</label>
                                         </div>
                                         <div class="form-check-inline">
                                             <input class="form-check-input" type="checkbox" name="Ogami"
-                                                id="sewingOgami" value="Ogami">
-                                            <label class="form-check-label" for="sewingOgami">Ogami</label>
+                                                id="Ogami" value="Ogami">
+                                            <label class="form-check-label" for="Ogami">Ogami</label>
                                         </div>
                                         <div class="form-check-inline">
                                             <input class="form-check-input" type="checkbox" name="Other"
-                                                id="sewingOther" value="Other">
-                                            <label class="form-check-label" for="sewingOther">Other</label>
+                                                id="Other" value="Other">
+                                            <label class="form-check-label" for="Other">Other</label>
                                         </div>
                                     </div>
                                 </div>
@@ -528,18 +528,18 @@
                                     <div class="ml-3">
                                         <div class="form-check-inline">
                                             <input class="form-check-input" type="checkbox" name="Bottom"
-                                                id="stitchBottom" value="yes">
-                                            <label class="form-check-label" for="stitchBottom">Bottom</label>
+                                                id="Bottom" value="Bottom">
+                                            <label class="form-check-label" for="Bottom">Bottom</label>
                                         </div>
                                         <div class="form-check-inline">
                                             <input class="form-check-input" type="checkbox" name="Side"
-                                                id="stitchSide" value="no">
-                                            <label class="form-check-label" for="stitchSide">Side Body</label>
+                                                id="Side" value="Side">
+                                            <label class="form-check-label" for="Side">Side Body</label>
                                         </div>
                                         <div class="form-check-inline">
                                             <input class="form-check-input" type="checkbox" name="Lift"
-                                                id="stitchLift" value="yes">
-                                            <label class="form-check-label" for="stitchLift">Lifting Belt</label>
+                                                id="Lift" value="Lift">
+                                            <label class="form-check-label" for="Lift">Lifting Belt</label>
                                         </div>
                                     </div>
                                 </div>
@@ -548,23 +548,25 @@
                                     <label>E. Fit to drawing spec.?</label>
                                     <div class="ml-3">
                                         <div class="form-check-inline">
-                                            <input class="form-check-input" type="checkbox" name="Yesfit-to-drawing"
-                                                id="fit-to-drawing-yes" value="yes">
-                                            <label class="form-check-label" for="fit-to-drawing-yes">Yes</label>
+                                            <input class="form-check-input" type="checkbox" name="Yesfit"
+                                                id="Yesfit" value="Yesfit">
+                                            <label class="form-check-label" for="Yesfit">Yes</label>
                                         </div>
                                         <div class="form-check-inline">
-                                            <input class="form-check-input" type="checkbox" name="Nofit-to-drawing"
-                                                id="fit-to-drawing-no" value="no">
-                                            <label class="form-check-label" for="fit-to-drawing-no">No</label>
+                                            <input class="form-check-input" type="checkbox" name="Nofit"
+                                                id="Nofit" value="Nofit">
+                                            <label class="form-check-label" for="Nofit">No</label>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
+                        <button type="button" id="btn_isi" class="btn btn-outline-secondary">Isi</button>
                         <button type="button" id="btn_simpan" class="btn btn-outline-secondary">Simpan</button>
-                        <button type="button" id="btn_koreksi" class="btn btn-outline-primary">Koreksi</button>
-                        <button type="button" id="btn_hapus" class="btn btn-outline-danger">Hapus</button>
+                        <button type="button" id="btn_batal" class="btn btn-outline-secondary">Batal</button>
+                        <button type="button" id="btn_koreksi" class="btn btn-outline-secondary">Koreksi</button>
+                        <button type="button" id="btn_hapus" class="btn btn-outline-secondary">Hapus</button>
 
                     </div>
                 </div>

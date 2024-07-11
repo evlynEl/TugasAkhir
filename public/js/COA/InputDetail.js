@@ -8,7 +8,9 @@ var year = document.getElementById('year');
 var btn_RefNo = document.getElementById('btn_RefNo');
 var btn_BagCode = document.getElementById('btn_BagCode');
 
+var btn_isi = document.getElementById('btn_isi');
 var btn_simpan = document.getElementById('btn_simpan');
+var btn_batal = document.getElementById('btn_batal');
 var btn_koreksi = document.getElementById('btn_koreksi');
 var btn_hapus = document.getElementById('btn_hapus');
 
@@ -18,7 +20,7 @@ var radioWeight1 = document.getElementById('radioWeight2');
 var weightLabel = document.getElementById('weightLabel');
 
 // attribut
-var reffNo = document.getElementById('reffNo');
+var No = document.getElementById('No');
 var refNo = document.getElementById('refNo');
 var customer = document.getElementById('customer');
 var bagCode = document.getElementById('bag-code');
@@ -63,8 +65,11 @@ var inputIds2 = ['panjang2', 'lebar2', 'waft2', 'denierWaft2', 'weft2', 'denierW
 var inputs2 = inputIds2.map(id => document.getElementById(id));
 var weight2 = document.getElementById('weight2');
 
-
 var fixRefNo = '';
+var jenis = [];
+var sewing = [];
+var stitch = [];
+var draw = [];
 
 const inputs = Array.from(document.querySelectorAll('.card-body input[type="text"]:not([readonly])'));
 const inputAll = Array.from(document.querySelectorAll('.card-body input[type="text"]'));
@@ -132,7 +137,9 @@ function getYearFromInput() {
     year.value = inputDate.getFullYear();
 }
 
-// ref no
+fixRefNo = No.value + "/KRR-QC/" + refNo.value + "/" + year.value;
+
+// button ref no
 btn_RefNo.addEventListener("click", function (e) {
     try {
         Swal.fire({
@@ -163,47 +170,114 @@ btn_RefNo.addEventListener("click", function (e) {
             showConfirmButton: true,
             confirmButtonText: 'Select',
             didOpen: () => {
-                $(document).ready(function () {
-                    const table = $("#table_list").DataTable({
-                        responsive: true,
-                        processing: true,
-                        serverSide: true,
-                        order: [1, "asc"],
-                        ajax: {
-                            url: "FrmInputFIBC/GetReff",
-                            dataType: "json",
-                            type: "GET",
-                            data: {
-                                _token: csrfToken
-                            }
-                        },
-                        columns: [
-                            { data: "Reference_No" },
-                            { data: "Tanggal" }
-                        ]
-                    });
+                const table = $("#table_list").DataTable({
+                    responsive: true,
+                    processing: true,
+                    serverSide: true,
+                    order: [1, "asc"],
+                    ajax: {
+                        url: "FrmInputFIBC/GetReff",
+                        dataType: "json",
+                        type: "GET",
+                        data: {
+                            _token: csrfToken
+                        }
+                    },
+                    columns: [
+                        { data: "Reference_No" },
+                        { data: "Tanggal" }
+                    ]
+                });
 
-                    $("#table_list tbody").on("click", "tr", function () {
-                        table.$("tr.selected").removeClass("selected");
-                        $(this).addClass("selected");
-                    });
+                $("#table_list tbody").on("click", "tr", function () {
+                    table.$("tr.selected").removeClass("selected");
+                    $(this).addClass("selected");
                 });
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                selectRefNo(result.value.Reference_No, result.value.Tanggal);
+                const selectedRow = result.value;
+
+                let splitRefNo = selectedRow.Reference_No.trim();
+
+                let parts = splitRefNo.split("/");
+                let extractedNo = parts[0];
+                let extractedRefNo = parts[2];
+
+                No.value = extractedNo;
+                refNo.value = extractedRefNo;
+
+                $.ajax({
+                    url: "FrmInputFIBC/getDataDetailReference",
+                    type: "GET",
+                    data: {
+                        _token: csrfToken,
+                        no_ref: splitRefNo
+                    },
+                    success: function (result) {
+
+                        console.log(splitRefNo);
+
+
+                        customer.value = result[0].Customer.trim();
+                        bagCode.value = result[0].Bag_Code.trim();
+                        bagType.value = result[0].Bag_Type.trim();
+                        poNo.value = result[0].PO_No.trim();
+                        prodDate.value = result[0].Tanggal_Prod.trim();
+                        testingDate.value = result[0].Tanggal_Testing.trim();
+                        size.value = result[0].Size.trim();
+                        reinforced.value = result[0].Reinforced.trim();
+                        colour.value = result[0].Colour.trim();
+                        swl.value = result[0].SWL.trim();
+                        sf.value = result[0].sf.trim();
+                        liftBeltType.value = result[0].LiftingBelt_Type.trim();
+                        sewingThreadType.value = result[0].SewingThread_Type.trim();
+                        topS1.value = result[0].Top_KG_1.trim();
+                        topS2.value = result[0].Top_KG_2.trim();
+                        topS3.value = result[0].Top_KG_3.trim();
+                        topS4.value = result[0].Top_KG_4.trim();
+                        topS5.value = result[0].Top_KG_5.trim();
+                        topE1.value = result[0].Top_Persen_1.trim();
+                        topE2.value = result[0].Top_Persen_2.trim();
+                        topE3.value = result[0].Top_Persen_3.trim();
+                        topE4.value = result[0].Top_Persen_4.trim();
+                        topE5.value = result[0].Top_Persen_5.trim();
+                        bottomS1.value = result[0].Bottom_KG_1.trim();
+                        bottomS2.value = result[0].Bottom_KG_2.trim();
+                        bottomS3.value = result[0].Bottom_KG_3.trim();
+                        bottomS4.value = result[0].Bottom_KG_4.trim();
+                        bottomS5.value = result[0].Bottom_KG_5.trim();
+                        bottomE1.value = result[0].Bottom_Persen_1.trim();
+                        bottomE2.value = result[0].Bottom_Persen_2.trim();
+                        bottomE3.value = result[0].Bottom_Persen_3.trim();
+                        bottomE4.value = result[0].Bottom_Persen_4.trim();
+                        bottomE5.value = result[0].Bottom_Persen_5.trim();
+
+                        inputs1[0].value = result[0].Panjang.trim();
+                        inputs1[1].value = result[0].Lebar.trim();
+                        inputs1[2].value = result[0].Waft.trim();
+                        inputs1[3].value = result[0].Denier_Waft.trim();
+                        inputs1[4].value = result[0].Weft.trim();
+                        inputs1[5].value = result[0].Denier_Weft.trim();
+                        weight1.value = result[0].Weight.trim();
+
+                        inputs2[0].value = result[0].Panjang2.trim();
+                        inputs2[1].value = result[0].Lebar2.trim();
+                        inputs2[2].value = result[0].Waft2.trim();
+                        inputs2[3].value = result[0].Denier_Waft2.trim();
+                        inputs2[4].value = result[0].Weft2.trim();
+                        inputs2[5].value = result[0].Denier_Weft2.trim();
+                        weight2.value = result[0].Weight2.trim();
+                    }
+                });
             }
         });
     } catch (error) {
-        console.error(error);
+        console.error("An error occurred:", error);
     }
 });
 
-function selectRefNo(Reference_No, Tanggal) {
-    reffNo.value = Reference_No;
-    refNo.value = Tanggal;
-    Swal.close();
-}
+
 
 // bag code
 btn_BagCode.addEventListener("click", function (e) {
@@ -308,66 +382,64 @@ isWeight1Selected = setupWeightRadio();
 
 
 // cek checkbox
-// function checkCheckboxChecked(elementId) {
-//     var element = document.getElementById(elementId);
+var sections = [
+    { id: 'jenis', checkboxes: ['sample', 'pre-production', 'production', 'spec-modification', 'trial', 'customer-sample'] },
+    { id: 'sewingMethod', checkboxes: ['Mitsumaki', 'HalfMitsumaki', 'Ogami', 'Other'], },
+    { id: 'stitchApprox', checkboxes: ['Bottom', 'Side', 'Lift'] },
+    { id: 'fitDraw', checkboxes: ['Yesfit', 'Nofit'] }
+];
 
-//     if (!element) {
-//         console.error('Element with ID ' + elementId + ' not found.');
-//         return false;
-//     }
-
-//     var checkboxes = element.querySelectorAll('input[type="checkbox"]');
-
-//     for (var i = 0; i < checkboxes.length; i++) {
-//         if (checkboxes[i].checked) {
-//             return true;
-//         }
-//     }
-//     return false;
-// }
-// let jenis = checkCheckboxChecked('jenis');
-// let sewingChecked = checkCheckboxChecked('sewingMethod');
-// let stitchChecked = checkCheckboxChecked('stitchApprox');
-// let fitChecked = checkCheckboxChecked('fitDraw');
-
-
-function setupWeightCheckbox() {
-    var checkedNames = [];
-
-    document.querySelectorAll('input[name="weight"]').forEach(function(checkbox) {
-        checkbox.addEventListener('change', function(event) {
-            var checkboxName = event.target.name;
-            var isChecked = event.target.checked;
-
-            if (isChecked) {
-                checkedNames.push(checkboxName);
+// fungsi track aktifitas checkbox
+function setupCheckboxListeners() {
+    sections.forEach(function (section) {
+        section.checkboxes.forEach(function (checkboxName) {
+            var checkbox = document.querySelector(`#${section.id} input[name="${checkboxName}"]`);
+            if (checkbox) {
+                checkbox.addEventListener('change', function (event) {
+                    handleCheckboxChange(section.id);
+                });
             } else {
-                var index = checkedNames.indexOf(checkboxName);
-                if (index !== -1) {
-                    checkedNames.splice(index, 1);
-                }
+                console.error(`Checkbox ${checkboxName} not found in section ${section.id}`);
             }
-
-            console.log('Checked checkboxes:', checkedNames);
         });
     });
 }
 
-// Call setupWeightCheckbox to initialize event listeners
-setupWeightCheckbox();
+// fungsi dapetin nilai checkbox
+function handleCheckboxChange(sectionId) {
+    var section = document.getElementById(sectionId);
+    var checkedName = null;
 
+    // Find the first checked checkbox value for the section
+    sections.find(s => s.id === sectionId).checkboxes.some(function (checkboxName) {
+        var checkbox = section.querySelector(`input[name="${checkboxName}"]`);
+        if (checkbox && checkbox.checked) {
+            checkedName = checkboxName;
+            return true;
+        }
+    });
 
-// Contoh penggunaan:
-let checkedJenis = checkCheckboxChecked('jenis');
-console.log('Info checkbox jenis:', checkedJenis);
-let sewingChecked = checkCheckboxChecked('sewingMethod');
-console.log('Info checkbox sewing:', sewingChecked);
-let stitchChecked = checkCheckboxChecked('stitchApprox');
-console.log('Info checkbox stitch:', stitchChecked);
-let fitChecked = checkCheckboxChecked('fitDraw');
-console.log('Info checkbox fit:', fitChecked);
+    // simpan nilai checkbox
+    switch (sectionId) {
+        case 'jenis':
+            jenis = checkedName ? [checkedName] : [];
+            break;
+        case 'sewingMethod':
+            sewing = checkedName ? [checkedName] : [];
+            break;
+        case 'stitchApprox':
+            stitch = checkedName ? [checkedName] : [];
+            break;
+        case 'fitDraw':
+            draw = checkedName ? [checkedName] : [];
+            break;
+        default:
+            break;
+    }
+}
 
-
+// panggil fungsi cek checkbox
+setupCheckboxListeners();
 
 
 // cek form yang kosong
@@ -448,31 +520,82 @@ inputs1.forEach(input => input.addEventListener('input', calculateWeight));
 inputs2.forEach(input => input.addEventListener('input', calculateWeight));
 
 
+document.addEventListener('DOMContentLoaded', function () {
+    // Disable btn_RefNo and btn_BagCode by default
+    btn_RefNo.disabled = true;
+    btn_BagCode.disabled = true;
+
+    btn_simpan.style.display = 'none';
+    btn_batal.style.display = 'none';
+
+    var Ketik = document.querySelectorAll('input');
+
+    // Function to enable Ketik
+    function enableKetik() {
+        Ketik.forEach(function (input) {
+            input.disabled = false;
+        });
+
+        btn_isi.style.display = 'none';
+        btn_simpan.style.display = 'inline-block';
+
+        btn_koreksi.style.display = 'none';
+        btn_batal.style.display = 'inline-block';
+
+        btn_RefNo.disabled = false;
+        btn_BagCode.disabled = false;
+    }
+
+    // Function to disable Ketik
+    function disableKetik() {
+        Ketik.forEach(function (input) {
+            input.value = ''; // Clear input values
+            input.disabled = true;
+        });
+
+        btn_simpan.style.display = 'none';
+        btn_isi.style.display = 'inline-block';
+
+        btn_batal.style.display = 'none';
+        btn_koreksi.style.display = 'inline-block';
+
+        btn_RefNo.disabled = true;
+        btn_BagCode.disabled = true;
+    }
+
+    // Button isi event listener
+    btn_isi.addEventListener('click', function () {
+        enableKetik();
+        btn_RefNo.disabled = true;
+        btn_BagCode.disabled = true;
+    });
+
+    // Button batal event listener
+    btn_batal.addEventListener('click', function () {
+        disableKetik();
+    });
+
+    // Initially disable Ketik on page load
+    disableKetik();
+});
+
 
 // button simpan
-btn_simpan.addEventListener("click", function (e) {
+btn_simpan.addEventListener('click', function () {
     try {
         e.preventDefault();
 
         console.log(tanggal.valueAsDate, currentDate);
-        let jenis = checkCheckboxChecked('jenis');
-        let sewingChecked = checkCheckboxChecked('sewingMethod');
-        let stitchChecked = checkCheckboxChecked('stitchApprox');
-        let fitChecked = checkCheckboxChecked('fitDraw');
-
-        fixRefNo = refNo.value + "/KRR-QC/" + reffNo.value + "/" + year.value;
-
-
 
         if (tanggal.value == '') {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: `Tanggal tidak boleh kosong`,
-                returnFocus: false
-            }).then(() => {
-                tanggal.focus()
-            });
+            // Swal.fire({
+            //     icon: 'error',
+            //     title: 'Error',
+            //     text: `Tanggal tidak boleh kosong`,
+            //     returnFocus: false
+            // }).then(() => {
+            //     tanggal.focus()
+            // });
             // } else if (tanggal.valueAsDate > currentDate) {
             //     Swal.fire({
             //         icon: 'error',
@@ -495,7 +618,7 @@ btn_simpan.addEventListener("click", function (e) {
             //     });
 
             //     return;
-        } else if (!sewingChecked) {
+        } else if (sewing.length == 0) {
             Swal.fire({
                 icon: 'question',
                 text: 'Apakah Data Sewing Method Mau Anda Lengkapi?',
@@ -506,7 +629,7 @@ btn_simpan.addEventListener("click", function (e) {
                 if (result.isConfirmed) {
                     return;
                 } else {
-                    if (!stitchChecked) {
+                    if (stitch.length == 0) {
                         Swal.fire({
                             icon: 'question',
                             text: 'Apakah Data Stitch Approx Mau Anda Lengkapi?',
@@ -517,7 +640,7 @@ btn_simpan.addEventListener("click", function (e) {
                             if (result.isConfirmed) {
                                 return;
                             } else {
-                                if (!fitChecked) {
+                                if (draw.length == 0) {
                                     Swal.fire({
                                         icon: 'question',
                                         text: 'Apakah Data Fit to Drawing Spec. Mau Anda Lengkapi?',
@@ -555,11 +678,12 @@ btn_simpan.addEventListener("click", function (e) {
                                                     weight1: weight1.value,
                                                     swl: swl.value,
                                                     sf: sf.value,
-                                                    jenis: jenis.value, // jenisnya apa? blm di passing
+                                                    jenis: jenis.value,
                                                     liftBeltType: liftBeltType.value,
                                                     sewingThreadType: sewingThreadType.value,
-                                                    // sewing method, stitch spprox, fit to draw apa? blm di passing
-                                                    //user input
+                                                    sewing: sewing.values,
+                                                    stitch: stitch.values,
+                                                    draw: draw.values,
                                                     currentDate: currentDate,
                                                     panjang2: inputs2[0].value,
                                                     lebar2: inputs2[1].value,
@@ -568,8 +692,6 @@ btn_simpan.addEventListener("click", function (e) {
                                                     weft2: inputs2[4].value,
                                                     denierWeft2: inputs2[5].value,
                                                     weight2: weight2,
-                                                    //copyref no
-
                                                     topS1: topS1.value,
                                                     topS2: topS2.value,
                                                     topS3: topS3.value,
@@ -620,67 +742,16 @@ btn_simpan.addEventListener("click", function (e) {
                     }
                 }
             })
-        } else {
-            // checkAllGroups();
-
-            let sewingChecked = checkCheckboxChecked('sewingMethod');
-            let stitchChecked = checkCheckboxChecked('stitchApprox');
-            let fitChecked = checkCheckboxChecked('fitDraw');
-            let stringJenis = []
-
-            if (!sewingChecked) {
-                let result = Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: `Pilih Jenis FIBC Terlebih Dahulu !`,
-                    returnFocus: false
-                }).then(() => {
-                    document.getElementById("sample").focus()
-                });
-                if (!stitchChecked) {
-                    if (!fitChecked) {
-
-                    }
-                }
-            }
-
-            showDataCompletionPrompt(stringJenis);
-            $.ajax({
-                type: 'POST',
-                url: 'FrmInputFIBC',
-                data: {
-                    _token: csrfToken,
-                    tanggal: tanggal,
-                    refNo: refNo,
-                    reffNo: reffNo,
-
-
-                },
-                timeout: 30000,
-                success: function (response) {
-                    if (response.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success',
-                            text: 'Data Telah Tersimpan',
-                        });
-
-                        inputAll.forEach(input => { input.value = ''; });
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error('AJAX Error:', error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Data Belum Lengkap Terisi',
-                    });
-                }
-            });
         }
     } catch (error) {
         console.error('Exception:', error);
     }
+});
+
+
+// button simpan
+btn_koreksi.addEventListener("click", function (e) {
+
 });
 
 

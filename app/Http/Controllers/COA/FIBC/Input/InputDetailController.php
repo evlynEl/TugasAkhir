@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\COA\FIBC\Input;
 
+use Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Controllers\HakAksesController;
@@ -24,10 +25,6 @@ class InputDetailController extends Controller
 
     public function store(Request $request)
     {
-        // $request->validate([
-        //     'material' => 'required|string|max:100',
-        // ]);
-
         $Reference_No = $request->input('fixRefNo');
         $Tanggal = $request->input('tanggal');
         $Customer = $request->input('customer');
@@ -48,13 +45,14 @@ class InputDetailController extends Controller
         $Denier_Waft = $request->input('denierWaft1');
         $Denier_Weft = $request->input('denierWeft1');
         $Weight = $request->input('weight1');
-        // $Jenis_FIBC = $request->input('jenis');
+        $Jenis_FIBC = $request->input('jenis');
         $LiftingBelt_Type = $request->input('liftBeltType');
         $SewingThread_Type = $request->input('sewingThreadType');
-        // $Sewing_Method = $request->input('sewingMethod');
-        // $Stitch_Approx = $request->input('stitchApprox');
-        // $Fit_to_Draw = $request->input('fitToDraw');
-        // $UserInput = $request->input('userInput'); // Misalnya, jika ada input dengan nama 'userInput'
+        $Sewing_Method = $request->input('sewing');
+        $Stitch_Approx = $request->input('stitch');
+        $Fit_to_Draw = $request->input('draw');
+        $UserInput = Auth::user()->NomorUser;
+        $UserInput = trim($UserInput);
         $TimeInput = $request->input('currentDate');
         $Panjang2 = $request->input('panjang2');
         $Lebar2 = $request->input('lebar2');
@@ -63,8 +61,6 @@ class InputDetailController extends Controller
         $Denier_Waft2 = $request->input('denierWaft2');
         $Denier_Weft2 = $request->input('denierWeft2');
         $Weight2 = $request->input('weight2');
-        // $Copy_RefNo = $request->input('copyRefNo');
-
         $Top_KG_1 = $request->input('topS1');
         $Top_KG_2 = $request->input('topS2');
         $Top_KG_3 = $request->input('topS3');
@@ -85,8 +81,6 @@ class InputDetailController extends Controller
         $Bottom_Persen_3 = $request->input('bottomE3');
         $Bottom_Persen_4 = $request->input('bottomE4');
         $Bottom_Persen_5 = $request->input('bottomE5');
-
-
 
 
         try {
@@ -128,7 +122,6 @@ class InputDetailController extends Controller
                     @DenierWA2 = ?,
                     @DenierWE2 = ?,
                     @Weight2 = ?,
-                    @RefCopy = ?,
                     @TopKG1 = ?,
                     @TopKG2 = ?,
                     @TopKG3 = ?,
@@ -170,13 +163,13 @@ class InputDetailController extends Controller
                     $Weight,
                     $SWL,
                     $sf,
-                    // $Jenis_FIBC,
+                    $Jenis_FIBC,
                     $LiftingBelt_Type,
                     $SewingThread_Type,
-                    // $Sewing_Method,
-                    // $Stitch_Approx,
-                    // $Fit_to_Draw,
-                    // $UserInput,
+                    $Sewing_Method,
+                    $Stitch_Approx,
+                    $Fit_to_Draw,
+                    $UserInput,
                     $TimeInput,
                     $Panjang2,
                     $Lebar2,
@@ -185,7 +178,6 @@ class InputDetailController extends Controller
                     $Denier_Waft2,
                     $Denier_Weft2,
                     $Weight2,
-                    // $Copy_RefNo,
                     $Top_KG_1,
                     $Top_KG_2,
                     $Top_KG_3,
@@ -215,29 +207,90 @@ class InputDetailController extends Controller
         }
     }
 
-    public function show($id)
+    public function show($id, Request $request)
     {
         if ($id == 'GetReff') {
             $refNo = DB::connection('ConnTestQC')->select('exec [SP_1273_QTC_MAINT_FIBC] @Kode = ?', [2]);
-            $data_list = [];
+            $data_ref = [];
             foreach ($refNo as $refno) {
-                $data_list[] = [
+                $data_ref[] = [
                     'Reference_No' => $refno->Reference_No,
                     'Tanggal' => $refno->Tanggal,
                 ];
             }
-            return datatables($data_list)->make(true);
-        } elseif ($id == 'GetBagCode') {
+            return datatables($data_ref)->make(true);
+        } else if ($id == 'getDataDetailReference') {
+            $dataDetailRef = DB::connection('ConnTestQC')->select('exec [SP_1273_QTC_LIST_FIBC] @Kode = ?, @RefNo = ?', [2, $request->input('no_ref')]);
+
+            $data_detailReff = [];
+            // dd($dataDetailRef);
+
+            foreach ($dataDetailRef as $dataDetail) {
+                $data_detailReff[] = [
+                    'Reference_No' => $dataDetail->Reference_No,
+                    'Tanggal' => $dataDetail->Tanggal,
+                    'Customer' => $dataDetail->Customer,
+                    'Bag_Code' => $dataDetail->Bag_Code,
+                    'Bag_Type' => $dataDetail->Bag_Type,
+                    'PO_No' => $dataDetail->PO_No,
+                    'Tanggal_Prod' => $dataDetail->Tanggal_Prod,
+                    'Tanggal_Testing' => $dataDetail->Tanggal_Testing,
+                    'Size' => $dataDetail->Size,
+                    'Reinforced' => $dataDetail->Reinforced,
+                    'Colour' => $dataDetail->Colour,
+                    'SWL' => $dataDetail->SWL,
+                    'sf' => $dataDetail->sf,
+                    'LiftingBelt_Type' => $dataDetail->LiftingBelt_Type,
+                    'SewingThread_Type' => $dataDetail->SewingThread_Type,
+                    'Top_KG_1' => $dataDetail->Top_KG_1,
+                    'Top_KG_2' => $dataDetail->Top_KG_2,
+                    'Top_KG_3' => $dataDetail->Top_KG_3,
+                    'Top_KG_4' => $dataDetail->Top_KG_4,
+                    'Top_KG_5' => $dataDetail->Top_KG_5,
+                    'Top_Persen_1' => $dataDetail->Top_Persen_1,
+                    'Top_Persen_2' => $dataDetail->Top_Persen_2,
+                    'Top_Persen_3' => $dataDetail->Top_Persen_3,
+                    'Top_Persen_4' => $dataDetail->Top_Persen_4,
+                    'Top_Persen_5' => $dataDetail->Top_Persen_5,
+                    'Bottom_KG_1' => $dataDetail->Bottom_KG_1,
+                    'Bottom_KG_2' => $dataDetail->Bottom_KG_2,
+                    'Bottom_KG_3' => $dataDetail->Bottom_KG_3,
+                    'Bottom_KG_4' => $dataDetail->Bottom_KG_4,
+                    'Bottom_KG_5' => $dataDetail->Bottom_KG_5,
+                    'Bottom_Persen_1' => $dataDetail->Bottom_Persen_1,
+                    'Bottom_Persen_2' => $dataDetail->Bottom_Persen_2,
+                    'Bottom_Persen_3' => $dataDetail->Bottom_Persen_3,
+                    'Bottom_Persen_4' => $dataDetail->Bottom_Persen_4,
+                    'Bottom_Persen_5' => $dataDetail->Bottom_Persen_5,
+                    'Panjang' => $dataDetail->Panjang,
+                    'Lebar' => $dataDetail->Lebar,
+                    'Waft' => $dataDetail->Waft,
+                    'Denier_Waft' => $dataDetail->Denier_Waft,
+                    'Weft' => $dataDetail->Weft,
+                    'Denier_Weft' => $dataDetail->Denier_Weft,
+                    'Weight' => $dataDetail->Weight,
+                    'Panjang2' => $dataDetail->Panjang2,
+                    'Lebar2' => $dataDetail->Lebar2,
+                    'Waft2' => $dataDetail->Waft2,
+                    'Denier_Waft2' => $dataDetail->Denier_Waft2,
+                    'Weft2' => $dataDetail->Weft2,
+                    'Denier_Weft2' => $dataDetail->Denier_Weft2,
+                    'Weight2' => $dataDetail->Weight2,
+                ];
+            }
+
+            return response()->json($data_detailReff);
+        } else if ($id == 'GetBagCode') {
             $bagCode = DB::connection('ConnTestQC')->select('exec [SP_1273_QTC_LIST_FIBC] @Kode = ?', [1]);
-            $data_list = [];
+            $data_bag = [];
             // dd($bagCode);
             foreach ($bagCode as $bagCode) {
-                $data_list[] = [
+                $data_bag[] = [
                     'Reference_No' => $bagCode->Reference_No,
                     'Bag_Code' => $bagCode->Bag_Code,
                 ];
             }
-            return datatables($data_list)->make(true);
+            return datatables($data_bag)->make(true);
         }
     }
 
