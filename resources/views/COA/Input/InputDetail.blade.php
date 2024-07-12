@@ -31,7 +31,6 @@
                         <div class="form-row">
                             <div class="form-group col-md-2">
                                 <label>Ref No :</label>
-                                <label style="display: none">No Reference</label>
                                 <input type="text" id="No" name="No" class="form-control">
                             </div>
                             <div class="form-group col-md-10" style="margin-top: 31px;">
@@ -94,8 +93,9 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="reinforced">Reinforcedx</label>
+                                    <label for="reinforced">Reinforced</label>
                                     <select class="form-control" id="reinforced" name="reinforced">
+                                        <option value="blank">-</option>
                                         <option value="yes">Yes</option>
                                         <option value="no">No</option>
                                     </select>
@@ -138,7 +138,7 @@
                                     </div>
                                     <label id="weightLabel" class="text-center mt-2"></label>
                                 </div>
-                                {{-- weight tabel --}}
+                                {{-- Form untuk Weight 1 --}}
                                 <div id="formWeight1">
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
@@ -321,19 +321,19 @@
 
                         {{-- Bag Detail --}}
                         <label>Bag Detail</label>
-                        <div class="form-row mb-3" style="border: 1px solid #ddd">
+                        <div class="form-row mb-3" id="bag_detail" style="border: 1px solid #ddd">
                             <div class="col-md-12 mt-3">
                                 <label for="liftBeltType">A. Lifting Belt</label>
                                 <div class="form-group">
                                     <label>Type :</label>
-                                    <label style="display: none">Type Lifting Belt</label>
+                                    <label style="display: none" for="liftBeltType">Type Lifting Belt</label>
                                     <input type="text" class="form-control" id="liftBeltType" name="liftBeltType">
                                 </div>
 
                                 <label>B. Sewing Thread</label>
                                 <div class="form-group">
                                     <label for="sewingThreadType">Type :</label>
-                                    <label style="display: none">Type Sewing Thread</label>
+                                    <label style="display: none" for="sewingThreadType">Type Sewing Thread</label>
                                     <input type="text" class="form-control" id="sewingThreadType"
                                         name="sewingThreadType">
                                 </div>

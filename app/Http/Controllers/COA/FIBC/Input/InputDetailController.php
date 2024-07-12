@@ -200,6 +200,7 @@ class InputDetailController extends Controller
                     $Bottom_Persen_5
                 ]
             );
+            dd($process);
 
             return response()->json(['success' => 'Data inserted successfully'], 200);
         } catch (\Exception $e) {
