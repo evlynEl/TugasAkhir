@@ -26,15 +26,16 @@
                                 <div class="col-sm-2">
                                     <input type="time" class="form-control" id="jamInput">
                                 </div>
+                                <div class="col-sm-3">
+                                </div>
                                 <div class="col-sm-2">
                                     <label for="nomorTransaksi" class="col-form-label">No. Transaksi</label>
                                 </div>
                                 <div class="col-sm-2">
                                     <input type="text" id="nomorTransaksi" class="form-control">
                                 </div>
-                                <div class="col-sm-2">
-                                    <button type="button" class="btn btn-primary" id="buttonNomorTransaksi">No.
-                                        Transaksi</button>
+                                <div class="col-sm-1">
+                                    <button type="button" class="btn btn-primary" id="buttonNomorTransaksi">...</button>
                                 </div>
                             </div>
 
@@ -70,17 +71,14 @@
                                 <div class="col-sm-2">
                                     <label for="mesin" class="col-form-label">Mesin</label>
                                 </div>
-                                <div class="col-sm-2">
+                                <div class="col-sm-1">
                                     <input type="text" class="form-control" id="mesin" disabled>
                                 </div>
-                                <div class="col-sm-2">
-                                    <label for="namaMesin" class="col-form-label">Nama Mesin</label>
-                                </div>
-                                <div class="col-sm-2">
+                                <div class="col-sm-1">
                                     <input type="text" class="form-control" id="namaMesin" disabled>
                                 </div>
                                 <div class="col-sm-2">
-                                    <button type="button" class="btn btn-primary" id="buttonIdMesin">Cari Mesin</button>
+                                    <button type="button" class="btn btn-primary" id="buttonIdMesin">...</button>
                                 </div>
                             </div>
 
@@ -89,19 +87,19 @@
                                 <div class="col-sm-2">
                                     <label for="spekBenang" class="col-form-label">Spek Benang</label>
                                 </div>
-                                <div class="col-sm-2">
+                                <div class="col-sm-4">
                                     <input type="text" class="form-control" id="spekBenang" disabled>
                                 </div>
+                                <div class="col-sm-1">
+                                    <button type="button" class="btn btn-primary" id="buttonSpekBenang">...</button>
+                                </div>
                                 <div class="col-sm-2">
-                                    <label for="idKonversi" class="col-form-label">Id Konversi Ext</label>
+                                    <label for="idKonversi" class="col-form-label">Id Konversi Ext:</label>
                                 </div>
                                 <div class="col-sm-2">
                                     <input type="text" class="form-control" id="idKonversi">
                                 </div>
-                                <div class="col-sm-2">
-                                    <button type="button" class="btn btn-primary" id="buttonSpekBenang">Spek
-                                        Benang</button>
-                                </div>
+
                             </div>
 
                             <!-- Row 6: Keterangan and Denier Rata-Rata -->
@@ -109,13 +107,13 @@
                                 <div class="col-sm-2">
                                     <label for="keterangan" class="col-form-label">Keterangan</label>
                                 </div>
-                                <div class="col-sm-4">
+                                <div class="col-sm-2">
                                     <input type="text" class="form-control" id="keterangan">
                                 </div>
                                 <div class="col-sm-2">
                                     <label for="denier" class="col-form-label">Denier Rata-Rata</label>
                                 </div>
-                                <div class="col-sm-4">
+                                <div class="col-sm-3">
                                     <input type="text" class="form-control" id="denier">
                                 </div>
                             </div>
@@ -127,7 +125,7 @@
                         {{-- quantity dan prosentase --}}
                         <div class="container mt-3">
                             <div class="row">
-                                <div class="col-sm-10">
+                                <div class="col-sm-9">
                                 </div>
                                 <div class="col-sm-1">
                                     Quantity
@@ -150,18 +148,17 @@
                                     <input type="text" id="typeBahan" name="typeBahan" class="form-control mb-1"
                                         disabled>
                                 </div>
-                                <div class="col-sm-2">
-                                    <button type="button" class="btn btn-primary form-control mb-1"
-                                        id="buttonBahanBaku">Bahan Baku</button>
+                                <div class="col-sm-1">
+                                    <button type="button" class="btn btn-primary" id="buttonBahanBaku">...</button>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" id="quantityBahanBaku" name="quantityBahanBaku"
                                         class="form-control mb-1" disabled>
                                 </div>
-                                <div class="col-sm-1">
+                                {{-- <div class="col-sm-1">
                                     <input type="text" id="prosentaseBahanBaku" name="prosentaseBahanBaku"
                                         class="form-control mb-1" disabled>
-                                </div>
+                                </div> --}}
                             </div>
 
                             <!-- Calpet/CACO3 -->
@@ -177,9 +174,8 @@
                                     <input type="text" id="typeCalpetCaco3" name="typeCalpetCaco3"
                                         class="form-control mb-1" disabled>
                                 </div>
-                                <div class="col-sm-2">
-                                    <button type="button" class="btn btn-primary form-control mb-1"
-                                        id="buttonCalpetCaco3">Calpet/CACO3</button>
+                                <div class="col-sm-1">
+                                    <button type="button" class="btn btn-primary" id="buttonCalpetCaco3">...</button>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" id="quantityCalpetCaco3" name="quantityCalpetCaco3"
@@ -204,9 +200,8 @@
                                     <input type="text" id="typeMasterBath" name="typeMasterBath"
                                         class="form-control mb-1" disabled>
                                 </div>
-                                <div class="col-sm-2">
-                                    <button type="button" class="btn btn-primary form-control mb-1"
-                                        id="buttonMasterBath">MasterBath</button>
+                                <div class="col-sm-1">
+                                    <button type="button" class="btn btn-primary" id="buttonMasterBath">...</button>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" id="quantityMasterBath" name="quantityMasterBath"
@@ -231,9 +226,8 @@
                                     <input type="text" id="typeUv" name="typeUv" class="form-control mb-1"
                                         disabled>
                                 </div>
-                                <div class="col-sm-2">
-                                    <button type="button" class="btn btn-primary form-control mb-1" id="buttonUv">U
-                                        V</button>
+                                <div class="col-sm-1">
+                                    <button type="button" class="btn btn-primary" id="buttonUv">...</button>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" id="quantityUv" name="quantityUv" class="form-control mb-1"
@@ -258,9 +252,8 @@
                                     <input type="text" id="typeAntiStatic" name="typeAntiStatic"
                                         class="form-control mb-1" disabled>
                                 </div>
-                                <div class="col-sm-2">
-                                    <button type="button" class="btn btn-primary form-control mb-1"
-                                        id="buttonAntiStatic">Anti Static</button>
+                                <div class="col-sm-1">
+                                    <button type="button" class="btn btn-primary" id="buttonAntiStatic">...</button>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" id="quantityAntiStatic" name="quantityAntiStatic"
@@ -285,9 +278,8 @@
                                     <input type="text" id="typePeletan" name="typePeletan" class="form-control mb-1"
                                         disabled>
                                 </div>
-                                <div class="col-sm-2">
-                                    <button type="button" class="btn btn-primary form-control mb-1"
-                                        id="buttonPeletan">Peletan</button>
+                                <div class="col-sm-1">
+                                    <button type="button" class="btn btn-primary" id="buttonPeletan">...</button>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" id="quantityPeletan" name="quantityPeletan"
@@ -312,9 +304,8 @@
                                     <input type="text" id="typeAdditif" name="typeAdditif" class="form-control mb-1"
                                         disabled>
                                 </div>
-                                <div class="col-sm-2">
-                                    <button type="button" class="btn btn-primary form-control mb-1"
-                                        id="buttonAdditif">Additif</button>
+                                <div class="col-sm-1">
+                                    <button type="button" class="btn btn-primary" id="buttonAdditif">...</button>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" id="quantityAdditif" name="quantityAdditif"
@@ -339,9 +330,8 @@
                                     <input type="text" id="typeLldpe" name="typeLldpe" class="form-control mb-1"
                                         disabled>
                                 </div>
-                                <div class="col-sm-2">
-                                    <button type="button" class="btn btn-primary form-control mb-1"
-                                        id="buttonLldpe">LLDPE</button>
+                                <div class="col-sm-1">
+                                    <button type="button" class="btn btn-primary" id="buttonLldpe">...</button>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" id="quantityLldpe" name="quantityLldpe"
@@ -366,9 +356,8 @@
                                     <input type="text" id="typeLdpeLami" name="typeLdpeLami"
                                         class="form-control mb-1" disabled>
                                 </div>
-                                <div class="col-sm-2">
-                                    <button type="button" class="btn btn-primary form-control mb-1"
-                                        id="buttonLdpeLami">LDPE Lami</button>
+                                <div class="col-sm-1">
+                                    <button type="button" class="btn btn-primary" id="buttonLdpeLami">...</button>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" id="quantityLdpeLami" name="quantityLdpeLami"
@@ -393,9 +382,8 @@
                                     <input type="text" id="typeLdpe" name="typeLdpe" class="form-control mb-1"
                                         disabled>
                                 </div>
-                                <div class="col-sm-2">
-                                    <button type="button" class="btn btn-primary form-control mb-1"
-                                        id="buttonLdpe">LDPE</button>
+                                <div class="col-sm-1">
+                                    <button type="button" class="btn btn-primary" id="buttonLdpe">...</button>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" id="quantityLdpe" name="quantityLdpe"
@@ -420,9 +408,8 @@
                                     <input type="text" id="typeConductive" name="typeConductive"
                                         class="form-control mb-1" disabled>
                                 </div>
-                                <div class="col-sm-2">
-                                    <button type="button" class="btn btn-primary form-control mb-1"
-                                        id="buttonConductive">Conductive</button>
+                                <div class="col-sm-1">
+                                    <button type="button" class="btn btn-primary" id="buttonConductive">...</button>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" id="quantityConductive" name="quantityConductive"
@@ -447,9 +434,8 @@
                                     <input type="text" id="typeHdpe" name="typeHdpe" class="form-control mb-1"
                                         disabled>
                                 </div>
-                                <div class="col-sm-2">
-                                    <button type="button" class="btn btn-primary form-control mb-1"
-                                        id="buttonHdpe">HDPE</button>
+                                <div class="col-sm-1">
+                                    <button type="button" class="btn btn-primary" id="buttonHdpe">...</button>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" id="quantityHdpe" name="quantityHdpe"
@@ -474,9 +460,8 @@
                                     <input type="text" id="typeSweeping" name="typeSweeping"
                                         class="form-control mb-1" disabled>
                                 </div>
-                                <div class="col-sm-2">
-                                    <button type="button" class="btn btn-primary form-control mb-1"
-                                        id="buttonSweeping">Sweeping</button>
+                                <div class="col-sm-1">
+                                    <button type="button" class="btn btn-primary" id="buttonSweeping">...</button>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" id="quantitySweeping" name="quantitySweeping"
@@ -501,9 +486,8 @@
                                     <input type="text" id="typeInjection" name="typeInjection"
                                         class="form-control mb-1" disabled>
                                 </div>
-                                <div class="col-sm-2">
-                                    <button type="button" class="btn btn-primary form-control mb-1"
-                                        id="buttonInjection">Injection</button>
+                                <div class="col-sm-1">
+                                    <button type="button" class="btn btn-primary" id="buttonInjection">...</button>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" id="quantityInjection" name="quantityInjection"
@@ -520,6 +504,115 @@
 
                     </div>
                 </div>
+
+                {{-- table daftar Komposisi --}}
+                <div class="card">
+                    <div class="card-body RDZOverflow RDZMobilePaddingLR0">
+                        <div class="acs-div-container">
+                            <div class="container">
+                                <h5>Daftar Komposisi</h5>
+                                <div class="row">
+                                    <div class="col-sm-10">
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered" id="tableKomposisi">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Id Type</th>
+                                                        <th scope="col">Nama Type</th>
+                                                        <th scope="col">Jenis</th>
+                                                        <th scope="col">Kelompok</th>
+                                                        <th scope="col">Qty</th>
+                                                        <th scope="col">Prosen</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <button class="btn btn-primary btn-block btn-sm" id="isiButton">ISI</button>
+                                        <button class="btn btn-primary btn-block btn-sm"
+                                            id="koreksiButton">KOREKSI</button>
+                                        <button class="btn btn-primary btn-block btn-sm" id="hapusButton">HAPUS</button>
+                                        <button class="btn btn-primary btn-block btn-sm" id="batalButton">BATAL</button>
+                                        <button class="btn btn-primary btn-block btn-sm" id="prosesButton">PROSES</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body RDZOverflow RDZMobilePaddingLR0">
+                        <div class="acs-div-container">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-sm-2">
+                                        <label>Lebar Benang</label>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <input type="text" id="lebarBenang" name="lebarBenang"
+                                            class="form-control mb-1">
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <label>Denier</label>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <input type="text" id="denierAdd" name="denierAdd" class="form-control mb-1">
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-2">
+                                        <label>Strength</label>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <input type="text" id="strength" name="strength" class="form-control mb-1">
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <label>Elongation</label>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <input type="text" id="elongation" name="elongation"
+                                            class="form-control mb-1">
+                                    </div>
+                                    %
+                                    <div class="col-sm-2">
+                                        <label>Ket. Strength</label>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <input type="text" id="ketStrength" name="ketStrength"
+                                            class="form-control mb-1">
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <button class="btn btn-primary btn-block btn-sm" id="tambahButton">+</button>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <button class="btn btn-primary btn-block btn-sm" id="kurangButton">-</button>
+                                    </div>
+                                </div>
+
+                                <br>
+                                <div class="row">
+                                    <div class="col-sm-10">
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered" id="tabelAdd">
+                                                <thead>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>

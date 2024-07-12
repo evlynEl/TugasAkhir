@@ -27,7 +27,6 @@ class QCExtruderTropodoController extends Controller
 
     public function show($id, Request $request)
     {
-
         // ambil nomor transaksi
         if ($id == 'getNomorTransaksi') {
             $tgl = $request->input('tgl');
@@ -88,7 +87,7 @@ class QCExtruderTropodoController extends Controller
             $mesin = $request->input('mesin');
 
             $listSpekBenang = DB::connection('ConnExtruder')
-                ->select('exec SP_5298_QC_LIST_SPEKBNG @kode = ?, @tgl = ?, @shift = ?, @mesin = ?', [2, $tgl, $Shift, $mesin]);
+                ->select('exec SP_5298_QC_LIST_SPEKBNG @kode = ?, @tgl = ?, @shift = ?, @mesin = ?', [2 , $tgl, $Shift, $mesin]);
             $dataSpekBenangArr = [];
             foreach ($listSpekBenang as $listSpek) {
                 $dataSpekBenangArr[] = [
@@ -173,10 +172,245 @@ class QCExtruderTropodoController extends Controller
             foreach ($quantityBahanBakuConn as $listQuantity) {
                 $quantityBahanBakuArr[] = [
                     'Quantity' => $listQuantity->JumlahTritier,
+                    'Prosentase' => $listQuantity->Persentase,
+                    'StatusType' => $listQuantity->StatusType,
+                    'NamaKelompok' => $listQuantity->NamaKelompok
                 ];
             }
             return response()->json($quantityBahanBakuArr);
         }
+
+        // selain bahan baku, ambil data
+        else if (
+            $id == 'getCalpetCaco3' || $id == 'getMasterBath' || $id == 'getUv' || $id == 'getAntiStatic' || $id == 'getPeletan' ||
+            $id == 'getAdditif' || $id == 'getLldpe' || $id == 'getLdpeLami' || $id == 'getLdpe' || $id == 'getConductive' ||
+            $id == 'getHdpe' || $id == 'getSweeping' || $id == 'getInjection'
+        ) {
+            $tgl = $request->input('tgl');
+            $shift = $request->input('shift');
+            $nama = $request->input('nama');
+            $benang = $request->input('benang');
+
+            // kalau buat table
+            switch ($id) {
+                case 'getCalpetCaco3':
+                    $kelompok = 'CACO3';
+                    $kelompok1 = 'Calpet';
+                    break;
+
+                case 'getMasterBath':
+                    $kelompok1 = '';
+                    $kelompok = 'Masterbath';
+                    break;
+
+                case 'getUv':
+                    $kelompok1 = '';
+                    $kelompok = 'UV';
+                    break;
+
+                case 'getAntiStatic':
+                    $kelompok1 = '';
+                    $kelompok = 'Anti Static';
+                    break;
+
+                case 'getPeletan':
+                    $kelompok1 = '';
+                    $kelompok = 'Pelletan';
+                    break;
+
+                case 'getAdditif':
+                    $kelompok1 = '';
+                    $kelompok = 'Additif';
+                    break;
+
+                case 'getLldpe':
+                    $kelompok1 = '';
+                    $kelompok = 'LLDPE';
+                    break;
+
+                case 'getLdpeLami':
+                    $kelompok1 = '';
+                    $kelompok = 'LDPE Lami';
+                    break;
+
+                case 'getLdpe':
+                    $kelompok1 = '';
+                    $kelompok = 'LDPE';
+                    break;
+
+                case 'getConductive':
+                    $kelompok1 = '';
+                    $kelompok = 'Conductive';
+                    break;
+
+                case 'getHdpe':
+                    $kelompok1 = '';
+                    $kelompok = 'HDPE';
+                    break;
+
+                case 'getSweeping':
+                    $kelompok1 = '';
+                    $kelompok = 'Sweeping';
+                    break;
+
+                case 'getInjection':
+                    $kelompok1 = '';
+                    $kelompok = 'PP Injection';
+                    break;
+
+                default:
+                    $kelompok = '';
+                    $kelompok1 = '';
+                    break;
+            }
+
+            $merkConn = DB::connection('ConnExtruder')
+                ->select('exec SP_5298_QC_LIST_BAHAN_KONV
+                @kode = ?,
+                @tgl = ?,
+                @shift = ?,
+                @nama = ?,
+                @benang = ?,
+                @kelompok = ?,
+                @kelompok1 = ?',
+                    [
+                        2,
+                        $tgl,
+                        $shift,
+                        $nama,
+                        $benang,
+                        $kelompok,
+                        $kelompok1
+                    ]
+                );
+            $merkArr = [];
+            foreach ($merkConn as $listMerk) {
+                $merkArr[] = [
+                    'Merk' => $listMerk->Merk,
+                    'IdType' => $listMerk->IdType,
+                ];
+            }
+            return datatables($merkArr)->make(true);
+        }
+
+        // kalau cari quantity dan prosen
+        else if (
+            $id == 'getCalpetCaco3Quantity' || $id == 'getMasterBathQuantity' || $id == 'getUvQuantity' || $id == 'getAntiStaticQuantity' ||
+            $id == 'getPeletanQuantity' || $id == 'getAdditifQuantity' || $id == 'getLldpeQuantity' || $id == 'getLdpeLamiQuantity' ||
+            $id == 'getLdpeQuantity' || $id == 'getConductiveQuantity' || $id == 'getHdpeQuantity' || $id == 'getSweepingQuantity' ||
+            $id == 'getInjectionQuantity'
+        ) {
+            $tgl = $request->input('tgl');
+            $shift = $request->input('shift');
+            $nama = $request->input('nama');
+            $benang = $request->input('benang');
+            $type = $request->input('type');
+
+            switch ($id) {
+                case 'getCalpetCaco3Quantity':
+                    $kelompok = 'CACO3';
+                    $kelompok1 = 'Calpet';
+                    break;
+
+                case 'getMasterBathQuantity':
+                    $kelompok1 = '';
+                    $kelompok = 'Masterbath';
+                    break;
+
+                case 'getUvQuantity':
+                    $kelompok1 = '';
+                    $kelompok = 'UV';
+                    break;
+
+                case 'getAntiStaticQuantity':
+                    $kelompok1 = '';
+                    $kelompok = 'Anti Static';
+                    break;
+
+                case 'getPeletanQuantity':
+                    $kelompok1 = '';
+                    $kelompok = 'Pelletan';
+                    break;
+
+                case 'getAdditifQuantity':
+                    $kelompok1 = '';
+                    $kelompok = 'Additif';
+                    break;
+
+                case 'getLldpeQuantity':
+                    $kelompok1 = '';
+                    $kelompok = 'LLDPE';
+                    break;
+
+                case 'getLdpeLamiQuantity':
+                    $kelompok1 = '';
+                    $kelompok = 'LDPE Lami';
+                    break;
+
+                case 'getLdpeQuantity':
+                    $kelompok1 = '';
+                    $kelompok = 'LDPE';
+                    break;
+
+                case 'getConductiveQuantity':
+                    $kelompok1 = '';
+                    $kelompok = 'Conductive';
+                    break;
+
+                case 'getHdpeQuantity':
+                    $kelompok = 'HDPE';
+                    $kelompok1 = '';
+                    break;
+
+                case 'getSweepingQuantity':
+                    $kelompok = 'Sweeping';
+                    $kelompok1 = '';
+                    break;
+
+                case 'getInjectionQuantity':
+                    $kelompok = 'PP Injection';
+                    $kelompok1 = '';
+                    break;
+
+                default:
+                    $kelompok = '';
+                    $kelompok1 = '';
+                    break;
+            }
+
+            $qtyConn = DB::connection('ConnExtruder')
+                ->select('exec SP_5298_QC_LIST_BAHAN_KONV @kode = ?,
+                @tgl = ?,
+                @shift = ?,
+                @nama = ?,
+                @benang = ?,
+                @kelompok = ?,
+                @kelompok1 = ?,
+                @type = ?',
+                    [
+                        3,
+                        $tgl,
+                        $shift,
+                        $nama,
+                        $benang,
+                        $kelompok,
+                        $kelompok1,
+                        $type
+                    ]
+                );
+
+            $qtyArr = [];
+            foreach ($qtyConn as $listQuantity) {
+                $qtyArr[] = [
+                    'Quantity' => $listQuantity->JumlahTritier,
+                    'Prosentase' => $listQuantity->Persentase,
+                    'StatusType' => $listQuantity->StatusType,
+                    'NamaKelompok' => $listQuantity->NamaKelompok
+                ];
+            }
+            return response()->json($qtyArr);
+        }
+
 
     }
 

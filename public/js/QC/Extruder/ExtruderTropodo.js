@@ -96,6 +96,9 @@ var typeInjection = document.getElementById('typeInjection');
 var quantityInjection = document.getElementById('quantityInjection');
 var prosentaseInjection = document.getElementById('prosentaseInjection');
 
+// Tables
+// var tableKomposisi = new DataTable('#tableKomposisi');
+
 // Nomor Transaksi
 var nomorTransaksi = document.getElementById('nomorTransaksi');
 
@@ -127,6 +130,21 @@ var selectedButtonQuantity;
 var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 document.addEventListener('DOMContentLoaded', function () {
+
+    const tableKomposisi = $('#tableKomposisi').DataTable({
+        paging: false,
+        searching: false,
+        info: false,
+        ordering: false,
+        columns: [
+            { title: 'Id Type' },
+            { title: 'Nama Type' },
+            { title: 'Jenis' },
+            { title: 'Kelompok' },
+            { title: 'Qty' },
+            { title: 'Prosen' }
+        ]
+    });
 
     // button ... ambil nomor transaksi (baru ambil nomor)
     buttonNomorTransaksi.addEventListener('click', async () => {
@@ -366,7 +384,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // button ...  Bahan Baku
     buttonBahanBaku.addEventListener('click', async () => {
         try {
-            let result = Swal.fire({
+            let result = await Swal.fire({
                 title: "Pilih Bahan",
                 html: `<table id="table_bahanBaku" class="display" style="width:100%">
                             <thead>
@@ -417,12 +435,30 @@ document.addEventListener('DOMContentLoaded', function () {
                         });
                     });
                 },
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    const selectedRow = result.value;
-                    bahan.value = selectedRow.IdType.trim();
-                    typeBahan.value = selectedRow.Merk.trim();
+            });
 
+            if (result.isConfirmed) {
+                const selectedRow = result.value;
+                bahan.value = selectedRow.IdType.trim();
+                typeBahan.value = selectedRow.Merk.trim();
+
+                let dataExists = false;
+                $("#tableKomposisi tbody tr").each(function () {
+                    const idType = $(this).find("td:eq(1)").text().trim();
+                    const merk = $(this).find("td:eq(0)").text().trim();
+                    if (idType === selectedRow.IdType.trim() && merk === selectedRow.Merk.trim()) {
+                        dataExists = true;
+                        return false;
+                    }
+                });
+
+                if (dataExists) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Data sudah ada di tabel'
+                    });
+                } else {
                     $.ajax({
                         type: 'GET',
                         url: 'ExtruderTropodo/getQuantityBahanBaku',
@@ -436,21 +472,29 @@ document.addEventListener('DOMContentLoaded', function () {
                         },
                         success: function (result) {
                             quantityBahanBaku.value = result[0].Quantity.trim();
+
+                            $('#tableKomposisi').DataTable().row.add([
+                                selectedRow.Merk.trim(),
+                                selectedRow.IdType.trim(),
+                                result[0].StatusType.trim(),
+                                result[0].NamaKelompok.trim(),
+                                result[0].Quantity.trim(),
+                                0
+                            ]).draw(false);
                         },
                         error: function (xhr, status, error) {
                             console.error(error);
                         }
                     });
-
                 }
-            });
+            }
         } catch (error) {
             console.error("An error occurred:", error);
         }
     });
 
-    // dynamic, blom jadi
-    function openBahanBakuModal(selectedButtonQuantity) {
+    // untuk ambil data semua bahan, selain bahan baku
+    function openAllModal(selectedButtonQuantity) {
         try {
             let result = Swal.fire({
                 title: "Pilih Bahan",
@@ -482,7 +526,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             serverSide: true,
                             order: [1, "asc"],
                             ajax: {
-                                url: "ExtruderTropodo/getBahanBaku",
+                                url: "ExtruderTropodo/" + selectedButtonQuantity,
                                 dataType: "json",
                                 data: {
                                     tgl: tanggal.value,
@@ -506,28 +550,215 @@ document.addEventListener('DOMContentLoaded', function () {
             }).then((result) => {
                 if (result.isConfirmed) {
                     const selectedRow = result.value;
-                    bahan.value = selectedRow.IdType.trim();
-                    typeBahan.value = selectedRow.Merk.trim();
+
+                    var typeSelected;
+
+                    switch (selectedButtonQuantity) {
+                        case 'getCalpetCaco3':
+                            calpetCaco3.value = selectedRow.IdType.trim();
+                            typeCalpetCaco3.value = selectedRow.Merk.trim();
+                            typeSelected = calpetCaco3.value.trim();
+                            break;
+
+                        case 'getMasterBath':
+                            masterBath.value = selectedRow.IdType.trim();
+                            typeMasterBath.value = selectedRow.Merk.trim();
+                            typeSelected = masterBath.value.trim();
+                            break;
+
+                        case 'getUv':
+                            uv.value = selectedRow.IdType.trim();
+                            typeUv.value = selectedRow.Merk.trim();
+                            typeSelected = uv.value.trim();
+                            break;
+
+                        case 'getAntiStatic':
+                            antiStatic.value = selectedRow.IdType.trim();
+                            typeAntiStatic.value = selectedRow.Merk.trim();
+                            typeSelected = antiStatic.value.trim();
+                            break;
+
+                        case 'getPeletan':
+                            peletan.value = selectedRow.IdType.trim();
+                            typePeletan.value = selectedRow.Merk.trim();
+                            typeSelected = peletan.value.trim();
+                            break;
+
+                        case 'getAdditif':
+                            additif.value = selectedRow.IdType.trim();
+                            typeAdditif.value = selectedRow.Merk.trim();
+                            typeSelected = additif.value.trim();
+                            break;
+
+                        case 'getLldpe':
+                            lldpe.value = selectedRow.IdType.trim();
+                            typeLldpe.value = selectedRow.Merk.trim();
+                            typeSelected = lldpe.value.trim();
+                            break;
+
+                        case 'getLdpeLami':
+                            ldpeLami.value = selectedRow.IdType.trim();
+                            typeLdpeLami.value = selectedRow.Merk.trim();
+                            typeSelected = ldpeLami.value.trim();
+                            break;
+
+                        case 'getLdpe':
+                            ldpe.value = selectedRow.IdType.trim();
+                            typeLdpe.value = selectedRow.Merk.trim();
+                            typeSelected = ldpe.value.trim();
+                            break;
+
+                        case 'getConductive':
+                            conductive.value = selectedRow.IdType.trim();
+                            typeConductive.value = selectedRow.Merk.trim();
+                            typeSelected = conductive.value.trim();
+                            break;
+
+                        case 'getHdpe':
+                            hdpe.value = selectedRow.IdType.trim();
+                            typeHdpe.value = selectedRow.Merk.trim();
+                            typeSelected = hdpe.value.trim();
+                            break;
+
+                        case 'getSweeping':
+                            sweeping.value = selectedRow.IdType.trim();
+                            typeSweeping.value = selectedRow.Merk.trim();
+                            typeSelected = sweeping.value.trim();
+                            break;
+
+                        case 'getInjection':
+                            injection.value = selectedRow.IdType.trim();
+                            typeInjection.value = selectedRow.Merk.trim();
+                            typeSelected = injection.value.trim();
+                            break;
+
+                        default:
+                            console.log('No matching case found for selectedButtonQuantity:', selectedButtonQuantity);
+                            break;
+                    }
+
+                    let buttonQuantity = selectedButtonQuantity + 'Quantity';
 
                     $.ajax({
                         type: 'GET',
-                        url: 'ExtruderTropodo/' + selectedButtonQuantity,
+                        url: 'ExtruderTropodo/' + buttonQuantity,
                         data: {
                             _token: csrfToken,
                             tgl: tanggal.value,
                             shift: shiftLetter.value,
                             nama: namaMesin.value,
                             benang: spekBenang.value,
-                            type: bahan.value
+                            type: typeSelected
                         },
                         success: function (result) {
-                            quantityBahanBaku.value = result[0].Quantity.trim();
+
+                            let StatusTypeVariable = result[0].StatusType.trim();
+                            let NamaKelompokVariable = result[0].NamaKelompok.trim();
+                            let QuantityVariable = result[0].Quantity.trim();
+                            let ProsentaseVariable = result[0].Prosentase.trim();
+
+                            let dataExists = false;
+                            $("#tableKomposisi tbody tr").each(function () {
+                                const idType = $(this).find("td:eq(1)").text().trim();
+                                const merk = $(this).find("td:eq(0)").text().trim();
+                                if (idType === selectedRow.IdType.trim() && merk === selectedRow.Merk.trim()) {
+                                    dataExists = true;
+                                    return false;
+                                }
+                            });
+
+                            if (dataExists) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: 'Data sudah ada di tabel'
+                                });
+                            } else {
+                                $('#tableKomposisi').DataTable().row.add([
+                                    selectedRow.Merk.trim(),
+                                    selectedRow.IdType.trim(),
+                                    StatusTypeVariable,
+                                    NamaKelompokVariable,
+                                    QuantityVariable,
+                                    0
+                                ]).draw(false);
+
+                                switch (selectedButtonQuantity) {
+                                    case 'getCalpetCaco3':
+                                        quantityCalpetCaco3.value = QuantityVariable;
+                                        prosentaseCalpetCaco3.value = ProsentaseVariable;
+                                        break;
+
+                                    case 'getMasterBath':
+                                        quantityMasterBath.value = QuantityVariable;
+                                        prosentaseMasterBath.value = ProsentaseVariable;
+                                        break;
+
+                                    case 'getUv':
+                                        quantityUv.value = QuantityVariable;
+                                        prosentaseUv.value = ProsentaseVariable;
+                                        break;
+
+                                    case 'getAntiStatic':
+                                        quantityAntiStatic.value = QuantityVariable;
+                                        prosentaseAntiStatic.value = ProsentaseVariable;
+                                        break;
+
+                                    case 'getPeletan':
+                                        quantityPeletan.value = QuantityVariable;
+                                        prosentasePeletan.value = ProsentaseVariable;
+                                        break;
+
+                                    case 'getAdditif':
+                                        quantityAdditif.value = QuantityVariable;
+                                        prosentaseAdditif.value = ProsentaseVariable;
+                                        break;
+
+                                    case 'getLldpe':
+                                        quantityLldpe.value = QuantityVariable;
+                                        prosentaseLldpe.value = ProsentaseVariable;
+                                        break;
+
+                                    case 'getLdpeLami':
+                                        quantityLdpeLami.value = QuantityVariable;
+                                        prosentaseLdpeLami.value = ProsentaseVariable;
+                                        break;
+
+                                    case 'getLdpe':
+                                        quantityLdpe.value = QuantityVariable;
+                                        prosentaseLdpe.value = ProsentaseVariable;
+                                        break;
+
+                                    case 'getConductive':
+                                        quantityConductive.value = QuantityVariable;
+                                        prosentaseConductive.value = ProsentaseVariable;
+                                        break;
+
+                                    case 'getHdpe':
+                                        quantityHdpe.value = QuantityVariable;
+                                        prosentaseHdpe.value = ProsentaseVariable;
+                                        break;
+
+                                    case 'getSweeping':
+                                        quantitySweeping.value = QuantityVariable;
+                                        prosentaseSweeping.value = ProsentaseVariable;
+                                        break;
+
+                                    case 'getInjection':
+                                        quantityInjection.value = QuantityVariable;
+                                        prosentaseInjection.value = ProsentaseVariable;
+                                        break;
+
+                                    default:
+                                        console.log('No matching case found for selectedButtonQuantity:', selectedButtonQuantity);
+                                        break;
+                                }
+                            }
                         },
                         error: function (xhr, status, error) {
                             console.error(error);
                         }
                     });
-
                 }
             });
         } catch (error) {
@@ -535,17 +766,81 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    buttonCalpetCaco3.addEventListener('click', function () { openBahanBakuModal('getCalpetCaco3'); });
-    buttonMasterBath.addEventListener('click', function () { openBahanBakuModal('getMasterBath'); });
-    buttonUv.addEventListener('click', function () { openBahanBakuModal('getUv'); });
-    buttonAntiStatic.addEventListener('click', function () { openBahanBakuModal('getAntiStatic'); });
-    buttonPeletan.addEventListener('click', function () { openBahanBakuModal('getPeletan'); });
-    buttonAdditif.addEventListener('click', function () { openBahanBakuModal('getAdditif'); });
-    buttonLldpe.addEventListener('click', function () { openBahanBakuModal('getLldpe'); });
-    buttonLdpeLami.addEventListener('click', function () { openBahanBakuModal('getLdpeLami'); });
-    buttonLdpe.addEventListener('click', function () { openBahanBakuModal('getLdpe'); });
-    buttonConductive.addEventListener('click', function () { openBahanBakuModal('getConductive'); });
-    buttonHdpe.addEventListener('click', function () { openBahanBakuModal('getHdpe'); });
-    buttonSweeping.addEventListener('click', function () { openBahanBakuModal('getSweeping'); });
-    buttonInjection.addEventListener('click', function () { openBahanBakuModal('getInjection'); });
+    // langsung ke function ambil data
+    buttonCalpetCaco3.addEventListener('click', function () { openAllModal('getCalpetCaco3'); });
+    buttonMasterBath.addEventListener('click', function () { openAllModal('getMasterBath'); });
+    buttonUv.addEventListener('click', function () { openAllModal('getUv'); });
+    buttonAntiStatic.addEventListener('click', function () { openAllModal('getAntiStatic'); });
+    buttonPeletan.addEventListener('click', function () { openAllModal('getPeletan'); });
+    buttonAdditif.addEventListener('click', function () { openAllModal('getAdditif'); });
+    buttonLldpe.addEventListener('click', function () { openAllModal('getLldpe'); });
+    buttonLdpeLami.addEventListener('click', function () { openAllModal('getLdpeLami'); });
+    buttonLdpe.addEventListener('click', function () { openAllModal('getLdpe'); });
+    buttonConductive.addEventListener('click', function () { openAllModal('getConductive'); });
+    buttonHdpe.addEventListener('click', function () { openAllModal('getHdpe'); });
+    buttonSweeping.addEventListener('click', function () { openAllModal('getSweeping'); });
+    buttonInjection.addEventListener('click', function () { openAllModal('getInjection'); });
+
+    const tableAdd = $('#tabelAdd').DataTable({
+        paging: false,
+        searching: false,
+        info: false,
+        ordering: false,
+        columns: [
+            { title: 'Lebar Benang' },
+            { title: 'Denier' },
+            { title: 'Strength' },
+            { title: 'Elongation' },
+            { title: 'Ket. Strength' }
+        ]
+    });
+
+    // Function to add row to DataTable
+    $('#tambahButton').on('click', function () {
+        const lebarBenang = $('#lebarBenang').val().trim();
+        const denier = $('#denierAdd').val().trim();
+        const strength = $('#strength').val().trim();
+        const elongation = $('#elongation').val().trim();
+        const ketStrength = $('#ketStrength').val().trim();
+
+        if (lebarBenang && denier && strength && elongation && ketStrength) {
+            tableAdd.row.add([lebarBenang, denier, strength, elongation, ketStrength]).draw(false);
+
+            $('#lebarBenang').val('');
+            $('#denierAdd').val('');
+            $('#strength').val('');
+            $('#elongation').val('');
+            $('#ketStrength').val('');
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Mohon isi semua detail.'
+            });
+        }
+    });
+
+    $('#kurangButton').on('click', function () {
+        const selectedRow = tableAdd.row('.selected');
+        if (selectedRow.any()) {
+            selectedRow.remove().draw(false);
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Mohon isi semua detail.'
+            });
+        }
+    });
+
+    $('#tabelAdd tbody').on('click', 'tr', function () {
+        if ($(this).hasClass('selected')) {
+            $(this).removeClass('selected');
+        } else {
+            tableAdd.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+        }
+    });
+
+
 });
