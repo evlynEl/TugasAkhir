@@ -46,7 +46,7 @@
 
                         {{-- FIBC Detail --}}
                         <label>FIBC Detail</label>
-                        <div class="form-row" style="border: 1px solid #ddd">
+                        <div class="form-row" id="fibc_detail" style="border: 1px solid #ddd">
                             <div class="col-md-4 mt-3">
                                 <div class="form-group">
                                     <label for="customer">Customer</label>
@@ -96,8 +96,8 @@
                                     <label for="reinforced">Reinforced</label>
                                     <select class="form-control" id="reinforced" name="reinforced">
                                         <option value="blank">-</option>
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
                                     </select>
                                 </div>
 
@@ -143,48 +143,48 @@
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
                                             <div class="form-group">
-                                                <label for="panjang1">Panjang 1</label>
-                                                <input type="text" class="form-control" id="panjang1"
-                                                    name="panjang1">
+                                                <label for="Panjang">Panjang 1</label>
+                                                <input type="text" class="form-control" id="Panjang"
+                                                    name="Panjang">
                                             </div>
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <div class="form-group">
-                                                <label for="lebar1">Lebar</label>
-                                                <input type="text" class="form-control" id="lebar1"
-                                                    name="lebar1">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <div class="form-group">
-                                                <label for="waft1">Waft</label>
-                                                <input type="text" class="form-control" id="waft1"
-                                                    name="waft1">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <div class="form-group">
-                                                <label for="weft1">Weft</label>
-                                                <input type="text" class="form-control" id="weft1"
-                                                    name="weft1">
+                                                <label for="Lebar">Lebar</label>
+                                                <input type="text" class="form-control" id="Lebar"
+                                                    name="Lebar">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
                                             <div class="form-group">
-                                                <label for="denierWaft1">Denier Waft</label>
-                                                <input type="text" class="form-control" id="denierWaft1"
-                                                    name="denierWaft1">
+                                                <label for="Waft">Waft</label>
+                                                <input type="text" class="form-control" id="Waft"
+                                                    name="Waft">
                                             </div>
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <div class="form-group">
-                                                <label for="denierWeft1">Denier Weft</label>
-                                                <input type="text" class="form-control" id="denierWeft1"
-                                                    name="denierWeft1">
+                                                <label for="Weft">Weft</label>
+                                                <input type="text" class="form-control" id="Weft"
+                                                    name="Weft">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <div class="form-group">
+                                                <label for="Denier_Waft">Denier Waft</label>
+                                                <input type="text" class="form-control" id="Denier_Waft"
+                                                    name="Denier_Waft">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <div class="form-group">
+                                                <label for="Denier_Weft">Denier Weft</label>
+                                                <input type="text" class="form-control" id="Denier_Weft"
+                                                    name="Denier_Weft">
                                             </div>
                                         </div>
                                     </div>
@@ -209,48 +209,48 @@
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
                                             <div class="form-group">
-                                                <label for="panjang2">Panjang 2</label>
-                                                <input type="text" class="form-control" id="panjang2"
-                                                    name="panjang2">
+                                                <label for="Panjang2">Panjang 2</label>
+                                                <input type="text" class="form-control" id="Panjang2"
+                                                    name="Panjang2">
                                             </div>
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <div class="form-group">
-                                                <label for="lebar2">Lebar</label>
-                                                <input type="text" class="form-control" id="lebar2"
-                                                    name="lebar2">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <div class="form-group">
-                                                <label for="waft2">Waft</label>
-                                                <input type="text" class="form-control" id="waft2"
-                                                    name="waft2">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <div class="form-group">
-                                                <label for="weft2">Weft</label>
-                                                <input type="text" class="form-control" id="weft2"
-                                                    name="weft2">
+                                                <label for="Lebar2">Lebar</label>
+                                                <input type="text" class="form-control" id="Lebar2"
+                                                    name="Lebar2">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
                                             <div class="form-group">
-                                                <label for="denierWaft2">Denier Waft</label>
-                                                <input type="text" class="form-control" id="denierWaft2"
-                                                    name="denierWaft2">
+                                                <label for="Waft2">Waft</label>
+                                                <input type="text" class="form-control" id="Waft2"
+                                                    name="Waft2">
                                             </div>
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <div class="form-group">
-                                                <label for="denierWeft2">Denier Weft</label>
-                                                <input type="text" class="form-control" id="denierWeft2"
-                                                    name="denierWeft2">
+                                                <label for="Weft2">Weft</label>
+                                                <input type="text" class="form-control" id="Weft2"
+                                                    name="Weft2">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <div class="form-group">
+                                                <label for="Denier_Waft2">Denier Waft</label>
+                                                <input type="text" class="form-control" id="Denier_Waft2"
+                                                    name="Denier_Waft2">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <div class="form-group">
+                                                <label for="Denier_Weft2">Denier Weft</label>
+                                                <input type="text" class="form-control" id="Denier_Weft2"
+                                                    name="Denier_Weft2">
                                             </div>
                                         </div>
                                     </div>
