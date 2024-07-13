@@ -5,6 +5,7 @@ namespace App\Http\Controllers\QC\Extruder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\HakAksesController;
 
 class QCExtruderTropodoController extends Controller
@@ -87,7 +88,7 @@ class QCExtruderTropodoController extends Controller
             $mesin = $request->input('mesin');
 
             $listSpekBenang = DB::connection('ConnExtruder')
-                ->select('exec SP_5298_QC_LIST_SPEKBNG @kode = ?, @tgl = ?, @shift = ?, @mesin = ?', [2 , $tgl, $Shift, $mesin]);
+                ->select('exec SP_5298_QC_LIST_SPEKBNG @kode = ?, @tgl = ?, @shift = ?, @mesin = ?', [2, $tgl, $Shift, $mesin]);
             $dataSpekBenangArr = [];
             foreach ($listSpekBenang as $listSpek) {
                 $dataSpekBenangArr[] = [
@@ -411,6 +412,21 @@ class QCExtruderTropodoController extends Controller
             return response()->json($qtyArr);
         }
 
+        // ambil data id transaksi
+        else if ($id == 'getIdTransaksi') {
+
+            $idTransaksiConn = DB::connection('ConnExtruder')
+                ->select('exec SP_5298_QC_INSERT_MASTERQC @kode = ?', [1]);
+
+            $idTransaksiArr = [];
+            foreach ($idTransaksiConn as $listIdTransaksi) {
+                $idTransaksiArr[] = [
+                    'sNomer' => $listIdTransaksi->sNomer,
+                ];
+            }
+            return response()->json($idTransaksiArr);
+        }
+
 
     }
 
@@ -421,11 +437,203 @@ class QCExtruderTropodoController extends Controller
 
     public function update(Request $request, $id)
     {
-        //
+        if ($id == 'insertDataGeneral') {
+            $jam = $request->input('jam');
+            $tgl = $request->input('tgl');
+            $shift = $request->input('shift');
+            $mesin = $request->input('mesin');
+            $awal = $request->input('awal');
+            $akhir = $request->input('akhir');
+            $benang = $request->input('benang');
+            $denierrata = $request->input('denierrata');
+            $user = Auth::user()->NomorUser;
+            $user = trim($user);
+            $ket = $request->input('ket');
+            $idKonv = $request->input('idKonv');
+
+            try {
+                DB::connection('ConnExtruder')
+                    ->statement('exec [SP_5298_QC_INSERT_MASTERQC] 
+        @Kode = ?, 
+        @jam = ?, 
+        @tgl = ?, 
+        @shift = ?, 
+        @mesin = ?, 
+        @awal = ?, 
+        @akhir = ?, 
+        @benang = ?, 
+        @denierrata = ?, 
+        @user = ?, 
+        @ket = ?, 
+        @idKonv = ?',
+                        [
+                            0,
+                            $jam,
+                            $tgl,
+                            $shift,
+                            $mesin,
+                            $awal,
+                            $akhir,
+                            $benang,
+                            $denierrata,
+                            $user,
+                            $ket,
+                            $idKonv,
+                        ]
+                    );
+
+                return response()->json(['success' => 'Data sudah diSIMPAN'], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Data gagal diSIMPAN: ' . $e->getMessage()], 500);
+            }
+        }
+
+        // insert data komposisi
+        else if ($id == 'insertDataKomposisi') {
+            $noTr = $request->input('noTr');
+            $dataArray = $request->input('dataArray');
+
+            try {
+                DB::beginTransaction();
+                foreach ($dataArray as $data) {
+                    $idType = $data[0];
+                    $jenis = $data[2];
+                    $kelompok = $data[3];
+                    $idKelut = $data[1];
+                    $qty = ($idKelut == 'BB') ? $data[4] : $data[5];
+
+                    DB::connection('ConnExtruder')
+                        ->statement('exec [SP_5409_QC_INSERT_KOMPOSISI] 
+                            @noTr = ?, 
+                            @idType = ?, 
+                            @qty = ?, 
+                            @idKelut = ?,
+                            @idKel = ?',
+                            [
+                                $noTr,
+                                $idType,
+                                $qty,
+                                $jenis,
+                                $kelompok
+                            ]
+                        );
+                }
+
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json(['error' => $e->getMessage()], 500);
+            }
+        }
+
+        // insert detail data (additional data)
+        else if ($id == 'insertAdditionalData') {
+            $noTr = $request->input('noTr');
+            $dataArray = $request->input('dataArray');
+
+            try {
+                DB::beginTransaction();
+                foreach ($dataArray as $data) {
+                    $lebar = $data[0];
+                    $denier = $data[1];
+                    $strength = $data[2];
+                    $elgn = $data[3];
+                    $ketS = $data[4];
+
+                    DB::connection('ConnExtruder')
+                        ->statement('exec [SP_5298_QC_INSERT_DETAILQC] 
+                            @noTr = ?, 
+                            @lebar = ?, 
+                            @denier = ?, 
+                            @strength = ?,
+                            @elgn = ?,
+                            @ketS = ?',
+                            [
+                                $noTr,
+                                $lebar,
+                                $denier,
+                                $strength,
+                                $elgn,
+                                $ketS
+                            ]
+                        );
+                }
+
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json(['error' => $e->getMessage()], 500);
+            }
+        }
+
+        // update nomor counter by id trx
+        else if ($id == 'updateCounter') {
+            $noTr = $request->input('noTr');
+
+            try {
+                DB::connection('ConnExtruder')
+                    ->statement('exec [SP_5298_QC_UPDATE_MASTERQC] 
+                        @kode = ?, 
+                        @noTr = ?',
+                        [
+                            2,
+                            $noTr,
+                        ]
+                    );
+
+                return response()->json(['success' => 'Data berhasil disimpan.'], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Gagal menyimpan data: ' . $e->getMessage()], 500);
+            }
+        }
+
+
     }
 
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
-        //
+        if ($id == 'deleteDetail') {
+            $noTr = $request->input('noTr');
+
+            try {
+                DB::connection('ConnExtruder')
+                    ->statement('exec [SP_5298_QC_DELETE_DETAILQC] @noTr = ?', [
+                        $noTr,
+                    ]);
+                return response()->json(['success' => 'Data successfully deleted.'], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Failed to delete data: ' . $e->getMessage()], 500);
+            }
+        }
+
+        else if ($id == 'deleteBahan') {
+            $noTr = $request->input('noTr');
+
+            try {
+                DB::connection('ConnExtruder')
+                    ->statement('exec [SP_5298_QC_DELETE_BAHAN_BAKU] @noTr = ?', [
+                        $noTr,
+                    ]);
+                return response()->json(['success' => 'Data successfully deleted.'], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Failed to delete data: ' . $e->getMessage()], 500);
+            }
+        }
+
+        else if ($id == 'deleteMaster') {
+            $noTr = $request->input('noTr');
+
+            try {
+                DB::connection('ConnExtruder')
+                    ->statement('exec [SP_5298_QC_DELETE_MASTERQC] @noTr = ?', [
+                        $noTr,
+                    ]);
+                return response()->json(['success' => 'Data successfully deleted.'], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Failed to delete data: ' . $e->getMessage()], 500);
+            }
+        }
+
+        
     }
 }

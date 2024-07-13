@@ -32,7 +32,7 @@
                                     <label for="nomorTransaksi" class="col-form-label">No. Transaksi</label>
                                 </div>
                                 <div class="col-sm-2">
-                                    <input type="text" id="nomorTransaksi" class="form-control">
+                                    <input type="text" id="nomorTransaksi" class="form-control" readonly>
                                 </div>
                                 <div class="col-sm-1">
                                     <button type="button" class="btn btn-primary" id="buttonNomorTransaksi">...</button>
@@ -58,11 +58,11 @@
                                     <input type="text" class="form-control" id="shiftLetter" maxlength="1">
                                 </div>
                                 <div class="col-sm-2">
-                                    <input type="text" class="form-control" id="shiftAwal" disabled>
+                                    <input type="text" class="form-control" id="shiftAwal" readonly>
                                 </div>
                                 <label class="col-form-label">S/D</label>
                                 <div class="col-sm-2">
-                                    <input type="text" class="form-control" id="shiftAkhir" disabled>
+                                    <input type="text" class="form-control" id="shiftAkhir" readonly>
                                 </div>
                             </div>
 
@@ -72,10 +72,10 @@
                                     <label for="mesin" class="col-form-label">Mesin</label>
                                 </div>
                                 <div class="col-sm-1">
-                                    <input type="text" class="form-control" id="mesin" disabled>
+                                    <input type="text" class="form-control" id="mesin" readonly>
                                 </div>
                                 <div class="col-sm-1">
-                                    <input type="text" class="form-control" id="namaMesin" disabled>
+                                    <input type="text" class="form-control" id="namaMesin" readonly>
                                 </div>
                                 <div class="col-sm-2">
                                     <button type="button" class="btn btn-primary" id="buttonIdMesin">...</button>
@@ -88,7 +88,7 @@
                                     <label for="spekBenang" class="col-form-label">Spek Benang</label>
                                 </div>
                                 <div class="col-sm-4">
-                                    <input type="text" class="form-control" id="spekBenang" disabled>
+                                    <input type="text" class="form-control" id="spekBenang" readonly>
                                 </div>
                                 <div class="col-sm-1">
                                     <button type="button" class="btn btn-primary" id="buttonSpekBenang">...</button>
@@ -142,18 +142,18 @@
                                 </div>
                                 <div class="col-sm-2">
                                     <input type="text" id="bahan" name="bahan" class="form-control mb-1"
-                                        disabled>
+                                    readonly>
                                 </div>
                                 <div class="col-sm-4">
                                     <input type="text" id="typeBahan" name="typeBahan" class="form-control mb-1"
-                                        disabled>
+                                    readonly>
                                 </div>
                                 <div class="col-sm-1">
                                     <button type="button" class="btn btn-primary" id="buttonBahanBaku">...</button>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" id="quantityBahanBaku" name="quantityBahanBaku"
-                                        class="form-control mb-1" disabled>
+                                        class="form-control mb-1" readonly>
                                 </div>
                                 {{-- <div class="col-sm-1">
                                     <input type="text" id="prosentaseBahanBaku" name="prosentaseBahanBaku"
@@ -168,22 +168,22 @@
                                 </div>
                                 <div class="col-sm-2">
                                     <input type="text" id="calpetCaco3" name="calpetCaco3" class="form-control mb-1"
-                                        disabled>
+                                    readonly>
                                 </div>
                                 <div class="col-sm-4">
                                     <input type="text" id="typeCalpetCaco3" name="typeCalpetCaco3"
-                                        class="form-control mb-1" disabled>
+                                        class="form-control mb-1" readonly>
                                 </div>
                                 <div class="col-sm-1">
                                     <button type="button" class="btn btn-primary" id="buttonCalpetCaco3">...</button>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" id="quantityCalpetCaco3" name="quantityCalpetCaco3"
-                                        class="form-control mb-1" disabled>
+                                        class="form-control mb-1" readonly>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" id="prosentaseCalpetCaco3" name="prosentaseCalpetCaco3"
-                                        class="form-control mb-1" disabled>
+                                        class="form-control mb-1" readonly>
                                 </div>
                             </div>
 
@@ -194,22 +194,22 @@
                                 </div>
                                 <div class="col-sm-2">
                                     <input type="text" id="masterBath" name="masterBath" class="form-control mb-1"
-                                        disabled>
+                                    readonly>
                                 </div>
                                 <div class="col-sm-4">
                                     <input type="text" id="typeMasterBath" name="typeMasterBath"
-                                        class="form-control mb-1" disabled>
+                                        class="form-control mb-1" readonly>
                                 </div>
                                 <div class="col-sm-1">
                                     <button type="button" class="btn btn-primary" id="buttonMasterBath">...</button>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" id="quantityMasterBath" name="quantityMasterBath"
-                                        class="form-control mb-1" disabled>
+                                        class="form-control mb-1" readonly>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" id="prosentaseMasterBath" name="prosentaseMasterBath"
-                                        class="form-control mb-1" disabled>
+                                        class="form-control mb-1" readonly>
                                 </div>
                             </div>
 
@@ -220,22 +220,22 @@
                                 </div>
                                 <div class="col-sm-2">
                                     <input type="text" id="uv" name="uv" class="form-control mb-1"
-                                        disabled>
+                                    readonly>
                                 </div>
                                 <div class="col-sm-4">
                                     <input type="text" id="typeUv" name="typeUv" class="form-control mb-1"
-                                        disabled>
+                                    readonly>
                                 </div>
                                 <div class="col-sm-1">
                                     <button type="button" class="btn btn-primary" id="buttonUv">...</button>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" id="quantityUv" name="quantityUv" class="form-control mb-1"
-                                        disabled>
+                                    readonly>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" id="prosentaseUv" name="prosentaseUv"
-                                        class="form-control mb-1" disabled>
+                                        class="form-control mb-1" readonly>
                                 </div>
                             </div>
 
@@ -246,22 +246,22 @@
                                 </div>
                                 <div class="col-sm-2">
                                     <input type="text" id="antiStatic" name="antiStatic" class="form-control mb-1"
-                                        disabled>
+                                    readonly>
                                 </div>
                                 <div class="col-sm-4">
                                     <input type="text" id="typeAntiStatic" name="typeAntiStatic"
-                                        class="form-control mb-1" disabled>
+                                        class="form-control mb-1" readonly>
                                 </div>
                                 <div class="col-sm-1">
                                     <button type="button" class="btn btn-primary" id="buttonAntiStatic">...</button>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" id="quantityAntiStatic" name="quantityAntiStatic"
-                                        class="form-control mb-1" disabled>
+                                        class="form-control mb-1" readonly>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" id="prosentaseAntiStatic" name="prosentaseAntiStatic"
-                                        class="form-control mb-1" disabled>
+                                        class="form-control mb-1" readonly>
                                 </div>
                             </div>
 
@@ -272,22 +272,22 @@
                                 </div>
                                 <div class="col-sm-2">
                                     <input type="text" id="peletan" name="peletan" class="form-control mb-1"
-                                        disabled>
+                                    readonly>
                                 </div>
                                 <div class="col-sm-4">
                                     <input type="text" id="typePeletan" name="typePeletan" class="form-control mb-1"
-                                        disabled>
+                                    readonly>
                                 </div>
                                 <div class="col-sm-1">
                                     <button type="button" class="btn btn-primary" id="buttonPeletan">...</button>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" id="quantityPeletan" name="quantityPeletan"
-                                        class="form-control mb-1" disabled>
+                                        class="form-control mb-1" readonly>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" id="prosentasePeletan" name="prosentasePeletan"
-                                        class="form-control mb-1" disabled>
+                                        class="form-control mb-1" readonly>
                                 </div>
                             </div>
 
@@ -298,22 +298,22 @@
                                 </div>
                                 <div class="col-sm-2">
                                     <input type="text" id="additif" name="additif" class="form-control mb-1"
-                                        disabled>
+                                    readonly>
                                 </div>
                                 <div class="col-sm-4">
                                     <input type="text" id="typeAdditif" name="typeAdditif" class="form-control mb-1"
-                                        disabled>
+                                    readonly>
                                 </div>
                                 <div class="col-sm-1">
                                     <button type="button" class="btn btn-primary" id="buttonAdditif">...</button>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" id="quantityAdditif" name="quantityAdditif"
-                                        class="form-control mb-1" disabled>
+                                        class="form-control mb-1" readonly>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" id="prosentaseAdditif" name="prosentaseAdditif"
-                                        class="form-control mb-1" disabled>
+                                        class="form-control mb-1" readonly>
                                 </div>
                             </div>
 
@@ -324,22 +324,22 @@
                                 </div>
                                 <div class="col-sm-2">
                                     <input type="text" id="lldpe" name="lldpe" class="form-control mb-1"
-                                        disabled>
+                                    readonly>
                                 </div>
                                 <div class="col-sm-4">
                                     <input type="text" id="typeLldpe" name="typeLldpe" class="form-control mb-1"
-                                        disabled>
+                                    readonly>
                                 </div>
                                 <div class="col-sm-1">
                                     <button type="button" class="btn btn-primary" id="buttonLldpe">...</button>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" id="quantityLldpe" name="quantityLldpe"
-                                        class="form-control mb-1" disabled>
+                                        class="form-control mb-1" readonly>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" id="prosentaseLldpe" name="prosentaseLldpe"
-                                        class="form-control mb-1" disabled>
+                                        class="form-control mb-1" readonly>
                                 </div>
                             </div>
 
@@ -350,22 +350,22 @@
                                 </div>
                                 <div class="col-sm-2">
                                     <input type="text" id="ldpeLami" name="ldpeLami" class="form-control mb-1"
-                                        disabled>
+                                    readonly>
                                 </div>
                                 <div class="col-sm-4">
                                     <input type="text" id="typeLdpeLami" name="typeLdpeLami"
-                                        class="form-control mb-1" disabled>
+                                        class="form-control mb-1" readonly>
                                 </div>
                                 <div class="col-sm-1">
                                     <button type="button" class="btn btn-primary" id="buttonLdpeLami">...</button>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" id="quantityLdpeLami" name="quantityLdpeLami"
-                                        class="form-control mb-1" disabled>
+                                        class="form-control mb-1" readonly>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" id="prosentaseLdpeLami" name="prosentaseLdpeLami"
-                                        class="form-control mb-1" disabled>
+                                        class="form-control mb-1" readonly>
                                 </div>
                             </div>
 
@@ -376,22 +376,22 @@
                                 </div>
                                 <div class="col-sm-2">
                                     <input type="text" id="ldpe" name="ldpe" class="form-control mb-1"
-                                        disabled>
+                                    readonly>
                                 </div>
                                 <div class="col-sm-4">
                                     <input type="text" id="typeLdpe" name="typeLdpe" class="form-control mb-1"
-                                        disabled>
+                                    readonly>
                                 </div>
                                 <div class="col-sm-1">
                                     <button type="button" class="btn btn-primary" id="buttonLdpe">...</button>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" id="quantityLdpe" name="quantityLdpe"
-                                        class="form-control mb-1" disabled>
+                                        class="form-control mb-1" readonly>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" id="prosentaseLdpe" name="prosentaseLdpe"
-                                        class="form-control mb-1" disabled>
+                                        class="form-control mb-1" readonly>
                                 </div>
                             </div>
 
@@ -402,22 +402,22 @@
                                 </div>
                                 <div class="col-sm-2">
                                     <input type="text" id="conductive" name="conductive" class="form-control mb-1"
-                                        disabled>
+                                    readonly>
                                 </div>
                                 <div class="col-sm-4">
                                     <input type="text" id="typeConductive" name="typeConductive"
-                                        class="form-control mb-1" disabled>
+                                        class="form-control mb-1" readonly>
                                 </div>
                                 <div class="col-sm-1">
                                     <button type="button" class="btn btn-primary" id="buttonConductive">...</button>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" id="quantityConductive" name="quantityConductive"
-                                        class="form-control mb-1" disabled>
+                                        class="form-control mb-1" readonly>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" id="prosentaseConductive" name="prosentaseConductive"
-                                        class="form-control mb-1" disabled>
+                                        class="form-control mb-1" readonly>
                                 </div>
                             </div>
 
@@ -428,22 +428,22 @@
                                 </div>
                                 <div class="col-sm-2">
                                     <input type="text" id="hdpe" name="hdpe" class="form-control mb-1"
-                                        disabled>
+                                    readonly>
                                 </div>
                                 <div class="col-sm-4">
                                     <input type="text" id="typeHdpe" name="typeHdpe" class="form-control mb-1"
-                                        disabled>
+                                    readonly>
                                 </div>
                                 <div class="col-sm-1">
                                     <button type="button" class="btn btn-primary" id="buttonHdpe">...</button>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" id="quantityHdpe" name="quantityHdpe"
-                                        class="form-control mb-1" disabled>
+                                        class="form-control mb-1" readonly>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" id="prosentaseHdpe" name="prosentaseHdpe"
-                                        class="form-control mb-1" disabled>
+                                        class="form-control mb-1" readonly>
                                 </div>
                             </div>
 
@@ -454,22 +454,22 @@
                                 </div>
                                 <div class="col-sm-2">
                                     <input type="text" id="sweeping" name="sweeping" class="form-control mb-1"
-                                        disabled>
+                                    readonly>
                                 </div>
                                 <div class="col-sm-4">
                                     <input type="text" id="typeSweeping" name="typeSweeping"
-                                        class="form-control mb-1" disabled>
+                                        class="form-control mb-1" readonly>
                                 </div>
                                 <div class="col-sm-1">
                                     <button type="button" class="btn btn-primary" id="buttonSweeping">...</button>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" id="quantitySweeping" name="quantitySweeping"
-                                        class="form-control mb-1" disabled>
+                                        class="form-control mb-1" readonly>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" id="prosentaseSweeping" name="prosentaseSweeping"
-                                        class="form-control mb-1" disabled>
+                                        class="form-control mb-1" readonly>
                                 </div>
                             </div>
 
@@ -480,22 +480,22 @@
                                 </div>
                                 <div class="col-sm-2">
                                     <input type="text" id="injection" name="injection" class="form-control mb-1"
-                                        disabled>
+                                    readonly>
                                 </div>
                                 <div class="col-sm-4">
                                     <input type="text" id="typeInjection" name="typeInjection"
-                                        class="form-control mb-1" disabled>
+                                        class="form-control mb-1" readonly>
                                 </div>
                                 <div class="col-sm-1">
                                     <button type="button" class="btn btn-primary" id="buttonInjection">...</button>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" id="quantityInjection" name="quantityInjection"
-                                        class="form-control mb-1" disabled>
+                                        class="form-control mb-1" readonly>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" id="prosentaseInjection" name="prosentaseInjection"
-                                        class="form-control mb-1" disabled>
+                                        class="form-control mb-1" readonly>
                                 </div>
                             </div>
 
@@ -554,13 +554,14 @@
                                     </div>
                                     <div class="col-sm-1">
                                         <input type="text" id="lebarBenang" name="lebarBenang"
-                                            class="form-control mb-1">
+                                            class="form-control additional mb-1">
                                     </div>
                                     <div class="col-sm-2">
                                         <label>Denier</label>
                                     </div>
                                     <div class="col-sm-1">
-                                        <input type="text" id="denierAdd" name="denierAdd" class="form-control mb-1">
+                                        <input type="text" id="denierAdd" name="denierAdd"
+                                            class="form-control additional mb-1">
                                     </div>
                                 </div>
 
@@ -569,14 +570,15 @@
                                         <label>Strength</label>
                                     </div>
                                     <div class="col-sm-1">
-                                        <input type="text" id="strength" name="strength" class="form-control mb-1">
+                                        <input type="text" id="strength" name="strength"
+                                            class="form-control additional mb-1">
                                     </div>
                                     <div class="col-sm-2">
                                         <label>Elongation</label>
                                     </div>
                                     <div class="col-sm-1">
                                         <input type="text" id="elongation" name="elongation"
-                                            class="form-control mb-1">
+                                            class="form-control additional mb-1">
                                     </div>
                                     %
                                     <div class="col-sm-2">
@@ -584,7 +586,7 @@
                                     </div>
                                     <div class="col-sm-1">
                                         <input type="text" id="ketStrength" name="ketStrength"
-                                            class="form-control mb-1">
+                                            class="form-control additional mb-1">
                                     </div>
                                     <div class="col-sm-1">
                                         <button class="btn btn-primary btn-block btn-sm" id="tambahButton">+</button>
