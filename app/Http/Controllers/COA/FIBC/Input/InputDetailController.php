@@ -53,7 +53,6 @@ class InputDetailController extends Controller
         $Fit_to_Draw = $request->input('draw');
         $UserInput = Auth::user()->NomorUser;
         $UserInput = trim($UserInput);
-        $TimeInput = $request->input('currentDate');
         $Panjang2 = $request->input('panjang2');
         $Lebar2 = $request->input('lebar2');
         $Waft2 = $request->input('waft2');
@@ -81,7 +80,6 @@ class InputDetailController extends Controller
         $Bottom_Persen_3 = $request->input('bottomE3');
         $Bottom_Persen_4 = $request->input('bottomE4');
         $Bottom_Persen_5 = $request->input('bottomE5');
-
 
         try {
             $process = DB::connection('ConnTestQC')->statement(
@@ -114,7 +112,6 @@ class InputDetailController extends Controller
                     @StitchApprox = ?,
                     @FitDrawing = ?,
                     @UserInput = ?,
-                    @CurrentDate = ?,
                     @Panjang2 = ?,
                     @Lebar2 = ?,
                     @Waft2 = ?,
@@ -170,7 +167,6 @@ class InputDetailController extends Controller
                     $Stitch_Approx,
                     $Fit_to_Draw,
                     $UserInput,
-                    $TimeInput,
                     $Panjang2,
                     $Lebar2,
                     $Waft2,
@@ -200,7 +196,6 @@ class InputDetailController extends Controller
                     $Bottom_Persen_5
                 ]
             );
-            dd($process);
 
             return response()->json(['success' => 'Data inserted successfully'], 200);
         } catch (\Exception $e) {
@@ -221,7 +216,7 @@ class InputDetailController extends Controller
             }
             return datatables($data_ref)->make(true);
         } else if ($id == 'getDataDetailReference') {
-            $dataDetailRef = DB::connection('ConnTestQC')->select('exec [SP_1273_QTC_LIST_FIBC] @Kode = ?, @RefNo = ?', [2, $request->input('no_ref')]);
+            $dataDetailRef = DB::connection('ConnTestQC')->select('exec [SP_1273_QTC_MAINT_FIBC] @Kode = ?, @RefNo = ?', [3, $request->input('no_ref')]);
 
             $data_detailReff = [];
             // dd($dataDetailRef);
@@ -240,7 +235,13 @@ class InputDetailController extends Controller
                     'Reinforced' => $dataDetail->Reinforced,
                     'Colour' => $dataDetail->Colour,
                     'SWL' => $dataDetail->SWL,
-                    'sf' => $dataDetail->sf,
+                    'SF' => $dataDetail->SF,
+
+                    'Jenis_FIBC' => $dataDetail->Jenis_FIBC,
+                    'Sewing_Method' => $dataDetail->Sewing_Method,
+                    'Stitch_Approx' => $dataDetail->Stitch_Approx,
+                    'Fit_to_Draw' => $dataDetail->Fit_to_Draw,
+
                     'LiftingBelt_Type' => $dataDetail->LiftingBelt_Type,
                     'SewingThread_Type' => $dataDetail->SewingThread_Type,
                     'Top_KG_1' => $dataDetail->Top_KG_1,
@@ -276,7 +277,7 @@ class InputDetailController extends Controller
                     'Denier_Waft2' => $dataDetail->Denier_Waft2,
                     'Weft2' => $dataDetail->Weft2,
                     'Denier_Weft2' => $dataDetail->Denier_Weft2,
-                    'Weight2' => $dataDetail->Weight2,
+                    'Weight2' => $dataDetail->Weight2
                 ];
             }
 
