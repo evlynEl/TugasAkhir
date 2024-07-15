@@ -277,41 +277,41 @@
                             style="border: 1px solid #ddd; padding: 10px 10px;">
                             <div class="col-md-2">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="sample" name="sample">
-                                    <label class="form-check-label" for="sample">Sample</label>
+                                    <input class="form-check-input" type="checkbox" id="Sample" name="Sample">
+                                    <label class="form-check-label" for="Sample">Sample</label>
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="pre-production"
-                                        name="pre-production">
-                                    <label class="form-check-label" for="pre-production">Pre-Production</label>
+                                    <input class="form-check-input" type="checkbox" id="Pre-production"
+                                        name="Pre-production">
+                                    <label class="form-check-label" for="Pre-production">Pre-Production</label>
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="production" name="production">
-                                    <label class="form-check-label" for="production">Production</label>
+                                    <input class="form-check-input" type="checkbox" id="Production" name="Production">
+                                    <label class="form-check-label" for="Production">Production</label>
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="spec-modification"
-                                        name="spec-modification">
-                                    <label class="form-check-label" for="spec-modification">Spec. Modification</label>
+                                    <input class="form-check-input" type="checkbox" id="Spec-modification"
+                                        name="Spec-modification">
+                                    <label class="form-check-label" for="Spec-modification">Spec. Modification</label>
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="trial" name="trial">
-                                    <label class="form-check-label" for="trial">Trial</label>
+                                    <input class="form-check-input" type="checkbox" id="Trial" name="Trial">
+                                    <label class="form-check-label" for="Trial">Trial</label>
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="customer-sample"
-                                        name="customer-sample">
-                                    <label class="form-check-label" for="customer-sample">Sample dari Customer</label>
+                                    <input class="form-check-input" type="checkbox" id="Customer-sample"
+                                        name="Customer-sample">
+                                    <label class="form-check-label" for="Customer-sample">Sample dari Customer</label>
                                 </div>
                             </div>
                         </div>
@@ -548,14 +548,14 @@
                                     <label>E. Fit to drawing spec.?</label>
                                     <div class="ml-3">
                                         <div class="form-check-inline">
-                                            <input class="form-check-input" type="checkbox" name="Yesfit"
-                                                id="Yesfit" value="Yesfit">
-                                            <label class="form-check-label" for="Yesfit">Yes</label>
+                                            <input class="form-check-input" type="checkbox" name="Yes"
+                                                id="Yes" value="Yes">
+                                            <label class="form-check-label" for="Yes">Yes</label>
                                         </div>
                                         <div class="form-check-inline">
-                                            <input class="form-check-input" type="checkbox" name="Nofit"
-                                                id="Nofit" value="Nofit">
-                                            <label class="form-check-label" for="Nofit">No</label>
+                                            <input class="form-check-input" type="checkbox" name="No"
+                                                id="No" value="No">
+                                            <label class="form-check-label" for="No">No</label>
                                         </div>
                                     </div>
                                 </div>

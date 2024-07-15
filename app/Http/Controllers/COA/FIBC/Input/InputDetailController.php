@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Controllers\HakAksesController;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Log;
 
 class InputDetailController extends Controller
 {
@@ -303,8 +303,133 @@ class InputDetailController extends Controller
 
     public function update(Request $request, $id)
     {
-        //
+        if ($id == 'koreksiDetailFIBC') {
+            $Reference_No = $request->input('fixRefNo');
+            $Customer = $request->input('customer');
+            $Bag_Code = $request->input('bagCode');
+            $Bag_Type = $request->input('bagType');
+            $PO_No = $request->input('poNo');
+            $Tanggal_Prod = $request->input('prodDate');
+            $Tanggal_Testing = $request->input('testingDate');
+            $Size = $request->input('size');
+            $Reinforced = $request->input('reinforced');
+            $Colour = $request->input('colour');
+            $SWL = $request->input('swl');
+            $sf = $request->input('sf');
+            $Panjang = $request->input('panjang1');
+            $Lebar = $request->input('lebar1');
+            $Waft = $request->input('waft1');
+            $Weft = $request->input('weft1');
+            $Denier_Waft = $request->input('denierWaft1');
+            $Denier_Weft = $request->input('denierWeft1');
+            $Weight = $request->input('weight1');
+            $Jenis_FIBC = $request->input('jenis');
+            $LiftingBelt_Type = $request->input('liftBeltType');
+            $SewingThread_Type = $request->input('sewingThreadType');
+            $Sewing_Method = $request->input('sewing');
+            $Stitch_Approx = $request->input('stitch');
+            $Fit_to_Draw = $request->input('draw');
+            $UserInput = Auth::user()->NomorUser;
+            $UserInput = trim($UserInput);
+            $Panjang2 = $request->input('panjang2');
+            $Lebar2 = $request->input('lebar2');
+            $Waft2 = $request->input('waft2');
+            $Weft2 = $request->input('weft2');
+            $Denier_Waft2 = $request->input('denierWaft2');
+            $Denier_Weft2 = $request->input('denierWeft2');
+            $Weight2 = $request->input('weight2');
+            $Top_KG_1 = $request->input('topS1');
+            $Top_KG_2 = $request->input('topS2');
+            $Top_KG_3 = $request->input('topS3');
+            $Top_KG_4 = $request->input('topS4');
+            $Top_KG_5 = $request->input('topS5');
+            $Top_Persen_1 = $request->input('topE1');
+            $Top_Persen_2 = $request->input('topE2');
+            $Top_Persen_3 = $request->input('topE3');
+            $Top_Persen_4 = $request->input('topE4');
+            $Top_Persen_5 = $request->input('topE5');
+            $Bottom_KG_1 = $request->input('bottomS1');
+            $Bottom_KG_2 = $request->input('bottomS2');
+            $Bottom_KG_3 = $request->input('bottomS3');
+            $Bottom_KG_4 = $request->input('bottomS4');
+            $Bottom_KG_5 = $request->input('bottomS5');
+            $Bottom_Persen_1 = $request->input('bottomE1');
+            $Bottom_Persen_2 = $request->input('bottomE2');
+            $Bottom_Persen_3 = $request->input('bottomE3');
+            $Bottom_Persen_4 = $request->input('bottomE4');
+            $Bottom_Persen_5 = $request->input('bottomE5');
+
+            $result = DB::connection('ConnTestQC')->select('exec [SP_1273_QTC_MAINT_FIBC] @Kode = ?, @RefNo = ?', [5, $Reference_No]);
+            // dd($result);
+
+            if (!empty($result)) {
+                $top = DB::connection('ConnTestQC')->select('exec [SP_1273_QTC_MAINT_FIBC] @Kode = ?, @RefNo = ?', [7, $Reference_No]);
+                $data_ref = [];
+                foreach ($top as $refno) {
+                    $data_ref[] = $refno->Top_Result;
+                }
+
+                $testResult = $SWL * $sf;
+                $hasilResult = $testResult < $data_ref[0]? 'PASS' : 'FAIL';
+
+                try {
+                    $updateAda = DB::connection('ConnTestQC')->statement(
+                        'exec SP_1273_QTC_MAINT_FIBC
+                    @Kode = 6,
+                    @RefNo = ?, @Result = ?, @Cust = ?, @BagCode = ?, @BagType = ?, @PO_No = ?, @TglProd = ?, @TglTest = ?, @Size = ?,
+                    @Reinf = ?, @Colour = ?, @Panjang = ?, @Lebar = ?, @Waft = ?, @Weft = ?, @DenierWA = ?, @DenierWE = ?, @Weight = ?,
+                    @SWL = ?, @SF = ?, @Jenis = ?, @LiftingType = ?, @SewingType = ?, @SewingMethod = ?, @StitchApprox = ?,
+                    @FitDrawing = ?, @UserInput = ?, @Panjang2 = ?, @Lebar2 = ?, @Waft2 = ?, @Weft2 = ?, @DenierWA2 = ?, @DenierWE2 = ?,
+                    @Weight2 = ?, @TopKG1 = ?, @TopKG2 = ?, @TopKG3 = ?, @TopKG4 = ?, @TopKG5 = ?, @TopPersen1 = ?, @TopPersen2 = ?,
+                    @TopPersen3 = ?, @TopPersen4 = ?, @TopPersen5 = ?, @BottomKG1 = ?, @BottomKG2 = ?, @BottomKG3 = ?, @BottomKG4 = ?,
+                    @BottomKG5 = ?, @BottomPersen1 = ?, @BottomPersen2 = ?, @BottomPersen3 = ?, @BottomPersen4 = ?, @BottomPersen5 = ?',
+                        [
+                            $Reference_No, $hasilResult, $Customer, $Bag_Code, $Bag_Type, $PO_No, $Tanggal_Prod, $Tanggal_Testing, $Size,
+                            $Reinforced, $Colour, $Panjang, $Lebar, $Waft, $Weft, $Denier_Waft, $Denier_Weft, $Weight, $SWL, $sf, $Jenis_FIBC,
+                            $LiftingBelt_Type, $SewingThread_Type, $Sewing_Method, $Stitch_Approx, $Fit_to_Draw, $UserInput, $Panjang2, $Lebar2,
+                            $Waft2, $Weft2, $Denier_Waft2, $Denier_Weft2, $Weight2, $Top_KG_1, $Top_KG_2, $Top_KG_3, $Top_KG_4, $Top_KG_5,
+                            $Top_Persen_1, $Top_Persen_2, $Top_Persen_3, $Top_Persen_4, $Top_Persen_5, $Bottom_KG_1, $Bottom_KG_2, $Bottom_KG_3,
+                            $Bottom_KG_4, $Bottom_KG_5, $Bottom_Persen_1, $Bottom_Persen_2, $Bottom_Persen_3, $Bottom_Persen_4, $Bottom_Persen_5
+                        ]
+                    );
+
+                    return response()->json(['success' => 'Data updated successfully'], 200);
+                } catch (\Exception $e) {
+                    return response()->json(['error' => 'Failed to update data: ' . $e->getMessage()], 500);
+                }
+            } else {
+                try {
+                    $update0 = DB::connection('ConnTestQC')->statement(
+                        'exec SP_1273_QTC_MAINT_FIBC
+                    @Kode = 4,
+                    @RefNo = ?, @Cust = ?, @BagCode = ?, @BagType = ?, @PO_No = ?, @TglProd = ?, @TglTest = ?, @Size = ?,
+                    @Reinf = ?, @Colour = ?, @Panjang = ?, @Lebar = ?, @Waft = ?, @Weft = ?, @DenierWA = ?, @DenierWE = ?,
+                    @Weight = ?, @SWL = ?, @SF = ?, @Jenis = ?, @LiftingType = ?, @SewingType = ?, @SewingMethod = ?,
+                    @StitchApprox = ?, @FitDrawing = ?, @UserInput = ?, @Panjang2 = ?, @Lebar2 = ?, @Waft2 = ?, @Weft2 = ?,
+                    @DenierWA2 = ?, @DenierWE2 = ?, @Weight2 = ?, @TopKG1 = ?, @TopKG2 = ?, @TopKG3 = ?, @TopKG4 = ?,
+                    @TopKG5 = ?, @TopPersen1 = ?, @TopPersen2 = ?, @TopPersen3 = ?, @TopPersen4 = ?, @TopPersen5 = ?,
+                    @BottomKG1 = ?, @BottomKG2 = ?, @BottomKG3 = ?, @BottomKG4 = ?, @BottomKG5 = ?, @BottomPersen1 = ?,
+                    @BottomPersen2 = ?, @BottomPersen3 = ?, @BottomPersen4 = ?, @BottomPersen5 = ?',
+                        [
+                            $Reference_No, $Customer, $Bag_Code, $Bag_Type, $PO_No, $Tanggal_Prod, $Tanggal_Testing, $Size,
+                            $Reinforced, $Colour, $Panjang, $Lebar, $Waft, $Weft, $Denier_Waft, $Denier_Weft, $Weight, $SWL, $sf, $Jenis_FIBC,
+                            $LiftingBelt_Type, $SewingThread_Type, $Sewing_Method, $Stitch_Approx, $Fit_to_Draw, $UserInput, $Panjang2, $Lebar2,
+                            $Waft2, $Weft2, $Denier_Waft2, $Denier_Weft2, $Weight2, $Top_KG_1, $Top_KG_2, $Top_KG_3, $Top_KG_4, $Top_KG_5,
+                            $Top_Persen_1, $Top_Persen_2, $Top_Persen_3, $Top_Persen_4, $Top_Persen_5, $Bottom_KG_1, $Bottom_KG_2, $Bottom_KG_3,
+                            $Bottom_KG_4, $Bottom_KG_5, $Bottom_Persen_1, $Bottom_Persen_2, $Bottom_Persen_3, $Bottom_Persen_4, $Bottom_Persen_5
+                        ]
+                    );
+                    // dd($update0);
+
+                    return response()->json(['success' => 'Data updated successfully'], 200);
+                } catch (\Exception $e) {
+                    return response()->json(['error' => 'Failed to update data: ' . $e->getMessage()], 500);
+                }
+            }
+        }
     }
+
+
 
     public function destroy($id)
     {
