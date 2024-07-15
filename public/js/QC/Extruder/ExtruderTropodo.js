@@ -273,12 +273,40 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (result.isConfirmed) {
                     const selectedRow = result.value;
                     nomorTransaksi.value = selectedRow.NoTrans.trim();
+                    displayData();
                 }
             });
         } catch (error) {
             console.error("An error occurred:", error);
         }
     });
+
+    // function display data
+    function displayData(){
+        $.ajax({
+            type: 'GET',
+            url: 'ExtruderTropodo/getDisplayDataByNoTr',
+            data: {
+                _token: csrfToken,
+                noTr: nomorTransaksi.value,
+            },
+            success: function (result) {
+                jamInput.value = result[0].JamInput.trim();
+                shiftLetter.value = result[0].Shift.trim();
+                shiftAkhir.value = result[0].JamAkhirShift.trim();
+                shiftAwal.value = result[0].JamAwalShift.trim();
+                mesin.value = result[0].Mesin.trim();
+                namaMesin.value = result[0].TypeMesin.trim();
+                spekBenang.value = result[0].SpekBenang.trim();
+                idKonversi.value = result[0].IdKonv.trim();
+                keterangan.value = result[0].Keterangan.trim();
+                denier.value = result[0].DenierRata.trim();
+            },
+            error: function (xhr, status, error) {
+                console.error(error);
+            }
+        });
+    }
 
     // button ... ambil id mesin dan shift
     buttonIdMesin.addEventListener('click', async () => {
@@ -438,6 +466,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             benang: spekBenang.value
                         },
                         success: function (result) {
+                            console.log(result.length);
                             idKonversi.value = result[0].IdKonversi.trim();
                         },
                         error: function (xhr, status, error) {
@@ -450,6 +479,8 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error("An error occurred:", error);
         }
     });
+
+    let dataArrKomposisi = [];
 
     // button ...  Bahan Baku
     buttonBahanBaku.addEventListener('click', async () => {
@@ -554,6 +585,19 @@ document.addEventListener('DOMContentLoaded', function () {
                                 result[0].Quantity.trim(),
                                 0
                             ]).draw(false);
+
+                            let StatusTypeVariable = result[0].StatusType.trim();
+                            let NamaKelompokVariable = result[0].NamaKelompok.trim();
+                            let QuantityVariable = result[0].Quantity.trim();
+
+                            dataArrKomposisi.push([
+                                selectedRow.Merk.trim(),
+                                selectedRow.IdType.trim(),
+                                StatusTypeVariable,
+                                NamaKelompokVariable,
+                                QuantityVariable,
+                                0
+                            ]);
                         },
                         error: function (xhr, status, error) {
                             console.error(error);
@@ -783,6 +827,16 @@ document.addEventListener('DOMContentLoaded', function () {
                                     ProsentaseVariable
                                 ]).draw(false);
 
+                                // Push data to dataArrKomposisi array
+                                dataArrKomposisi.push([
+                                    selectedRow.Merk.trim(),
+                                    selectedRow.IdType.trim(),
+                                    StatusTypeVariable,
+                                    NamaKelompokVariable,
+                                    QuantityVariable,
+                                    ProsentaseVariable
+                                ]);
+
                                 switch (selectedButtonQuantity) {
                                     case 'getCalpetCaco3':
                                         quantityCalpetCaco3.value = QuantityVariable;
@@ -896,6 +950,8 @@ document.addEventListener('DOMContentLoaded', function () {
         ]
     });
 
+    let dataArrayDetail = [];
+
     // Function to add row to DataTable additional
     $('#tambahButton').on('click', function () {
         const lebarBenang = $('#lebarBenang').val().trim();
@@ -927,7 +983,9 @@ document.addEventListener('DOMContentLoaded', function () {
             $('#elongation').val('');
             $('#ketStrength').val('');
 
+            // Add data to DataTable
             tableAdd.row.add([lebarBenang, denier, strength, elongation, ketStrength]).draw(false);
+            dataArrayDetail.push([lebarBenang, denier, strength, elongation, ketStrength]);
         } else {
             let errorMessage = 'Mohon isi ';
             if (!lebarBenang) {
@@ -1059,17 +1117,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // functionsave komposisi
         function saveKomposisiData() {
-            var dataKomposisi = tableKomposisi.rows().data();
-            var arrKomposisi = [];
-            dataKomposisi.each(function (valueArray) {
-                var rowKomposisi = [];
-                valueArray.forEach(function (value) {
-                    rowKomposisi.push(value);
-                });
-                arrKomposisi.push(rowKomposisi);
-            });
-
-            if (arrKomposisi.length === 0) {
+            if (dataArrKomposisi.length === 0) {
                 return;
             }
 
@@ -1078,7 +1126,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 url: 'ExtruderTropodo/insertDataKomposisi',
                 data: {
                     _token: csrfToken,
-                    dataArray: arrKomposisi,
+                    dataArray: dataArrKomposisi,
                     noTr: nomorTransaksi.value
                 },
                 success: function (response) {
@@ -1098,17 +1146,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // function save additional data
         function saveAdditionalData() {
-            var dataAdd = tableAdd.rows().data();
-            var arrAdd = [];
-            dataAdd.each(function (valueArray) {
-                var rowAdd = [];
-                valueArray.forEach(function (value) {
-                    rowAdd.push(value);
-                });
-                arrAdd.push(rowAdd);
-            });
-
-            if (arrAdd.length === 0) {
+            if (dataArrayDetail.length === 0) {
                 return;
             }
 
@@ -1117,7 +1155,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 url: 'ExtruderTropodo/insertAdditionalData',
                 data: {
                     _token: csrfToken,
-                    dataArray: arrAdd,
+                    dataArray: dataArrayDetail,
                     noTr: nomorTransaksi.value
                 },
                 success: function (response) {
@@ -1167,7 +1205,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     noTr: nomorTransaksi.value
                 }
             });
-    
+
             const deleteBahan = $.ajax({
                 type: 'DELETE',
                 url: 'ExtruderTropodo/deleteBahan',
@@ -1176,7 +1214,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     noTr: nomorTransaksi.value
                 }
             });
-    
+
             const deleteMaster = $.ajax({
                 type: 'DELETE',
                 url: 'ExtruderTropodo/deleteMaster',
@@ -1185,30 +1223,30 @@ document.addEventListener('DOMContentLoaded', function () {
                     noTr: nomorTransaksi.value
                 }
             });
-    
+
             const responses = await Promise.allSettled([deleteDetail, deleteMaster, deleteBahan]);
-    
+
             let successMessages = [];
             let errorMessages = [];
-    
+
             responses.forEach((response, index) => {
                 if (response.status === 'fulfilled' && response.value.success) {
                     successMessages.push(response.value.success);
                 } else if (response.status === 'rejected') {
                     switch (index) {
                         case 0:
-                            errorMessages.push('Detail data deletion failed');
+                            errorMessages.push('Penghapusan data detail gagal');
                             break;
                         case 1:
-                            errorMessages.push('Master data deletion failed');
+                            errorMessages.push('Penghapusan data master gagal');
                             break;
                         case 2:
-                            errorMessages.push('Bahan data deletion failed');
+                            errorMessages.push('Penghapusan data bahan gagal');
                             break;
                     }
                 }
             });
-    
+
             if (errorMessages.length > 0) {
                 Swal.fire({
                     icon: 'error',
@@ -1226,7 +1264,12 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error('AJAX Error:', error);
         }
     });
-    
+
+
+    // KOREKSI
+    koreksiButton.addEventListener('click', async () => {
+
+    });
 
 
 });

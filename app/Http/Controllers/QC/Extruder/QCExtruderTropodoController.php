@@ -46,6 +46,30 @@ class QCExtruderTropodoController extends Controller
             return datatables($dataNoTransaksi)->make(true);
         }
 
+        // ambil data by nomor transaksi
+        else if ($id == 'getDisplayDataByNoTr') {
+            $noTr = $request->input('noTr');
+
+            $listDataTransaksi = DB::connection('ConnExtruder')
+                ->select('exec SP_5298_QC_LIST_DATAMASTERQC @kode = ?, @noTr = ?', [2, $noTr]);
+            $dataTransaksiArr = [];
+            foreach ($listDataTransaksi as $dataTransaksi) {
+                $dataTransaksiArr[] = [
+                    'JamInput' => $dataTransaksi->JamInput,
+                    'Shift' => $dataTransaksi->Shift,
+                    'JamAwalShift' => $dataTransaksi->JamAwalShift,
+                    'JamAkhirShift' => $dataTransaksi->JamAkhirShift,
+                    'Mesin' => $dataTransaksi->Mesin,
+                    'TypeMesin' => $dataTransaksi->TypeMesin,
+                    'SpekBenang' => $dataTransaksi->SpekBenang,
+                    'IdKonv' => $dataTransaksi->IdKonv,
+                    'Keterangan' => $dataTransaksi->Keterangan,
+                    'DenierRata' => $dataTransaksi->DenierRata,
+                ];
+            }
+            return response()->json($dataTransaksiArr);
+        }
+
         // ambil id mesin
         else if ($id == 'getIdMesin') {
             $tgl = $request->input('tgl');
@@ -496,11 +520,10 @@ class QCExtruderTropodoController extends Controller
             try {
                 DB::beginTransaction();
                 foreach ($dataArray as $data) {
-                    $idType = $data[0];
+                    $idType = $data[1];
                     $jenis = $data[2];
                     $kelompok = $data[3];
-                    $idKelut = $data[1];
-                    $qty = ($idKelut == 'BB') ? $data[4] : $data[5];
+                    $qty = ($jenis === "BB") ? $data[4] : $data[5];
 
                     DB::connection('ConnExtruder')
                         ->statement('exec [SP_5409_QC_INSERT_KOMPOSISI] 
