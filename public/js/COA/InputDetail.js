@@ -93,12 +93,13 @@ var draw = [];
 var centangCheck = [];
 
 var sections = [
-    { id: 'jenis', checkboxes: ['Sample', 'Pre-production', 'Production', 'Spec-modification', 'Trial', 'Customer-sample'] },
-    { id: 'sewingMethod', checkboxes: ['Mitsumaki', 'HalfMitsumaki', 'Ogami', 'Other'], },
-    { id: 'stitchApprox', checkboxes: ['Bottom', 'Side', 'Lift'] },
+    { id: 'jenis', checkboxes: ['Sample', 'Pre-production', 'Production', 'Spec. Modification', 'Trial', 'Sample dari Customer'] },
+    { id: 'sewingMethod', checkboxes: ['Mitsumaki', 'Half Mitsumaki', 'Ogami', 'Other'], },
+    { id: 'stitchApprox', checkboxes: ['Bottom', 'Side Body', 'Lifting Belt'] },
     { id: 'fitDraw', checkboxes: ['Yes', 'No'] }
 ];
 
+let splitRefNo = null;
 
 let a; // isi = 1, koreksi = 2, hapus = 3
 
@@ -127,8 +128,8 @@ inputs.forEach((masuk, index) => {
                     }
                 }
 
-
-            } else if (masuk.id === 'denierWeft1' || masuk.id === 'denierWeft2') {
+            } else if (masuk.id === 'denierWeft1' || masuk.id === 'denierWeft2') { // TYPE LIFT BELT & WEING & TOP BELUM BISA KEISI SETELAH DENIER WEFT
+                calculateWeight();
                 liftBeltType.focus();
                 inputsInBagDetail.forEach(function (input) {
                     input.disabled = false;
@@ -213,7 +214,7 @@ btn_RefNo.addEventListener("click", function (e) {
             if (result.isConfirmed) {
                 const selectedRow = result.value;
 
-                let splitRefNo = selectedRow.Reference_No.trim();
+                splitRefNo = selectedRow.Reference_No.trim();
 
                 let parts = splitRefNo.split("/");
                 let extractedNo = parts[0];
@@ -240,13 +241,6 @@ btn_RefNo.addEventListener("click", function (e) {
                 drawDetail.forEach(function (input) { // membuka input checkbox fit to draw
                     input.disabled = false;
                 });
-
-                btn_isi.style.display = 'none';
-                btn_simpan.style.display = 'inline-block';
-
-                btn_koreksi.style.display = 'none';
-                btn_batal.style.display = 'inline-block';
-
 
                 $.ajax({
                     url: "FrmInputFIBC/getDataDetailReference",
@@ -281,24 +275,24 @@ btn_RefNo.addEventListener("click", function (e) {
                             }
                         }
 
-                        weight1.value = result[0].Weight.trim();
-                        weight2.value = result[0].Weight2.trim();
+                        weight1.value = result[0].Weight;
+                        weight2.value = result[0].Weight2;
 
                         // Convert to numbers for comparison
                         let numWeight1 = parseFloat(weight1.value);
                         let numWeight2 = parseFloat(weight2.value);
 
 
-                        if (numWeight1 === 0.00 && numWeight2 > 0.00) {
+                        if (numWeight2 > 0.00) {
                             radioWeight2.checked = true;
                             document.getElementById('formWeight1').style.display = 'none';
                             document.getElementById('formWeight2').style.display = 'block';
-                            weightLabel.value = "Weight 2";
+                            weightLabel.textContent = "Weight 2";
                         } else {
                             radioWeight1.checked = true;
                             document.getElementById('formWeight1').style.display = 'block';
                             document.getElementById('formWeight2').style.display = 'none';
-                            weightLabel.value = "Weight 1";
+                            weightLabel.textContent = "Weight 1";
 
                         }
 
@@ -308,6 +302,10 @@ btn_RefNo.addEventListener("click", function (e) {
                         stitch.value = result[0].Stitch_Approx ? result[0].Stitch_Approx.trim() : '';
                         draw.value = result[0].Fit_to_Draw ? result[0].Fit_to_Draw.trim() : '';
 
+                        // console.log(jenis.value);
+                        // console.log(sewing.value);
+                        // console.log(stitch.value);
+                        // console.log(draw.value);
 
                         retrieveCheck('jenis', jenis.value);
                         retrieveCheck('sewingMethod', sewing.value);
@@ -330,8 +328,6 @@ btn_RefNo.addEventListener("click", function (e) {
                         liftBeltType.value = result[0].LiftingBelt_Type ? result[0].LiftingBelt_Type.trim() : '';
                         sewingThreadType.value = result[0].SewingThread_Type ? result[0].SewingThread_Type.trim() : '';
 
-
-                        //Top KG and Persen fields
                         topS1.value = result[0].Top_KG_1.trim();
                         topS2.value = result[0].Top_KG_2.trim();
                         topS3.value = result[0].Top_KG_3.trim();
@@ -343,7 +339,6 @@ btn_RefNo.addEventListener("click", function (e) {
                         topE4.value = result[0].Top_Persen_4.trim();
                         topE5.value = result[0].Top_Persen_5.trim();
 
-                        // Bottom KG and Persen fields
                         bottomS1.value = result[0].Bottom_KG_1.trim();
                         bottomS2.value = result[0].Bottom_KG_2.trim();
                         bottomS3.value = result[0].Bottom_KG_3.trim();
@@ -436,30 +431,33 @@ function selectBageCode(Bag_Code) {
     Swal.close();
 }
 
-let isWeight2Selected = true; // Default is Weight 2 selected
+let isWeight2Selected = false; // Default is Weight 1 selected
 
 // weight radio button
+// console.log(isWeight2Selected);
+
 function setupWeightRadio() {
     document.querySelectorAll('input[name="weight"]').forEach(function (radio) {
         radio.addEventListener('change', function () {
             if (radio.checked) {
-                if (radio.value === 'radioWeight2') {
-                    document.getElementById('formWeight1').style.display = 'none';
-                    document.getElementById('formWeight2').style.display = 'block';
-                    weightLabel.textContent = "Weight 2";
-                    isWeight2Selected = true;
-                } else {
+                if (radio.value === 'radioWeight1') {
                     document.getElementById('formWeight1').style.display = 'block';
                     document.getElementById('formWeight2').style.display = 'none';
                     weightLabel.textContent = "Weight 1";
                     isWeight2Selected = false;
+                } else {
+                    document.getElementById('formWeight1').style.display = 'none';
+                    document.getElementById('formWeight2').style.display = 'block';
+                    weightLabel.textContent = "Weight 2";
+                    isWeight2Selected = true;
                 }
-                console.log(isWeight2Selected);
+                // console.log(isWeight2Selected);
             }
         });
     });
-    weightLabel.textContent = "Weight 2";
-    return isWeight2Selected;
+    document.getElementById('formWeight1').style.display = 'block';
+    document.getElementById('formWeight2').style.display = 'none';
+    weightLabel.textContent = "Weight 1";
 }
 
 // panggil fungsi weight radio button
@@ -475,6 +473,13 @@ function parseDecimal(value) {
 
     return parsedValue;
 }
+
+inputs1.forEach(input => {
+    input.addEventListener('change', calculateWeight);
+});
+inputs2.forEach(input => {
+    input.addEventListener('change', calculateWeight);
+});
 
 // hitung weight
 function calculateWeight() {
@@ -499,10 +504,6 @@ function calculateWeight() {
         }
     }
 }
-
-inputs1.forEach(input => input.addEventListener('input', calculateWeight));
-inputs2.forEach(input => input.addEventListener('input', calculateWeight));
-
 
 // cek checkbox
 // fungsi track aktifitas checkbox
@@ -567,15 +568,14 @@ function allInputsFilled() {
     for (const input of inputAll) {
         if (input.value.trim() === '') {
             // membiarkan input weight tidak terpilih exclude dari inputAll
-            if (isWeight1Selected) {
-                selectWeight = !inputIds2.includes(input.id);
-            } else {
+            if (isWeight2Selected) {
                 selectWeight = !inputIds1.includes(input.id);
+            } else {
+                selectWeight = !inputIds2.includes(input.id);
             }
 
             // kalau form bag detail tidak kebuka, exclude dari notif semua inputnya
             if (inputsInBagDetail.disabled && (input.id === 'liftBeltType' && input.id === 'sewingThreadType')) {
-                // input.value = null;
                 continue;
             }
 
@@ -635,143 +635,128 @@ function allInputsFilled() {
 
 
 // button enable disable input sesuai button isi & batal
-document.addEventListener('DOMContentLoaded', function () {
+btn_RefNo.disabled = true;
+btn_BagCode.disabled = true;
+
+btn_simpan.style.display = 'none';
+btn_batal.style.display = 'none';
+
+var Ketik = document.querySelectorAll('input');
+
+// fungsi bisa ketik
+function enableKetik() {
+    Ketik.forEach(function (input) {
+        input.value = '';
+        input.disabled = false;
+    });
+
+    inputsInBagDetail.forEach(function (input) { // menutup input pada div bag detail
+        input.disabled = true;
+    });
+    // hide button isi, tampilkan button simpan
+    btn_isi.style.display = 'none';
+    btn_simpan.style.display = 'inline-block';
+    // hide button koreksi, tampilkan button batal
+    btn_koreksi.style.display = 'none';
+    btn_batal.style.display = 'inline-block';
+
+    btn_RefNo.disabled = false;
+    btn_BagCode.disabled = false;
+
+    radioWeight1.disabled = false;
+    radioWeight2.disabled = false;
+}
+
+// fungsi gak bisa ketik
+function disableKetik() {
+    Ketik.forEach(function (input) {
+        if (input.type === 'checkbox' || input.type === 'radio') {
+            input.checked = false;
+            input.disabled = true;
+        } else {
+            input.value = '';
+            input.disabled = true;
+        }
+    });
+
+    btn_simpan.style.display = 'none';
+    btn_isi.style.display = 'inline-block';
+
+    btn_batal.style.display = 'none';
+    btn_koreksi.style.display = 'inline-block';
+
     btn_RefNo.disabled = true;
     btn_BagCode.disabled = true;
 
-    btn_simpan.style.display = 'none';
-    btn_batal.style.display = 'none';
+    radioWeight1.disabled = true;
+    radioWeight2.disabled = true;
 
-    var Ketik = document.querySelectorAll('input');
+    btn_hapus.disabled = false;
+}
 
-    // fungsi bisa ketik
-    function enableKetik() {
-        Ketik.forEach(function (input) { // membuka semua input
-            input.disabled = false;
-        });
-        inputsInBagDetail.forEach(function (input) { // menutup input pada div bag detail
-            input.disabled = true;
-        });
+// Button isi event listener
+btn_isi.addEventListener('click', function () {
+    a = 1;
+    // console.log(a);
+    enableKetik();
+    tanggal.focus();
 
-        btn_isi.style.display = 'none';
-        btn_simpan.style.display = 'inline-block';
+    btn_RefNo.disabled = true;
+    btn_BagCode.disabled = true;
+    btn_hapus.disabled = true;
 
-        btn_koreksi.style.display = 'none';
-        btn_batal.style.display = 'inline-block';
-
-        btn_RefNo.disabled = false;
-        btn_BagCode.disabled = false;
-    }
-
-    // fungsi gak bisa ketik
-    function disableKetik() {
-        Ketik.forEach(function (input) {
-            if (input.type !== 'radio') { // Exclude radio buttons from being disabled
-                input.value = '';
-                input.disabled = true;
-            }
-        });
-
-        btn_simpan.style.display = 'none';
-        btn_isi.style.display = 'inline-block';
-
-        btn_batal.style.display = 'none';
-        btn_koreksi.style.display = 'inline-block';
-
-        btn_RefNo.disabled = true;
-        btn_BagCode.disabled = true;
-    }
-
-    // Button isi event listener
-    btn_isi.addEventListener('click', function () {
-        a = 1;
-        enableKetik();
-        btn_RefNo.disabled = true;
-        btn_BagCode.disabled = true;
-        tanggal.focus();
+    sewingDetail.forEach(function (input) {
+        input.disabled = false;
     });
 
-    // Button batal event listener
-    btn_batal.addEventListener('click', function () {
-        disableKetik();
+    stitchDetail.forEach(function (input) {
+        input.disabled = false;
     });
 
-    // Initially disable Ketik on page load
+    drawDetail.forEach(function (input) {
+        input.disabled = false;
+    });
+
+});
+
+// Button batal event listener
+btn_batal.addEventListener('click', function () {
+    btn_hapus.disabled = false;
     disableKetik();
 });
 
-// Function to log all HTML elements with their information
-function logAllElements() {
-    let info = {
-        tanggal: tanggal.value,
-        fixRefNo: fixRefNo,
-        customer: customer.value,
-        bagCode: bagCode.value,
-        bagType: bagType.value,
-        poNo: poNo.value,
-        prodDate: prodDate.value,
-        testingDate: testingDate.value,
-        size: size.value,
-        reinforced: reinforced.value,
-        colour: colour.value,
-        panjang1: inputs1[0].value,
-        lebar1: inputs1[1].value,
-        waft1: inputs1[2].value,
-        denierWaft1: inputs1[3].value,
-        weft1: inputs1[4].value,
-        denierWeft1: inputs1[5].value,
-        weight1: weight1.value,
-        swl: swl.value,
-        sf: sf.value,
-        jenis: jenis,
-        liftBeltType: liftBeltType.value,
-        sewingThreadType: sewingThreadType.value,
-        sewing: sewing,
-        stitch: stitch,
-        draw: draw,
-        timeInput: timeInput,
-        panjang2: inputs2[0].value,
-        lebar2: inputs2[1].value,
-        waft2: inputs2[2].value,
-        denierWaft2: inputs2[3].value,
-        weft2: inputs2[4].value,
-        denierWeft2: inputs2[5].value,
-        weight2: weight2.value,
-        topS1: topS1.value,
-        topS2: topS2.value,
-        topS3: topS3.value,
-        topS4: topS4.value,
-        topS5: topS5.value,
-        topE1: topE1.value,
-        topE2: topE2.value,
-        topE3: topE3.value,
-        topE4: topE4.value,
-        topE5: topE5.value,
-        bottomS1: bottomS1.value,
-        bottomS2: bottomS2.value,
-        bottomS3: bottomS3.value,
-        bottomS4: bottomS4.value,
-        bottomS5: bottomS5.value,
-        bottomE1: bottomE1.value,
-        bottomE2: bottomE2.value,
-        bottomE3: bottomE3.value,
-        bottomE4: bottomE4.value,
-        bottomE5: bottomE5.value
-    };
-    console.log(info);
-    console.log("ini di dalam log all element");
+// Initially disable Ketik on page load
+disableKetik();
 
-    let hasUndefinedOrNullValue = Object.values(info).some(value => value === undefined || value === null);
+// button koreksi
+btn_koreksi.addEventListener("click", function (e) {
+    a = 2;
+    btn_isi.style.display = 'none';
+    btn_simpan.style.display = 'inline-block';
 
-    if (hasUndefinedOrNullValue) {
-        console.log("One or more values are undefined or null.");
-        // Handle the error condition appropriately
-        return; // Or perform any necessary action
-    } else {
-        console.log("gak ada masalah");
-        console.log(hasUndefinedOrNullValue);
-    }
-}
+    btn_koreksi.style.display = 'none';
+    btn_batal.style.display = 'inline-block';
+
+    btn_RefNo.disabled = false;
+    btn_hapus.disabled = true;
+    btn_RefNo.focus()
+
+});
+
+// button hapus
+btn_hapus.addEventListener("click", function (e) {
+    a = 3;
+
+    btn_isi.style.display = 'none';
+    btn_simpan.style.display = 'inline-block';
+
+    btn_koreksi.style.display = 'none';
+    btn_batal.style.display = 'inline-block';
+
+    btn_RefNo.disabled = false;
+    btn_hapus.disabled = true;
+    btn_RefNo.focus()
+});
 
 // atribut parse
 let parsedWeight1 = parseDecimal(weight1.value);
@@ -802,6 +787,10 @@ let parsedBottomE5 = parseDecimal(bottomE5.value);
 // button simpan
 btn_simpan.addEventListener('click', async function (e) {
     if (a === 1) { // ISI
+        inputsInBagDetail.forEach(function (input) {
+            input.disabled = false;
+        });
+
         try {
             e.preventDefault();
 
@@ -901,7 +890,7 @@ btn_simpan.addEventListener('click', async function (e) {
         } catch (error) {
             console.error('Exception:', error);
         }
-    } else if (a = 2) { // KOREKSI
+    } else if (a === 2) { // KOREKSI
         try {
             e.preventDefault();
 
@@ -917,42 +906,115 @@ btn_simpan.addEventListener('click', async function (e) {
             let sewingString = sewing.join(', ');
             let stitchString = stitch.join(', ');
             let drawString = draw.join(', ');
-
-
-            console.log(jenis);
-            console.log(sewing);
-            console.log(stitch);
-            console.log(draw);
+            // console.log(jenis);
+            // console.log(sewing);
+            // console.log(stitch);
+            // console.log(draw);
 
             koreksiFIBC(jenisString, sewingString, stitchString, drawString);
 
         } catch (error) {
             console.error('Exception:', error);
         }
+    } else if (a === 3) { //HAPUS
+        $.ajax({
+            url: "FrmInputFIBC/hapusDetailFIBC",
+            type: "DELETE",
+            data: {
+                _token: csrfToken,
+                no_ref: splitRefNo,
+                customer: customer.value,
+                bagCode: bagCode.value,
+                bagType: bagType.value,
+                poNo: poNo.value,
+                prodDate: prodDate.value,
+                testingDate: testingDate.value,
+                size: size.value,
+                reinforced: reinforced.value,
+                colour: colour.value,
+                panjang1: inputIds1[0].value,
+                lebar1: inputIds1[1],
+                waft1: inputIds1[2],
+                denierWaft1: inputIds1[3],
+                weft1: inputIds1[4],
+                denierWeft1: inputIds1[5],
+                weight1: weight1.value,
+                swl: swl.value,
+                sf: sf.value,
+                jenis: jenis.value,
+                liftBeltType: liftBeltType.value,
+                sewingThreadType: sewingThreadType.value,
+                sewing: sewing.value,
+                stitch: stitch.value,
+                draw: draw.value,
+                panjang2: inputs2[0].value,
+                lebar2: inputs2[1].value,
+                waft2: inputs2[2].value,
+                denierWaft2: inputs2[3].value,
+                weft2: inputs2[4].value,
+                denierWeft2: inputs2[5].value,
+                weight2: weight2.value,
+                topS1: parsedTopS1,
+                topS2: parsedTopS2,
+                topS3: parsedTopS3,
+                topS4: parsedTopS4,
+                topS5: parsedTopS5,
+                topE1: parsedTopE1,
+                topE2: parsedTopE2,
+                topE3: parsedTopE3,
+                topE4: parsedTopE4,
+                topE5: parsedTopE5,
+                bottomS1: parsedBottomS1,
+                bottomS2: parsedBottomS2,
+                bottomS3: parsedBottomS3,
+                bottomS4: parsedBottomS4,
+                bottomS5: parsedBottomS5,
+                bottomE1: parsedBottomE1,
+                bottomE2: parsedBottomE2,
+                bottomE3: parsedBottomE3,
+                bottomE4: parsedBottomE4,
+                bottomE5: parsedBottomE5
+            },
+            timeout: 30000,
+            success: function (response) {
+                if (response.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Data Telah Terhapus',
+                    }).then(() => {
+                        disableKetik();
+                    });
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('AJAX Error:', error);
+                console.log('Response Status:', status);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Data Gagal Terhapus',
+                });
+            }
+        });
     }
 });
 
-// button koreksi
-btn_koreksi.addEventListener("click", function (e) {
-    a = 2;
-    btn_RefNo.disabled = false;
-    btn_RefNo.focus()
-});
 
-// button hapus
-btn_hapus.addEventListener("click", function (e) {
-    a = 3;
-});
-
-// fungsi async unk submit
+// fungsi unk submit isi
 async function submitForm(jenisString, sewingString, stitchString, drawString) {
     // Perform AJAX request with parsed values
+    // console.log(parsedWeight1);
+    // console.log("ini parse ", parsedWeight2);
+    // console.log(weight1.value);
+    // console.log("ini value", weight2.value);
+    console.log("parse:", parsedTopS1, "value:", topS1.value);
+
     $.ajax({
         type: 'POST',
         url: 'FrmInputFIBC',
         data: {
             _token: csrfToken,
-
             tanggal: tanggal.value,
             fixRefNo: fixRefNo,
             customer: customer.value,
@@ -964,48 +1026,52 @@ async function submitForm(jenisString, sewingString, stitchString, drawString) {
             size: size.value,
             reinforced: reinforced.value,
             colour: colour.value,
+
             panjang1: parsedInputs1[0],
             lebar1: parsedInputs1[1],
             waft1: parsedInputs1[2],
             denierWaft1: parsedInputs1[3],
             weft1: parsedInputs1[4],
             denierWeft1: parsedInputs1[5],
-            weight1: parsedWeight1,
-            swl: parsedSwl,
-            sf: parsedSf,
+            weight1: weight1.value,
+
+            swl: swl.value,
+            sf: sf.value,
             jenis: jenisString,
             liftBeltType: liftBeltType.value,
             sewingThreadType: sewingThreadType.value,
             sewing: sewingString,
             stitch: stitchString,
             draw: drawString,
+
             panjang2: parsedInputs2[0],
             lebar2: parsedInputs2[1],
             waft2: parsedInputs2[2],
             denierWaft2: parsedInputs2[3],
             weft2: parsedInputs2[4],
             denierWeft2: parsedInputs2[5],
-            weight2: parsedWeight2,
-            topS1: parsedTopS1,
-            topS2: parsedTopS2,
-            topS3: parsedTopS3,
-            topS4: parsedTopS4,
-            topS5: parsedTopS5,
-            topE1: parsedTopE1,
-            topE2: parsedTopE2,
-            topE3: parsedTopE3,
-            topE4: parsedTopE4,
-            topE5: parsedTopE5,
-            bottomS1: parsedBottomS1,
-            bottomS2: parsedBottomS2,
-            bottomS3: parsedBottomS3,
-            bottomS4: parsedBottomS4,
-            bottomS5: parsedBottomS5,
-            bottomE1: parsedBottomE1,
-            bottomE2: parsedBottomE2,
-            bottomE3: parsedBottomE3,
-            bottomE4: parsedBottomE4,
-            bottomE5: parsedBottomE5
+            weight2: weight2.value,
+
+            topS1: TopS1.value,
+            topS2: TopS2.value,
+            topS3: TopS3.value,
+            topS4: TopS4.value,
+            topS5: TopS5.value,
+            topE1: TopE1.value,
+            topE2: TopE2.value,
+            topE3: TopE3.value,
+            topE4: TopE4.value,
+            topE5: TopE5.value,
+            bottomS1: BottomS1.value,
+            bottomS2: BottomS2.value,
+            bottomS3: BottomS3.value,
+            bottomS4: BottomS4.value,
+            bottomS5: BottomS5.value,
+            bottomE1: BottomE1.value,
+            bottomE2: BottomE2.value,
+            bottomE3: BottomE3.value,
+            bottomE4: BottomE4.value,
+            bottomE5: BottomE5.value
         },
         timeout: 30000,
         success: function (response) {
@@ -1014,10 +1080,9 @@ async function submitForm(jenisString, sewingString, stitchString, drawString) {
                     icon: 'success',
                     title: 'Success',
                     text: 'Data Telah Tersimpan',
+                }).then(() => {
+                    disableKetik();
                 });
-
-                // Clear all input fields after successful submission
-                inputAll.forEach(input => { input.value = ''; });
             }
         },
         error: function (xhr, status, error) {
@@ -1027,18 +1092,46 @@ async function submitForm(jenisString, sewingString, stitchString, drawString) {
                 title: 'Error',
                 text: 'Data Belum Lengkap Terisi',
             });
+            checkLiftBeltType();
         }
     });
 }
 
+// fungsi untuk tetap input disable barigan bag detail if lift typenya kosong
+function checkLiftBeltType() {
+    if (liftBeltType.value === '') {
+        inputsInBagDetail.forEach(function (input) {
+            input.disabled = true;
+        });
+    } else {
+        inputsInBagDetail.forEach(function (input) {
+            input.disabled = false;
+        });
+    }
+
+    sewingDetail.forEach(function (input) {
+        input.disabled = false;
+    });
+
+    stitchDetail.forEach(function (input) {
+        input.disabled = false;
+    });
+
+    drawDetail.forEach(function (input) {
+        input.disabled = false;
+    });
+}
+
+
+// fungsi unk submit koreksi
 async function koreksiFIBC(jenisString, sewingString, stitchString, drawString) {
-    console.log("simpan koreksi");
+    // console.log(swl.value);
     $.ajax({
         url: "FrmInputFIBC/koreksiDetailFIBC",
         type: "PUT",
         data: {
             _token: csrfToken,
-            no_ref: fixRefNo,
+            no_ref: splitRefNo,
             customer: customer.value,
             bagCode: bagCode.value,
             bagType: bagType.value,
@@ -1054,9 +1147,9 @@ async function koreksiFIBC(jenisString, sewingString, stitchString, drawString) 
             denierWaft1: parsedInputs1[3],
             weft1: parsedInputs1[4],
             denierWeft1: parsedInputs1[5],
-            weight1: parsedWeight1,
-            swl: parsedSwl,
-            sf: parsedSf,
+            weight1: weight1.value,
+            swl: swl.value,
+            sf: sf.value,
             jenis: jenisString,
             liftBeltType: liftBeltType.value,
             sewingThreadType: sewingThreadType.value,
@@ -1069,7 +1162,7 @@ async function koreksiFIBC(jenisString, sewingString, stitchString, drawString) 
             denierWaft2: parsedInputs2[3],
             weft2: parsedInputs2[4],
             denierWeft2: parsedInputs2[5],
-            weight2: parsedWeight2,
+            weight2: weight2.value,
             topS1: parsedTopS1,
             topS2: parsedTopS2,
             topS3: parsedTopS3,
@@ -1098,12 +1191,14 @@ async function koreksiFIBC(jenisString, sewingString, stitchString, drawString) 
                     icon: 'success',
                     title: 'Success',
                     text: 'Data Telah Terkoreksi',
+                }).then(() => {
+                    disableKetik();
                 });
-
             }
         },
         error: function (xhr, status, error) {
             console.error('AJAX Error:', error);
+            console.log('Response Status:', status);
             Swal.fire({
                 icon: 'error',
                 title: 'Error',

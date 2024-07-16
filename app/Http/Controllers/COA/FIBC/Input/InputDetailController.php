@@ -217,9 +217,9 @@ class InputDetailController extends Controller
             return datatables($data_ref)->make(true);
         } else if ($id == 'getDataDetailReference') {
             $dataDetailRef = DB::connection('ConnTestQC')->select('exec [SP_1273_QTC_MAINT_FIBC] @Kode = ?, @RefNo = ?', [3, $request->input('no_ref')]);
+            // dd($dataDetailRef);
 
             $data_detailReff = [];
-            // dd($dataDetailRef);
 
             foreach ($dataDetailRef as $dataDetail) {
                 $data_detailReff[] = [
@@ -304,7 +304,8 @@ class InputDetailController extends Controller
     public function update(Request $request, $id)
     {
         if ($id == 'koreksiDetailFIBC') {
-            $Reference_No = $request->input('fixRefNo');
+            $Reference_No = $request->input('no_ref');
+            // dd($Reference_No);
             $Customer = $request->input('customer');
             $Bag_Code = $request->input('bagCode');
             $Bag_Type = $request->input('bagType');
@@ -360,20 +361,25 @@ class InputDetailController extends Controller
             $Bottom_Persen_5 = $request->input('bottomE5');
 
             $result = DB::connection('ConnTestQC')->select('exec [SP_1273_QTC_MAINT_FIBC] @Kode = ?, @RefNo = ?', [5, $Reference_No]);
-            // dd($result);
+            $count = $result[0]->Ada;
+            // dd($count);
 
-            if (!empty($result)) {
+            if ($count > 0) {
                 $top = DB::connection('ConnTestQC')->select('exec [SP_1273_QTC_MAINT_FIBC] @Kode = ?, @RefNo = ?', [7, $Reference_No]);
+                // dd($top);
                 $data_ref = [];
                 foreach ($top as $refno) {
                     $data_ref[] = $refno->Top_Result;
                 }
 
                 $testResult = $SWL * $sf;
-                $hasilResult = $testResult < $data_ref[0]? 'PASS' : 'FAIL';
+                $hasilResult = $testResult < $data_ref[0] ? 'PASS' : 'FAIL';
+                // dd('SWL:', $SWL, 'sf:', $sf, 'test: ', $testResult);
+                // dd($data_ref[0]);
+                // dd($hasilResult);
 
                 try {
-                    $updateAda = DB::connection('ConnTestQC')->statement(
+                    DB::connection('ConnTestQC')->statement(
                         'exec SP_1273_QTC_MAINT_FIBC
                     @Kode = 6,
                     @RefNo = ?, @Result = ?, @Cust = ?, @BagCode = ?, @BagType = ?, @PO_No = ?, @TglProd = ?, @TglTest = ?, @Size = ?,
@@ -399,7 +405,7 @@ class InputDetailController extends Controller
                 }
             } else {
                 try {
-                    $update0 = DB::connection('ConnTestQC')->statement(
+                    DB::connection('ConnTestQC')->statement(
                         'exec SP_1273_QTC_MAINT_FIBC
                     @Kode = 4,
                     @RefNo = ?, @Cust = ?, @BagCode = ?, @BagType = ?, @PO_No = ?, @TglProd = ?, @TglTest = ?, @Size = ?,
@@ -430,9 +436,17 @@ class InputDetailController extends Controller
     }
 
 
-
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
-        //
+        if ($id == 'hapusDetailFIBC') {
+            $Reference_No = $request->input('no_ref');
+            try {
+                DB::connection('ConnTestQC')->statement('exec [SP_1273_QTC_MAINT_FIBC] @Kode = ?, @RefNo = ?', [8, $Reference_No]);
+
+                return response()->json(['success' => 'Data deteled successfully'], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Failed to delete data: ' . $e->getMessage()], 500);
+            }
+        }
     }
 }

@@ -52,7 +52,7 @@ Route::post('login', 'App\Http\Controllers\LoginController@login');
 Route::post('/logout', 'App\Http\Controllers\LoginController@logout')->name('logout');
 
 Route::group(['middleware' => ['auth']], function () {
-    
+
     Route::get('/home', 'App\Http\Controllers\HomeController@index')->name('home');
 
     // QC
@@ -82,14 +82,14 @@ Route::group(['middleware' => ['auth']], function () {
 
 
     // COA
-    Route::get('COA', 'App\Http\Controllers\HomeController@COA');
+    // Route::get('COA', 'App\Http\Controllers\HomeController@COA');
     Route::resource('FrmInputFIBC', InputDetailController::class);
 
-    Route::get('COA', 'App\Http\Controllers\HomeController@COA');
-    // Route::resource('FrmInputTest', InputTestController::class);
+    // Route::get('COA', 'App\Http\Controllers\HomeController@COA');
+    Route::resource('FrmInputTest', InputTestController::class);
 
-    Route::get('FrmACCMng_FIBC', 'App\Http\Controllers\COA\FIBC\ACC\ACCQCManController@index');
-    // Route::resource('FrmACCMng_FIBC', ACCQCManController::class);
+    // Route::get('FrmACCMng_FIBC', 'App\Http\Controllers\COA\FIBC\ACC\ACCQCManController@index');
+    Route::resource('FrmACCMng_FIBC', ACCQCManController::class);
 
     Route::get('FrmACCFIBC', 'App\Http\Controllers\COA\FIBC\ACC\ACCQCSpvController@index');
     // Route::resource('FrmACCFIBC', ACCQCSpvController::class);

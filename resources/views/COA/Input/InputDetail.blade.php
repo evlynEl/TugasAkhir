@@ -296,9 +296,9 @@
                             </div>
                             <div class="col-md-2">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="Spec-modification"
-                                        name="Spec-modification">
-                                    <label class="form-check-label" for="Spec-modification">Spec. Modification</label>
+                                    <input class="form-check-input" type="checkbox" id="Spec. Modification"
+                                        name="Spec. Modification">
+                                    <label class="form-check-label" for="Spec. Modification">Spec. Modification</label>
                                 </div>
                             </div>
                             <div class="col-md-2">
@@ -309,9 +309,9 @@
                             </div>
                             <div class="col-md-2">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="Customer-sample"
-                                        name="Customer-sample">
-                                    <label class="form-check-label" for="Customer-sample">Sample dari Customer</label>
+                                    <input class="form-check-input" type="checkbox" id="Sample dari Customer"
+                                        name="Sample dari Customer">
+                                    <label class="form-check-label" for="Sample dari Customer">Sample dari Customer</label>
                                 </div>
                             </div>
                         </div>
@@ -505,9 +505,9 @@
                                             <label class="form-check-label" for="Mitsumaki">Mitsumaki</label>
                                         </div>
                                         <div class="form-check-inline">
-                                            <input class="form-check-input" type="checkbox" name="HalfMitsumaki"
-                                                id="HalfMitsumaki" value="HalfMitsumaki">
-                                            <label class="form-check-label" for="HalfMitsumaki">Half
+                                            <input class="form-check-input" type="checkbox" name="Half Mitsumaki"
+                                                id="Half Mitsumaki" value="Hal fMitsumaki">
+                                            <label class="form-check-label" for="Half Mitsumaki">Half
                                                 Mitsumaki</label>
                                         </div>
                                         <div class="form-check-inline">
@@ -532,14 +532,14 @@
                                             <label class="form-check-label" for="Bottom">Bottom</label>
                                         </div>
                                         <div class="form-check-inline">
-                                            <input class="form-check-input" type="checkbox" name="Side"
-                                                id="Side" value="Side">
-                                            <label class="form-check-label" for="Side">Side Body</label>
+                                            <input class="form-check-input" type="checkbox" name="Side Body"
+                                                id="Side Body" value="Side Body">
+                                            <label class="form-check-label" for="Side Body">Side Body</label>
                                         </div>
                                         <div class="form-check-inline">
-                                            <input class="form-check-input" type="checkbox" name="Lift"
-                                                id="Lift" value="Lift">
-                                            <label class="form-check-label" for="Lift">Lifting Belt</label>
+                                            <input class="form-check-input" type="checkbox" name="Lifting Belt"
+                                                id="Lifting Belt" value="Lifting Belt">
+                                            <label class="form-check-label" for="Lifting Belt">Lifting Belt</label>
                                         </div>
                                     </div>
                                 </div>
