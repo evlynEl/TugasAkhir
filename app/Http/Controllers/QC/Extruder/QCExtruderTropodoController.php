@@ -451,6 +451,48 @@ class QCExtruderTropodoController extends Controller
             return response()->json($idTransaksiArr);
         }
 
+        // list bahan baku display data
+        else if ($id == 'getListBahanBaku') {
+            $noTr = $request->input('noTr');
+            $idKonv = $request->input('idKonv');
+
+            $bahanBakuConn = DB::connection('ConnExtruder')
+                ->select('exec SP_5298_QC_BAHAN_BAKU @kd = ?, @noTr = ?,  @IdKonv = ?', [1, $noTr, $idKonv]);
+
+            $bahanBakuArr = [];
+            foreach ($bahanBakuConn as $listBahanBaku) {
+                $bahanBakuArr[] = [
+                    'IdBahan' => trim($listBahanBaku->IdBahan),
+                    'NamaType' => trim($listBahanBaku->NamaType),
+                    'Jenis' => trim($listBahanBaku->Jenis),
+                    'NamaKelompok' => trim($listBahanBaku->NamaKelompok),
+                    'Jml' => trim($listBahanBaku->Jml),
+                    'Prosen' => trim($listBahanBaku->Prosen),
+                ];
+            }
+            return response()->json($bahanBakuArr);
+        }
+
+        // list DetailData additional 
+        else if ($id == 'getListDetailData') {
+            $noTr = $request->input('noTr');
+
+            $detailAdditionalConn = DB::connection('ConnExtruder')
+                ->select('exec SP_5298_QC_LIST_DATADETAILQC @noTr = ?', [$noTr]);
+
+            $detailAdditionalArr = [];
+            foreach ($detailAdditionalConn as $listDetailAdditional) {
+                $detailAdditionalArr[] = [
+                    'LebarBng' => trim($listDetailAdditional->LebarBng),
+                    'Denier' => trim($listDetailAdditional->Denier),
+                    'Strength' => trim($listDetailAdditional->Strength),
+                    'Elongation' => trim($listDetailAdditional->Elongation),
+                    'KetStr' => trim($listDetailAdditional->KetStr),
+                ];
+            }
+            return response()->json($detailAdditionalArr);
+        }
+
 
     }
 
@@ -543,6 +585,7 @@ class QCExtruderTropodoController extends Controller
                 }
 
                 DB::commit();
+                return response()->json(['success' => 'Data berhasil disimpan.'], 200);
             } catch (\Exception $e) {
                 DB::rollback();
                 return response()->json(['error' => $e->getMessage()], 500);
@@ -583,6 +626,7 @@ class QCExtruderTropodoController extends Controller
                 }
 
                 DB::commit();
+                return response()->json(['success' => 'Data berhasil disimpan.'], 200);
             } catch (\Exception $e) {
                 DB::rollback();
                 return response()->json(['error' => $e->getMessage()], 500);
@@ -610,6 +654,54 @@ class QCExtruderTropodoController extends Controller
             }
         }
 
+        // update data general
+        else if ($id == 'updateGeneralData') {
+            $noTr = $request->input('noTr');
+            $denierRata = $request->input('denierrata');
+            $keterangan = $request->input('ket');
+            $shift = $request->input('shift');
+            $mesin = $request->input('mesin');
+            $shiftAwal = $request->input('awal');
+            $shiftAkhir = $request->input('akhir');
+            $spekBenang = $request->input('bng');
+            $jamInput = $request->input('jam');
+            $idKonv = $request->input('idKonv');
+
+            try {
+                DB::connection('ConnExtruder')
+                    ->statement('exec [SP_5298_QC_UPDATE_MASTERQC] 
+        @kode = ?, 
+        @noTr = ?, 
+        @denierrata = ?, 
+        @ket = ?, 
+        @shift = ?, 
+        @mesin = ?, 
+        @awal = ?, 
+        @akhir = ?, 
+        @bng = ?, 
+        @jam = ?, 
+        @idKonv = ?',
+                        [
+                            1,
+                            $noTr,
+                            $denierRata,
+                            $keterangan,
+                            $shift,
+                            $mesin,
+                            $shiftAwal,
+                            $shiftAkhir,
+                            $spekBenang,
+                            $jamInput,
+                            $idKonv,
+                        ]
+                    );
+
+                return response()->json(['success' => 'Data berhasil diKOREKSI.'], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Gagal KOREKSI data: ' . $e->getMessage()], 500);
+            }
+        }
+
 
     }
 
@@ -627,9 +719,7 @@ class QCExtruderTropodoController extends Controller
             } catch (\Exception $e) {
                 return response()->json(['error' => 'Failed to delete data: ' . $e->getMessage()], 500);
             }
-        }
-
-        else if ($id == 'deleteBahan') {
+        } else if ($id == 'deleteBahan') {
             $noTr = $request->input('noTr');
 
             try {
@@ -641,9 +731,7 @@ class QCExtruderTropodoController extends Controller
             } catch (\Exception $e) {
                 return response()->json(['error' => 'Failed to delete data: ' . $e->getMessage()], 500);
             }
-        }
-
-        else if ($id == 'deleteMaster') {
+        } else if ($id == 'deleteMaster') {
             $noTr = $request->input('noTr');
 
             try {
@@ -657,6 +745,6 @@ class QCExtruderTropodoController extends Controller
             }
         }
 
-        
+
     }
 }
