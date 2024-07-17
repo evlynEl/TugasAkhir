@@ -535,8 +535,8 @@
                                         <button class="btn btn-primary btn-block btn-sm"
                                             id="koreksiButton">KOREKSI</button>
                                         <button class="btn btn-primary btn-block btn-sm" id="hapusButton">HAPUS</button>
-                                        <button class="btn btn-primary btn-block btn-sm" id="batalButton">BATAL</button>
                                         <button class="btn btn-primary btn-block btn-sm" id="prosesButton">PROSES</button>
+                                        <button class="btn btn-primary btn-block btn-sm" id="batalButton">BATAL</button>
                                     </div>
                                 </div>
                             </div>

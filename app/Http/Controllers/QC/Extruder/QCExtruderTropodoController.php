@@ -456,22 +456,29 @@ class QCExtruderTropodoController extends Controller
             $noTr = $request->input('noTr');
             $idKonv = $request->input('idKonv');
 
-            $bahanBakuConn = DB::connection('ConnExtruder')
-                ->select('exec SP_5298_QC_BAHAN_BAKU @kd = ?, @noTr = ?,  @IdKonv = ?', [1, $noTr, $idKonv]);
+            try {
+                $bahanBakuConn = DB::connection('ConnExtruder')
+                    ->select('exec SP_5298_QC_BAHAN_BAKU @kd = ?, @noTr = ?, @IdKonv = ?', [1, $noTr, $idKonv]);
 
-            $bahanBakuArr = [];
-            foreach ($bahanBakuConn as $listBahanBaku) {
-                $bahanBakuArr[] = [
-                    'IdBahan' => trim($listBahanBaku->IdBahan),
-                    'NamaType' => trim($listBahanBaku->NamaType),
-                    'Jenis' => trim($listBahanBaku->Jenis),
-                    'NamaKelompok' => trim($listBahanBaku->NamaKelompok),
-                    'Jml' => trim($listBahanBaku->Jml),
-                    'Prosen' => trim($listBahanBaku->Prosen),
-                ];
+                // dd($bahanBakuConn);
+
+                $bahanBakuArr = [];
+                foreach ($bahanBakuConn as $listBahanBaku) {
+                    $bahanBakuArr[] = [
+                        'IdBahan' => trim($listBahanBaku->IdBahan),
+                        'NamaType' => trim($listBahanBaku->NamaType),
+                        'Jenis' => trim($listBahanBaku->Jenis),
+                        'NamaKelompok' => trim($listBahanBaku->NamaKelompok),
+                        'Jml' => trim($listBahanBaku->Jml),
+                        'Prosen' => trim($listBahanBaku->Prosen),
+                    ];
+                }
+                return response()->json($bahanBakuArr);
+            } catch (\Exception $e) {
+                return response()->json(['error' => $e->getMessage()], 500);
             }
-            return response()->json($bahanBakuArr);
         }
+
 
         // list DetailData additional 
         else if ($id == 'getListDetailData') {
@@ -562,7 +569,7 @@ class QCExtruderTropodoController extends Controller
             try {
                 DB::beginTransaction();
                 foreach ($dataArray as $data) {
-                    $idType = $data[1];
+                    $idType = $data[0];
                     $jenis = $data[2];
                     $kelompok = $data[3];
                     $qty = ($jenis === "BB") ? $data[4] : $data[5];

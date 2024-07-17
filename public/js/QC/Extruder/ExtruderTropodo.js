@@ -4,19 +4,23 @@ var jamInput = document.getElementById('jamInput');
 var shiftLetter = document.getElementById('shiftLetter');
 
 // jam saat ini
-var currentTime = new Date();
-var hours = currentTime.getHours().toString().padStart(2, '0');
-var minutes = currentTime.getMinutes().toString().padStart(2, '0');
-var currentTimeString = hours + ':' + minutes;
-jamInput.value = currentTimeString;
+function jamSkrg() {
+    var currentTime = new Date();
+    var hours = currentTime.getHours().toString().padStart(2, '0');
+    var minutes = currentTime.getMinutes().toString().padStart(2, '0');
+    var currentTimeString = hours + ':' + minutes;
+    jamInput.value = currentTimeString;
+}
 
 // tanggal hari ini
-var today = new Date();
-var year = today.getFullYear();
-var month = (today.getMonth() + 1).toString().padStart(2, '0');
-var day = today.getDate().toString().padStart(2, '0');
-var todayString = year + '-' + month + '-' + day;
-tanggal.value = todayString;
+function tanggalToday() {
+    var today = new Date();
+    var year = today.getFullYear();
+    var month = (today.getMonth() + 1).toString().padStart(2, '0');
+    var day = today.getDate().toString().padStart(2, '0');
+    var todayString = year + '-' + month + '-' + day;
+    tanggal.value = todayString;
+}
 
 var shiftAwal = document.getElementById('shiftAwal');
 var shiftAkhir = document.getElementById('shiftAkhir');
@@ -130,6 +134,10 @@ var hapusButton = document.getElementById('hapusButton');
 var prosesButton = document.getElementById('prosesButton');
 var isiButton = document.getElementById('isiButton');
 var koreksiButton = document.getElementById('koreksiButton');
+var batalButton = document.getElementById('batalButton');
+var nomorButton;
+
+prosesButton.disabled = true;
 
 // button bahan di bawah
 var buttonBahanBaku = document.getElementById('buttonBahanBaku');
@@ -148,6 +156,27 @@ var buttonSweeping = document.getElementById('buttonSweeping');
 var buttonInjection = document.getElementById('buttonInjection');
 
 var selectedButtonQuantity;
+
+function setUpAwal() {
+    document.querySelectorAll('button').forEach(button => {
+        button.disabled = true;
+    });
+
+    document.querySelectorAll('input').forEach(input => {
+        input.value = '';
+    });
+
+    isiButton.disabled = false;
+    koreksiButton.disabled = false;
+    hapusButton.disabled = false;
+
+    jamSkrg();
+    tanggalToday();
+
+    nomorButton = 0;
+}
+
+setUpAwal();
 
 // token
 var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -193,6 +222,36 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    $('#keterangan').on('keydown', function (e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            denier.focus();
+        }
+    });
+
+    $('#denier').on('keydown', function (e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+
+            if (nomorButton === 1 || nomorButton === 2) {
+                Swal.fire({
+                    icon: 'question',
+                    title: 'Ada Detail?',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya',
+                    cancelButtonText: 'Tidak',
+                    returnFocus: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $('#lebarBenang').focus();
+                    } else {
+                        prosesButton.focus();
+                    }
+                });
+            }
+        }
+    });
+
     // table komposisi
     const tableKomposisi = $('#tableKomposisi').DataTable({
         paging: false,
@@ -226,6 +285,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 showCancelButton: true,
                 confirmButtonText: 'Pilih',
                 cancelButtonText: 'Close',
+                returnFocus: false,
                 preConfirm: () => {
                     const selectedData = $("#table_noTransaksi")
                         .DataTable()
@@ -273,6 +333,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (result.isConfirmed) {
                     const selectedRow = result.value;
                     nomorTransaksi.value = selectedRow.NoTrans.trim();
+
+                    if (nomorButton === 3) {
+                        prosesButton.focus();
+                    }
+
                     displayData();
                 }
             });
@@ -334,6 +399,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     idKonv: idKonversi.value
                 },
                 success: function (result) {
+                    console.log('AJAX request succeeded:', result); // Debugging log
+
                     tableKomposisi.clear();
 
                     result.forEach(function (row) {
@@ -348,13 +415,13 @@ document.addEventListener('DOMContentLoaded', function () {
                         tableKomposisi.row.add(rowData).draw(false);
                         dataArrKomposisi.push(rowData); // Isi array dataArrKomposisi
                     });
-
                 },
                 error: function (xhr, status, error) {
-                    console.error(error);
+                    console.error('AJAX request failed:', error); // Debugging log
                 }
             });
         }
+
 
         // list detail data additional
         function getListDetailData() {
@@ -377,7 +444,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             row['KetStr'],
                         ];
                         tableAdd.row.add(rowData).draw(false);
-                        dataArrayDetail.push(rowData); // Isi array dataArrayDetail
+                        // dataArrayDetail.push(rowData);
                     });
 
                 },
@@ -443,7 +510,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     });
                 },
                 didClose: () => {
-                    buttonSpekBenang.focus();
+                    if (nomorButton === 2 || nomorButton === 3) {
+                        buttonNomorTransaksi.focus();
+                    } else {
+                        buttonSpekBenang.focus();
+                    }
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -671,8 +742,8 @@ document.addEventListener('DOMContentLoaded', function () {
                             let QuantityVariable = result[0].Quantity.trim();
 
                             dataArrKomposisi.push([
-                                selectedRow.Merk.trim(),
                                 selectedRow.IdType.trim(),
+                                selectedRow.Merk.trim(),
                                 StatusTypeVariable,
                                 NamaKelompokVariable,
                                 QuantityVariable,
@@ -769,6 +840,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         buttonSweeping.focus();
                     } else if (selectedButtonQuantity == 'getSweeping') {
                         buttonInjection.focus();
+                    } else {
+                        keterangan.focus();
                     }
                 }
             }).then((result) => {
@@ -909,8 +982,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
                                 // Push data to dataArrKomposisi array
                                 dataArrKomposisi.push([
-                                    selectedRow.Merk.trim(),
                                     selectedRow.IdType.trim(),
+                                    selectedRow.Merk.trim(),
                                     StatusTypeVariable,
                                     NamaKelompokVariable,
                                     QuantityVariable,
@@ -1055,6 +1128,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         $('#lebarBenang').focus();
                         tableAdd.rows().deselect().draw(false);
                     } else {
+                        prosesButton.focus();
                         resetInputDetail();
                         tableAdd.rows().deselect().draw(false);
                     }
@@ -1064,7 +1138,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Add data to DataTable
             tableAdd.row.add([lebarBenang, denier, strength, elongation, ketStrength]).draw(false);
-            dataArrayDetail.push([lebarBenang, denier, strength, elongation, ketStrength]);
         } else {
             let errorMessage = 'Mohon isi ';
             if (!lebarBenang) {
@@ -1136,82 +1209,225 @@ document.addEventListener('DOMContentLoaded', function () {
     // PROSES button
     prosesButton.addEventListener('click', async () => {
 
-        // kalau mau proses isi,minim ada shift, mesin
-        if (mesin.value === '' || shiftLetter.value === '') {
-            let errorMessage = 'Isi ';
-            if (mesin.value === '') {
-                errorMessage += 'Mesin';
+        // ISI
+        if (nomorButton === 1) {
+            // kalau mau proses isi,minim ada shift, mesin
+            if (mesin.value === '' || shiftLetter.value === '') {
+                let errorMessage = 'Isi ';
+                if (mesin.value === '') {
+                    errorMessage += 'Mesin';
+                }
+                if (mesin.value === '' && shiftLetter.value === '') {
+                    errorMessage += ' dan ';
+                }
+                if (shiftLetter.value === '') {
+                    errorMessage += 'Shift';
+                }
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: errorMessage
+                });
+                return;
             }
-            if (mesin.value === '' && shiftLetter.value === '') {
-                errorMessage += ' dan ';
-            }
-            if (shiftLetter.value === '') {
-                errorMessage += 'Shift';
-            }
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: errorMessage
+
+            dataArrayDetail = [];
+            tableAdd.rows().every(function () {
+                const data = this.data();
+                dataArrayDetail.push(data);
             });
-            return;
+
+            $.ajax({
+                type: 'PUT', //update
+                url: 'ExtruderTropodo/insertDataGeneral', //update
+                data: {
+                    _token: csrfToken,
+                    jam: jamInput.value,
+                    tgl: tanggal.value,
+                    shift: shiftLetter.value,
+                    mesin: mesin.value,
+                    awal: shiftAwal.value,
+                    akhir: shiftAkhir.value,
+                    benang: spekBenang.value,
+                    denierrata: denier.value,
+                    ket: keterangan.value,
+                    idKonv: idKonversi.value,
+                },
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.success,
+                            didClose: () => {
+                                batalButton.click(); 
+                            }
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                }
+            });
+
+            // ambil nomor transaksi dan save komposisi dan additional data
+            $.ajax({
+                type: 'GET',
+                url: 'ExtruderTropodo/getIdTransaksi',
+                data: {
+                    _token: csrfToken,
+                },
+                success: function (response) {
+                    nomorTransaksi.value = response[0].sNomer.trim();
+
+                    saveKomposisiData();
+                    saveAdditionalData();
+                    updateCounter();
+
+                    clearTable();
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                }
+            });
         }
 
-        $.ajax({
-            type: 'PUT', //update
-            url: 'ExtruderTropodo/insertDataGeneral', //update
-            data: {
-                _token: csrfToken,
-                jam: jamInput.value,
-                tgl: tanggal.value,
-                shift: shiftLetter.value,
-                mesin: mesin.value,
-                awal: shiftAwal.value,
-                akhir: shiftAkhir.value,
-                benang: spekBenang.value,
-                denierrata: denier.value,
-                ket: keterangan.value,
-                idKonv: idKonversi.value,
-            },
-            success: function (response) {
-                if (response.success) {
+        // KOREKSI
+        else if (nomorButton === 2) {
+            dataArrayDetail = [];
+            tableAdd.rows().every(function () {
+                const data = this.data();
+                dataArrayDetail.push(data);
+            });
+
+            // update data
+            $.ajax({
+                type: 'PUT',
+                url: 'ExtruderTropodo/updateGeneralData',
+                data: {
+                    _token: csrfToken,
+                    noTr: nomorTransaksi.value,
+                    denierrata: denier.value,
+                    ket: keterangan.value,
+                    shift: shiftLetter.value,
+                    mesin: mesin.value,
+                    awal: shiftAwal.value,
+                    akhir: shiftAkhir.value,
+                    bng: spekBenang.value,
+                    jam: jamInput.value,
+                    idKonv: idKonversi.value,
+                },
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.success,
+                            didClose: () => {
+                                batalButton.click(); 
+                            }
+                        });
+                        // delete bahan baku lalu masukan lagi
+                        deleteBahan();
+                        saveKomposisiData();
+
+                        // delete detail lalu masukan lagi
+                        deleteDetail();
+                        saveAdditionalData();
+
+                        updateCounter();
+
+                        clearTable();
+
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        }
+
+        // HAPUS
+        else if (nomorButton === 3) {
+            try {
+                const deleteDetail = $.ajax({
+                    type: 'DELETE',
+                    url: 'ExtruderTropodo/deleteDetail',
+                    data: {
+                        _token: csrfToken,
+                        noTr: nomorTransaksi.value
+                    }
+                });
+
+                const deleteBahan = $.ajax({
+                    type: 'DELETE',
+                    url: 'ExtruderTropodo/deleteBahan',
+                    data: {
+                        _token: csrfToken,
+                        noTr: nomorTransaksi.value
+                    }
+                });
+
+                const deleteMaster = $.ajax({
+                    type: 'DELETE',
+                    url: 'ExtruderTropodo/deleteMaster',
+                    data: {
+                        _token: csrfToken,
+                        noTr: nomorTransaksi.value
+                    }
+                });
+
+                const responses = await Promise.allSettled([deleteDetail, deleteMaster, deleteBahan]);
+
+                let successMessages = [];
+                let errorMessages = [];
+
+                responses.forEach((response, index) => {
+                    if (response.status === 'fulfilled' && response.value.success) {
+                        successMessages.push(response.value.success);
+                    } else if (response.status === 'rejected') {
+                        switch (index) {
+                            case 0:
+                                errorMessages.push('Penghapusan data detail gagal');
+                                break;
+                            case 1:
+                                errorMessages.push('Penghapusan data master gagal');
+                                break;
+                            case 2:
+                                errorMessages.push('Penghapusan data bahan gagal');
+                                break;
+                        }
+                    }
+                });
+
+                if (errorMessages.length > 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: errorMessages.join(', '),
+                    });
+                } else if (successMessages.length > 0) {
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
-                        text: response.success,
+                        text: "Data berhasil diHAPUS",
+                        confirmButtonText: 'Ok',
+                        didClose: () => {
+                            batalButton.click(); 
+                        }
                     });
                 }
-            },
-            error: function (xhr, status, error) {
-                console.error(error);
+
+            } catch (error) {
+                console.error('AJAX Error:', error);
             }
-        });
+        }
 
-        // ambil nomor transaksi dan save komposisi dan additional data
-        $.ajax({
-            type: 'GET',
-            url: 'ExtruderTropodo/getIdTransaksi',
-            data: {
-                _token: csrfToken,
-            },
-            success: function (response) {
-                nomorTransaksi.value = response[0].sNomer.trim();
-
-                saveKomposisiData();
-                saveAdditionalData();
-                updateCounter();
-
-                clearTable();
-            },
-            error: function (xhr, status, error) {
-                console.error(error);
-            }
-        });
 
     });
 
     // functionsave komposisi
     function saveKomposisiData() {
-        console.log(dataArrKomposisi);
         if (dataArrKomposisi.length === 0) {
             return;
         }
@@ -1227,7 +1443,6 @@ document.addEventListener('DOMContentLoaded', function () {
             success: function (response) {
                 if (response.success) {
                     dataArrKomposisi = [];
-                    tableKomposisi.clear().draw();
                 }
             },
             error: function (xhr, status, error) {
@@ -1239,8 +1454,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // function save additional data
     function saveAdditionalData() {
-        console.log(dataArrayDetail);
-
         if (dataArrayDetail.length === 0) {
             return;
         }
@@ -1256,7 +1469,6 @@ document.addEventListener('DOMContentLoaded', function () {
             success: function (response) {
                 if (response.success) {
                     dataArrayDetail = [];
-                    tableAdd.clear().draw();
                 }
             },
             error: function (xhr, status, error) {
@@ -1286,121 +1498,78 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // HAPUS
     hapusButton.addEventListener('click', async () => {
-        try {
-            const deleteDetail = $.ajax({
-                type: 'DELETE',
-                url: 'ExtruderTropodo/deleteDetail',
-                data: {
-                    _token: csrfToken,
-                    noTr: nomorTransaksi.value
-                }
-            });
+        nomorButton = 3;
 
-            const deleteBahan = $.ajax({
-                type: 'DELETE',
-                url: 'ExtruderTropodo/deleteBahan',
-                data: {
-                    _token: csrfToken,
-                    noTr: nomorTransaksi.value
-                }
-            });
+        isiButton.disabled = true;
+        koreksiButton.disabled = true;
+        hapusButton.disabled = true;
+        prosesButton.disabled = false;
+        batalButton.disabled = false;
 
-            const deleteMaster = $.ajax({
-                type: 'DELETE',
-                url: 'ExtruderTropodo/deleteMaster',
-                data: {
-                    _token: csrfToken,
-                    noTr: nomorTransaksi.value
-                }
-            });
+        buttonNomorTransaksi.disabled = false;
+        buttonIdMesin.disabled = false;
 
-            const responses = await Promise.allSettled([deleteDetail, deleteMaster, deleteBahan]);
+        tanggal.focus();
 
-            let successMessages = [];
-            let errorMessages = [];
-
-            responses.forEach((response, index) => {
-                if (response.status === 'fulfilled' && response.value.success) {
-                    successMessages.push(response.value.success);
-                } else if (response.status === 'rejected') {
-                    switch (index) {
-                        case 0:
-                            errorMessages.push('Penghapusan data detail gagal');
-                            break;
-                        case 1:
-                            errorMessages.push('Penghapusan data master gagal');
-                            break;
-                        case 2:
-                            errorMessages.push('Penghapusan data bahan gagal');
-                            break;
-                    }
-                }
-            });
-
-            if (errorMessages.length > 0) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: errorMessages.join(', '),
-                });
-            } else if (successMessages.length > 0) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: "Data berhasil diHAPUS",
-                });
-            }
-        } catch (error) {
-            console.error('AJAX Error:', error);
-        }
     });
 
 
     // KOREKSI
     koreksiButton.addEventListener('click', async () => {
 
-        // update data
-        $.ajax({
-            type: 'PUT',
-            url: 'ExtruderTropodo/updateGeneralData',
-            data: {
-                _token: csrfToken,
-                noTr: nomorTransaksi.value,
-                denierrata: denier.value,
-                ket: keterangan.value,
-                shift: shiftLetter.value,
-                mesin: mesin.value,
-                awal: shiftAwal.value,
-                akhir: shiftAkhir.value,
-                bng: spekBenang.value,
-                jam: jamInput.value,
-                idKonv: idKonversi.value,
-            },
-            success: function (response) {
-                if (response.success) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success',
-                        text: response.success,
-                    });
-                    // delete bahan baku lalu masukan lagi
-                    deleteBahan();
-                    saveKomposisiData();
+        nomorButton = 2;
 
-                    // delete detail lalu masukan lagi
-                    deleteDetail();
-                    saveAdditionalData();
-
-                    updateCounter();
-
-                    clearTable();
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error(error);
-            }
+        document.querySelectorAll('button').forEach(button => {
+            button.disabled = false;
         });
 
+        isiButton.disabled = true;
+        koreksiButton.disabled = true;
+        hapusButton.disabled = true;
+
+        tanggal.focus();
+
+    });
+
+    isiButton.addEventListener('click', async () => {
+        nomorButton = 1;
+
+        document.querySelectorAll('button').forEach(button => {
+            button.disabled = false;
+        });
+
+        isiButton.disabled = true;
+        koreksiButton.disabled = true;
+        hapusButton.disabled = true;
+
+        jamInput.focus();
+    });
+
+    batalButton.addEventListener('click', async () => {
+        nomorButton = 0;
+
+        isiButton.disabled = false;
+        koreksiButton.disabled = false;
+        hapusButton.disabled = false;
+        prosesButton.disabled = true;
+        batalButton.disabled = false;
+
+
+        document.querySelectorAll('input').forEach(input => {
+            input.value = '';
+        });
+
+        document.querySelectorAll('button').forEach(button => {
+            button.disabled = true;
+        });
+
+        isiButton.disabled = false;
+        koreksiButton.disabled = false;
+        hapusButton.disabled = false;
+
+        jamSkrg();
+        tanggalToday();
+        clearTable();
     });
 
     function clearTable() {
