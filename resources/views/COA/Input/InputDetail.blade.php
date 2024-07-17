@@ -18,20 +18,19 @@
                         <div class="form-group">
                             <label>Tanggal :</label>
                             <div class="input-group">
-                                <input type="date" class="form-control" id="tanggal" name="tanggal"
-                                    onchange="getYearFromInput()">
+                                <input type="date" class="form-control" id="tanggal">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label>Tahun :</label>
-                            <input type="text" id="year" name="year" class="form-control" readonly>
+                            <input type="text" id="year" name="year" class="form-control">
                         </div>
 
                         <div class="form-row">
                             <div class="form-group col-md-2">
                                 <label>Ref No :</label>
-                                <input type="text" id="No" name="No" class="form-control">
+                                <input type="text" id="No." name="No." class="form-control">
                             </div>
                             <div class="form-group col-md-10" style="margin-top: 31px;">
                                 <div class="input-group">
@@ -326,14 +325,12 @@
                                 <label for="liftBeltType">A. Lifting Belt</label>
                                 <div class="form-group">
                                     <label>Type :</label>
-                                    <label style="display: none" for="liftBeltType">Type Lifting Belt</label>
                                     <input type="text" class="form-control" id="liftBeltType" name="liftBeltType">
                                 </div>
 
                                 <label>B. Sewing Thread</label>
                                 <div class="form-group">
                                     <label for="sewingThreadType">Type :</label>
-                                    <label style="display: none" for="sewingThreadType">Type Sewing Thread</label>
                                     <input type="text" class="form-control" id="sewingThreadType"
                                         name="sewingThreadType">
                                 </div>
