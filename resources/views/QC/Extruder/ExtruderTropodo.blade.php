@@ -155,10 +155,6 @@
                                     <input type="text" id="quantityBahanBaku" name="quantityBahanBaku"
                                         class="form-control mb-1" readonly>
                                 </div>
-                                {{-- <div class="col-sm-1">
-                                    <input type="text" id="prosentaseBahanBaku" name="prosentaseBahanBaku"
-                                        class="form-control mb-1" disabled>
-                                </div> --}}
                             </div>
 
                             <!-- Calpet/CACO3 -->

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\QC\Extruder;
 
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -430,7 +431,8 @@ class QCExtruderTropodoController extends Controller
                     'Quantity' => $listQuantity->JumlahTritier,
                     'Prosentase' => $listQuantity->Persentase,
                     'StatusType' => $listQuantity->StatusType,
-                    'NamaKelompok' => $listQuantity->NamaKelompok
+                    'NamaKelompok' => $listQuantity->NamaKelompok,
+                    'Merk' => $listQuantity->Merk
                 ];
             }
             return response()->json($qtyArr);
@@ -515,14 +517,27 @@ class QCExtruderTropodoController extends Controller
             $tgl = $request->input('tgl');
             $shift = $request->input('shift');
             $mesin = $request->input('mesin');
-            $awal = $request->input('awal');
-            $akhir = $request->input('akhir');
+
             $benang = $request->input('benang');
             $denierrata = $request->input('denierrata');
             $user = Auth::user()->NomorUser;
             $user = trim($user);
             $ket = $request->input('ket');
             $idKonv = $request->input('idKonv');
+
+            $tanggal = date('Y-m-d');
+
+            $jam = $request->input('jam');
+            $jamDate = $tanggal . ' ' . $jam;
+
+            $awal = $request->input('awal');
+            $akhir = $request->input('akhir');
+
+            $awalDatetimeString = $tanggal . ' ' . $awal;
+            $akhirDatetimeString = $tanggal . ' ' . $akhir;
+
+            $awalDatetime = new DateTime($awalDatetimeString);
+            $akhirDatetime = new DateTime($akhirDatetimeString);
 
             try {
                 DB::connection('ConnExtruder')
@@ -541,12 +556,12 @@ class QCExtruderTropodoController extends Controller
         @idKonv = ?',
                         [
                             0,
-                            $jam,
+                            $jamDate,
                             $tgl,
                             $shift,
                             $mesin,
-                            $awal,
-                            $akhir,
+                            $awalDatetime,
+                            $akhirDatetime,
                             $benang,
                             $denierrata,
                             $user,
@@ -668,11 +683,20 @@ class QCExtruderTropodoController extends Controller
             $keterangan = $request->input('ket');
             $shift = $request->input('shift');
             $mesin = $request->input('mesin');
+            $spekBenang = $request->input('bng');
+            $idKonv = $request->input('idKonv');
+
+            $jamInput = $request->input('jam');
+            $tanggal = date('Y-m-d');
+            $jamInputDatetime = $tanggal . ' ' . $jamInput;
+
             $shiftAwal = $request->input('awal');
             $shiftAkhir = $request->input('akhir');
-            $spekBenang = $request->input('bng');
-            $jamInput = $request->input('jam');
-            $idKonv = $request->input('idKonv');
+
+            $tanggal = date('Y-m-d');
+
+            $shiftAwalDatetime = $tanggal . ' ' . $shiftAwal;
+            $shiftAkhirDatetime = $tanggal . ' ' . $shiftAkhir;
 
             try {
                 DB::connection('ConnExtruder')
@@ -695,10 +719,10 @@ class QCExtruderTropodoController extends Controller
                             $keterangan,
                             $shift,
                             $mesin,
-                            $shiftAwal,
-                            $shiftAkhir,
+                            $shiftAwalDatetime,
+                            $shiftAkhirDatetime,
                             $spekBenang,
-                            $jamInput,
+                            $jamInputDatetime,
                             $idKonv,
                         ]
                     );

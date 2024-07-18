@@ -58,6 +58,12 @@ var typeUv = document.getElementById('typeUv');
 var quantityUv = document.getElementById('quantityUv');
 var prosentaseUv = document.getElementById('prosentaseUv');
 
+// LDPE
+var ldpe = document.getElementById('ldpe');
+var typeLdpe = document.getElementById('typeLdpe');
+var quantityLdpe = document.getElementById('quantityLdpe');
+var prosentaseLdpe = document.getElementById('prosentaseLdpe');
+
 // Anti Static
 var antiStatic = document.getElementById('antiStatic');
 var typeAntiStatic = document.getElementById('typeAntiStatic');
@@ -75,48 +81,6 @@ var additif = document.getElementById('additif');
 var typeAdditif = document.getElementById('typeAdditif');
 var quantityAdditif = document.getElementById('quantityAdditif');
 var prosentaseAdditif = document.getElementById('prosentaseAdditif');
-
-// LLDPE
-var lldpe = document.getElementById('lldpe');
-var typeLldpe = document.getElementById('typeLldpe');
-var quantityLldpe = document.getElementById('quantityLldpe');
-var prosentaseLldpe = document.getElementById('prosentaseLldpe');
-
-// LDPE Lami
-var ldpeLami = document.getElementById('ldpeLami');
-var typeLdpeLami = document.getElementById('typeLdpeLami');
-var quantityLdpeLami = document.getElementById('quantityLdpeLami');
-var prosentaseLdpeLami = document.getElementById('prosentaseLdpeLami');
-
-// LDPE
-var ldpe = document.getElementById('ldpe');
-var typeLdpe = document.getElementById('typeLdpe');
-var quantityLdpe = document.getElementById('quantityLdpe');
-var prosentaseLdpe = document.getElementById('prosentaseLdpe');
-
-// Conductive
-var conductive = document.getElementById('conductive');
-var typeConductive = document.getElementById('typeConductive');
-var quantityConductive = document.getElementById('quantityConductive');
-var prosentaseConductive = document.getElementById('prosentaseConductive');
-
-// HDPE
-var hdpe = document.getElementById('hdpe');
-var typeHdpe = document.getElementById('typeHdpe');
-var quantityHdpe = document.getElementById('quantityHdpe');
-var prosentaseHdpe = document.getElementById('prosentaseHdpe');
-
-// Sweeping
-var sweeping = document.getElementById('sweeping');
-var typeSweeping = document.getElementById('typeSweeping');
-var quantitySweeping = document.getElementById('quantitySweeping');
-var prosentaseSweeping = document.getElementById('prosentaseSweeping');
-
-// Injection
-var injection = document.getElementById('injection');
-var typeInjection = document.getElementById('typeInjection');
-var quantityInjection = document.getElementById('quantityInjection');
-var prosentaseInjection = document.getElementById('prosentaseInjection');
 
 // Nomor Transaksi
 var nomorTransaksi = document.getElementById('nomorTransaksi');
@@ -147,13 +111,6 @@ var buttonUv = document.getElementById('buttonUv');
 var buttonAntiStatic = document.getElementById('buttonAntiStatic');
 var buttonPeletan = document.getElementById('buttonPeletan');
 var buttonAdditif = document.getElementById('buttonAdditif');
-var buttonLldpe = document.getElementById('buttonLldpe');
-var buttonLdpeLami = document.getElementById('buttonLdpeLami');
-var buttonLdpe = document.getElementById('buttonLdpe');
-var buttonConductive = document.getElementById('buttonConductive');
-var buttonHdpe = document.getElementById('buttonHdpe');
-var buttonSweeping = document.getElementById('buttonSweeping');
-var buttonInjection = document.getElementById('buttonInjection');
 
 var selectedButtonQuantity;
 
@@ -261,7 +218,7 @@ document.addEventListener('DOMContentLoaded', function () {
         columns: [
             { title: 'Id Type' },
             { title: 'Nama Type' },
-            { title: 'Jenis' },
+            // { title: 'Jenis' },
             { title: 'Kelompok' },
             { title: 'Qty' },
             { title: 'Prosen' }
@@ -305,7 +262,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             serverSide: true,
                             order: [1, "asc"],
                             ajax: {
-                                url: "ExtruderTropodo/getNomorTransaksi",
+                                url: "ExtruderD/getNomorTransaksi",
                                 dataType: "json",
                                 data: {
                                     tgl: tanggal.value,
@@ -353,7 +310,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         $.ajax({
             type: 'GET',
-            url: 'ExtruderTropodo/getDisplayDataByNoTr',
+            url: 'ExtruderD/getDisplayDataByNoTr',
             data: {
                 _token: csrfToken,
                 noTr: nomorTransaksi.value,
@@ -392,7 +349,7 @@ document.addEventListener('DOMContentLoaded', function () {
         function getListBahanBaku() {
             $.ajax({
                 type: 'GET',
-                url: 'ExtruderTropodo/getListBahanBaku',
+                url: 'ExtruderD/getListBahanBaku',
                 data: {
                     _token: csrfToken,
                     noTr: nomorTransaksi.value,
@@ -407,10 +364,10 @@ document.addEventListener('DOMContentLoaded', function () {
                         const rowData = [
                             row['IdBahan'],
                             row['NamaType'],
-                            row['Jenis'],
                             row['NamaKelompok'],
                             row['Jml'],
-                            row['Prosen']
+                            row['Prosen'],
+                            row['Jenis'],
                         ];
                         tableKomposisi.row.add(rowData).draw(false);
                         dataArrKomposisi.push(rowData); // Isi array dataArrKomposisi
@@ -427,7 +384,7 @@ document.addEventListener('DOMContentLoaded', function () {
         function getListDetailData() {
             $.ajax({
                 type: 'GET',
-                url: 'ExtruderTropodo/getListDetailData',
+                url: 'ExtruderD/getListDetailData',
                 data: {
                     _token: csrfToken,
                     noTr: nomorTransaksi.value,
@@ -490,7 +447,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             serverSide: true,
                             order: [1, "asc"],
                             ajax: {
-                                url: "ExtruderTropodo/getIdMesin",
+                                url: "ExtruderD/getIdMesin",
                                 dataType: "json",
                                 data: {
                                     tgl: tanggal.value,
@@ -524,7 +481,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     $.ajax({
                         type: 'GET',
-                        url: 'ExtruderTropodo/getShiftData',
+                        url: 'ExtruderD/getShiftData',
                         data: {
                             _token: csrfToken,
                             tgl: tanggal.value,
@@ -579,7 +536,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             serverSide: true,
                             order: [1, "asc"],
                             ajax: {
-                                url: "ExtruderTropodo/getSpekBenang",
+                                url: "ExtruderD/getSpekBenang",
                                 dataType: "json",
                                 data: {
                                     tgl: tanggal.value,
@@ -609,7 +566,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     $.ajax({
                         type: 'GET',
-                        url: 'ExtruderTropodo/getIdKonversi',
+                        url: 'ExtruderD/getIdKonversi',
                         data: {
                             _token: csrfToken,
                             tgl: tanggal.value,
@@ -666,7 +623,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             serverSide: true,
                             order: [1, "asc"],
                             ajax: {
-                                url: "ExtruderTropodo/getBahanBaku",
+                                url: "ExtruderD/getBahanBaku",
                                 dataType: "json",
                                 data: {
                                     tgl: tanggal.value,
@@ -716,7 +673,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 } else {
                     $.ajax({
                         type: 'GET',
-                        url: 'ExtruderTropodo/getQuantityBahanBaku',
+                        url: 'ExtruderD/getQuantityBahanBaku',
                         data: {
                             _token: csrfToken,
                             tgl: tanggal.value,
@@ -731,10 +688,10 @@ document.addEventListener('DOMContentLoaded', function () {
                             $('#tableKomposisi').DataTable().row.add([
                                 selectedRow.IdType.trim(),
                                 selectedRow.Merk.trim(),
-                                result[0].StatusType.trim(),
                                 result[0].NamaKelompok.trim(),
                                 result[0].Quantity.trim(),
-                                0
+                                0,
+                                result[0].StatusType.trim(),
                             ]).draw(false);
 
                             let StatusTypeVariable = result[0].StatusType.trim();
@@ -744,10 +701,10 @@ document.addEventListener('DOMContentLoaded', function () {
                             dataArrKomposisi.push([
                                 selectedRow.IdType.trim(),
                                 selectedRow.Merk.trim(),
-                                StatusTypeVariable,
                                 NamaKelompokVariable,
                                 QuantityVariable,
-                                0
+                                0,
+                                StatusTypeVariable,
                             ]);
                         },
                         error: function (xhr, status, error) {
@@ -794,7 +751,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             serverSide: true,
                             order: [1, "asc"],
                             ajax: {
-                                url: "ExtruderTropodo/" + selectedButtonQuantity,
+                                url: "ExtruderD/" + selectedButtonQuantity,
                                 dataType: "json",
                                 data: {
                                     tgl: tanggal.value,
@@ -821,25 +778,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     } else if (selectedButtonQuantity == 'getMasterBath') {
                         buttonUv.focus();
                     } else if (selectedButtonQuantity == 'getUv') {
+                        buttonLdpe.focus();
+                    } else if (selectedButtonQuantity == 'getLdpe') {
                         buttonAntiStatic.focus();
                     } else if (selectedButtonQuantity == 'getAntiStatic') {
                         buttonPeletan.focus();
                     } else if (selectedButtonQuantity == 'getPeletan') {
                         buttonAdditif.focus();
-                    } else if (selectedButtonQuantity == 'getAdditif') {
-                        buttonLldpe.focus();
-                    } else if (selectedButtonQuantity == 'getLldpe') {
-                        buttonLdpeLami.focus();
-                    } else if (selectedButtonQuantity == 'getLdpeLami') {
-                        buttonLdpe.focus();
-                    } else if (selectedButtonQuantity == 'getLdpe') {
-                        buttonConductive.focus();
-                    } else if (selectedButtonQuantity == 'getConductive') {
-                        buttonHdpe.focus();
-                    } else if (selectedButtonQuantity == 'getHdpe') {
-                        buttonSweeping.focus();
-                    } else if (selectedButtonQuantity == 'getSweeping') {
-                        buttonInjection.focus();
                     } else {
                         keterangan.focus();
                     }
@@ -869,6 +814,12 @@ document.addEventListener('DOMContentLoaded', function () {
                             typeSelected = uv.value.trim();
                             break;
 
+                        case 'getLdpe':
+                            ldpe.value = selectedRow.IdType.trim();
+                            typeLdpe.value = selectedRow.Merk.trim();
+                            typeSelected = ldpe.value.trim();
+                            break;
+
                         case 'getAntiStatic':
                             antiStatic.value = selectedRow.IdType.trim();
                             typeAntiStatic.value = selectedRow.Merk.trim();
@@ -887,48 +838,6 @@ document.addEventListener('DOMContentLoaded', function () {
                             typeSelected = additif.value.trim();
                             break;
 
-                        case 'getLldpe':
-                            lldpe.value = selectedRow.IdType.trim();
-                            typeLldpe.value = selectedRow.Merk.trim();
-                            typeSelected = lldpe.value.trim();
-                            break;
-
-                        case 'getLdpeLami':
-                            ldpeLami.value = selectedRow.IdType.trim();
-                            typeLdpeLami.value = selectedRow.Merk.trim();
-                            typeSelected = ldpeLami.value.trim();
-                            break;
-
-                        case 'getLdpe':
-                            ldpe.value = selectedRow.IdType.trim();
-                            typeLdpe.value = selectedRow.Merk.trim();
-                            typeSelected = ldpe.value.trim();
-                            break;
-
-                        case 'getConductive':
-                            conductive.value = selectedRow.IdType.trim();
-                            typeConductive.value = selectedRow.Merk.trim();
-                            typeSelected = conductive.value.trim();
-                            break;
-
-                        case 'getHdpe':
-                            hdpe.value = selectedRow.IdType.trim();
-                            typeHdpe.value = selectedRow.Merk.trim();
-                            typeSelected = hdpe.value.trim();
-                            break;
-
-                        case 'getSweeping':
-                            sweeping.value = selectedRow.IdType.trim();
-                            typeSweeping.value = selectedRow.Merk.trim();
-                            typeSelected = sweeping.value.trim();
-                            break;
-
-                        case 'getInjection':
-                            injection.value = selectedRow.IdType.trim();
-                            typeInjection.value = selectedRow.Merk.trim();
-                            typeSelected = injection.value.trim();
-                            break;
-
                         default:
                             console.log('No matching case found for selectedButtonQuantity:', selectedButtonQuantity);
                             break;
@@ -938,7 +847,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     $.ajax({
                         type: 'GET',
-                        url: 'ExtruderTropodo/' + buttonQuantity,
+                        url: 'ExtruderD/' + buttonQuantity,
                         data: {
                             _token: csrfToken,
                             tgl: tanggal.value,
@@ -975,20 +884,20 @@ document.addEventListener('DOMContentLoaded', function () {
                                 $('#tableKomposisi').DataTable().row.add([
                                     selectedRow.IdType.trim(),
                                     selectedRow.Merk.trim(),
-                                    StatusTypeVariable,
                                     NamaKelompokVariable,
                                     QuantityVariable,
-                                    ProsentaseVariable
+                                    ProsentaseVariable,
+                                    StatusTypeVariable,
                                 ]).draw(false);
 
                                 // Push data to dataArrKomposisi array
                                 dataArrKomposisi.push([
                                     selectedRow.IdType.trim(),
                                     selectedRow.Merk.trim(),
-                                    StatusTypeVariable,
                                     NamaKelompokVariable,
                                     QuantityVariable,
-                                    ProsentaseVariable
+                                    ProsentaseVariable,
+                                    StatusTypeVariable,
                                 ]);
 
                                 switch (selectedButtonQuantity) {
@@ -1007,6 +916,11 @@ document.addEventListener('DOMContentLoaded', function () {
                                         prosentaseUv.value = ProsentaseVariable;
                                         break;
 
+                                    case 'getLdpe':
+                                        quantityLdpe.value = QuantityVariable;
+                                        prosentaseLdpe.value = ProsentaseVariable;
+                                        break;
+
                                     case 'getAntiStatic':
                                         quantityAntiStatic.value = QuantityVariable;
                                         prosentaseAntiStatic.value = ProsentaseVariable;
@@ -1020,41 +934,6 @@ document.addEventListener('DOMContentLoaded', function () {
                                     case 'getAdditif':
                                         quantityAdditif.value = QuantityVariable;
                                         prosentaseAdditif.value = ProsentaseVariable;
-                                        break;
-
-                                    case 'getLldpe':
-                                        quantityLldpe.value = QuantityVariable;
-                                        prosentaseLldpe.value = ProsentaseVariable;
-                                        break;
-
-                                    case 'getLdpeLami':
-                                        quantityLdpeLami.value = QuantityVariable;
-                                        prosentaseLdpeLami.value = ProsentaseVariable;
-                                        break;
-
-                                    case 'getLdpe':
-                                        quantityLdpe.value = QuantityVariable;
-                                        prosentaseLdpe.value = ProsentaseVariable;
-                                        break;
-
-                                    case 'getConductive':
-                                        quantityConductive.value = QuantityVariable;
-                                        prosentaseConductive.value = ProsentaseVariable;
-                                        break;
-
-                                    case 'getHdpe':
-                                        quantityHdpe.value = QuantityVariable;
-                                        prosentaseHdpe.value = ProsentaseVariable;
-                                        break;
-
-                                    case 'getSweeping':
-                                        quantitySweeping.value = QuantityVariable;
-                                        prosentaseSweeping.value = ProsentaseVariable;
-                                        break;
-
-                                    case 'getInjection':
-                                        quantityInjection.value = QuantityVariable;
-                                        prosentaseInjection.value = ProsentaseVariable;
                                         break;
 
                                     default:
@@ -1078,16 +957,10 @@ document.addEventListener('DOMContentLoaded', function () {
     buttonCalpetCaco3.addEventListener('click', function () { openAllModal('getCalpetCaco3'); });
     buttonMasterBath.addEventListener('click', function () { openAllModal('getMasterBath'); });
     buttonUv.addEventListener('click', function () { openAllModal('getUv'); });
+    buttonLdpe.addEventListener('click', function () { openAllModal('getLdpe'); });
     buttonAntiStatic.addEventListener('click', function () { openAllModal('getAntiStatic'); });
     buttonPeletan.addEventListener('click', function () { openAllModal('getPeletan'); });
     buttonAdditif.addEventListener('click', function () { openAllModal('getAdditif'); });
-    buttonLldpe.addEventListener('click', function () { openAllModal('getLldpe'); });
-    buttonLdpeLami.addEventListener('click', function () { openAllModal('getLdpeLami'); });
-    buttonLdpe.addEventListener('click', function () { openAllModal('getLdpe'); });
-    buttonConductive.addEventListener('click', function () { openAllModal('getConductive'); });
-    buttonHdpe.addEventListener('click', function () { openAllModal('getHdpe'); });
-    buttonSweeping.addEventListener('click', function () { openAllModal('getSweeping'); });
-    buttonInjection.addEventListener('click', function () { openAllModal('getInjection'); });
 
     // table untuk additional data
     const tableAdd = $('#tabelAdd').DataTable({
@@ -1240,7 +1113,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             $.ajax({
                 type: 'PUT', //update
-                url: 'ExtruderTropodo/insertDataGeneral', //update
+                url: 'ExtruderD/insertDataGeneral', //update
                 data: {
                     _token: csrfToken,
                     jam: jamInput.value,
@@ -1261,7 +1134,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             title: 'Success',
                             text: response.success,
                             didClose: () => {
-                                batalButton.click(); 
+                                batalButton.click();
                             }
                         });
                     }
@@ -1274,7 +1147,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // ambil nomor transaksi dan save komposisi dan additional data
             $.ajax({
                 type: 'GET',
-                url: 'ExtruderTropodo/getIdTransaksi',
+                url: 'ExtruderD/getIdTransaksi',
                 data: {
                     _token: csrfToken,
                 },
@@ -1304,7 +1177,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // update data
             $.ajax({
                 type: 'PUT',
-                url: 'ExtruderTropodo/updateGeneralData',
+                url: 'ExtruderD/updateGeneralData',
                 data: {
                     _token: csrfToken,
                     noTr: nomorTransaksi.value,
@@ -1325,7 +1198,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             title: 'Success',
                             text: response.success,
                             didClose: () => {
-                                batalButton.click(); 
+                                batalButton.click();
                             }
                         });
                         // delete bahan baku lalu masukan lagi
@@ -1353,7 +1226,7 @@ document.addEventListener('DOMContentLoaded', function () {
             try {
                 const deleteDetail = $.ajax({
                     type: 'DELETE',
-                    url: 'ExtruderTropodo/deleteDetail',
+                    url: 'ExtruderD/deleteDetail',
                     data: {
                         _token: csrfToken,
                         noTr: nomorTransaksi.value
@@ -1362,7 +1235,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 const deleteBahan = $.ajax({
                     type: 'DELETE',
-                    url: 'ExtruderTropodo/deleteBahan',
+                    url: 'ExtruderD/deleteBahan',
                     data: {
                         _token: csrfToken,
                         noTr: nomorTransaksi.value
@@ -1371,7 +1244,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 const deleteMaster = $.ajax({
                     type: 'DELETE',
-                    url: 'ExtruderTropodo/deleteMaster',
+                    url: 'ExtruderD/deleteMaster',
                     data: {
                         _token: csrfToken,
                         noTr: nomorTransaksi.value
@@ -1414,7 +1287,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         text: "Data berhasil diHAPUS",
                         confirmButtonText: 'Ok',
                         didClose: () => {
-                            batalButton.click(); 
+                            batalButton.click();
                         }
                     });
                 }
@@ -1435,7 +1308,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         $.ajax({
             type: 'PUT',
-            url: 'ExtruderTropodo/insertDataKomposisi',
+            url: 'ExtruderD/insertDataKomposisi',
             data: {
                 _token: csrfToken,
                 dataArray: dataArrKomposisi,
@@ -1461,7 +1334,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         $.ajax({
             type: 'PUT',
-            url: 'ExtruderTropodo/insertAdditionalData',
+            url: 'ExtruderD/insertAdditionalData',
             data: {
                 _token: csrfToken,
                 dataArray: dataArrayDetail,
@@ -1482,7 +1355,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function updateCounter() {
         $.ajax({
             type: 'PUT',
-            url: 'ExtruderTropodo/updateCounter',
+            url: 'ExtruderD/updateCounter',
             data: {
                 _token: csrfToken,
                 noTr: nomorTransaksi.value
@@ -1584,7 +1457,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function deleteDetail() {
         $.ajax({
             type: 'DELETE',
-            url: 'ExtruderTropodo/deleteDetail',
+            url: 'ExtruderD/deleteDetail',
             data: {
                 _token: csrfToken,
                 noTr: nomorTransaksi.value
@@ -1595,7 +1468,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function deleteBahan() {
         $.ajax({
             type: 'DELETE',
-            url: 'ExtruderTropodo/deleteBahan',
+            url: 'ExtruderD/deleteBahan',
             data: {
                 _token: csrfToken,
                 noTr: nomorTransaksi.value
