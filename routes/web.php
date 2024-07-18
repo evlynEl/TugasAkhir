@@ -91,8 +91,8 @@ Route::group(['middleware' => ['auth']], function () {
     // Route::get('FrmACCMng_FIBC', 'App\Http\Controllers\COA\FIBC\ACC\ACCQCManController@index');
     Route::resource('FrmACCMng_FIBC', ACCQCManController::class);
 
-    Route::get('FrmACCFIBC', 'App\Http\Controllers\COA\FIBC\ACC\ACCQCSpvController@index');
-    // Route::resource('FrmACCFIBC', ACCQCSpvController::class);
+    // Route::get('FrmACCFIBC', 'App\Http\Controllers\COA\FIBC\ACC\ACCQCSpvController@index');
+    Route::resource('FrmACCFIBC', ACCQCSpvController::class);
 
     Route::get('FrmPrintFIBC', 'App\Http\Controllers\COA\FIBC\FIBCPrintController@index');
     // Route::resource('FrmPrintFIBC', FIBCPrintController::class);
