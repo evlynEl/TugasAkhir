@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Controllers\HakAksesController;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class InputDetailController extends Controller
 {
@@ -80,6 +79,7 @@ class InputDetailController extends Controller
         $Bottom_Persen_3 = $request->input('bottomE3');
         $Bottom_Persen_4 = $request->input('bottomE4');
         $Bottom_Persen_5 = $request->input('bottomE5');
+        $Copy_RefNo = $request->input('Copy_RefNo');
 
         try {
             $process = DB::connection('ConnTestQC')->statement(
@@ -138,7 +138,8 @@ class InputDetailController extends Controller
                     @BottomPersen2 = ?,
                     @BottomPersen3 = ?,
                     @BottomPersen4 = ?,
-                    @BottomPersen5 = ?',
+                    @BottomPersen5 = ?,
+                    @RefCopy = ?',
                 [
                     $Reference_No,
                     $Tanggal,
@@ -193,7 +194,8 @@ class InputDetailController extends Controller
                     $Bottom_Persen_2,
                     $Bottom_Persen_3,
                     $Bottom_Persen_4,
-                    $Bottom_Persen_5
+                    $Bottom_Persen_5,
+                    $Copy_RefNo
                 ]
             );
 
@@ -277,7 +279,8 @@ class InputDetailController extends Controller
                     'Denier_Waft2' => $dataDetail->Denier_Waft2,
                     'Weft2' => $dataDetail->Weft2,
                     'Denier_Weft2' => $dataDetail->Denier_Weft2,
-                    'Weight2' => $dataDetail->Weight2
+                    'Weight2' => $dataDetail->Weight2,
+                    'Copy_RefNo' => $dataDetail->Copy_RefNo
                 ];
             }
 
@@ -293,6 +296,71 @@ class InputDetailController extends Controller
                 ];
             }
             return datatables($data_bag)->make(true);
+        } else if ($id == 'getDataDetailBag') {
+            $dataDetailBag = DB::connection('ConnTestQC')->select('exec [SP_1273_QTC_LIST_FIBC] @Kode = ?, @RefNo = ?', [2, $request->input('no_ref')]);
+            // dd($dataDetailBag);
+
+            $data_detailBag = [];
+
+            foreach ($dataDetailBag as $dataBag) {
+                $data_detailBag[] = [
+                    'Bag_Code' => $dataBag->Bag_Code,
+                    'Bag_Type' => $dataBag->Bag_Type,
+                    'PO_No' => $dataBag->PO_No,
+                    'Tanggal_Prod' => $dataBag->Tanggal_Prod,
+                    'Tanggal_Testing' => $dataBag->Tanggal_Testing,
+                    'Size' => $dataBag->Size,
+                    'Reinforced' => $dataBag->Reinforced,
+                    'Colour' => $dataBag->Colour,
+                    'SWL' => $dataBag->SWL,
+                    'SF' => $dataBag->SF,
+
+                    'Jenis_FIBC' => $dataBag->Jenis_FIBC,
+                    'Sewing_Method' => $dataBag->Sewing_Method,
+                    'Stitch_Approx' => $dataBag->Stitch_Approx,
+                    'Fit_to_Draw' => $dataBag->Fit_to_Draw,
+
+                    'LiftingBelt_Type' => $dataBag->LiftingBelt_Type,
+                    'SewingThread_Type' => $dataBag->SewingThread_Type,
+                    'Top_KG_1' => $dataBag->Top_KG_1,
+                    'Top_KG_2' => $dataBag->Top_KG_2,
+                    'Top_KG_3' => $dataBag->Top_KG_3,
+                    'Top_KG_4' => $dataBag->Top_KG_4,
+                    'Top_KG_5' => $dataBag->Top_KG_5,
+                    'Top_Persen_1' => $dataBag->Top_Persen_1,
+                    'Top_Persen_2' => $dataBag->Top_Persen_2,
+                    'Top_Persen_3' => $dataBag->Top_Persen_3,
+                    'Top_Persen_4' => $dataBag->Top_Persen_4,
+                    'Top_Persen_5' => $dataBag->Top_Persen_5,
+                    'Bottom_KG_1' => $dataBag->Bottom_KG_1,
+                    'Bottom_KG_2' => $dataBag->Bottom_KG_2,
+                    'Bottom_KG_3' => $dataBag->Bottom_KG_3,
+                    'Bottom_KG_4' => $dataBag->Bottom_KG_4,
+                    'Bottom_KG_5' => $dataBag->Bottom_KG_5,
+                    'Bottom_Persen_1' => $dataBag->Bottom_Persen_1,
+                    'Bottom_Persen_2' => $dataBag->Bottom_Persen_2,
+                    'Bottom_Persen_3' => $dataBag->Bottom_Persen_3,
+                    'Bottom_Persen_4' => $dataBag->Bottom_Persen_4,
+                    'Bottom_Persen_5' => $dataBag->Bottom_Persen_5,
+                    'Panjang' => $dataBag->Panjang,
+                    'Lebar' => $dataBag->Lebar,
+                    'Waft' => $dataBag->Waft,
+                    'Denier_Waft' => $dataBag->Denier_Waft,
+                    'Weft' => $dataBag->Weft,
+                    'Denier_Weft' => $dataBag->Denier_Weft,
+                    'Weight' => $dataBag->Weight,
+                    'Panjang2' => $dataBag->Panjang2,
+                    'Lebar2' => $dataBag->Lebar2,
+                    'Waft2' => $dataBag->Waft2,
+                    'Denier_Waft2' => $dataBag->Denier_Waft2,
+                    'Weft2' => $dataBag->Weft2,
+                    'Denier_Weft2' => $dataBag->Denier_Weft2,
+                    'Weight2' => $dataBag->Weight2,
+                    'Reference_No' => $dataBag->Copy_RefNo
+                ];
+            }
+
+            return response()->json($data_detailBag);
         }
     }
 

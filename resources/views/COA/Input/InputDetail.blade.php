@@ -573,5 +573,5 @@
 
 
 
-    <script src="{{ asset('js/COA/InputDetail.js') }}"></script>
+    <script src="{{ asset('js/COA/Input/InputDetail.js') }}"></script>
 @endsection

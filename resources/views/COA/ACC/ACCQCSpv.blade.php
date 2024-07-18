@@ -15,9 +15,26 @@
                 <div class="card">
                     <div class="card-header">ACC QC Spv</div>
                     <div class="card-body RDZOverflow RDZMobilePaddingLR0">
-                        <div class="acs-div-container">
-                            <div class="acs-div-container1">
-                                <!-- {{-- <img src="{{ asset('/images/Contoh1.png') }}" alt=""> --}} -->
+                        <div class="form-row">
+                            <div class="form-group col-8">
+                                <label for="refNo">Reference No:</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="refNo" name="refNo" readonly>
+                                    <div class="input-group-append">
+                                        <button type="button" id="btn_info" class="btn btn-info">...</button>
+                                    </div>
+                                </div>
+
+                                <label for="customer">Customer:</label>
+                                <input type="text" class="form-control" id="customer" name="customer" readonly>
+                            </div>
+                            <div class="form-group col-4 d-flex align-items-center justify-content-center">
+                                <div class="text-center">
+                                    <button type="button" id="btn-detail" class="btn btn-outline-secondary"
+                                        style="width: 150px;">Detail</button>
+                                    <button type="button" id="btn-acc" class="btn btn-outline-secondary"
+                                        style="width: 150px;">ACC</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -25,4 +42,6 @@
             </div>
         </div>
     </div>
+
+    <script src="{{ asset('js/COA/ACCQCSpv.js') }}"></script>
 @endsection

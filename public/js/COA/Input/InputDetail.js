@@ -63,6 +63,7 @@ var bottomE2 = document.getElementById('bottomE2');
 var bottomE3 = document.getElementById('bottomE3');
 var bottomE4 = document.getElementById('bottomE4');
 var bottomE5 = document.getElementById('bottomE5');
+var Copy_RefNo;
 
 // atribut weight
 var inputIds1 = ['Panjang', 'Lebar', 'Waft', 'Denier_Waft', 'Weft', 'Denier_Weft'];
@@ -174,7 +175,6 @@ liftBeltType.addEventListener('keypress', function (event) {
                 liftBeltType.focus();
             });
         } else {
-            console.log('masuk lift gagal');
             sewingThreadType.focus();
         }
     }
@@ -259,6 +259,7 @@ btn_RefNo.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            timeout: 30000,
             width: '40%',
             showCloseButton: true,
             showConfirmButton: true,
@@ -327,6 +328,7 @@ btn_RefNo.addEventListener("click", function (e) {
                         _token: csrfToken,
                         no_ref: splitRefNo
                     },
+                    timeout: 30000,
                     success: function (result) {
 
                         tanggal.value = new Date(result[0].Tanggal).toISOString().split('T')[0];
@@ -361,7 +363,7 @@ btn_RefNo.addEventListener("click", function (e) {
                         let numWeight2 = parseFloat(weight2.value);
 
 
-                        if (numWeight2 > 0.00) {
+                        if (numWeight1 !== null && numWeight2 > 0.00) {
                             radioWeight2.checked = true;
                             formWeight1.style.display = 'none';
                             formWeight2.style.display = 'block';
@@ -463,6 +465,7 @@ btn_BagCode.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            timeout: 30000,
             showCloseButton: true,
             showConfirmButton: true,
             confirmButtonText: 'Select',
@@ -480,7 +483,9 @@ btn_BagCode.addEventListener("click", function (e) {
                             data: {
                                 _token: csrfToken
                             }
+
                         },
+                        timeout: 30000,
                         columns: [
                             { data: "Reference_No" },
                             { data: "Bag_Code" }
@@ -495,19 +500,145 @@ btn_BagCode.addEventListener("click", function (e) {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                selectBageCode(result.value.Bag_Code);
+                inputFibcDetail.forEach(function (input) {
+                    input.disabled = false;
+                });
+                jenisDetail.forEach(function (input) {
+                    input.disabled = false;
+                });
+                inputsInBagDetail.forEach(function (input) {
+                    input.disabled = false;
+                });
+                sewingDetail.forEach(function (input) {
+                    input.disabled = false;
+                });
+                stitchDetail.forEach(function (input) {
+                    input.disabled = false;
+                });
+                drawDetail.forEach(function (input) {
+                    input.disabled = false;
+                });
+
+                const selectedRow = result.value;
+                splitRefNo = selectedRow.Reference_No.trim();
+                Copy_RefNo = splitRefNo;
+
+                $.ajax({
+                    url: "FrmInputFIBC/getDataDetailBag",
+                    type: "GET",
+                    data: {
+                        _token: csrfToken,
+                        no_ref: splitRefNo
+                    },
+                    success: function (result) {
+                        // console.log(result.length);
+                        if (result && result.length > 0) {
+                            bagCode.value = result[0].Bag_Code.trim();
+                            bagType.value = result[0].Bag_Type.trim();
+                            poNo.value = result[0].PO_No.trim();
+                            prodDate.value = new Date(result[0].Tanggal_Prod).toISOString().split('T')[0];
+                            testingDate.value = new Date(result[0].Tanggal_Testing).toISOString().split('T')[0];
+                            size.value = result[0].Size.trim();
+                            reinforced.value = result[0].Reinforced;
+                            colour.value = result[0].Colour.trim();
+                            swl.value = result[0].SWL.trim();
+                            sf.value = result[0].SF.trim();
+
+                            for (var i = 0; i < inputIds1.length; i++) {
+                                if (result[0][inputIds1[i]]) {
+                                    inputs1[i].value = result[0][inputIds1[i]].trim();
+                                }
+                                if (result[0][inputIds2[i]]) {
+                                    inputs2[i].value = result[0][inputIds2[i]].trim();
+                                }
+                            }
+
+                            weight1.value = result[0].Weight.trim();
+                            weight2.value = result[0].Weight2.trim();
+
+                            let numWeight1 = parseFloat(weight1.value);
+                            let numWeight2 = parseFloat(weight2.value);
+
+                            if (numWeight1 === 0.00 && numWeight2 > 0.00) {
+                                radioWeight2.checked = true;
+                                formWeight1.style.display = 'none';
+                                formWeight2.style.display = 'block';
+                                weightLabel.textContent = "Weight 2";
+                            } else {
+                                radioWeight1.checked = true;
+                                formWeight1.style.display = 'block';
+                                formWeight2.style.display = 'none';
+                                weightLabel.textContent = "Weight 1";
+                            }
+
+                            jenis.value = result[0].Jenis_FIBC ? result[0].Jenis_FIBC.trim() : '';
+                            jenis.push(result[0].Jenis_FIBC ? result[0].Jenis_FIBC.trim() : ''); // supaya kalau isi dari bag code pas di cek allInputsField notif nya tidak keluar
+
+                            sewing.value = result[0].Sewing_Method ? result[0].Sewing_Method.trim() : '';
+                            sewing.push(result[0].Sewing_Method ? result[0].Sewing_Method.trim() : '');
+
+                            stitch.value = result[0].Stitch_Approx ? result[0].Stitch_Approx.trim() : '';
+                            stitch.push(result[0].Stitch_Approx ? result[0].Stitch_Approx.trim() : '');
+
+                            draw.value = result[0].Fit_to_Draw ? result[0].Fit_to_Draw.trim() : '';
+                            draw.push(result[0].Fit_to_Draw ? result[0].Fit_to_Draw.trim() : '');
+
+
+                            retrieveCheck('jenis', jenis.value);
+                            retrieveCheck('sewingMethod', sewing.value);
+                            retrieveCheck('stitchApprox', stitch.value);
+                            retrieveCheck('fitDraw', draw.value);
+
+                            function retrieveCheck(sectionId, value) {
+                                var section = sections.find(s => s.id === sectionId);
+                                if (section) {
+                                    section.checkboxes.forEach(function (checkboxName) {
+                                        var checkbox = document.querySelector(`#${sectionId} input[name="${checkboxName}"]`);
+                                        if (checkbox) {
+                                            checkbox.checked = (checkboxName === value);
+                                        }
+                                    });
+                                }
+                            }
+
+                            liftBeltType.value = result[0].LiftingBelt_Type ? result[0].LiftingBelt_Type.trim() : '';
+                            sewingThreadType.value = result[0].SewingThread_Type ? result[0].SewingThread_Type.trim() : '';
+
+                            topS1.value = result[0].Top_KG_1.trim();
+                            topS2.value = result[0].Top_KG_2.trim();
+                            topS3.value = result[0].Top_KG_3.trim();
+                            topS4.value = result[0].Top_KG_4.trim();
+                            topS5.value = result[0].Top_KG_5.trim();
+                            topE1.value = result[0].Top_Persen_1.trim();
+                            topE2.value = result[0].Top_Persen_2.trim();
+                            topE3.value = result[0].Top_Persen_3.trim();
+                            topE4.value = result[0].Top_Persen_4.trim();
+                            topE5.value = result[0].Top_Persen_5.trim();
+
+                            bottomS1.value = result[0].Bottom_KG_1.trim();
+                            bottomS2.value = result[0].Bottom_KG_2.trim();
+                            bottomS3.value = result[0].Bottom_KG_3.trim();
+                            bottomS4.value = result[0].Bottom_KG_4.trim();
+                            bottomS5.value = result[0].Bottom_KG_5.trim();
+                            bottomE1.value = result[0].Bottom_Persen_1.trim();
+                            bottomE2.value = result[0].Bottom_Persen_2.trim();
+                            bottomE3.value = result[0].Bottom_Persen_3.trim();
+                            bottomE4.value = result[0].Bottom_Persen_4.trim();
+                            bottomE5.value = result[0].Bottom_Persen_5.trim();
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("AJAX Error:", status, error);
+                    }
+                });
             }
         });
     } catch (error) {
-        console.error(error);
+        console.error("Exception occurred:", error);
     }
 });
 
-//fungsi pilih kode bag
-function selectBageCode(Bag_Code) {
-    document.getElementById("bag-code").value = Bag_Code;
-    Swal.close();
-}
+
 
 let isWeight2Selected = false;
 
@@ -541,10 +672,10 @@ function parseDecimal(value) {
     let parsedValue = parseFloat(value.replace(',', '.'));
 
     if (isNaN(parsedValue)) {
-        return 0;
+        return 0.00;
     }
 
-    return parsedValue;
+    return parsedValue.toFixed(2);
 }
 
 inputs1.forEach(input => {
@@ -553,7 +684,6 @@ inputs1.forEach(input => {
 inputs2.forEach(input => {
     input.addEventListener('change', calculateWeight);
 });
-
 // hitung weight
 function calculateWeight() {
     let parsedInputs1 = inputs1.map(input => parseDecimal(input.value));
@@ -564,6 +694,7 @@ function calculateWeight() {
             let weight = parsedInputs2[0] * parsedInputs2[1] * ((parsedInputs2[2] * parsedInputs2[3]) + (parsedInputs2[4] * parsedInputs2[5])) / 1143000 / 2;
             weight = Math.round(weight * 10) / 10;
             weight2.value = weight.toFixed(2);
+            weight1.value = '0.00'; // ensure it's set to string '0.00'
         } else {
             weight2.value = '';
         }
@@ -572,11 +703,13 @@ function calculateWeight() {
             let weight = parsedInputs1[0] * parsedInputs1[1] * ((parsedInputs1[2] * parsedInputs1[3]) + (parsedInputs1[4] * parsedInputs1[5])) / 1143000 / 2;
             weight = Math.round(weight * 10) / 10;
             weight1.value = weight.toFixed(2);
+            weight2.value = '0.00'; // ensure it's set to string '0.00'
         } else {
             weight1.value = '';
         }
     }
 }
+
 
 // cek checkbox
 // fungsi track aktifitas checkbox
@@ -647,13 +780,8 @@ function allInputsFilled() {
                 selectWeight = !inputIds2.includes(input.id);
             }
 
-            // kalau form bag detail tidak kebuka, exclude dari notif semua inputnya
-            // if (inputsInBagDetail.disabled && (input.id === 'liftBeltType' && input.id === 'sewingThreadType')) {
-            //     continue;
-            // }
 
             // skip input pada div id
-            console.log(inputsInBagDetail.disabled);
             if (input.closest('#jenis, #sewingMethod, #stitchApprox, #fitDraw')) {
                 continue
             } else if (inputsInBagDetail.disabled && input.id !== 'No.' && input.id !== 'refNo' && selectWeight) {
@@ -714,10 +842,6 @@ function enableKetik() {
     Ketik.forEach(function (input) {
         input.value = '';
         input.disabled = false;
-    });
-
-    inputFibcDetail.forEach(function (input) { // menutup input pada div bag detail
-        input.disabled = true;
     });
     inputsInBagDetail.forEach(function (input) { // menutup input pada div bag detail
         input.disabled = true;
@@ -782,7 +906,7 @@ btn_isi.addEventListener('click', function () {
     tanggal.focus();
 
     btn_RefNo.disabled = true;
-    btn_BagCode.disabled = true;
+    btn_BagCode.disabled = false;
     btn_hapus.disabled = true;
 
     sewingDetail.forEach(function (input) {
@@ -839,30 +963,8 @@ btn_hapus.addEventListener("click", function (e) {
 });
 
 // atribut parse
-let parsedWeight1 = parseDecimal(weight1.value);
-let parsedWeight2 = parseDecimal(weight2.value);
 let parsedSwl = parseDecimal(swl.value);
 let parsedSf = parseDecimal(sf.value);
-let parsedTopS1 = parseDecimal(topS1.value);
-let parsedTopS2 = parseDecimal(topS2.value);
-let parsedTopS3 = parseDecimal(topS3.value);
-let parsedTopS4 = parseDecimal(topS4.value);
-let parsedTopS5 = parseDecimal(topS5.value);
-let parsedTopE1 = parseDecimal(topE1.value);
-let parsedTopE2 = parseDecimal(topE2.value);
-let parsedTopE3 = parseDecimal(topE3.value);
-let parsedTopE4 = parseDecimal(topE4.value);
-let parsedTopE5 = parseDecimal(topE5.value);
-let parsedBottomS1 = parseDecimal(bottomS1.value);
-let parsedBottomS2 = parseDecimal(bottomS2.value);
-let parsedBottomS3 = parseDecimal(bottomS3.value);
-let parsedBottomS4 = parseDecimal(bottomS4.value);
-let parsedBottomS5 = parseDecimal(bottomS5.value);
-let parsedBottomE1 = parseDecimal(bottomE1.value);
-let parsedBottomE2 = parseDecimal(bottomE2.value);
-let parsedBottomE3 = parseDecimal(bottomE3.value);
-let parsedBottomE4 = parseDecimal(bottomE4.value);
-let parsedBottomE5 = parseDecimal(bottomE5.value);
 
 // button simpan
 btn_simpan.addEventListener('click', async function (e) {
@@ -992,58 +1094,7 @@ btn_simpan.addEventListener('click', async function (e) {
             type: "DELETE",
             data: {
                 _token: csrfToken,
-                no_ref: splitRefNo,
-                customer: customer.value,
-                bagCode: bagCode.value,
-                bagType: bagType.value,
-                poNo: poNo.value,
-                prodDate: prodDate.value,
-                testingDate: testingDate.value,
-                size: size.value,
-                reinforced: reinforced.value,
-                colour: colour.value,
-                panjang1: inputIds1[0].value,
-                lebar1: inputIds1[1],
-                waft1: inputIds1[2],
-                denierWaft1: inputIds1[3],
-                weft1: inputIds1[4],
-                denierWeft1: inputIds1[5],
-                weight1: weight1.value,
-                swl: swl.value,
-                sf: sf.value,
-                jenis: jenis.value,
-                liftBeltType: liftBeltType.value,
-                sewingThreadType: sewingThreadType.value,
-                sewing: sewing.value,
-                stitch: stitch.value,
-                draw: draw.value,
-                panjang2: inputs2[0].value,
-                lebar2: inputs2[1].value,
-                waft2: inputs2[2].value,
-                denierWaft2: inputs2[3].value,
-                weft2: inputs2[4].value,
-                denierWeft2: inputs2[5].value,
-                weight2: weight2.value,
-                topS1: parsedTopS1,
-                topS2: parsedTopS2,
-                topS3: parsedTopS3,
-                topS4: parsedTopS4,
-                topS5: parsedTopS5,
-                topE1: parsedTopE1,
-                topE2: parsedTopE2,
-                topE3: parsedTopE3,
-                topE4: parsedTopE4,
-                topE5: parsedTopE5,
-                bottomS1: parsedBottomS1,
-                bottomS2: parsedBottomS2,
-                bottomS3: parsedBottomS3,
-                bottomS4: parsedBottomS4,
-                bottomS5: parsedBottomS5,
-                bottomE1: parsedBottomE1,
-                bottomE2: parsedBottomE2,
-                bottomE3: parsedBottomE3,
-                bottomE4: parsedBottomE4,
-                bottomE5: parsedBottomE5
+                no_ref: splitRefNo
             },
             timeout: 30000,
             success: function (response) {
@@ -1098,62 +1149,63 @@ async function submitForm(jenisString, sewingString, stitchString, drawString) {
         data: {
             _token: csrfToken,
             tanggal: tanggal.value,
-            fixRefNo: fixRefNo,
-            customer: customer.value,
-            bagCode: bagCode.value,
-            bagType: bagType.value,
-            poNo: poNo.value,
+            fixRefNo: fixRefNo.trim(),
+            customer: customer.value.trim(),
+            bagCode: bagCode.value.trim(),
+            bagType: bagType.value.trim(),
+            poNo: poNo.value.trim(),
             prodDate: prodDate.value,
             testingDate: testingDate.value,
-            size: size.value,
-            reinforced: reinforced.value,
-            colour: colour.value,
+            size: size.value.trim(),
+            reinforced: reinforced.value.trim(),
+            colour: colour.value.trim(),
 
-            panjang1: parsedInputs1[0],
-            lebar1: parsedInputs1[1],
-            waft1: parsedInputs1[2],
-            denierWaft1: parsedInputs1[3],
-            weft1: parsedInputs1[4],
-            denierWeft1: parsedInputs1[5],
-            weight1: weight1.value,
+            panjang1: parsedInputs1[0] !== undefined ? parsedInputs1[0].toFixed(2) : '0.00',
+            lebar1: parsedInputs1[1] !== undefined ? parsedInputs1[1].toFixed(2) : '0.00',
+            waft1: parsedInputs1[2] !== undefined ? parsedInputs1[2].toFixed(2) : '0.00',
+            denierWaft1: parsedInputs1[3] !== undefined ? parsedInputs1[3].toFixed(2) : '0.00',
+            weft1: parsedInputs1[4] !== undefined ? parsedInputs1[4].toFixed(2) : '0.00',
+            denierWeft1: parsedInputs1[5] !== undefined ? parsedInputs1[5].toFixed(2) : '0.00',
+            weight1: weight1.value ? weight1.value.trim() : 0.00,
 
-            swl: swl.value,
-            sf: sf.value,
-            jenis: jenisString,
-            liftBeltType: liftBeltType.value,
-            sewingThreadType: sewingThreadType.value,
-            sewing: sewingString,
-            stitch: stitchString,
-            draw: drawString,
+            swl: swl.value.trim(),
+            sf: sf.value.trim(),
+            jenis: jenisString.trim(),
+            liftBeltType: liftBeltType.value.trim(),
+            sewingThreadType: sewingThreadType.value.trim(),
+            sewing: sewingString.trim(),
+            stitch: stitchString.trim(),
+            draw: drawString.trim(),
 
-            panjang2: parsedInputs2[0],
-            lebar2: parsedInputs2[1],
-            waft2: parsedInputs2[2],
-            denierWaft2: parsedInputs2[3],
-            weft2: parsedInputs2[4],
-            denierWeft2: parsedInputs2[5],
-            weight2: weight2.value,
+            panjang2: parsedInputs2[0] !== undefined ? parsedInputs2[0].toFixed(2) : '0.00',
+            lebar2: parsedInputs2[1] !== undefined ? parsedInputs2[1].toFixed(2) : '0.00',
+            waft2: parsedInputs2[2] !== undefined ? parsedInputs2[2].toFixed(2) : '0.00',
+            denierWaft2: parsedInputs2[3] !== undefined ? parsedInputs2[3].toFixed(2) : '0.00',
+            weft2: parsedInputs2[4] !== undefined ? parsedInputs2[4].toFixed(2) : '0.00',
+            denierWeft2: parsedInputs2[5] !== undefined ? parsedInputs2[5].toFixed(2) : '0.00',
+            weight2: weight2.value ? weight2.value.trim() : 0.00,
 
-            topS1: parsedTopS1,
-            topS2: parsedTopS2,
-            topS3: parsedTopS3,
-            topS4: parsedTopS4,
-            topS5: parsedTopS5,
-            topE1: parsedTopE1,
-            topE2: parsedTopE2,
-            topE3: parsedTopE3,
-            topE4: parsedTopE4,
-            topE5: parsedTopE5,
-            bottomS1: parsedBottomS1,
-            bottomS2: parsedBottomS2,
-            bottomS3: parsedBottomS3,
-            bottomS4: parsedBottomS4,
-            bottomS5: parsedBottomS5,
-            bottomE1: parsedBottomE1,
-            bottomE2: parsedBottomE2,
-            bottomE3: parsedBottomE3,
-            bottomE4: parsedBottomE4,
-            bottomE5: parsedBottomE5
+            topS1: topS1.value.trim(),
+            topS2: topS2.value.trim(),
+            topS3: topS3.value.trim(),
+            topS4: topS4.value.trim(),
+            topS5: topS5.value.trim(),
+            topE1: topE1.value.trim(),
+            topE2: topE2.value.trim(),
+            topE3: topE3.value.trim(),
+            topE4: topE4.value.trim(),
+            topE5: topE5.value.trim(),
+            bottomS1: bottomS1.value.trim(),
+            bottomS2: bottomS2.value.trim(),
+            bottomS3: bottomS3.value.trim(),
+            bottomS4: bottomS4.value.trim(),
+            bottomS5: bottomS5.value.trim(),
+            bottomE1: bottomE1.value.trim(),
+            bottomE2: bottomE2.value.trim(),
+            bottomE3: bottomE3.value.trim(),
+            bottomE4: bottomE4.value.trim(),
+            bottomE5: bottomE5.value.trim(),
+            Copy_RefNo: Copy_RefNo,
         },
         timeout: 30000,
         success: function (response) {
@@ -1180,64 +1232,72 @@ async function submitForm(jenisString, sewingString, stitchString, drawString) {
 
 // fungsi unk submit koreksi
 async function koreksiFIBC(jenisString, sewingString, stitchString, drawString) {
-    // console.log(swl.value);
+    console.log(bottomE5.value);
+
     $.ajax({
         url: "FrmInputFIBC/koreksiDetailFIBC",
         type: "PUT",
         data: {
             _token: csrfToken,
-            no_ref: splitRefNo,
-            customer: customer.value,
-            bagCode: bagCode.value,
-            bagType: bagType.value,
-            poNo: poNo.value,
+            tanggal: tanggal.value,
+            fixRefNo: fixRefNo.trim(),
+            customer: customer.value.trim(),
+            bagCode: bagCode.value.trim(),
+            bagType: bagType.value.trim(),
+            poNo: poNo.value.trim(),
             prodDate: prodDate.value,
             testingDate: testingDate.value,
-            size: size.value,
-            reinforced: reinforced.value,
-            colour: colour.value,
-            panjang1: parsedInputs1[0],
-            lebar1: parsedInputs1[1],
-            waft1: parsedInputs1[2],
-            denierWaft1: parsedInputs1[3],
-            weft1: parsedInputs1[4],
-            denierWeft1: parsedInputs1[5],
-            weight1: weight1.value,
-            swl: swl.value,
-            sf: sf.value,
-            jenis: jenisString,
-            liftBeltType: liftBeltType.value,
-            sewingThreadType: sewingThreadType.value,
-            sewing: sewingString,
-            stitch: stitchString,
-            draw: drawString,
-            panjang2: parsedInputs2[0],
-            lebar2: parsedInputs2[1],
-            waft2: parsedInputs2[2],
-            denierWaft2: parsedInputs2[3],
-            weft2: parsedInputs2[4],
-            denierWeft2: parsedInputs2[5],
-            weight2: weight2.value,
-            topS1: parsedTopS1,
-            topS2: parsedTopS2,
-            topS3: parsedTopS3,
-            topS4: parsedTopS4,
-            topS5: parsedTopS5,
-            topE1: parsedTopE1,
-            topE2: parsedTopE2,
-            topE3: parsedTopE3,
-            topE4: parsedTopE4,
-            topE5: parsedTopE5,
-            bottomS1: parsedBottomS1,
-            bottomS2: parsedBottomS2,
-            bottomS3: parsedBottomS3,
-            bottomS4: parsedBottomS4,
-            bottomS5: parsedBottomS5,
-            bottomE1: parsedBottomE1,
-            bottomE2: parsedBottomE2,
-            bottomE3: parsedBottomE3,
-            bottomE4: parsedBottomE4,
-            bottomE5: parsedBottomE5
+            size: size.value.trim(),
+            reinforced: reinforced.value.trim(),
+            colour: colour.value.trim(),
+
+            panjang1: parsedInputs1[0] !== undefined ? parsedInputs1[0].toFixed(2) : '0.00',
+            lebar1: parsedInputs1[1] !== undefined ? parsedInputs1[1].toFixed(2) : '0.00',
+            waft1: parsedInputs1[2] !== undefined ? parsedInputs1[2].toFixed(2) : '0.00',
+            denierWaft1: parsedInputs1[3] !== undefined ? parsedInputs1[3].toFixed(2) : '0.00',
+            weft1: parsedInputs1[4] !== undefined ? parsedInputs1[4].toFixed(2) : '0.00',
+            denierWeft1: parsedInputs1[5] !== undefined ? parsedInputs1[5].toFixed(2) : '0.00',
+            weight1: weight1.value ? weight1.value.trim() : '0.00',
+
+            swl: swl.value.trim(),
+            sf: sf.value.trim(),
+            jenis: jenisString.trim(),
+            liftBeltType: liftBeltType.value.trim(),
+            sewingThreadType: sewingThreadType.value.trim(),
+            sewing: sewingString.trim(),
+            stitch: stitchString.trim(),
+            draw: drawString.trim(),
+
+            panjang2: parsedInputs2[0] !== undefined ? parsedInputs2[0].toFixed(2) : '0.00',
+            lebar2: parsedInputs2[1] !== undefined ? parsedInputs2[1].toFixed(2) : '0.00',
+            waft2: parsedInputs2[2] !== undefined ? parsedInputs2[2].toFixed(2) : '0.00',
+            denierWaft2: parsedInputs2[3] !== undefined ? parsedInputs2[3].toFixed(2) : '0.00',
+            weft2: parsedInputs2[4] !== undefined ? parsedInputs2[4].toFixed(2) : '0.00',
+            denierWeft2: parsedInputs2[5] !== undefined ? parsedInputs2[5].toFixed(2) : '0.00',
+
+            weight2: weight2.value ? weight2.value.trim() : '0.00',
+
+            topS1: topS1.value.trim(),
+            topS2: topS2.value.trim(),
+            topS3: topS3.value.trim(),
+            topS4: topS4.value.trim(),
+            topS5: topS5.value.trim(),
+            topE1: topE1.value.trim(),
+            topE2: topE2.value.trim(),
+            topE3: topE3.value.trim(),
+            topE4: topE4.value.trim(),
+            topE5: topE5.value.trim(),
+            bottomS1: bottomS1.value.trim(),
+            bottomS2: bottomS2.value.trim(),
+            bottomS3: bottomS3.value.trim(),
+            bottomS4: bottomS4.value.trim(),
+            bottomS5: bottomS5.value.trim(),
+            bottomE1: bottomE1.value.trim(),
+            bottomE2: bottomE2.value.trim(),
+            bottomE3: bottomE3.value.trim(),
+            bottomE4: bottomE4.value.trim(),
+            bottomE5: bottomE5.value.trim(),
+            Copy_RefNo: Copy_RefNo.trim(),
         },
         timeout: 30000,
         success: function (response) {
