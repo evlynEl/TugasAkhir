@@ -46,7 +46,7 @@
                         {{-- FIBC Detail --}}
                         <label>FIBC Detail</label>
                         <div class="form-row" id="fibc_detail" style="border: 1px solid #ddd">
-                            <div class="col-md-4 mt-3">
+                            <div class="col-md-4 mt-1">
                                 <div class="form-group">
                                     <label for="customer">Customer</label>
                                     <label style="display: none">Nama Customer</label>
@@ -80,7 +80,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-4 mt-3">
+                            <div class="col-md-4 mt-1">
                                 <div class="form-group">
                                     <label for="size">Size</label>
                                     <div class="input-group">
@@ -121,7 +121,7 @@
                             </div>
 
                             {{-- weight --}}
-                            <div class="col-md-4 mt-3">
+                            <div class="col-md-4 mt-1">
                                 <div class="form-group text-center">
                                     <div>
                                         <div class="form-check-inline">
@@ -140,14 +140,14 @@
                                 {{-- Form untuk Weight 1 --}}
                                 <div id="formWeight1">
                                     <div class="row">
-                                        <div class="col-md-6 mb-3">
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="Panjang">Panjang 1</label>
                                                 <input type="text" class="form-control" id="Panjang"
                                                     name="Panjang">
                                             </div>
                                         </div>
-                                        <div class="col-md-6 mb-3">
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="Lebar">Lebar</label>
                                                 <input type="text" class="form-control" id="Lebar"
@@ -156,14 +156,14 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-6 mb-3">
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="Waft">Waft</label>
                                                 <input type="text" class="form-control" id="Waft"
                                                     name="Waft">
                                             </div>
                                         </div>
-                                        <div class="col-md-6 mb-3">
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="Weft">Weft</label>
                                                 <input type="text" class="form-control" id="Weft"
@@ -172,14 +172,14 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-6 mb-3">
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="Denier_Waft">Denier Waft</label>
                                                 <input type="text" class="form-control" id="Denier_Waft"
                                                     name="Denier_Waft">
                                             </div>
                                         </div>
-                                        <div class="col-md-6 mb-3">
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="Denier_Weft">Denier Weft</label>
                                                 <input type="text" class="form-control" id="Denier_Weft"
@@ -188,7 +188,7 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-6 mb-3">
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="weight1">Weight</label>
                                                 <div class="input-group">
@@ -206,14 +206,14 @@
                                 <!-- Form untuk Weight 2 (default hidden) -->
                                 <div id="formWeight2" style="display: none;">
                                     <div class="row">
-                                        <div class="col-md-6 mb-3">
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="Panjang2">Panjang 2</label>
                                                 <input type="text" class="form-control" id="Panjang2"
                                                     name="Panjang2">
                                             </div>
                                         </div>
-                                        <div class="col-md-6 mb-3">
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="Lebar2">Lebar</label>
                                                 <input type="text" class="form-control" id="Lebar2"
@@ -222,14 +222,14 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-6 mb-3">
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="Waft2">Waft</label>
                                                 <input type="text" class="form-control" id="Waft2"
                                                     name="Waft2">
                                             </div>
                                         </div>
-                                        <div class="col-md-6 mb-3">
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="Weft2">Weft</label>
                                                 <input type="text" class="form-control" id="Weft2"
@@ -238,14 +238,14 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-6 mb-3">
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="Denier_Waft2">Denier Waft</label>
                                                 <input type="text" class="form-control" id="Denier_Waft2"
                                                     name="Denier_Waft2">
                                             </div>
                                         </div>
-                                        <div class="col-md-6 mb-3">
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="Denier_Weft2">Denier Weft</label>
                                                 <input type="text" class="form-control" id="Denier_Weft2"
@@ -254,7 +254,7 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-6 mb-3">
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="weight2">Weight</label>
                                                 <div class="input-group">
@@ -272,7 +272,7 @@
                         </div>
 
                         {{-- jenis FIBC --}}
-                        <div class="form-row mt-3 mb-3 text-center" id="jenis"
+                        <div class="form-row mt-1 text-center" id="jenis"
                             style="border: 1px solid #ddd; padding: 10px 10px;">
                             <div class="col-md-2">
                                 <div class="form-check">
@@ -320,15 +320,15 @@
 
                         {{-- Bag Detail --}}
                         <label>Bag Detail</label>
-                        <div class="form-row mb-3" id="bag_detail" style="border: 1px solid #ddd">
-                            <div class="col-md-12 mt-3">
-                                <label for="liftBeltType">A. Lifting Belt</label>
+                        <div class="form-row" id="bag_detail" style="border: 1px solid #ddd">
+                            <div class="col-md-12 mt-1">
+                                <label for="liftBeltType"><strong>A. Lifting Belt</strong></label>
                                 <div class="form-group">
                                     <label>Type :</label>
                                     <input type="text" class="form-control" id="liftBeltType" name="liftBeltType">
                                 </div>
 
-                                <label>B. Sewing Thread</label>
+                                <label><strong>B. Sewing Thread</strong></label>
                                 <div class="form-group">
                                     <label for="sewingThreadType">Type :</label>
                                     <input type="text" class="form-control" id="sewingThreadType"
@@ -494,7 +494,7 @@
                                 </div>
 
                                 <div class="form-group" id="sewingMethod">
-                                    <label>C. Sewing Method</label>
+                                    <label><strong>C. Sewing Method</strong></label>
                                     <div class="ml-3">
                                         <div class="form-check-inline">
                                             <input class="form-check-input" type="checkbox" name="Mitsumaki"
@@ -521,7 +521,7 @@
                                 </div>
 
                                 <div class="form-group" id="stitchApprox">
-                                    <label>D. Stitch Approx.</label>
+                                    <label><strong>D. Stitch Approx.</strong></label>
                                     <div class="ml-3">
                                         <div class="form-check-inline">
                                             <input class="form-check-input" type="checkbox" name="Bottom"
@@ -542,7 +542,7 @@
                                 </div>
 
                                 <div class="form-group" id="fitDraw">
-                                    <label>E. Fit to drawing spec.?</label>
+                                    <label><strong>E. Fit to drawing spec.?</strong></label>
                                     <div class="ml-3">
                                         <div class="form-check-inline">
                                             <input class="form-check-input" type="checkbox" name="Yes"

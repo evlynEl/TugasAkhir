@@ -288,6 +288,9 @@ btn_RefNo.addEventListener("click", function (e) {
                     table.$("tr.selected").removeClass("selected");
                     $(this).addClass("selected");
                 });
+
+                currentIndex = null;
+                Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
             }
         }).then((result) => {
             if (result.isConfirmed) {
@@ -496,6 +499,9 @@ btn_BagCode.addEventListener("click", function (e) {
                         table.$("tr.selected").removeClass("selected");
                         $(this).addClass("selected");
                     });
+
+                    currentIndex = null;
+                    Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_bagCode'));
                 });
             }
         }).then((result) => {
@@ -638,7 +644,58 @@ btn_BagCode.addEventListener("click", function (e) {
     }
 });
 
+// fungsi swal select pake arrow
+function handleTableKeydown(e, tableId) {
+    const table = $(`#${tableId}`).DataTable();
+    const rows = $(`#${tableId} tbody tr`);
+    const rowCount = rows.length;
 
+    if (e.key === "Enter") {
+        e.preventDefault();
+        const selectedRow = table.row(".selected").data();
+        if (selectedRow) {
+            Swal.getConfirmButton().click();
+        } else {
+            const firstRow = $(`#${tableId} tbody tr:first-child`);
+            if (firstRow.length) {
+                firstRow.click();
+                Swal.getConfirmButton().click();
+            }
+        }
+    } else if (e.key === "ArrowDown") {
+        e.preventDefault();
+        if (currentIndex === null) {
+            currentIndex = 0;
+        } else {
+            currentIndex = (currentIndex + 1) % rowCount;
+        }
+        rows.removeClass("selected");
+        $(rows[currentIndex]).addClass("selected");
+    } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        if (currentIndex === null) {
+            currentIndex = rowCount - 1;
+        } else {
+            currentIndex = (currentIndex - 1 + rowCount) % rowCount;
+        }
+        rows.removeClass("selected");
+        $(rows[currentIndex]).addClass("selected");
+    } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        currentIndex = null;
+        const pageInfo = table.page.info();
+        if (pageInfo.page < pageInfo.pages - 1) {
+            table.page('next').draw('page');
+        }
+    } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        currentIndex = null;
+        const pageInfo = table.page.info();
+        if (pageInfo.page > 0) {
+            table.page('previous').draw('page');
+        }
+    }
+}
 
 let isWeight2Selected = false;
 
@@ -767,7 +824,6 @@ function handleCheckboxChange(sectionId) {
 
 // panggil fungsi cek checkbox
 setupCheckboxListeners();
-
 
 // fungsi cek semua form yang kosong
 function allInputsFilled() {
