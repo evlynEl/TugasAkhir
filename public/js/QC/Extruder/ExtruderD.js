@@ -5,6 +5,7 @@ var shiftLetter = document.getElementById('shiftLetter');
 
 // jam saat ini
 function jamSkrg() {
+    jamInput.disabled = false;
     var currentTime = new Date();
     var hours = currentTime.getHours().toString().padStart(2, '0');
     var minutes = currentTime.getMinutes().toString().padStart(2, '0');
@@ -14,6 +15,7 @@ function jamSkrg() {
 
 // tanggal hari ini
 function tanggalToday() {
+    tanggal.disabled = false;
     var today = new Date();
     var year = today.getFullYear();
     var month = (today.getMonth() + 1).toString().padStart(2, '0');
@@ -108,6 +110,7 @@ var buttonBahanBaku = document.getElementById('buttonBahanBaku');
 var buttonCalpetCaco3 = document.getElementById('buttonCalpetCaco3');
 var buttonMasterBath = document.getElementById('buttonMasterBath');
 var buttonUv = document.getElementById('buttonUv');
+var buttonLdpe = document.getElementById('buttonLdpe');
 var buttonAntiStatic = document.getElementById('buttonAntiStatic');
 var buttonPeletan = document.getElementById('buttonPeletan');
 var buttonAdditif = document.getElementById('buttonAdditif');
@@ -140,17 +143,95 @@ var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
 
 document.addEventListener('DOMContentLoaded', function () {
 
+    let sudahAmbilNomor = 0;
+    let currentIndex = null;
+
+    // next index untuk keypress arrow di modal
+    function handleTableKeydown(e, tableId) {
+        const table = $(`#${tableId}`).DataTable();
+        const rows = $(`#${tableId} tbody tr`);
+        const rowCount = rows.length;
+
+        if (e.key === "Enter") {
+            e.preventDefault();
+            const selectedRow = table.row(".selected").data();
+            if (selectedRow) {
+                Swal.getConfirmButton().click();
+            } else {
+                const firstRow = $(`#${tableId} tbody tr:first-child`);
+                if (firstRow.length) {
+                    firstRow.click();
+                    Swal.getConfirmButton().click();
+                }
+            }
+        } else if (e.key === "ArrowDown") {
+            e.preventDefault();
+            if (currentIndex === null) {
+                currentIndex = 0;
+            } else {
+                currentIndex = (currentIndex + 1) % rowCount;
+            }
+            rows.removeClass("selected");
+            $(rows[currentIndex]).addClass("selected");
+        } else if (e.key === "ArrowUp") {
+            e.preventDefault();
+            if (currentIndex === null) {
+                currentIndex = rowCount - 1;
+            } else {
+                currentIndex = (currentIndex - 1 + rowCount) % rowCount;
+            }
+            rows.removeClass("selected");
+            $(rows[currentIndex]).addClass("selected");
+        } else if (e.key === "ArrowRight") {
+            e.preventDefault();
+            currentIndex = null;
+            const pageInfo = table.page.info();
+            if (pageInfo.page < pageInfo.pages - 1) {
+                table.page('next').draw('page');
+            }
+        } else if (e.key === "ArrowLeft") {
+            e.preventDefault();
+            currentIndex = null;
+            const pageInfo = table.page.info();
+            if (pageInfo.page > 0) {
+                table.page('previous').draw('page');
+            }
+        }
+    }
+
     $('#jamInput').on('keydown', function (e) {
         if (e.key === 'Enter') {
             e.preventDefault();
-            tanggal.focus();
+
+            if (nomorButton !== 2) {
+                tanggal.focus();
+            }
+
+            else {
+                shiftLetter.focus();
+            }
         }
     });
 
     $('#tanggal').on('keydown', function (e) {
         if (e.key === 'Enter') {
             e.preventDefault();
-            shiftLetter.focus();
+
+            const enteredDate = new Date(tanggal.value);
+            const hariIni = new Date();
+
+            if (enteredDate > hariIni) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Tanggal Melebihi Hari Ini!',
+                    text: 'Tanggal tidak bisa melebihi hari ini.',
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    tanggalToday()
+                });
+            } else {
+                shiftLetter.focus();
+            }
         }
     });
 
@@ -228,17 +309,17 @@ document.addEventListener('DOMContentLoaded', function () {
     // button ... ambil nomor transaksi (baru ambil nomor)
     buttonNomorTransaksi.addEventListener('click', async () => {
         try {
-            let result = Swal.fire({
+            let result = await Swal.fire({
                 title: "Pilih No Transaksi",
                 html: `<table id="table_noTransaksi" class="display" style="width:100%">
-                            <thead>
-                                <tr>
-                                    <th>No Transaksi</th>
-                                    <th>Transaksi</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>`,
+                        <thead>
+                            <tr>
+                                <th>No Transaksi</th>
+                                <th>Transaksi</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>`,
                 showCancelButton: true,
                 confirmButtonText: 'Pilih',
                 cancelButtonText: 'Close',
@@ -255,36 +336,37 @@ document.addEventListener('DOMContentLoaded', function () {
                     return selectedData;
                 },
                 didOpen: () => {
-                    $(document).ready(function () {
-                        const table = $("#table_noTransaksi").DataTable({
-                            responsive: true,
-                            processing: true,
-                            serverSide: true,
-                            order: [1, "asc"],
-                            ajax: {
-                                url: "ExtruderD/getNomorTransaksi",
-                                dataType: "json",
-                                data: {
-                                    tgl: tanggal.value,
-                                    Shift: shiftLetter.value,
-                                    Mesin: mesin.value
-                                },
-                                type: "GET",
+
+                    const table = $("#table_noTransaksi").DataTable({
+                        responsive: true,
+                        processing: true,
+                        serverSide: true,
+                        order: [1, "asc"],
+                        ajax: {
+                            url: "ExtruderB/getNomorTransaksi",
+                            dataType: "json",
+                            data: {
+                                tgl: tanggal.value,
+                                Shift: shiftLetter.value,
+                                Mesin: mesin.value
                             },
-                            columns: [
-                                {
-                                    data: "NoTrans",
-                                },
-                                {
-                                    data: "Trans"
-                                },
-                            ],
-                        });
-                        $("#table_noTransaksi tbody").on("click", "tr", function () {
-                            table.$("tr.selected").removeClass("selected");
-                            $(this).addClass("selected");
-                        });
+                            type: "GET",
+                        },
+                        columns: [
+                            { data: "NoTrans" },
+                            { data: "Trans" }
+                        ],
                     });
+
+                    $("#table_noTransaksi tbody").on("click", "tr", function () {
+                        table.$("tr.selected").removeClass("selected");
+                        $(this).addClass("selected");
+                        currentIndex = table.row(this).index();
+                    });
+
+                    currentIndex = null;
+                    Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_noTransaksi'));
+                    
                 },
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -292,7 +374,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     nomorTransaksi.value = selectedRow.NoTrans.trim();
 
                     if (nomorButton === 3) {
+                        sudahAmbilNomor = 0;
                         prosesButton.focus();
+                    }
+
+                    else if (nomorButton === 2) {
+                        tanggal.disabled = true;
+                        jamInput.focus();
                     }
 
                     displayData();
@@ -416,17 +504,17 @@ document.addEventListener('DOMContentLoaded', function () {
     // button ... ambil id mesin dan shift
     buttonIdMesin.addEventListener('click', async () => {
         try {
-            let result = Swal.fire({
+            let result = await Swal.fire({
                 title: "Pilih Id Mesin",
                 html: `<table id="table_IdMesin" class="display" style="width:100%">
-                            <thead>
-                                <tr>
-                                    <th>ID Mesin</th>
-                                    <th>Type Mesin</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>`,
+                        <thead>
+                            <tr>
+                                <th>ID Mesin</th>
+                                <th>Type Mesin</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>`,
                 showCancelButton: true,
                 confirmButtonText: 'Pilih',
                 cancelButtonText: 'Close',
@@ -440,35 +528,45 @@ document.addEventListener('DOMContentLoaded', function () {
                     return selectedData;
                 },
                 didOpen: () => {
-                    $(document).ready(function () {
-                        const table = $("#table_IdMesin").DataTable({
-                            responsive: true,
-                            processing: true,
-                            serverSide: true,
-                            order: [1, "asc"],
-                            ajax: {
-                                url: "ExtruderD/getIdMesin",
-                                dataType: "json",
-                                data: {
-                                    tgl: tanggal.value,
-                                    Shift: shiftLetter.value,
-                                },
-                                type: "GET",
+                    currentIndex = null;
+
+                    const table = $("#table_IdMesin").DataTable({
+                        responsive: true,
+                        processing: true,
+                        serverSide: true,
+                        order: [1, "asc"],
+                        ajax: {
+                            url: "ExtruderB/getIdMesin",
+                            dataType: "json",
+                            data: {
+                                tgl: tanggal.value,
+                                Shift: shiftLetter.value,
                             },
-                            columns: [
-                                { data: "IdMesin" },
-                                { data: "NamaMesin" },
-                            ],
-                        });
-                        $("#table_IdMesin tbody").on("click", "tr", function () {
-                            table.$("tr.selected").removeClass("selected");
-                            $(this).addClass("selected");
-                        });
+                            type: "GET",
+                        },
+                        columns: [
+                            { data: "IdMesin" },
+                            { data: "NamaMesin" },
+                        ],
                     });
+
+                    $("#table_IdMesin tbody").on("click", "tr", function () {
+                        table.$("tr.selected").removeClass("selected");
+                        $(this).addClass("selected");
+                    });
+
+                    Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_IdMesin'));
                 },
                 didClose: () => {
                     if (nomorButton === 2 || nomorButton === 3) {
-                        buttonNomorTransaksi.focus();
+                        if (sudahAmbilNomor !== 1) {
+                            buttonNomorTransaksi.focus();
+                            sudahAmbilNomor = 1;
+                        }
+                        else {
+                            buttonSpekBenang.focus();
+                            sudahAmbilNomor = 0;
+                        }
                     } else {
                         buttonSpekBenang.focus();
                     }
@@ -481,7 +579,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     $.ajax({
                         type: 'GET',
-                        url: 'ExtruderD/getShiftData',
+                        url: 'ExtruderB/getShiftData',
                         data: {
                             _token: csrfToken,
                             tgl: tanggal.value,
@@ -536,7 +634,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             serverSide: true,
                             order: [1, "asc"],
                             ajax: {
-                                url: "ExtruderD/getSpekBenang",
+                                url: "ExtruderB/getSpekBenang",
                                 dataType: "json",
                                 data: {
                                     tgl: tanggal.value,
@@ -554,6 +652,10 @@ document.addEventListener('DOMContentLoaded', function () {
                             table.$("tr.selected").removeClass("selected");
                             $(this).addClass("selected");
                         });
+
+                        currentIndex = null;
+                        Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_spekBenang'));
+
                     });
                 },
                 didClose: () => {
@@ -566,7 +668,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     $.ajax({
                         type: 'GET',
-                        url: 'ExtruderD/getIdKonversi',
+                        url: 'ExtruderB/getIdKonversi',
                         data: {
                             _token: csrfToken,
                             tgl: tanggal.value,
@@ -623,7 +725,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             serverSide: true,
                             order: [1, "asc"],
                             ajax: {
-                                url: "ExtruderD/getBahanBaku",
+                                url: "ExtruderB/getBahanBaku",
                                 dataType: "json",
                                 data: {
                                     tgl: tanggal.value,
@@ -642,6 +744,9 @@ document.addEventListener('DOMContentLoaded', function () {
                             table.$("tr.selected").removeClass("selected");
                             $(this).addClass("selected");
                         });
+
+                        currentIndex = null;
+                        Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_bahanBaku'));
                     });
                 },
                 didClose: () => {
@@ -673,7 +778,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 } else {
                     $.ajax({
                         type: 'GET',
-                        url: 'ExtruderD/getQuantityBahanBaku',
+                        url: 'ExtruderB/getQuantityBahanBaku',
                         data: {
                             _token: csrfToken,
                             tgl: tanggal.value,
@@ -770,6 +875,10 @@ document.addEventListener('DOMContentLoaded', function () {
                             table.$("tr.selected").removeClass("selected");
                             $(this).addClass("selected");
                         });
+
+                        currentIndex = null;
+                        Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_bahan'));
+
                     });
                 },
                 didClose: () => {

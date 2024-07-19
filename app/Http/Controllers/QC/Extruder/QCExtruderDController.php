@@ -209,7 +209,7 @@ class QCExtruderDController extends Controller
         // selain bahan baku, ambil data
         else if (
             $id == 'getCalpetCaco3' || $id == 'getMasterBath' || $id == 'getUv' || $id == 'getAntiStatic' || $id == 'getPeletan' ||
-            $id == 'getAdditif'
+            $id == 'getAdditif' || $id == 'getLdpe'
         ) {
             $tgl = $request->input('tgl');
             $shift = $request->input('shift');
@@ -286,7 +286,7 @@ class QCExtruderDController extends Controller
         // kalau cari quantity dan prosen
         else if (
             $id == 'getCalpetCaco3Quantity' || $id == 'getMasterBathQuantity' || $id == 'getUvQuantity' || $id == 'getAntiStaticQuantity' ||
-            $id == 'getPeletanQuantity' || $id == 'getAdditifQuantity'
+            $id == 'getPeletanQuantity' || $id == 'getAdditifQuantity' || $id == 'getLdpeQuantity'
         ) {
             $tgl = $request->input('tgl');
             $shift = $request->input('shift');

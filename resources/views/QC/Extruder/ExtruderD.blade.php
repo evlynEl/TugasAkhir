@@ -1,35 +1,33 @@
 @extends('layouts.appQC')
 @section('content')
-    <div class="container-fluid">
-        <div class="row justify-content-center">
-            <div class="col-md-10 RDZMobilePaddingLR0">
-                @if (Session::has('success'))
-                    <div class="alert alert-success">
-                        {{ Session::get('success') }}
-                    </div>
-                @elseif (Session::has('error'))
-                    <div class="alert alert-danger">
-                        {{ Session::get('error') }}
-                    </div>
-                @endif
-                <div class="card">
-                    <div class="card-header">Extruder D</div>
-                    <div class="card-body RDZOverflow RDZMobilePaddingLR0">
 
-                        <div class="container">
+    <body class="bodyExB">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-md-7 RDZMobilePaddingLR0">
+                    @if (Session::has('success'))
+                        <div class="alert alert-success">
+                            {{ Session::get('success') }}
+                        </div>
+                    @elseif (Session::has('error'))
+                        <div class="alert alert-danger">
+                            {{ Session::get('error') }}
+                        </div>
+                    @endif
+                    <div class="card">
+                        <div class="card-body RDZOverflow RDZMobilePaddingLR0" style="padding-left: 20px">
+                            <label style="padding: 0; text-decoration: underline;">Extruder D</label>
 
                             <!-- Row 1: Jam Input, Nomor Transaksi, and Button Nomor Transaksi -->
-                            <div class="row">
+                            <div class="row" style="padding-top: 10px">
                                 <div class="col-sm-2">
-                                    <label for="jamInput" class="col-form-label">Jam Input</label>
+                                    <label for="jamInput">Jam Input</label>
                                 </div>
                                 <div class="col-sm-2">
                                     <input type="time" class="form-control" id="jamInput">
                                 </div>
-                                <div class="col-sm-3">
-                                </div>
-                                <div class="col-sm-2">
-                                    <label for="nomorTransaksi" class="col-form-label">No. Transaksi</label>
+                                <div class="col-sm-4 d-flex justify-content-end align-items-center">
+                                    <label for="nomorTransaksi" class="mb-0">No. Transaksi</label>
                                 </div>
                                 <div class="col-sm-2">
                                     <input type="text" id="nomorTransaksi" class="form-control" readonly>
@@ -42,7 +40,7 @@
                             <!-- Row 2: Tanggal -->
                             <div class="row">
                                 <div class="col-sm-2">
-                                    <label for="tanggal" class="col-form-label">Tanggal</label>
+                                    <label for="tanggal">Tanggal</label>
                                 </div>
                                 <div class="col-sm-2">
                                     <input type="date" class="form-control" id="tanggal">
@@ -52,32 +50,39 @@
                             <!-- Row 3: Shift Letter, Shift Awal, Shift Akhir -->
                             <div class="row">
                                 <div class="col-sm-2">
-                                    <label for="shiftLetter" class="col-form-label">Shift</label>
+                                    <label for="shiftLetter">Shift</label>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" class="form-control" id="shiftLetter" maxlength="1">
                                 </div>
+
+                            </div>
+
+                            <div class="row">
                                 <div class="col-sm-2">
-                                    <input type="time" class="form-control" id="shiftAwal" readonly>
+                                    <label>Jam Shift</label>
                                 </div>
-                                <label class="col-form-label">S/D</label>
                                 <div class="col-sm-2">
-                                    <input type="time" class="form-control" id="shiftAkhir" readonly>
+                                    <input type="text" class="form-control" id="shiftAwal" readonly>
+                                </div>
+                                <label>S/D</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" id="shiftAkhir" readonly>
                                 </div>
                             </div>
 
                             <!-- Row 4: Mesin, Nama Mesin, and Button Cari Mesin -->
                             <div class="row">
                                 <div class="col-sm-2">
-                                    <label for="mesin" class="col-form-label">Mesin</label>
-                                </div>
-                                <div class="col-sm-1">
-                                    <input type="text" class="form-control" id="mesin" readonly>
-                                </div>
-                                <div class="col-sm-1">
-                                    <input type="text" class="form-control" id="namaMesin" readonly>
+                                    <label for="mesin">Mesin</label>
                                 </div>
                                 <div class="col-sm-2">
+                                    <input type="text" class="form-control" id="mesin" readonly>
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" id="namaMesin" readonly>
+                                </div>
+                                <div class="col-sm-1">
                                     <button type="button" class="btn btn-primary" id="buttonIdMesin">...</button>
                                 </div>
                             </div>
@@ -85,7 +90,7 @@
                             <!-- Row 5: Spek Benang, Id Konversi Ext, and Button Spek Benang -->
                             <div class="row">
                                 <div class="col-sm-2">
-                                    <label for="spekBenang" class="col-form-label">Spek Benang</label>
+                                    <label for="spekBenang">Spek Benang</label>
                                 </div>
                                 <div class="col-sm-4">
                                     <input type="text" class="form-control" id="spekBenang" readonly>
@@ -93,46 +98,23 @@
                                 <div class="col-sm-1">
                                     <button type="button" class="btn btn-primary" id="buttonSpekBenang">...</button>
                                 </div>
-                                <div class="col-sm-2">
-                                    <label for="idKonversi" class="col-form-label">Id Konversi Ext:</label>
+                                <div class="col-sm-1 d-flex justify-content-end align-items-center">
+                                    <label for="idKonversi" class="d-none">Id Konversi</label>
                                 </div>
                                 <div class="col-sm-2">
-                                    <input type="text" class="form-control" id="idKonversi">
+                                    <input type="text" class="form-control d-none" id="idKonversi">
                                 </div>
 
                             </div>
 
-                            {{-- <!-- Row 6: Keterangan and Denier Rata-Rata -->
-                            <div class="row">
-                                <div class="col-sm-2">
-                                    <label for="keterangan" class="col-form-label">Keterangan</label>
-                                </div>
-                                <div class="col-sm-2">
-                                    <input type="text" class="form-control" id="keterangan">
-                                </div>
-                                <div class="col-sm-2">
-                                    <label for="denier" class="col-form-label">Denier Rata-Rata</label>
-                                </div>
-                                <div class="col-sm-3">
-                                    <input type="text" class="form-control" id="denier">
-                                </div>
-                            </div> --}}
 
-                        </div>
-
-
-                        {{-- ----------------------- --}}
-                        {{-- quantity dan prosentase --}}
-                        <div class="container mt-3">
-                            <div class="row">
-                                <div class="col-sm-9">
-                                </div>
-                                <div class="col-sm-1">
+                            {{-- ----------------------- --}}
+                            {{-- quantity dan prosentase --}}
+                            <div class="row" style="margin-bottom: 5px">
+                                <div class="col-sm-10 d-flex justify-content-end align-items-center">
                                     Quantity
                                 </div>
-                                <div class="col-sm-1">
-                                    Prosen
-                                </div>
+                                Prosentase
                             </div>
 
                             {{-- Bahan Baku --}}
@@ -141,8 +123,7 @@
                                     <label>Bahan Baku</label>
                                 </div>
                                 <div class="col-sm-2">
-                                    <input type="text" id="bahan" name="bahan" class="form-control mb-1"
-                                        readonly>
+                                    <input type="text" id="bahan" name="bahan" class="form-control mb-1" readonly>
                                 </div>
                                 <div class="col-sm-4">
                                     <input type="text" id="typeBahan" name="typeBahan" class="form-control mb-1"
@@ -342,142 +323,164 @@
                             <!-- Row 6: Keterangan and Denier Rata-Rata -->
                             <div class="row">
                                 <div class="col-sm-2">
-                                    <label for="keterangan" class="col-form-label">Keterangan</label>
+                                    <label for="keterangan">Keterangan</label>
                                 </div>
-                                <div class="col-sm-3">
+                                <div class="col-sm-4">
                                     <input type="text" class="form-control" id="keterangan">
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-sm-2">
-                                    <label for="denier" class="col-form-label">Denier Rata-Rata</label>
+                                    <label for="denier">Denier Rata-Rata</label>
                                 </div>
                                 <div class="col-sm-2">
                                     <input type="text" class="form-control" id="denier">
                                 </div>
                             </div>
+
+                            <br>
+                            <div class="row">
+                                <div class="col">
+                                    <button class="btn btn-primary btn-block btn-sm btn-custom-width"
+                                        id="isiButton">ISI</button>
+                                </div>
+                                <div class="col">
+                                    <button class="btn btn-primary btn-block btn-sm btn-custom-width"
+                                        id="koreksiButton">KOREKSI</button>
+                                </div>
+                                <div class="col">
+                                    <button class="btn btn-primary btn-block btn-sm btn-custom-width"
+                                        id="hapusButton">HAPUS</button>
+                                </div>
+                                <div class="col">
+                                    <button class="btn btn-primary btn-block btn-sm btn-custom-width"
+                                        id="prosesButton">PROSES</button>
+                                </div>
+                                <div class="col">
+                                    <button class="btn btn-primary btn-block btn-sm btn-custom-width"
+                                        id="batalButton">BATAL</button>
+                                </div>
+                            </div>
                         </div>
-
-
                     </div>
+
+
+
                 </div>
 
                 {{-- table daftar Komposisi --}}
-                <div class="card">
-                    <div class="card-body RDZOverflow RDZMobilePaddingLR0">
-                        <div class="acs-div-container">
-                            <div class="container">
-                                <h5>Daftar Komposisi</h5>
-                                <div class="row">
-                                    <div class="col-sm-10">
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered" id="tableKomposisi">
-                                                <thead>
-                                                    <tr>
-                                                        <th scope="col">Id Type</th>
-                                                        <th scope="col">Nama Type</th>
-                                                        <th scope="col">Jenis</th>
-                                                        {{-- <th scope="col">Kelompok</th> --}}
-                                                        <th scope="col">Qty</th>
-                                                        <th scope="col">Prosen</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <button class="btn btn-primary btn-block btn-sm" id="isiButton">ISI</button>
-                                        <button class="btn btn-primary btn-block btn-sm"
-                                            id="koreksiButton">KOREKSI</button>
-                                        <button class="btn btn-primary btn-block btn-sm" id="hapusButton">HAPUS</button>
-                                        <button class="btn btn-primary btn-block btn-sm" id="prosesButton">PROSES</button>
-                                        <button class="btn btn-primary btn-block btn-sm" id="batalButton">BATAL</button>
+                <div class="col-md-5 RDZMobilePaddingLR0">
+
+                    <div class="card">
+                        <div class="card-body RDZOverflow RDZMobilePaddingLR0">
+                            <label>Daftar Komposisi</label>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="table-responsive fixed-height">
+                                        <table class="table table-bordered" id="tableKomposisi">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">Id Type</th>
+                                                    <th scope="col">Nama Type</th>
+                                                    <th scope="col">Jenis</th>
+                                                    <th scope="col">Qty</th>
+                                                    <th scope="col">Prosen</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="card">
-                    <div class="card-body RDZOverflow RDZMobilePaddingLR0">
-                        <div class="acs-div-container">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-sm-2">
-                                        <label>Lebar Benang</label>
-                                    </div>
-                                    <div class="col-sm-1">
-                                        <input type="text" id="lebarBenang" name="lebarBenang"
-                                            class="form-control additional mb-1">
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <label>Denier</label>
-                                    </div>
-                                    <div class="col-sm-1">
-                                        <input type="text" id="denierAdd" name="denierAdd"
-                                            class="form-control additional mb-1">
-                                    </div>
+
+                    <div class="card" style="margin-top: 10px">
+                        <div class="card-body RDZOverflow RDZMobilePaddingLR0">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label>Lebar Benang</label>
                                 </div>
-
-                                <div class="row">
-                                    <div class="col-sm-2">
-                                        <label>Strength</label>
-                                    </div>
-                                    <div class="col-sm-1">
-                                        <input type="text" id="strength" name="strength"
-                                            class="form-control additional mb-1">
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <label>Elongation</label>
-                                    </div>
-                                    <div class="col-sm-1">
-                                        <input type="text" id="elongation" name="elongation"
-                                            class="form-control additional mb-1">
-                                    </div>
-                                    %
-                                    <div class="col-sm-2">
-                                        <label>Ket. Strength</label>
-                                    </div>
-                                    <div class="col-sm-1">
-                                        <input type="text" id="ketStrength" name="ketStrength"
-                                            class="form-control additional mb-1">
-                                    </div>
-                                    <div class="col-sm-1">
-                                        <button class="btn btn-primary btn-block btn-sm" id="tambahButton">+</button>
-                                    </div>
-                                    <div class="col-sm-1">
-                                        <button class="btn btn-primary btn-block btn-sm" id="kurangButton">-</button>
-                                    </div>
+                                <div class="col-sm-2">
+                                    <input type="text" id="lebarBenang" name="lebarBenang"
+                                        class="form-control additional mb-1">
                                 </div>
-
-                                <br>
-                                <div class="row">
-                                    <div class="col-sm-10">
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered" id="tabelAdd">
-                                                <thead>
-                                                </thead>
-                                                <tbody>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
+                                <div class="col-sm-2">
+                                    <label>Denier</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="text" id="denierAdd" name="denierAdd"
+                                        class="form-control additional mb-1">
                                 </div>
 
                             </div>
+
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label>Strength</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="text" id="strength" name="strength"
+                                        class="form-control additional mb-1">
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Elongation</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="text" id="elongation" name="elongation"
+                                        class="form-control additional mb-1">
+                                </div>
+                                %
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label>Ket. Strength</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="text" id="ketStrength" name="ketStrength"
+                                        class="form-control additional mb-1">
+                                </div>
+                                <div class="col-sm-2">
+                                    <button class="btn btn-primary btn-block btn-sm" id="tambahButton"
+                                        style="width: 100%">+</button>
+                                </div>
+                                <div class="col-sm-2">
+                                    <button class="btn btn-primary btn-block btn-sm" id="kurangButton"
+                                        style="width: 100%">-</button>
+                                </div>
+                            </div>
+
+                            <br>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="table-responsive fixed-height" style="height: 180px">
+                                        <table class="table table-bordered" id="tabelAdd">
+                                            <thead>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
-    </div>
+        </div>
+
+    </body>
 
     <script type="text/javascript" src="{{ asset('js/QC/Extruder/ExtruderD.js') }}"></script>
     <link rel="stylesheet" href="{{ asset('css/sweetalert2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/QC/Extruder/ExtruderD.css') }}">
+
     <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>
 @endsection

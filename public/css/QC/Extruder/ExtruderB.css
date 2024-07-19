@@ -1,18 +1,30 @@
 body {
-    font-size: 12px;
+    font-size: 13px;
+}
+
+.RDZMobilePaddingLR0{
+    font-weight: bold;
+}
+
+label{
+    padding-bottom: 6px;
 }
 
 .card {
-    padding: 0;
+    padding: 2px;
+    border: 2px black solid;
+    background-color: lightgray;
 }
+
 .card-body {
-    padding: 3px;
+    padding: 10px;
 }
 
 input.form-control {
     padding: 0;
     font-size: 12px;
-    height: 20px;
+    height: 75%;
+    width: 100%;
     border-left: 1px black solid;
     border-top: 1px black solid;
 }
@@ -20,48 +32,48 @@ input.form-control {
 button.btn {
     padding: 0;
     font-size: 12px;
-    height: 20px;
-    width: 30px;
-    border-right: 2px black solid;
-    border-bottom: 2px black solid;
+    height: 25px;
+    width: 100%;
+    border-right: 1px black solid;
+    border-bottom: 1px black solid;
+    border-left: 0;
+    border-top: 0;
 }
 
 button.btn-custom-width {
-    width: 150px;
+    width: 125px;
     height: 30px;
-    font-size: 20px;
-    border-right: 3px black solid;
-    border-bottom: 3px black solid;
+    font-size: 16px;
+    border-right: 2px black solid;
+    border-bottom: 2px black solid;
 }
-
 .table-responsive.fixed-height {
-    height: 200px; /* Set the desired height */
-    overflow-y: auto; /* Enable vertical scroll */
+    height: 200px;
+    overflow-y: auto;
     position: relative;
     border-radius: 8px;
-    border: 2px black solid;
+    border: 2px solid black;
+    width: 100%;
+    table-layout: fixed;
 }
 
-.table thead th {
+.table-responsive.fixed-height thead th {
     position: sticky;
     top: 0;
-    background: lightgray; 
-    z-index: 1000; 
-    border-top: 1px solid #dee2e6;
-    border-bottom: 1px solid #dee2e6; 
+    background: lightgoldenrodyellow;
+    z-index: 1;
+
 }
 
-.table {
-    width: 100%; 
-    border-collapse: collapse;
-}
-
-.table tbody {
+.table-responsive.fixed-height tbody {
     display: block;
     overflow-y: auto;
+    width: 100%;
+    background-color: white;
 }
 
-.table thead, .table tbody tr {
+.table-responsive.fixed-height thead,
+.table-responsive.fixed-height tbody tr {
     display: table;
     width: 100%;
     table-layout: fixed;
