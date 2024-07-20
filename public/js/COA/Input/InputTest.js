@@ -3,6 +3,8 @@ var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
 var refNo = document.getElementById('refNo');
 var customer = document.getElementById('customer');
 var btn_info = document.getElementById('btn_info');
+var btn_pict = document.getElementById('btn_pict');
+
 
 btn_info.addEventListener("click", function (e) {
     try {

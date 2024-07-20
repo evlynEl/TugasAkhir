@@ -1,0 +1,65 @@
+input[type="text"] {
+    height: 30px;
+    font-size: 14px;
+}
+
+body,
+label,
+input,
+textarea {
+    font-size: 14px;
+}
+
+/* satuan panjang */
+.input-group-text {
+    padding: 0% 5%;
+}
+
+/* satuan pendek */
+.input-group-text.short {
+    padding:0% 25%;
+}
+
+.input-group-append .btn {
+    padding: 20% 50%;
+    font-size: 14px;
+}
+
+#inputHeight, #Drop_Test{
+    flex: 1; margin-left: 3%;
+}
+
+/* resize uk. input */
+#inputHeight .form-control{
+    max-width: 90%
+}
+#cyclicbox .form-control,
+#topliftbox .form-control {
+    max-width: 70%
+}
+
+/* isian 30 */
+#cyclic30box {
+    display: flex; flex-wrap: wrap;
+}
+.top-label {
+    margin: 0 2% 0;
+}
+
+
+/* outline div */
+#test_method, #test_result, #pict_break {
+    border: 1px solid #ddd;
+    margin-bottom: 1%;
+}
+
+.checkPict {
+    margin-left: 3%;
+    margin-top: 1%;
+    width: 20%;
+}
+
+/* tinggi 4 tempat gambar */
+#picture1, #picture2, #picture3, #picture4 {
+    height: 100px;
+}
