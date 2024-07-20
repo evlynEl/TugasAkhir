@@ -1,0 +1,40 @@
+input.form-control {
+    padding: 0;
+    font-size: 12px;
+    height: 60%;
+    width: 100%;
+    border-left: 1px black solid;
+    border-top: 1px black solid;
+}
+button.btn {
+    padding: 0;
+    font-size: 12px;
+    height: 25px;
+    width: 50%;
+    border-right: 1px black solid;
+    border-bottom: 1px black solid;
+    border-left: 0;
+    border-top: 0;
+}
+body {
+    font-size: 13px;
+}
+.row {
+    margin-top: -0.5%;
+}
+.card{
+    background-color: lightgray;
+}
+.no-wrap-header thead th {
+    white-space: nowrap;
+    background-color: white;
+    padding: 0;
+}
+.table-responsive.fixed-height {
+    overflow-y: auto;
+    position: relative;
+    border-radius: 8px;
+    border: 2px solid black;
+    width: 100%;
+    table-layout: fixed;
+}
