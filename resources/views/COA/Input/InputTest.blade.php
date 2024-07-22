@@ -83,7 +83,8 @@
                                         <span style="margin-right: 5%;"></span>
                                         30 X cycles of load application to approx.
                                         <div class="input-group" id="cyclicbox" style="flex: 1; margin-left: 1%;">
-                                            <input type="text" class="form-control" id="Cyclic_Test" name="Cyclic_Test">
+                                            <input type="text" class="form-control" id="Cyclic_Test" name="Cyclic_Test"
+                                                readonly>
                                             <div class="input-group-append">
                                                 <span class="input-group-text">kg (2 x SWL)</span>
                                             </div>
@@ -249,46 +250,50 @@
 
                                         <label class="ml-3">Lift at:</label>
 
-                                        <div class="form-check mb-1 ml-2">
-                                            <input class="form-check-input" type="checkbox" id="singleC"
-                                                name="singleC">
-                                            <label class="form-check-label" for="singleC">Single Loops</label>
-                                        </div>
-                                        <div class="form-check mb-1 ml-4 mr-3">
-                                            <input class="form-check-input" type="checkbox" id="fourC"
-                                                name="fourC">
-                                            <label class="form-check-label" for="fourC">Four Loops</label>
-                                        </div>
-                                        <div class="form-check mb-1 ml-4 mr-3">
-                                            <input class="form-check-input" type="checkbox" id="twoCC"
-                                                name="twoCC">
-                                            <label class="form-check-label" for="twoCC">Two Loops</label>
-                                        </div>
-                                        <div class="form-check mb-1 ml-4 mr-3">
-                                            <input class="form-check-input" type="checkbox" id="stevedoreC"
-                                                name="stevedoreC">
-                                            <label class="form-check-label" for="stevedoreC">Stevedore</label>
-                                        </div>
-                                        <div class="form-check mb-1 ml-4 mr-3">
-                                            <input class="form-check-input" type="checkbox" id="auxiliaryC"
-                                                name="auxiliaryC">
-                                            <label class="form-check-label" for="auxiliaryC">Auxiliary</label>
+                                        <div id="cyclicCheck" style="display: flex;">
+                                            <div class="form-check mb-1 ml-2">
+                                                <input class="form-check-input" type="checkbox" id="Single Loops"
+                                                    name="Single Loops">
+                                                <label class="form-check-label" for="Single Loops">Single Loops</label>
+                                            </div>
+                                            <div class="form-check mb-1 ml-4 mr-3">
+                                                <input class="form-check-input" type="checkbox" id="Four Loops"
+                                                    name="Four Loops">
+                                                <label class="form-check-label" for="Four Loops">Four Loops</label>
+                                            </div>
+                                            <div class="form-check mb-1 ml-4 mr-3">
+                                                <input class="form-check-input" type="checkbox" id="Two Loops"
+                                                    name="Two Loops">
+                                                <label class="form-check-label" for="Two Loops">Two Loops</label>
+                                            </div>
+                                            <div class="form-check mb-1 ml-4 mr-3">
+                                                <input class="form-check-input" type="checkbox" id="Stevedore"
+                                                    name="Stevedore">
+                                                <label class="form-check-label" for="Stevedore">Stevedore</label>
+                                            </div>
+                                            <div class="form-check mb-1 ml-4 mr-3">
+                                                <input class="form-check-input" type="checkbox" id="Auxalary"
+                                                    name="Auxalary">
+                                                <label class="form-check-label" for="Auxalary">Auxiliary</label>
+                                            </div>
                                         </div>
                                     </div>
 
-                                    <div class="form-row ml-4" style="display: flex;">
+                                    <div class="form-row ml-4" id="cyclicResult" style="display: flex;">
                                         <label class="col-md-2">Result :</label>
                                         <div class="col-md-10">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="noDamageCy"
-                                                    name="noDamageCy">
-                                                <label class="form-check-label" for="noDamageCy">No visible damages
+                                                <input class="form-check-input" type="checkbox"
+                                                    id="No visible damages occured" name="No visible damages occured">
+                                                <label class="form-check-label" for="No visible damages occured">No
+                                                    visible damages
                                                     occurred</label>
                                             </div>
                                             <div class="form-check" style="display: flex; align-items: center;">
-                                                <input class="form-check-input" type="checkbox" id="DamageCy"
-                                                    name="DamageCy">
-                                                <label class="form-check-label" for="DamageCy">Visible damages found
+                                                <input class="form-check-input" type="checkbox"
+                                                    id="Visible damages found at*" name="Visible damages found at*">
+                                                <label class="form-check-label" for="Visible damages found at*">Visible
+                                                    damages found
                                                     at</label>
                                                 <div class="input-group" style="flex: 1; margin-left: 1%;">
                                                     <input type="text" class="form-control" id="damageFoundDescCy"
@@ -306,32 +311,41 @@
                                     <div style="display: flex; align-items: center;">
                                         <div class="col-md-2">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="topLift" name="topLift">
-                                                <label class="form-check-label" for="topLift"><strong>Top Lift Test</strong></label>
+                                                <input class="form-check-input" type="checkbox" id="topLift"
+                                                    name="topLift">
+                                                <label class="form-check-label" for="topLift"><strong>Top Lift
+                                                        Test</strong></label>
                                             </div>
                                         </div>
 
                                         <label class="ml-3">Lift at:</label>
 
-                                        <div class="form-check mb-1 ml-4 mr-3">
-                                            <input class="form-check-input" type="checkbox" id="singleT" name="singleT">
-                                            <label class="form-check-label" for="singleT">Single Loops</label>
-                                        </div>
-                                        <div class="form-check mb-1 ml-4 mr-3">
-                                            <input class="form-check-input" type="checkbox" id="fourT" name="fourT">
-                                            <label class="form-check-label" for="fourT">Four Loops</label>
-                                        </div>
-                                        <div class="form-check mb-1 ml-4 mr-3">
-                                            <input class="form-check-input" type="checkbox" id="twoT" name="twoT">
-                                            <label class="form-check-label" for="twoT">Two Loops</label>
-                                        </div>
-                                        <div class="form-check mb-1 ml-4 mr-3">
-                                            <input class="form-check-input" type="checkbox" id="stevedoreT" name="stevedoreT">
-                                            <label class="form-check-label" for="stevedoreT">Stevedore</label>
-                                        </div>
-                                        <div class="form-check mb-1 ml-4 mr-3">
-                                            <input class="form-check-input" type="checkbox" id="auxiliaryT" name="auxiliaryT">
-                                            <label class="form-check-label" for="auxiliaryT">Auxiliary</label>
+                                        <div id="topLiftCheck" style="display: flex; align-items: center;">
+                                            <div class="form-check mb-1 ml-4 mr-3">
+                                                <input class="form-check-input" type="checkbox" id="Single Loops"
+                                                    name="Single Loops">
+                                                <label class="form-check-label" for="Single Loops">Single Loops</label>
+                                            </div>
+                                            <div class="form-check mb-1 ml-4 mr-3">
+                                                <input class="form-check-input" type="checkbox" id="Four Loops"
+                                                    name="Four Loops">
+                                                <label class="form-check-label" for="Four Loops">Four Loops</label>
+                                            </div>
+                                            <div class="form-check mb-1 ml-4 mr-3">
+                                                <input class="form-check-input" type="checkbox" id="twoT"
+                                                    name="twoT">
+                                                <label class="form-check-label" for="twoT">Two Loops</label>
+                                            </div>
+                                            <div class="form-check mb-1 ml-4 mr-3">
+                                                <input class="form-check-input" type="checkbox" id="stevedoreT"
+                                                    name="stevedoreT">
+                                                <label class="form-check-label" for="stevedoreT">Stevedore</label>
+                                            </div>
+                                            <div class="form-check mb-1 ml-4 mr-3">
+                                                <input class="form-check-input" type="checkbox" id="auxiliaryT"
+                                                    name="auxiliaryT">
+                                                <label class="form-check-label" for="auxiliaryT">Auxiliary</label>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -341,7 +355,8 @@
                                         <div class="col-md-10">
                                             <div class="form-check">
                                                 <div class="input-group" style="flex: 1; margin-left: 3%; width:30%;">
-                                                    <input type="text" class="form-control" id="Top_Lift" name="Top_Lift">
+                                                    <input type="text" class="form-control" id="Top_Lift"
+                                                        name="Top_Lift">
                                                     <div class="input-group-append">
                                                         <span class="input-group-text short">kg</span>
                                                     </div>
@@ -352,50 +367,69 @@
 
                                     <!-- Row 3 -->
                                     <div class="form-row">
-                                        <label class="col-md-2 col-form-label" style="margin-left: 2.5%; padding-right:0;">Breakage Location</label>
+                                        <label class="col-md-2 col-form-label"
+                                            style="margin-left: 2.5%; padding-right:0;">Breakage Location</label>
                                         <div class="col-md-9">
-                                            <div class="row">
+                                            <div class="row" id="breakageCheck">
                                                 <div class="col-md-3">
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" id="bodyFabric" name="bodyFabric">
-                                                        <label class="form-check-label" for="bodyFabric">Body Fabric</label>
+                                                        <input class="form-check-input" type="checkbox" id="Body fabric"
+                                                            name="Body fabric">
+                                                        <label class="form-check-label" for="Body fabric">Body
+                                                            Fabric</label>
                                                     </div>
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" id="petal" name="petal">
-                                                        <label class="form-check-label" for="petal">Petal</label>
+                                                        <input class="form-check-input" type="checkbox" id="Petal"
+                                                            name="Petal">
+                                                        <label class="form-check-label" for="Petal">Petal</label>
                                                     </div>
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" id="sideBodyThread" name="sideBodyThread">
-                                                        <label class="form-check-label" for="sideBodyThread">Side body's thread</label>
+                                                        <input class="form-check-input" type="checkbox"
+                                                            id="Side body's thread" name="Side body's thread">
+                                                        <label class="form-check-label" for="Side body's thread">Side
+                                                            body's thread</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-3">
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" id="bottomFabric" name="bottomFabric">
-                                                        <label class="form-check-label" for="bottomFabric">Bottom fabric</label>
+                                                        <input class="form-check-input" type="checkbox"
+                                                            id="Bottom fabric" name="Bottom fabric">
+                                                        <label class="form-check-label" for="Bottom fabric">Bottom
+                                                            fabric</label>
                                                     </div>
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" id="liftingBelt" name="liftingBelt">
-                                                        <label class="form-check-label" for="liftingBelt">Lifting belt</label>
+                                                        <input class="form-check-input" type="checkbox" id="Lifting belt"
+                                                            name="Lifting belt">
+                                                        <label class="form-check-label" for="Lifting belt">Lifting
+                                                            belt</label>
                                                     </div>
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" id="bottomBodyThread" name="bottomBodyThread">
-                                                        <label class="form-check-label" for="bottomBodyThread">Bottom body's thread</label>
+                                                        <input class="form-check-input" type="checkbox"
+                                                            id="Bottom body's thread" name="Bottom body's thread">
+                                                        <label class="form-check-label" for="Bottom body's thread">Bottom
+                                                            body's thread</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" id="starcutBottomSprout" name="starcutBottomSprout">
-                                                        <label class="form-check-label" for="starcutBottomSprout">Starcut of bottom sprout</label>
+                                                        <input class="form-check-input" type="checkbox"
+                                                            id="Starcut of bottom spout" name="Starcut of bottom spout">
+                                                        <label class="form-check-label"
+                                                            for="Starcut of bottom spout">Starcut of bottom sprout</label>
                                                     </div>
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" id="liftingBeltThread" name="liftingBeltThread">
-                                                        <label class="form-check-label" for="liftingBeltThread">Lifting belt's thread</label>
+                                                        <input class="form-check-input" type="checkbox"
+                                                            id="Lifting belt's thread" name="Lifting belt's thread">
+                                                        <label class="form-check-label"
+                                                            for="Lifting belt's thread">Lifting belt's thread</label>
                                                     </div>
                                                     <div class="form-check" style="display: flex; align-items: center;">
-                                                        <input class="form-check-input mr-2" type="checkbox" id="others" name="others">
-                                                        <label class="form-check-label mr-2" for="others">Others:</label>
-                                                        <input type="text" class="form-control" id="othersText" name="othersText">
+                                                        <input class="form-check-input mr-2" type="checkbox"
+                                                            id="Others :*" name="Others :*">
+                                                        <label class="form-check-label mr-2"
+                                                            for="Others :*">Others:</label>
+                                                        <input type="text" class="form-control" id="othersText"
+                                                            name="othersText">
                                                     </div>
                                                 </div>
                                             </div>
@@ -410,21 +444,28 @@
                                     <div class="form-row" style="display: flex;">
                                         <div class="col-md-2">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="dropTest" name="dropTest">
-                                                <label class="form-check-label" for="dropTest"><strong>Drop Test (80 cm)</strong></label>
+                                                <input class="form-check-input" type="checkbox" id="dropTest"
+                                                    name="dropTest">
+                                                <label class="form-check-label" for="dropTest"><strong>Drop Test (80
+                                                        cm)</strong></label>
                                             </div>
                                         </div>
                                         <label class="ml-3">Result :</label>
-                                        <div class="col-md-9">
+                                        <div class="col-md-9" id="dropResult">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="noDamageDrop" name="noDamageDrop">
-                                                <label class="form-check-label" for="noDamageDrop">No visible damages occurred</label>
+                                                <input class="form-check-input" type="checkbox"
+                                                    id="No visible damages occured" name="No visible damages occured">
+                                                <label class="form-check-label" for="No visible damages occured">No
+                                                    visible damages occurred</label>
                                             </div>
                                             <div class="form-check" style="display: flex; align-items: center;">
-                                                <input class="form-check-input" type="checkbox" id="DamageCy" name="DamageCy">
-                                                <label class="form-check-label" for="DamageCy">Visible damages found at</label>
+                                                <input class="form-check-input" type="checkbox"
+                                                    id="Visible damages found at*" name="Visible damages found at*">
+                                                <label class="form-check-label" for="Visible damages found at*">Visible
+                                                    damages found at</label>
                                                 <div class="input-group" style="flex: 1; margin-left: 1%;">
-                                                    <input type="text" class="form-control" id="damageFoundDescCy" name="damageFoundDescCy">
+                                                    <input type="text" class="form-control" id="damageFoundDescCy"
+                                                        name="damageFoundDescCy">
                                                 </div>
                                             </div>
 
@@ -546,12 +587,17 @@
                                 </div>
                             </div>
                         </div>
+
+                        <button type="button" id="btn_isi" class="btn btn-outline-secondary">Isi</button>
+                        <button type="button" id="btn_simpan" class="btn btn-outline-secondary">Simpan</button>
+                        <button type="button" id="btn_batal" class="btn btn-outline-secondary">Batal</button>
+                        <button type="button" id="btn_koreksi" class="btn btn-outline-secondary">Koreksi</button>
+                        <button type="button" id="btn_hapus" class="btn btn-outline-secondary">Hapus</button>
                     </div>
-
-
-
                 </div>
             </div>
-            <script src="{{ asset('js/COA/Input/InputTest.js') }}"></script>
-            <link rel="stylesheet" href="{{ asset('css/COA/Input/InputTest.css') }}">
-        @endsection
+        </div>
+    </div>
+    <script src="{{ asset('js/COA/Input/InputTest.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('css/COA/Input/InputTest.css') }}">
+@endsection
