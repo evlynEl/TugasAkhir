@@ -25,6 +25,8 @@ var excelButton = document.getElementById('excelButton');
 
 var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
+let focusAwal = 1;
+
 function tanggalToday() {
     var today = new Date();
     var year = today.getFullYear();
@@ -35,43 +37,61 @@ function tanggalToday() {
     var firstDayOfMonth = year + '-' + month + '-01';
     tanggalAwal.value = firstDayOfMonth;
     tanggalAkhir.value = todayString;
+
+    if (focusAwal === 1) {
+        tanggalAwal.focus();
+        focusAwal = 0;
+    }
 }
 
 tanggalToday();
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    $(document).ready(function () {
-        $('#tableLaporan').DataTable({
-            paging: false,
-            searching: false,
-            info: false,
-            ordering: false,
-            language: {
-                emptyTable: "",
-                zeroRecords: ""
-            },
-            columns: [
-                { title: 'Objek' },
-                { title: 'Kel. Utama' },
-                { title: 'Kelompok' },
-                { title: 'Sub Kelompok' },
-                { title: 'Type' },
-                { title: 'S. Awal Primer' },
-                { title: 'S. Awal Sekunder' },
-                { title: 'S. Awal Tritier' },
-                { title: 'Pemasukan Primer' },
-                { title: 'Pemasukan Sekunder' },
-                { title: 'Pemasukan Tritier' },
-                { title: 'Pengeluaran Primer' },
-                { title: 'Pengeluaran Sekunder' },
-                { title: 'Pengeluaran Tritier' },
-                { title: 'S. Akhir Primer' },
-                { title: 'S. Akhir Sekunder' },
-                { title: 'S. Akhir Tritier' },
-                { title: 'KodeBarang' }
-            ]
-        });
+    // prosesButton.disabled = true;
+    // excelButton.disabled = true;
+
+    $('#tanggalAwal').on('keydown', function (e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            tanggalAkhir.focus();
+        }
+    });
+
+    $('#tanggalAkhir').on('keydown', function (e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            buttonDivisi.focus();
+        }
+    });
+
+    $('#prosesButton').on('keydown', function (e) {
+        if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            cancelButton.focus();
+        }
+        else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            excelButton.focus();
+        }
+    });
+
+    $('#cancelButton').on('keydown', function (e) {
+        if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            prosesButton.focus();
+        }
+        else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            excelButton.focus();
+        }
+    });
+
+    $('#excelButton').on('keydown', function (e) {
+        if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            prosesButton.focus();
+        }
     });
 
     // divisi
@@ -90,6 +110,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 showCancelButton: true,
                 confirmButtonText: 'Pilih',
                 cancelButtonText: 'Close',
+                returnFocus: false,
                 preConfirm: () => {
                     const table = $("#table_divisi").DataTable();
                     const selectedData = table.row(".selected").data();
@@ -126,6 +147,10 @@ document.addEventListener('DOMContentLoaded', function () {
                             table.$("tr.selected").removeClass("selected");
                             $(this).addClass("selected");
                         });
+
+                        currentIndex = null;
+                        Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_divisi'));
+
                     });
                 }
             }).then((result) => {
@@ -143,6 +168,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         success: function (result) {
                             if (result) {
                                 divisi.value = result[0].IdDivisi.trim();
+                                cekFields();
+                                buttonObjek.focus();
                             } else {
                                 console.error("IdDivisi not found in response");
                             }
@@ -174,6 +201,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         </table>`,
                 showCancelButton: true,
                 confirmButtonText: 'Pilih',
+                returnFocus: false,
                 cancelButtonText: 'Close',
                 preConfirm: () => {
                     const table = $("#table_Objek").DataTable();
@@ -215,6 +243,10 @@ document.addEventListener('DOMContentLoaded', function () {
                             table.$("tr.selected").removeClass("selected");
                             $(this).addClass("selected");
                         });
+
+                        currentIndex = null;
+                        Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_Objek'));
+
                     });
                 }
             }).then((result) => {
@@ -233,6 +265,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         success: function (result) {
                             if (result) {
                                 objek.value = result[0].IdObjek.trim();
+                                cekFields();
+                                buttonKelUtama.focus();
                             } else {
                                 console.error("IdObjek not found in response");
                             }
@@ -265,6 +299,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         </table>`,
                     showCancelButton: true,
                     confirmButtonText: 'Pilih',
+                    returnFocus: false,
                     cancelButtonText: 'Close',
                     preConfirm: () => {
                         const table = $("#table_KelUtama").DataTable();
@@ -294,7 +329,6 @@ document.addEventListener('DOMContentLoaded', function () {
                                         console.error("Error fetching data: ", thrown);
                                     },
                                     dataSrc: function (json) {
-                                        // Add "ALL" option
                                         json.data.unshift({ NamaKelompokUtama: "ALL" });
                                         return json.data;
                                     }
@@ -311,6 +345,9 @@ document.addEventListener('DOMContentLoaded', function () {
                                 table.$("tr.selected").removeClass("selected");
                                 $(this).addClass("selected");
                             });
+
+                            currentIndex = null;
+                            Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_KelUtama'));
                         });
                     }
                 }).then((result) => {
@@ -330,6 +367,8 @@ document.addEventListener('DOMContentLoaded', function () {
                                 success: function (result) {
                                     if (result.length > 0) {
                                         kelUtama.value = result[0].NamaKelompokUtama ? result[0].NamaKelompokUtama.trim() : '';
+                                        cekFields();
+                                        prosesButton.focus();
                                     } else {
                                         console.error("NamaKelompokUtama not found in response");
                                     }
@@ -342,6 +381,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         else {
                             namaKelUtama.value = selectedRow.NamaKelompokUtama ? selectedRow.NamaKelompokUtama.trim() : '';
                             kelUtama.value = '';
+                            cekFields();
+                            prosesButton.focus();
                         }
                     }
                 });
@@ -351,10 +392,44 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    // table
+    $(document).ready(function () {
+        $('#tableLaporan').DataTable({
+            paging: false,
+            searching: false,
+            info: false,
+            ordering: false,
+            language: {
+                emptyTable: "",
+                zeroRecords: ""
+            },
+            columns: [
+                { title: 'Objek' },
+                { title: 'Kel. Utama' },
+                { title: 'Kelompok' },
+                { title: 'Sub Kelompok' },
+                { title: 'Type' },
+                { title: 'S. Awal Primer' },
+                { title: 'S. Awal Sekunder' },
+                { title: 'S. Awal Tritier' },
+                { title: 'Pemasukan Primer' },
+                { title: 'Pemasukan Sekunder' },
+                { title: 'Pemasukan Tritier' },
+                { title: 'Pengeluaran Primer' },
+                { title: 'Pengeluaran Sekunder' },
+                { title: 'Pengeluaran Tritier' },
+                { title: 'S. Akhir Primer' },
+                { title: 'S. Akhir Sekunder' },
+                { title: 'S. Akhir Tritier' },
+                { title: 'KodeBarang' }
+            ]
+        });
+    });
 
     // proses
+    var laporanArray = [];
+
     prosesButton.addEventListener("click", function (e) {
-        console.log(tanggalAkhir.value, tanggalAwal.value, objek.value);
         $.ajax({
             type: 'GET',
             url: 'LaporanStok/getLaporan1',
@@ -365,13 +440,441 @@ document.addEventListener('DOMContentLoaded', function () {
                 IdObjek: objek.value
             },
             success: function (result) {
-                console.log('mwmw');
+                updateDataTable(result);
             },
             error: function (xhr, status, error) {
-                console.error(error);
+                console.error('Error fetching data:', error);
             }
         });
     });
 
+    // Update the table and store the data in the array
+    function updateDataTable(data) {
+        var table = $('#tableLaporan').DataTable();
+        table.clear();
+
+        laporanArray = [];
+
+        data.forEach(function (item) {
+            table.row.add([
+                item.Objek,
+                item.KelompokUtama,
+                item.Kelompok,
+                item.SubKelompok,
+                item.Type,
+                item.SaldoAwalPrimer,
+                item.SaldoAwalSekunder,
+                item.SaldoAwalTritier,
+                item.PemasukanPrimer,
+                item.PemasukanSekunder,
+                item.PemasukanTritier,
+                item.PengeluaranPrimer,
+                item.PengeluaranSekunder,
+                item.PengeluaranTritier,
+                item.SaldoAkhirPrimer,
+                item.SaldoAkhirSekunder,
+                item.SaldoAkhirTritier,
+                item.KodeBarang
+            ]);
+
+            laporanArray.push({
+                Objek: item.Objek,
+                KelompokUtama: item.KelompokUtama,
+                Kelompok: item.Kelompok,
+                SubKelompok: item.SubKelompok,
+                Type: item.Type,
+                SaldoAwalPrimer: item.SaldoAwalPrimer,
+                SaldoAwalSekunder: item.SaldoAwalSekunder,
+                SaldoAwalTritier: item.SaldoAwalTritier,
+                PemasukanPrimer: item.PemasukanPrimer,
+                PemasukanSekunder: item.PemasukanSekunder,
+                PemasukanTritier: item.PemasukanTritier,
+                PengeluaranPrimer: item.PengeluaranPrimer,
+                PengeluaranSekunder: item.PengeluaranSekunder,
+                PengeluaranTritier: item.PengeluaranTritier,
+                SaldoAkhirPrimer: item.SaldoAkhirPrimer,
+                SaldoAkhirSekunder: item.SaldoAkhirSekunder,
+                SaldoAkhirTritier: item.SaldoAkhirTritier,
+                KodeBarang: item.KodeBarang
+            });
+        });
+
+        table.draw();
+    }
+
+
+    // selected row
+    $('#tableLaporan tbody').on('click', 'tr', function () {
+        var table = $('#tableLaporan').DataTable();
+        table.$('tr.selected').removeClass('selected');
+        $(this).addClass('selected');
+    });
+
+    var detailArray = [];
+
+    // double click, keluar modal untuk info
+    $(document).ready(function () {
+        $('#tableLaporan tbody').on('dblclick', 'tr', function () {
+            var data = $('#tableLaporan').DataTable().row(this).data();
+
+            var content = `
+                <div class="container-fluid">
+                    <!-- General Data -->
+                    <div class="row" style="margin-top: 0.5%">
+                        <div class="col-md-2">
+                            <label class="swalDetailLabel"><strong>Kel. Utama:</strong></label>
+                        </div>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control swalInputDetail" value="${data[1]}" readonly>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label class="swalDetailLabel"><strong>Kelompok:</strong></label>
+                        </div>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control swalInputDetail" value="${data[2]}" readonly>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label class="swalDetailLabel"><strong>Sub Kelompok:</strong></label>
+                        </div>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control swalInputDetail" value="${data[3]}" readonly>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label class="swalDetailLabel"><strong>Type:</strong></label>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" class="form-control swalInputDetail" value="${data[4]}" readonly>
+                        </div>
+                    </div>
+                    <!-- Saldo Awal -->
+                    <div class="row" style="margin-top: 1.5%">
+                        <div class="col-md-2">
+                            <label class="swalDetailLabel"><strong>Saldo Awal:</strong></label>
+                        </div>
+                        <div class="col-md-1">
+                            <label class="swalDetailLabel"><strong>Primer</strong></label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control swalInputDetail" value="${data[5]}" readonly>
+                        </div>
+                        <div class="col-md-1" style="padding:0">
+                            <label class="swalDetailLabel"><strong>Sekunder</strong></label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control swalInputDetail" value="${data[6]}" readonly>
+                        </div>
+                        <div class="col-md-1">
+                            <label class="swalDetailLabel"><strong>Tritier</strong></label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control swalInputDetail" value="${data[7]}" readonly>
+                        </div>
+                    </div>
+                    <!-- Pemasukan -->
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label class="swalDetailLabel"><strong>Pemasukan:</strong></label>
+                        </div>
+                        <div class="col-md-1">
+                            <label class="swalDetailLabel"><strong>Primer</strong></label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control swalInputDetail" value="${data[8]}" readonly>
+                        </div>
+                        <div class="col-md-1" style="padding:0">
+                            <label class="swalDetailLabel"><strong>Sekunder</strong></label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control swalInputDetail" value="${data[9]}" readonly>
+                        </div>
+                        <div class="col-md-1">
+                            <label class="swalDetailLabel"><strong>Tritier</strong></label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control swalInputDetail" value="${data[10]}" readonly>
+                        </div>
+                    </div>
+                    <!-- Pengeluaran -->
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label class="swalDetailLabel"><strong>Pengeluaran:</strong></label>
+                        </div>
+                        <div class="col-md-1">
+                            <label class="swalDetailLabel"><strong>Primer</strong></label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control swalInputDetail" value="${data[11]}" readonly>
+                        </div>
+                        <div class="col-md-1" style="padding:0">
+                            <label class="swalDetailLabel"><strong>Sekunder</strong></label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control swalInputDetail" value="${data[12]}" readonly>
+                        </div>
+                        <div class="col-md-1">
+                            <label class="swalDetailLabel"><strong>Tritier</strong></label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control swalInputDetail" value="${data[13]}" readonly>
+                        </div>
+                    </div>
+                    <!-- Saldo Akhir -->
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label class="swalDetailLabel"><strong>Saldo Akhir:</strong></label>
+                        </div>
+                        <div class="col-md-1">
+                            <label class="swalDetailLabel"><strong>Primer</strong></label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control swalInputDetail" value="${data[14]}" readonly>
+                        </div>
+                        <div class="col-md-1" style="padding:0">
+                            <label class="swalDetailLabel"><strong>Sekunder</strong></label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control swalInputDetail" value="${data[15]}" readonly>
+                        </div>
+                        <div class="col-md-1">
+                            <label class="swalDetailLabel"><strong>Tritier</strong></label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control swalInputDetail" value="${data[16]}" readonly>
+                        </div>
+                    </div>
+                    <!-- Table Detail -->
+                    <div class="row" style="margin-top: 2%">
+                        <div class="col-md-12">
+                            <table id="dataDetail" class="table table-striped table-bordered" style="font-size:12px">
+                                <thead>
+                                    <tr>
+                                        <th>Type Transaksi</th>
+                                        <th>Pemasukan Primer</th>
+                                        <th>Pemasukan Sekunder</th>
+                                        <th>Pemasukan Tritier</th>
+                                        <th>Pengeluaran Primer</th>
+                                        <th>Pengeluaran Sekunder</th>
+                                        <th>Pengeluaran Tritier</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 0.5%">
+                        <div class="col-sm-2">
+                            <button type="button" class="btn btn-primary" id="excelButtonDetail" style="width: 100%">Tampil Excel</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            Swal.fire({
+                title: 'Detail Laporan',
+                html: content,
+                confirmButtonText: 'OK',
+                width: '70%',
+                customClass: {
+                    container: 'swal2-container'
+                },
+                didOpen: () => {
+                    $('#dataDetail').DataTable({
+                        "processing": true,
+                        "serverSide": true,
+                        "paging": false,
+                        "searching": false,
+                        "info": false,
+                        "ordering": false,
+                        "ajax": {
+                            "url": "LaporanStok/getDetailData",
+                            "type": "GET",
+                            "data": function (d) {
+                                d._token = csrfToken;
+                            },
+                            "dataSrc": function (json) {
+                                detailArray= json.data;
+                                return json.data;
+                            }
+                        },
+                        "columns": [
+                            { "data": "TypeTransaksi" },
+                            { "data": "PemasukanPrimer" },
+                            { "data": "PemasukanSekunder" },
+                            { "data": "PemasukanTritier" },
+                            { "data": "PengeluaranPrimer" },
+                            { "data": "PengeluaranSekunder" },
+                            { "data": "PengeluaranTritier" }
+                        ],
+                        "language": {
+                            "emptyTable": "No data available in table"
+                        }
+                    });
+            
+                    // Event listener for Excel export
+                    document.getElementById("excelButtonDetail").addEventListener("click", function () {
+                        var tableDetailExcel = $('#dataDetail').DataTable();
+            
+                        var workbook = XLSX.utils.book_new();
+                        var worksheet_data = [
+                            ["Tanggal:", tanggalAwal.value + " s/d " + tanggalAkhir.value],
+                            [],
+                            ["Type Transaksi"
+                                , "Pemasukan Primer", "Pemasukan Sekunder", "Pemasukan Tritier"
+                                , "Pengeluaran Primer", "Pengeluaran Sekunder", "Pengeluaran Tritier"]
+                        ];
+            
+                        tableDetailExcel.rows().every(function () {
+                            var row = this.data();
+                            worksheet_data.push(row);
+                        });
+            
+                        var worksheet = XLSX.utils.aoa_to_sheet(worksheet_data);
+                        XLSX.utils.book_append_sheet(workbook, worksheet, "Laporan Data");
+            
+                        XLSX.writeFile(workbook, 'Detail_data.xlsx');
+                    });
+                },
+                didClose: () => {
+                    namaType.value = detailArray[4];
+                    $.ajax({
+                        type: 'GET',
+                        url: 'LaporanStok/getType',
+                        data: {
+                            _token: csrfToken,
+                            namaType: namaType.value
+                        },
+                        success: function (result) {
+                            console.log('Data refreshed:', result);
+                            idType.value = result[0].IdType.trim();
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error fetching data on modal close:', error);
+                        }
+                    });
+                }
+            });
+            
+        });
+    });
+
+
+    // button excel laporan
+    document.getElementById("excelButton").addEventListener("click", function () {
+        var tableLaporanExcel = $('#tableLaporan').DataTable();
+
+        var workbook = XLSX.utils.book_new();
+
+        var worksheet_data = [
+            ["Tanggal:", tanggalAwal.value + " s/d " + tanggalAkhir.value],
+            [],
+            ["Objek", "Kel. Utama", "Kelompok", "Sub Kelompok", "Type"
+                , "S. Awal Primer", "S. Awal Sekunder", "S. Awal Tritier"
+                , "Pemasukan Primer", "Pemasukan Sekunder", "Pemasukan Tritier"
+                , "Pengeluaran Primer", "Pengeluaran Sekunder", "Pengeluaran Tritier"
+                , "S. Akhir Primer", "S. Akhir Sekunder", "S. Akhir Tritier"
+                , "KodeBarang"]
+        ];
+
+        tableLaporanExcel.rows().every(function () {
+            var row = this.data();
+            worksheet_data.push(row);
+        });
+
+        var worksheet = XLSX.utils.aoa_to_sheet(worksheet_data);
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Laporan Data");
+
+        XLSX.writeFile(workbook, 'Laporan_Data.xlsx');
+    });
+
+    // cancel
+    cancelButton.addEventListener("click", function (e) {
+
+        var table = $('#tableLaporan').DataTable();
+        table.clear().draw();
+
+        objek.value = "";
+        namaObjek.value = "";
+        namaType.value = "";
+        idType.value = "";
+        kelUtama.value = "";
+        namaKelUtama.value = "";
+
+        tanggalToday();
+        prosesButton.disabled = true;
+        excelButton.disabled = true;
+    });
+
+    // disable proses dan excel kalau kosong
+    function cekFields() {
+        // blom dipake
+        if (objek.value && namaObjek.value && namaType.value && idType.value && namaKelUtama.value
+            && divisi.value && namaDivisi.value) {
+            prosesButton.disabled = false;
+            excelButton.disabled = false;
+        }
+        // else {
+        //     prosesButton.disabled = true;
+        //     excelButton.disabled = true;
+        // }
+    }
+
+    function handleTableKeydown(e, tableId) {
+        const table = $(`#${tableId}`).DataTable();
+        const rows = $(`#${tableId} tbody tr`);
+        const rowCount = rows.length;
+
+        if (e.key === "Enter") {
+            e.preventDefault();
+            const selectedRow = table.row(".selected").data();
+            if (selectedRow) {
+                Swal.getConfirmButton().click();
+            } else {
+                const firstRow = $(`#${tableId} tbody tr:first-child`);
+                if (firstRow.length) {
+                    firstRow.click();
+                    Swal.getConfirmButton().click();
+                }
+            }
+        } else if (e.key === "ArrowDown") {
+            e.preventDefault();
+            if (currentIndex === null) {
+                currentIndex = 0;
+            } else {
+                currentIndex = (currentIndex + 1) % rowCount;
+            }
+            rows.removeClass("selected");
+            $(rows[currentIndex]).addClass("selected");
+        } else if (e.key === "ArrowUp") {
+            e.preventDefault();
+            if (currentIndex === null) {
+                currentIndex = rowCount - 1;
+            } else {
+                currentIndex = (currentIndex - 1 + rowCount) % rowCount;
+            }
+            rows.removeClass("selected");
+            $(rows[currentIndex]).addClass("selected");
+        } else if (e.key === "ArrowRight") {
+            e.preventDefault();
+            currentIndex = null;
+            const pageInfo = table.page.info();
+            if (pageInfo.page < pageInfo.pages - 1) {
+                table.page('next').draw('page');
+            }
+        } else if (e.key === "ArrowLeft") {
+            e.preventDefault();
+            currentIndex = null;
+            const pageInfo = table.page.info();
+            if (pageInfo.page > 0) {
+                table.page('previous').draw('page');
+            }
+        }
+    }
 
 });

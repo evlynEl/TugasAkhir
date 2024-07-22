@@ -102,6 +102,7 @@
     </div>
 
     <script type="text/javascript" src="{{ asset('js/Laporan/LaporanStok.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
     <link rel="stylesheet" href="{{ asset('css/sweetalert2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/Laporan/LaporanStok.css') }}">
     <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>

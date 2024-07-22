@@ -120,36 +120,106 @@ class LaporanStokController extends Controller
             $tanggal1 = $request->input('tanggal1');
             $tanggal2 = $request->input('tanggal2');
             $idObjek = $request->input('IdObjek');
+            $idKelUtama = $request->input('IdKelUtama');
 
-            $laporan1Conn = DB::connection('ConnInventory')->select('exec SP_Laporan1
-            @tanggal1 = ?, @tanggal2 = ?, @IdObjek = ?', [$tanggal1, $tanggal2, $idObjek]);
+            try {
+                $laporan1Arr = DB::transaction(function () use ($tanggal1, $tanggal2, $idObjek, $idKelUtama) {
+                    if (empty($idKelUtama)) {
+                        DB::connection('ConnInventory')->statement('EXEC SP_Laporan1 @tanggal1 = ?, @tanggal2 = ?, @IdObjek = ?', [$tanggal1, $tanggal2, $idObjek]);
+                    } else {
+                        DB::connection('ConnInventory')->statement('EXEC SP_1273_INV_LaporanStok @tanggal1 = ?, @tanggal2 = ?, @IdObjek = ?, @IdKelUtama = ?', [$tanggal1, $tanggal2, $idObjek, $idKelUtama]);
+                    }
 
-            $laporan1Arr = [];
-            foreach ($laporan1Conn as $listLaporan1) {
-                $laporan1Arr[] = [
-                    'Objek' => trim($listLaporan1->Objek),
-                    'KelompokUtama' => trim($listLaporan1->KelompokUtama),
-                    'Kelompok' => trim($listLaporan1->Kelompok),
-                    'SubKelompok' => trim($listLaporan1->SubKelompok),
-                    'Type' => trim($listLaporan1->Type),
-                    'SaldoAwalPrimer' => trim($listLaporan1->SaldoAwalPrimer),
-                    'SaldoAwalSekunder' => trim($listLaporan1->SaldoAwalSekunder),
-                    'SaldoAwalTritier' => trim($listLaporan1->SaldoAwalTritier),
-                    'PemasukanPrimer' => trim($listLaporan1->PemasukanPrimer),
-                    'PemasukanSekunder' => trim($listLaporan1->PemasukanSekunder),
-                    'PemasukanTritier' => trim($listLaporan1->PemasukanTritier),
-                    'PengeluaranPrimer' => trim($listLaporan1->PengeluaranPrimer),
-                    'PengeluaranSekunder' => trim($listLaporan1->PengeluaranSekunder),
-                    'PengeluaranTritier' => trim($listLaporan1->PengeluaranTritier),
-                    'SaldoAkhirPrimer' => trim($listLaporan1->SaldoAkhirPrimer),
-                    'SaldoAkhirSekunder' => trim($listLaporan1->SaldoAkhirSekunder),
-                    'SaldoAkhirTritier' => trim($listLaporan1->SaldoAkhirTritier),
-                    'KodeBarang' => trim($listLaporan1->KodeBarang),
-                ];
+                    // Fetch data from VW_Laporan
+                    $vwLaporanData = DB::connection('ConnInventory')->select(
+                        'SELECT Objek, KelompokUtama, Kelompok, SubKelompok, Type
+                        , SaldoAwalPrimer, SaldoAwalSekunder, SaldoAwalTritier
+                    , PemasukanPrimer, PemasukanSekunder, PemasukanTritier
+                    , PengeluaranPrimer, PengeluaranSekunder, PengeluaranTritier
+                    , SaldoAkhirPrimer, SaldoAkhirSekunder, SaldoAkhirTritier
+                    , KodeBarang FROM VW_Laporan'
+                    );
+
+                    // Process and format the data
+                    $laporan1Arr = [];
+                    foreach ($vwLaporanData as $listLaporan) {
+                        $laporan1Arr[] = [
+                            'Objek' => trim($listLaporan->Objek),
+                            'KelompokUtama' => trim($listLaporan->KelompokUtama),
+                            'Kelompok' => trim($listLaporan->Kelompok),
+                            'SubKelompok' => trim($listLaporan->SubKelompok),
+                            'Type' => trim($listLaporan->Type),
+                            'SaldoAwalPrimer' => trim($listLaporan->SaldoAwalPrimer),
+                            'SaldoAwalSekunder' => trim($listLaporan->SaldoAwalSekunder),
+                            'SaldoAwalTritier' => trim($listLaporan->SaldoAwalTritier),
+                            'PemasukanPrimer' => trim($listLaporan->PemasukanPrimer),
+                            'PemasukanSekunder' => trim($listLaporan->PemasukanSekunder),
+                            'PemasukanTritier' => trim($listLaporan->PemasukanTritier),
+                            'PengeluaranPrimer' => trim($listLaporan->PengeluaranPrimer),
+                            'PengeluaranSekunder' => trim($listLaporan->PengeluaranSekunder),
+                            'PengeluaranTritier' => trim($listLaporan->PengeluaranTritier),
+                            'SaldoAkhirPrimer' => trim($listLaporan->SaldoAkhirPrimer),
+                            'SaldoAkhirSekunder' => trim($listLaporan->SaldoAkhirSekunder),
+                            'SaldoAkhirTritier' => trim($listLaporan->SaldoAkhirTritier),
+                            'KodeBarang' => trim($listLaporan->KodeBarang),
+                        ];
+                    }
+
+                    return $laporan1Arr;
+                });
+
+                return response()->json($laporan1Arr);
+            } catch (\Exception $e) {
+                return response()->json(['error' => $e->getMessage()], 500);
+            }
+        }
+
+        // detail data
+        else if ($id === 'getDetailData') {
+            $idObjek = $request->input('idObjek');
+
+            if (empty($idObjek)) {
+                return datatables()->of([])->make(true);
             }
 
-            dd($laporan1Conn);
-            return response()->json($laporan1Arr);
+            // Execute the query
+            $detailData = DB::connection('ConnInventory')
+                ->table('VW_Laporan1')
+                ->select(
+                    'TypeTransaksi'
+                    ,
+                    'PemasukanPrimer',
+                    'PemasukanSekunder',
+                    'PemasukanTritier'
+                    ,
+                    'PengeluaranPrimer',
+                    'PengeluaranSekunder',
+                    'PengeluaranTritier'
+                )
+                ->get();
+
+            // Return the data as DataTables response
+            return datatables($detailData)->make(true);
+        }
+
+        // get type
+        else if ($id === 'getType') {
+            $namaType = $request->input('namaType');
+
+
+            if (empty($namaType)) {
+                return datatables()->of([])->make(true);
+            }
+
+            $idTypeConn = DB::connection('ConnInventory')
+                ->table('VW_Laporan')
+                ->where('Type', $namaType)
+                ->get();
+
+            // dd($idTypeConn);
+
+            return response()->json($idTypeConn);
+
         }
 
     }
