@@ -42,7 +42,7 @@ textarea {
 #cyclic30box {
     display: flex; flex-wrap: wrap;
 }
-.top-label {
+.data-label {
     margin: 0 2% 0;
 }
 

@@ -111,111 +111,111 @@
                                     <div class="cyclic30box">
                                         <!-- Row 1 -->
                                         <div class="form-row mt-1 ">
-                                            <label for="Top1" class="top-label"> &nbsp; 1.</label><input
-                                                type="text" class="form-control" id="Top1" name="Top1"
+                                            <label for="Data_1" class="data-label"> &nbsp; 1.</label><input
+                                                type="text" class="form-control" id="Data_1" name="Data_1"
                                                 style="width: 10%;" />
-                                            <label for="Top2" class="top-label"> &nbsp; 2.</label><input
-                                                type="text" class="form-control" id="Top2" name="Top2"
+                                            <label for="Data_2" class="data-label"> &nbsp; 2.</label><input
+                                                type="text" class="form-control" id="Data_2" name="Data_2"
                                                 style="width: 10%;" />
-                                            <label for="Top3" class="top-label"> &nbsp; 3.</label><input
-                                                type="text" class="form-control" id="Top3" name="Top3"
+                                            <label for="Data_3" class="data-label"> &nbsp; 3.</label><input
+                                                type="text" class="form-control" id="Data_3" name="Data_3"
                                                 style="width: 10%;" />
-                                            <label for="Top4" class="top-label"> &nbsp; 4.</label><input
-                                                type="text" class="form-control" id="Top4" name="Top4"
+                                            <label for="Data_4" class="data-label"> &nbsp; 4.</label><input
+                                                type="text" class="form-control" id="Data_4" name="Data_4"
                                                 style="width: 10%;" />
-                                            <label for="Top5" class="top-label"> &nbsp; 5.</label><input
-                                                type="text" class="form-control" id="Top5" name="Top5"
+                                            <label for="Data_5" class="data-label"> &nbsp; 5.</label><input
+                                                type="text" class="form-control" id="Data_5" name="Data_5"
                                                 style="width: 10%;" />
-                                            <label for="Top6" class="top-label"> &nbsp; 6.</label><input
-                                                type="text" class="form-control" id="Top6" name="Top6"
+                                            <label for="Data_6" class="data-label"> &nbsp; 6.</label><input
+                                                type="text" class="form-control" id="Data_6" name="Data_6"
                                                 style="width: 10%;" />
                                         </div>
 
                                         <!-- Row 2 -->
                                         <div class="form-row mt-1">
-                                            <label for="Top7" class="top-label"> &nbsp; 7.</label><input
-                                                type="text" class="form-control" id="Top7" name="Top7"
+                                            <label for="Data_7" class="data-label"> &nbsp; 7.</label><input
+                                                type="text" class="form-control" id="Data_7" name="Data_7"
                                                 style="width: 10%;" />
-                                            <label for="Top8" class="top-label"> &nbsp; 8.</label><input
-                                                type="text" class="form-control" id="Top8" name="Top8"
+                                            <label for="Data_8" class="data-label"> &nbsp; 8.</label><input
+                                                type="text" class="form-control" id="Data_8" name="Data_8"
                                                 style="width: 10%;" />
-                                            <label for="Top9" class="top-label"> &nbsp; 9.</label><input
-                                                type="text" class="form-control" id="Top9" name="Top9"
+                                            <label for="Data_9" class="data-label"> &nbsp; 9.</label><input
+                                                type="text" class="form-control" id="Data_9" name="Data_9"
                                                 style="width: 10%;" />
-                                            <label for="Top10" class="top-label">10.</label><input type="text"
-                                                class="form-control" id="Top10" name="Top10"
+                                            <label for="Data_10" class="data-label">10.</label><input type="text"
+                                                class="form-control" id="Data_10" name="Data_10"
                                                 style="width: 10%;" />
-                                            <label for="Top11" class="top-label">11.</label><input type="text"
-                                                class="form-control" id="Top11" name="Top11"
+                                            <label for="Data_11" class="data-label">11.</label><input type="text"
+                                                class="form-control" id="Data_11" name="Data_11"
                                                 style="width: 10%;" />
-                                            <label for="Top12" class="top-label">12.</label><input type="text"
-                                                class="form-control" id="Top12" name="Top12"
+                                            <label for="Data_12" class="data-label">12.</label><input type="text"
+                                                class="form-control" id="Data_12" name="Data_12"
                                                 style="width: 10%;" />
                                         </div>
 
                                         <!-- Row 3 -->
                                         <div class="form-row mt-1">
-                                            <label for="Top13" class="top-label">13.</label><input type="text"
-                                                class="form-control" id="Top13" name="Top13"
+                                            <label for="Data_13" class="data-label">13.</label><input type="text"
+                                                class="form-control" id="Data_13" name="Data_13"
                                                 style="width: 10%;" />
-                                            <label for="Top14" class="top-label">14.</label><input type="text"
-                                                class="form-control" id="Top14" name="Top14"
+                                            <label for="Data_14" class="data-label">14.</label><input type="text"
+                                                class="form-control" id="Data_14" name="Data_14"
                                                 style="width: 10%;" />
-                                            <label for="Top15" class="top-label">15.</label><input type="text"
-                                                class="form-control" id="Top15" name="Top15"
+                                            <label for="Data_15" class="data-label">15.</label><input type="text"
+                                                class="form-control" id="Data_15" name="Data_15"
                                                 style="width: 10%;" />
-                                            <label for="Top16" class="top-label">16.</label><input type="text"
-                                                class="form-control" id="Top16" name="Top16"
+                                            <label for="Data_16" class="data-label">16.</label><input type="text"
+                                                class="form-control" id="Data_16" name="Data_16"
                                                 style="width: 10%;" />
-                                            <label for="Top17" class="top-label">17.</label><input type="text"
-                                                class="form-control" id="Top17" name="Top17"
+                                            <label for="Data_17" class="data-label">17.</label><input type="text"
+                                                class="form-control" id="Data_17" name="Data_17"
                                                 style="width: 10%;" />
-                                            <label for="Top18" class="top-label">18.</label><input type="text"
-                                                class="form-control" id="Top18" name="Top18"
+                                            <label for="Data_18" class="data-label">18.</label><input type="text"
+                                                class="form-control" id="Data_18" name="Data_18"
                                                 style="width: 10%;" />
                                         </div>
 
                                         <!-- Row 4 -->
                                         <div class="form-row mt-1">
-                                            <label for="Top19" class="top-label">19.</label><input type="text"
-                                                class="form-control" id="Top19" name="Top19"
+                                            <label for="Data_19" class="data-label">19.</label><input type="text"
+                                                class="form-control" id="Data_19" name="Data_19"
                                                 style="width: 10%;" />
-                                            <label for="Top20" class="top-label">20.</label><input type="text"
-                                                class="form-control" id="Top20" name="Top20"
+                                            <label for="Data_20" class="data-label">20.</label><input type="text"
+                                                class="form-control" id="Data_20" name="Data_20"
                                                 style="width: 10%;" />
-                                            <label for="Top21" class="top-label">21.</label><input type="text"
-                                                class="form-control" id="Top21" name="Top21"
+                                            <label for="Data_21" class="data-label">21.</label><input type="text"
+                                                class="form-control" id="Data_21" name="Data_21"
                                                 style="width: 10%;" />
-                                            <label for="Top22" class="top-label">22.</label><input type="text"
-                                                class="form-control" id="Top22" name="Top22"
+                                            <label for="Data_22" class="data-label">22.</label><input type="text"
+                                                class="form-control" id="Data_22" name="Data_22"
                                                 style="width: 10%;" />
-                                            <label for="Top23" class="top-label">23.</label><input type="text"
-                                                class="form-control" id="Top23" name="Top23"
+                                            <label for="Data_23" class="data-label">23.</label><input type="text"
+                                                class="form-control" id="Data_23" name="Data_23"
                                                 style="width: 10%;" />
-                                            <label for="Top24" class="top-label">24.</label><input type="text"
-                                                class="form-control" id="Top24" name="Top24"
+                                            <label for="Data_24" class="data-label">24.</label><input type="text"
+                                                class="form-control" id="Data_24" name="Data_24"
                                                 style="width: 10%;" />
                                         </div>
 
                                         <!-- Row 5 -->
                                         <div class="form-row mt-1">
-                                            <label for="Top25" class="top-label">25.</label><input type="text"
-                                                class="form-control" id="Top25" name="Top25"
+                                            <label for="Data_25" class="data-label">25.</label><input type="text"
+                                                class="form-control" id="Data_25" name="Data_25"
                                                 style="width: 10%;" />
-                                            <label for="Top26" class="top-label">26.</label><input type="text"
-                                                class="form-control" id="Top26" name="Top26"
+                                            <label for="Data_26" class="data-label">26.</label><input type="text"
+                                                class="form-control" id="Data_26" name="Data_26"
                                                 style="width: 10%;" />
-                                            <label for="Top27" class="top-label">27.</label><input type="text"
-                                                class="form-control" id="Top27" name="Top27"
+                                            <label for="Data_27" class="data-label">27.</label><input type="text"
+                                                class="form-control" id="Data_27" name="Data_27"
                                                 style="width: 10%;" />
-                                            <label for="Top28" class="top-label">28.</label><input type="text"
-                                                class="form-control" id="Top28" name="Top28"
+                                            <label for="Data_28" class="data-label">28.</label><input type="text"
+                                                class="form-control" id="Data_28" name="Data_28"
                                                 style="width: 10%;" />
-                                            <label for="Top29" class="top-label">29.</label><input type="text"
-                                                class="form-control" id="Top29" name="Top29"
+                                            <label for="Data_29" class="data-label">29.</label><input type="text"
+                                                class="form-control" id="Data_29" name="Data_29"
                                                 style="width: 10%;" />
-                                            <label for="Top30" class="top-label">30.</label><input type="text"
-                                                class="form-control" id="Top30" name="Top30"
+                                            <label for="Data_30" class="data-label">30.</label><input type="text"
+                                                class="form-control" id="Data_30" name="Data_30"
                                                 style="width: 10%;" />
                                         </div>
                                     </div>
@@ -241,9 +241,9 @@
                                     <div style="display: flex;">
                                         <div class="col-md-2">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="cyclicTest"
-                                                    name="cyclicTest">
-                                                <label class="form-check-label" for="cyclicTest"><strong>Cyclic
+                                                <input class="form-check-input" type="checkbox" id="Cyclic"
+                                                    name="Cyclic">
+                                                <label class="form-check-label" for="Cyclic"><strong>Cyclic
                                                         Test</strong></label>
                                             </div>
                                         </div>
@@ -311,9 +311,9 @@
                                     <div style="display: flex; align-items: center;">
                                         <div class="col-md-2">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="topLift"
-                                                    name="topLift">
-                                                <label class="form-check-label" for="topLift"><strong>Top Lift
+                                                <input class="form-check-input" type="checkbox" id="Top_Lift"
+                                                    name="Top_Lift">
+                                                <label class="form-check-label" for="Top_Lift"><strong>Top Lift
                                                         Test</strong></label>
                                             </div>
                                         </div>
@@ -355,8 +355,8 @@
                                         <div class="col-md-10">
                                             <div class="form-check">
                                                 <div class="input-group" style="flex: 1; margin-left: 3%; width:30%;">
-                                                    <input type="text" class="form-control" id="Top_Lift"
-                                                        name="Top_Lift">
+                                                    <input type="text" class="form-control" id="Top_Result"
+                                                        name="Top_Result">
                                                     <div class="input-group-append">
                                                         <span class="input-group-text short">kg</span>
                                                     </div>
@@ -370,7 +370,7 @@
                                         <label class="col-md-2 col-form-label"
                                             style="margin-left: 2.5%; padding-right:0;">Breakage Location</label>
                                         <div class="col-md-9">
-                                            <div class="row" id="breakageCheck">
+                                            <div class="row" id="Breakage_Location">
                                                 <div class="col-md-3">
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="checkbox" id="Body fabric"
@@ -442,15 +442,15 @@
                                 {{-- Drop Test --}}
                                 <div class="form-group">
                                     <div class="form-row" style="display: flex;">
-                                        <div class="col-md-2">
+                                        <div class="col-md-2 ml-3">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="dropTest"
-                                                    name="dropTest">
-                                                <label class="form-check-label" for="dropTest"><strong>Drop Test (80
+                                                <input class="form-check-input" type="checkbox" id="Drop_Result"
+                                                    name="Drop_Result">
+                                                <label class="form-check-label" for="Drop_Result"><strong>Drop Test (80
                                                         cm)</strong></label>
                                             </div>
                                         </div>
-                                        <label class="ml-3">Result :</label>
+                                        <label class="ml-1">Result :</label>
                                         <div class="col-md-9" id="dropResult">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox"
@@ -468,7 +468,6 @@
                                                         name="damageFoundDescCy">
                                                 </div>
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -483,7 +482,7 @@
                             <div class="row">
                                 <!-- Checkbox Section -->
                                 <div class="checkPict">
-                                    <div class="form-group">
+                                    <div class="form-group" id="Jumlah">
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="checkbox" id="threePictures"
                                                 name="threePictures">
@@ -504,10 +503,10 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <div class="d-flex align-items-center">
-                                                    <label for="pictureInput1" class="mr-2">1.</label>
+                                                    <label for="Pict_1" class="mr-2">1.</label>
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control" id="pictureInput1"
-                                                            name="pictureInput1" readonly>
+                                                        <input type="text" class="form-control" id="Pict_1"
+                                                            name="Pict_1" readonly>
                                                         <div class="input-group-append">
                                                             <button type="button" id="btn_pict"
                                                                 class="btn btn-info">...</button>
@@ -525,10 +524,10 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <div class="d-flex align-items-center">
-                                                    <label for="pictureInput2" class="mr-2">2.</label>
+                                                    <label for="Pict_2" class="mr-2">2.</label>
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control" id="pictureInput2"
-                                                            name="pictureInput2" readonly>
+                                                        <input type="text" class="form-control" id="Pict_2"
+                                                            name="Pict_2" readonly>
                                                         <div class="input-group-append">
                                                             <button type="button" id="btn_pict"
                                                                 class="btn btn-info">...</button>
@@ -546,10 +545,10 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <div class="d-flex align-items-center">
-                                                    <label for="pictureInput3" class="mr-2">3.</label>
+                                                    <label for="Pict_3" class="mr-2">3.</label>
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control" id="pictureInput3"
-                                                            name="pictureInput3" readonly>
+                                                        <input type="text" class="form-control" id="Pict_3"
+                                                            name="Pict_3" readonly>
                                                         <div class="input-group-append">
                                                             <button type="button" id="btn_pict"
                                                                 class="btn btn-info">...</button>
@@ -567,10 +566,10 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <div class="d-flex align-items-center">
-                                                    <label for="pictureInput4" class="mr-2">4.</label>
+                                                    <label for="Pict_4" class="mr-2">4.</label>
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control" id="pictureInput4"
-                                                            name="pictureInput4" readonly>
+                                                        <input type="text" class="form-control" id="Pict_4"
+                                                            name="Pict_4" readonly>
                                                         <div class="input-group-append">
                                                             <button type="button" id="btn_pict"
                                                                 class="btn btn-info">...</button>

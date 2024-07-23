@@ -4,47 +4,47 @@ var refNo = document.getElementById('refNo');
 var customer = document.getElementById('customer');
 
 // Test Method Detail Section
-var heightApprox = document.getElementById('Height_Approx');
+var Height_Approx = document.getElementById('Height_Approx');
 var diaCheckbox = document.getElementById('Dia');
-var diaVal = document.getElementById('dia_val');
+var dia_val = document.getElementById('dia_val');
 var squareCheckbox = document.getElementById('Square');
-var squareVal = document.getElementById('square_val');
-var cyclicTest = document.getElementById('Cyclic_Test');
-var loadSpeed = document.getElementById('Load_Speed');
-var top1 = document.getElementById('Top1');
-var top2 = document.getElementById('Top2');
-var top3 = document.getElementById('Top3');
-var top4 = document.getElementById('Top4');
-var top5 = document.getElementById('Top5');
-var top6 = document.getElementById('Top6');
-var top7 = document.getElementById('Top7');
-var top8 = document.getElementById('Top8');
-var top9 = document.getElementById('Top9');
-var top10 = document.getElementById('Top10');
-var top11 = document.getElementById('Top11');
-var top12 = document.getElementById('Top12');
-var top13 = document.getElementById('Top13');
-var top14 = document.getElementById('Top14');
-var top15 = document.getElementById('Top15');
-var top16 = document.getElementById('Top16');
-var top17 = document.getElementById('Top17');
-var top18 = document.getElementById('Top18');
-var top19 = document.getElementById('Top19');
-var top20 = document.getElementById('Top20');
-var top21 = document.getElementById('Top21');
-var top22 = document.getElementById('Top22');
-var top23 = document.getElementById('Top23');
-var top24 = document.getElementById('Top24');
-var top25 = document.getElementById('Top25');
-var top26 = document.getElementById('Top26');
-var top27 = document.getElementById('Top27');
-var top28 = document.getElementById('Top28');
-var top29 = document.getElementById('Top29');
-var top30 = document.getElementById('Top30');
-var dropTest = document.getElementById('Drop_Test');
+var square_val = document.getElementById('square_val');
+var Cyclic_Test = document.getElementById('Cyclic_Test');
+var Load_Speed = document.getElementById('Load_Speed');
+var Data_1 = document.getElementById('Data_1');
+var Data_2 = document.getElementById('Data_2');
+var Data_3 = document.getElementById('Data_3');
+var Data_4 = document.getElementById('Data_4');
+var Data_5 = document.getElementById('Data_5');
+var Data_6 = document.getElementById('Data_6');
+var Data_7 = document.getElementById('Data_7');
+var Data_8 = document.getElementById('Data_8');
+var Data_9 = document.getElementById('Data_9');
+var Data_10 = document.getElementById('Data_10');
+var Data_11 = document.getElementById('Data_11');
+var Data_12 = document.getElementById('Data_12');
+var Data_13 = document.getElementById('Data_13');
+var Data_14 = document.getElementById('Data_14');
+var Data_15 = document.getElementById('Data_15');
+var Data_16 = document.getElementById('Data_16');
+var Data_17 = document.getElementById('Data_17');
+var Data_18 = document.getElementById('Data_18');
+var Data_19 = document.getElementById('Data_19');
+var Data_20 = document.getElementById('Data_20');
+var Data_21 = document.getElementById('Data_21');
+var Data_22 = document.getElementById('Data_22');
+var Data_23 = document.getElementById('Data_23');
+var Data_24 = document.getElementById('Data_24');
+var Data_25 = document.getElementById('Data_25');
+var Data_26 = document.getElementById('Data_26');
+var Data_27 = document.getElementById('Data_27');
+var Data_28 = document.getElementById('Data_28');
+var Data_29 = document.getElementById('Data_29');
+var Data_30 = document.getElementById('Data_30');
+var Drop_Test = document.getElementById('Drop_Test');
 
 // Test Result Section
-var cyclicTestCheckbox = document.getElementById('cyclicTest');
+var cyclicCheckbox = document.getElementById('Cyclic');
 // Cyclic Test Lift Checkboxes
 var singleCCheckbox = document.getElementById('Single Loops');
 var fourCCheckbox = document.getElementById('Four Loops');
@@ -55,14 +55,14 @@ var noDamageCyCheckbox = document.getElementById('No visible damages occured');
 var damageCyCheckbox = document.getElementById('Visible damages found at*');
 var damageFoundDescCyInput = document.getElementById('damageFoundDescCy');
 // Top Lift Test Section
-var topLiftCheckbox = document.getElementById('topLift');
+var Top_Lift = document.getElementById('Top_Lift');
 var singleTCheckbox = document.getElementById('Single Loops');
 var fourTCheckbox = document.getElementById('Four Loops');
 var twoTCheckbox = document.getElementById('twoT');
 var stevedoreTCheckbox = document.getElementById('stevedoreT');
 var auxiliaryTCheckbox = document.getElementById('auxiliaryT');
 // Top Lift Test Result Input
-var topLiftResultInput = document.getElementById('Top_Lift');
+var Top_Result = document.getElementById('Top_Result');
 var bodyFabricCheckbox = document.getElementById('Body fabric');
 var petalCheckbox = document.getElementById('Petal');
 var sideBodyThreadCheckbox = document.getElementById('Side body\'s thread');
@@ -74,34 +74,35 @@ var liftingBeltThreadCheckbox = document.getElementById('Lifting belt\'s thread'
 var othersCheckbox = document.getElementById('Others :*');
 var othersTextInput = document.getElementById('othersText');
 // Drop Test Section
-var dropTestCheckbox = document.getElementById('dropTest');
+var Drop_Result = document.getElementById('Drop_Result');
 var noDamageDropCheckbox = document.getElementById('No visible damages occured');
 var damageDropCheckbox = document.getElementById('Visible damages found at*');
 var damageFoundDescDropInput = document.getElementById('damageFoundDescCy');
 
 // Picture of Breakage Section
+var Jumlah = document.getElementById('Jumlah');
 var threePictures = document.getElementById('threePictures');
 var fourPictures = document.getElementById('fourPictures');
-var pictureInput1 = document.getElementById('pictureInput1');
+var Pict_1 = document.getElementById('Pict_1');
 var picture1 = document.getElementById('picture1');
-var pictureInput2 = document.getElementById('pictureInput2');
+var Pict_2 = document.getElementById('Pict_2');
 var picture2 = document.getElementById('picture2');
-var pictureInput3 = document.getElementById('pictureInput3');
+var Pict_3 = document.getElementById('Pict_3');
 var picture3 = document.getElementById('picture3');
-var pictureInput4 = document.getElementById('pictureInput4');
+var Pict_4 = document.getElementById('Pict_4');
 var picture4 = document.getElementById('picture4');
 
 // specific div
-// var cyclicCheckDiv = document.getElementById('cyclicCheck');
-// var cyclicCheckDetail = cyclicCheckDiv.querySelectorAll('input');
-// var cyclicResultDiv = document.getElementById('jenis');
-// var cyclicResultDetail = cyclicResultDiv.querySelectorAll('input');
-// var topLiftCheckDiv = document.getElementById('topLiftCheck');
-// var topLiftChecDetail = topLiftCheckDiv.querySelectorAll('input');
-// var breakageCheckDiv = document.getElementById('breakageCheck');
-// var breakageCheckDetail = breakageCheckkDiv.querySelectorAll('input');
-// var dropResultDiv = document.getElementById('dropResult');
-// var dropResultDetail = dropResultDiv.querySelectorAll('input');
+var cyclicCheckDiv = document.getElementById('cyclicCheck');
+var cyclicCheckDetail = cyclicCheckDiv.querySelectorAll('input');
+var cyclicResultDiv = document.getElementById('cyclicResult');
+var cyclicResultDetail = cyclicResultDiv.querySelectorAll('input');
+var topLiftCheckDiv = document.getElementById('topLiftCheck');
+var topLiftChecDetail = topLiftCheckDiv.querySelectorAll('input');
+var breakageCheckDiv = document.getElementById('breakageCheck');
+var breakageCheckDetail = breakageCheckkDiv.querySelectorAll('input');
+var dropResultDiv = document.getElementById('dropResult');
+var dropResultDetail = dropResultDiv.querySelectorAll('input');
 
 // button
 var btn_info = document.getElementById('btn_info');
@@ -113,6 +114,39 @@ var btn_koreksi = document.getElementById('btn_koreksi');
 var btn_hapus = document.getElementById('btn_hapus');
 
 let a; // isi = 1, koreksi = 2, hapus = 3
+var refCopy;
+
+const inputs = Array.from(document.querySelectorAll('.card-body input[type="text"]:not([readonly]), .card-body input[type="date"]:not([readonly])'));
+
+var pressure = [];
+var cLift = [];
+var cResult = [];
+var tLift = [];
+var breakage = [];
+var dResult = [];
+var centangCheck = [];
+
+var sections = [
+    { id: 'pressurebox', checkboxes: ['Dia', 'Square'] },
+    { id: 'cyclicCheck', checkboxes: [ 'Single Loops', 'Four Loops', 'Two Loops', 'Stevedore', 'Auxiliary' ] },
+    { id: 'cyclicResult', checkboxes: [ 'No visible damages occured', 'Visible damages found at*' ] },
+    { id: 'topLiftCheck', checkboxes: ['Single Loops', 'Four Loops', 'Two Loops', 'Stevedore', 'Auxiliary'] },
+    { id: 'Breakage_Location', checkboxes: ['Body fabric', 'Petal', 'Side body\'s thread', 'Bottom fabric', 'Lifting belt', 'Bottom body\'s thread', 'Starcut of bottom spout', 'Lifting belt\'s thread', 'Others :*'] },
+    { id: 'dropResult', checkboxes: ['No visible damages occured', 'Visible damages found at*'] }
+];
+
+
+// fungsi berhubungan dengan ENTER
+inputs.forEach((masuk, index) => {
+    masuk.addEventListener('keypress', function (event) {
+        if (event.key === 'Enter') {
+            // console.log(masuk.id);
+            if (index < inputs.length - 1) {
+                inputs[index + 1].focus();
+            }
+        }
+    });
+});
 
 // fungsi swal select pake arrow
 function handleTableKeydown(e, tableId) {
@@ -172,16 +206,16 @@ btn_info.addEventListener("click", function (e) {
         Swal.fire({
             title: 'Input Test',
             html: `
-                    <table id="table_list" class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">Reference No</th>
-                                <th scope="col">Customer</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                `,
+                <table id="table_list" class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Reference No</th>
+                            <th scope="col">Customer</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            `,
             preConfirm: () => {
                 const selectedData = $("#table_list")
                     .DataTable()
@@ -207,7 +241,8 @@ btn_info.addEventListener("click", function (e) {
                         dataType: "json",
                         type: "GET",
                         data: {
-                            _token: csrfToken
+                            _token: csrfToken,
+                            a: a
                         }
                     },
                     columns: [
@@ -237,59 +272,233 @@ btn_info.addEventListener("click", function (e) {
                 customer.value = selectedRow.Customer.trim();
 
                 $.ajax({
-                    url: "FrmInputTest/getDetailCyclic",
+                    url: "FrmInputTest/getCyclic",
                     type: "GET",
                     data: {
                         _token: csrfToken,
-                        no_ref: splitRefNo
+                        no_ref: splitRefNo,
+                        a: a
                     },
                     timeout: 30000,
                     success: function (response) {
+                        // console.log('Cyclic Test Value:', response.cyclicTestValue);
+                        Cyclic_Test.value = response.cyclicTestValue;
 
-
-                        if (response.additionalData.length > 0) {
-                            const data = response.additionalData[0]; // Assuming there's only one set of data
-                            cyclicTestCheckbox.value = data.cyclicCheckbox || '';
-                            cyclicResultDetail.value = data.cyclicResult || '';
-                            topLiftCheckbox.value = data.topLiftCheckbox || '';
-                            dropResultDetail.value = data.dropCheckbox || '';
-                            heightApprox.value = data.heightApprox || '';
-                            diaVal.value = data.diaVal || '';
-                            squareVal.value = data.squareVal || '';
-                            loadSpeed.value = data.loadSpeed || '';
-                            dropTest.value = data.dropTest || '';
-                        }
-
-                        if (response.cyclicTestValue) {
-                            cyclicTest.value = response.cyclicTestValue;
-                            // console.log('Cyclic Test Value:', response.cyclicTestValue);
-
-                        }
-                        if (!response.RefCopy) {
-                            heightApprox.focus();
-                        } else {
-                            top1.focus();
+                        if (a === 1) { // fill dari no ref isi
+                            if (response.refCopy) {
+                                setTimeout(() => {
+                                    Data_1.focus();
+                                }, 100);
+                            } else {
+                                if (response.additionalData && response.additionalData.length > 0) {
+                                    const data = response.additionalData[0];
+                                    Height_Approx.value = data.Height_Approx;
+                                    dia_val.value = data.dia_val;
+                                    square_val.value = data.square_val;
+                                    Cyclic_Test.value = data.Cyclic_Test;
+                                    Load_Speed.value = data.Load_Speed;
+                                    Drop_Test.value = data.Drop_Test;
+                                    Cyclic_Lift.value = data.Cyclic_Lift;              // belom ada var nya
+                                    Cyclic_Result.value = data.Cyclic_Result;          //
+                                    Top_Lift.value = data.Top_Lift;
+                                    Top_Result.value = data.Top_Result;
+                                    Breakage_Location.value = data.Breakage_Location;  //
+                                }
+                                setTimeout(() => {
+                                    Height_Approx.focus();
+                                }, 100);
+                            }
+                        } else { // fill dari no ref koreksi
+                            if (response.additionalData && response.additionalData.length > 0) {
+                                const data = response.additionalData[0];
+                                Height_Approx.value = data.Height_Approx;
+                                dia_val.value = data.dia_val;
+                                square_val.value = data.square_val;
+                                Cyclic_Test.value = data.Cyclic_Test;
+                                Load_Speed.value = data.Load_Speed;
+                                Drop_Test.value = data.Drop_Test;
+                                Cyclic_Lift.value = data.Cyclic_Lift;
+                                Cyclic_Result.value = data.Cyclic_Result;
+                                Top_Lift.value = data.Top_Lift;
+                                Top_Result.value = data.Top_Result;
+                                Breakage_Location.value = data.Breakage_Location;
+                                Drop_Result.value = data.Drop_Result;
+                                Data_1.value = data.Data_1 || '';
+                                Data_2.value = data.Data_2 || '';
+                                Data_3.value = data.Data_3 || '';
+                                Data_4.value = data.Data_4 || '';
+                                Data_5.value = data.Data_5 || '';
+                                Data_6.value = data.Data_6 || '';
+                                Data_7.value = data.Data_7 || '';
+                                Data_8.value = data.Data_8 || '';
+                                Data_9.value = data.Data_9 || '';
+                                Data_10.value = data.Data_10 || '';
+                                Data_11.value = data.Data_11 || '';
+                                Data_12.value = data.Data_12 || '';
+                                Data_13.value = data.Data_13 || '';
+                                Data_14.value = data.Data_14 || '';
+                                Data_15.value = data.Data_15 || '';
+                                Data_16.value = data.Data_16 || '';
+                                Data_17.value = data.Data_17 || '';
+                                Data_18.value = data.Data_18 || '';
+                                Data_19.value = data.Data_19 || '';
+                                Data_20.value = data.Data_20 || '';
+                                Data_21.value = data.Data_21 || '';
+                                Data_22.value = data.Data_22 || '';
+                                Data_23.value = data.Data_23 || '';
+                                Data_24.value = data.Data_24 || '';
+                                Data_25.value = data.Data_25 || '';
+                                Data_26.value = data.Data_26 || '';
+                                Data_27.value = data.Data_27 || '';
+                                Data_28.value = data.Data_28 || '';
+                                Data_29.value = data.Data_29 || '';
+                                Data_30.value = data.Data_30 || '';
+                                Jumlah.value = data.Jumlah || '';
+                                Pict_1.src = data.Pict_1 || '';
+                                Pict_2.src = data.Pict_2 || '';
+                                Pict_3.src = data.Pict_3 || '';
+                                Pict_4.src = data.Pict_4 || '';
+                            }
                         }
                     },
                     error: function (xhr, status, error) {
                         console.error("AJAX request failed:", status, error);
+                        Swal.fire('Error', 'AJAX request failed: ' + status + ' ' + error, 'error');
+                        top1.focus();
                     }
                 });
             }
         });
     } catch (error) {
-        console.error(error);
+        console.error("An error occurred:", error);
     }
 });
+// cek checkbox
+// fungsi track aktifitas checkbox
+function setupCheckboxListeners() {
+    sections.forEach(function (section) {
+        section.checkboxes.forEach(function (checkboxName) {
+            var checkbox = document.querySelector(`#${section.id} input[name="${checkboxName}"]`);
+            if (checkbox) {
+                checkbox.addEventListener('change', function (event) {
+                    handleCheckboxChange(section.id);
+                });
+            }
+        });
+    });
+}
 
+// fungsi dapetin nilai checkbox
+function handleCheckboxChange(sectionId) {
+    var section = document.getElementById(sectionId);
+    var checkedName = null;
 
+    // Find the first checked checkbox value for the section
+    sections.find(s => s.id === sectionId).checkboxes.some(function (checkboxName) {
+        var checkbox = section.querySelector(`input[name="${checkboxName}"]`);
+        if (checkbox && checkbox.checked) {
+            checkedName = checkboxName;
+            return true;
+        }
+    });
+
+    // simpan nilai checkbox
+    switch (sectionId) {
+        case 'jenis':
+            jenis = checkedName ? [checkedName] : [];
+            break;
+        case 'sewingMethod':
+            sewing = checkedName ? [checkedName] : [];
+            break;
+        case 'stitchApprox':
+            stitch = checkedName ? [checkedName] : [];
+            break;
+        case 'fitDraw':
+            draw = checkedName ? [checkedName] : [];
+            break;
+        default:
+            break;
+    }
+    centangCheck = [sewing.length, stitch.length, draw.length];
+
+    // console.log(jenis);
+    // console.log(sewing);
+    // console.log(stitch);
+    // console.log(draw);
+}
+
+// panggil fungsi cek checkbox
+setupCheckboxListeners();
+
+var Ketik = document.querySelectorAll('input');
+
+// fungsi bisa ketik
+function enableKetik() {
+    Ketik.forEach(function (input) {
+        input.value = '';
+        input.disabled = false;
+    });
+    // inputsInBagDetail.forEach(function (input) { // menutup input pada div bag detail
+    //     input.disabled = true;
+    // });
+
+    // hide button isi, tampilkan button simpan
+    btn_isi.style.display = 'none';
+    btn_simpan.style.display = 'inline-block';
+    // hide button koreksi, tampilkan button batal
+    btn_koreksi.style.display = 'none';
+    btn_batal.style.display = 'inline-block';
+
+    btn_info.disabled = false;
+}
+
+// fungsi gak bisa ketik
+function disableKetik() {
+    Ketik.forEach(function (input) {
+        if (input.type === 'checkbox' || input.type === 'radio') {
+            input.checked = false;
+            input.disabled = true;
+        } else {
+            input.value = '';
+            input.disabled = true;
+        }
+    });
+
+    btn_simpan.style.display = 'none';
+    btn_isi.style.display = 'inline-block';
+
+    btn_batal.style.display = 'none';
+    btn_koreksi.style.display = 'inline-block';
+
+    btn_info.disabled = true;
+    btn_hapus.disabled = false;
+}
+
+// Initially disable Ketik on page load
+disableKetik();
 
 btn_isi.addEventListener('click', function () {
     a = 1;
+    enableKetik();
+    btn_info.focus();
+    btn_info.disabled = false;
+
 });
+
+// Button batal event listener
+btn_batal.addEventListener('click', function () {
+    btn_hapus.disabled = false;
+    disableKetik();
+});
+
 
 btn_koreksi.addEventListener('click', function () {
     a = 2;
+    enableKetik();
+    btn_info.focus();
+    btn_info.disabled = false;
+    btn_hapus.disabled = true;
+
 });
 
 btn_hapus.addEventListener('click', function () {
