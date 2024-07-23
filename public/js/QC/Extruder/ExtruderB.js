@@ -137,7 +137,6 @@ var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
 document.addEventListener('DOMContentLoaded', function () {
 
     let currentIndex = null;
-    let sudahAmbilNomor = 0;
 
     // next index untuk keypress arrow di modal
     function handleTableKeydown(e, tableId) {
@@ -368,7 +367,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     nomorTransaksi.value = selectedRow.NoTrans.trim();
 
                     if (nomorButton === 3) {
-                        sudahAmbilNomor = 0;
                         prosesButton.focus();
                     }
 
@@ -552,13 +550,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
                 didClose: () => {
                     if (nomorButton === 2 || nomorButton === 3) {
-                        if (sudahAmbilNomor !== 1) {
+                        if (!nomorTransaksi.value) {
                             buttonNomorTransaksi.focus();
-                            sudahAmbilNomor = 1;
                         }
                         else{
                             buttonSpekBenang.focus();
-                            sudahAmbilNomor = 0;
                         }
                     } else {
                         buttonSpekBenang.focus();

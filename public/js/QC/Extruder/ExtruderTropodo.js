@@ -5,6 +5,7 @@ var shiftLetter = document.getElementById('shiftLetter');
 
 // jam saat ini
 function jamSkrg() {
+    jamInput.disabled = false;
     var currentTime = new Date();
     var hours = currentTime.getHours().toString().padStart(2, '0');
     var minutes = currentTime.getMinutes().toString().padStart(2, '0');
@@ -14,6 +15,7 @@ function jamSkrg() {
 
 // tanggal hari ini
 function tanggalToday() {
+    tanggal.disabled = false;
     var today = new Date();
     var year = today.getFullYear();
     var month = (today.getMonth() + 1).toString().padStart(2, '0');
@@ -183,10 +185,73 @@ var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
 
 document.addEventListener('DOMContentLoaded', function () {
 
+    let currentIndex = null;
+
+    // next index untuk keypress arrow di modal
+    function handleTableKeydown(e, tableId) {
+        const table = $(`#${tableId}`).DataTable();
+        const rows = $(`#${tableId} tbody tr`);
+        const rowCount = rows.length;
+
+        if (e.key === "Enter") {
+            e.preventDefault();
+            const selectedRow = table.row(".selected").data();
+            if (selectedRow) {
+                Swal.getConfirmButton().click();
+            } else {
+                const firstRow = $(`#${tableId} tbody tr:first-child`);
+                if (firstRow.length) {
+                    firstRow.click();
+                    Swal.getConfirmButton().click();
+                }
+            }
+        } else if (e.key === "ArrowDown") {
+            e.preventDefault();
+            if (currentIndex === null) {
+                currentIndex = 0;
+            } else {
+                currentIndex = (currentIndex + 1) % rowCount;
+            }
+            rows.removeClass("selected");
+            $(rows[currentIndex]).addClass("selected");
+        } else if (e.key === "ArrowUp") {
+            e.preventDefault();
+            if (currentIndex === null) {
+                currentIndex = rowCount - 1;
+            } else {
+                currentIndex = (currentIndex - 1 + rowCount) % rowCount;
+            }
+            rows.removeClass("selected");
+            $(rows[currentIndex]).addClass("selected");
+        } else if (e.key === "ArrowRight") {
+            e.preventDefault();
+            currentIndex = null;
+            const pageInfo = table.page.info();
+            if (pageInfo.page < pageInfo.pages - 1) {
+                table.page('next').draw('page');
+            }
+        } else if (e.key === "ArrowLeft") {
+            e.preventDefault();
+            currentIndex = null;
+            const pageInfo = table.page.info();
+            if (pageInfo.page > 0) {
+                table.page('previous').draw('page');
+            }
+        }
+    }
+
     $('#jamInput').on('keydown', function (e) {
         if (e.key === 'Enter') {
             e.preventDefault();
             tanggal.focus();
+
+            if (nomorButton !== 2) {
+                tanggal.focus();
+            }
+
+            else {
+                shiftLetter.focus();
+            }
         }
     });
 
@@ -194,6 +259,22 @@ document.addEventListener('DOMContentLoaded', function () {
         if (e.key === 'Enter') {
             e.preventDefault();
             shiftLetter.focus();
+
+            const enteredDate = new Date(tanggal.value);
+            const hariIni = new Date();
+    
+            if (enteredDate > hariIni) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Tanggal Melebihi Hari Ini!',
+                    text: 'Tanggal tidak bisa melebihi hari ini.',
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    tanggalToday() 
+                });
+            } else {
+                shiftLetter.focus();
+            }
         }
     });
 
@@ -327,6 +408,9 @@ document.addEventListener('DOMContentLoaded', function () {
                             table.$("tr.selected").removeClass("selected");
                             $(this).addClass("selected");
                         });
+
+                        currentIndex = null;
+                        Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_noTransaksi'));
                     });
                 },
             }).then((result) => {
@@ -336,6 +420,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     if (nomorButton === 3) {
                         prosesButton.focus();
+                    }
+
+                    else if (nomorButton === 2) {
+                        tanggal.disabled = true;
+                        jamInput.focus();
                     }
 
                     displayData();
@@ -507,11 +596,19 @@ document.addEventListener('DOMContentLoaded', function () {
                             table.$("tr.selected").removeClass("selected");
                             $(this).addClass("selected");
                         });
+
+                        currentIndex = null;
+                        Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_IdMesin'));
                     });
                 },
                 didClose: () => {
                     if (nomorButton === 2 || nomorButton === 3) {
-                        buttonNomorTransaksi.focus();
+                        if (!nomorTransaksi.value) {
+                            buttonNomorTransaksi.focus();
+                        }
+                        else{
+                            buttonSpekBenang.focus();
+                        }
                     } else {
                         buttonSpekBenang.focus();
                     }
@@ -597,6 +694,9 @@ document.addEventListener('DOMContentLoaded', function () {
                             table.$("tr.selected").removeClass("selected");
                             $(this).addClass("selected");
                         });
+
+                        currentIndex = null;
+                        Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_spekBenang'));
                     });
                 },
                 didClose: () => {
@@ -685,6 +785,9 @@ document.addEventListener('DOMContentLoaded', function () {
                             table.$("tr.selected").removeClass("selected");
                             $(this).addClass("selected");
                         });
+
+                        currentIndex = null;
+                        Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_bahanBaku'));
                     });
                 },
                 didClose: () => {
@@ -813,6 +916,9 @@ document.addEventListener('DOMContentLoaded', function () {
                             table.$("tr.selected").removeClass("selected");
                             $(this).addClass("selected");
                         });
+
+                        currentIndex = null;
+                        Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_bahan'));
                     });
                 },
                 didClose: () => {
@@ -1261,7 +1367,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             title: 'Success',
                             text: response.success,
                             didClose: () => {
-                                batalButton.click(); 
+                                batalButton.click();
                             }
                         });
                     }
@@ -1325,7 +1431,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             title: 'Success',
                             text: response.success,
                             didClose: () => {
-                                batalButton.click(); 
+                                batalButton.click();
                             }
                         });
                         // delete bahan baku lalu masukan lagi
@@ -1414,7 +1520,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         text: "Data berhasil diHAPUS",
                         confirmButtonText: 'Ok',
                         didClose: () => {
-                            batalButton.click(); 
+                            batalButton.click();
                         }
                     });
                 }
@@ -1527,6 +1633,7 @@ document.addEventListener('DOMContentLoaded', function () {
         isiButton.disabled = true;
         koreksiButton.disabled = true;
         hapusButton.disabled = true;
+        
 
         tanggal.focus();
 
@@ -1542,6 +1649,7 @@ document.addEventListener('DOMContentLoaded', function () {
         isiButton.disabled = true;
         koreksiButton.disabled = true;
         hapusButton.disabled = true;
+        buttonNomorTransaksi.disabled = true;
 
         jamInput.focus();
     });

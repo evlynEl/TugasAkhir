@@ -78,6 +78,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // table by date data
     const tableByDate = $('#tableDataByDate').DataTable({
+        paging: false,
+        searching: false,
+        info: false,
         responsive: true,
         processing: true,
         serverSide: true,
@@ -154,6 +157,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // table qc data (bawah)
     const tableQcData = $('#tableQcData').DataTable({
+        paging: false,
+        searching: false,
+        info: false,
         responsive: true,
         processing: true,
         serverSide: true,

@@ -48,8 +48,8 @@ tanggalToday();
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    // prosesButton.disabled = true;
-    // excelButton.disabled = true;
+    prosesButton.disabled = true;
+    excelButton.disabled = true;
 
     $('#tanggalAwal').on('keydown', function (e) {
         if (e.key === 'Enter') {
@@ -441,6 +441,7 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             success: function (result) {
                 updateDataTable(result);
+                excelButton.disabled = false;
             },
             error: function (xhr, status, error) {
                 console.error('Error fetching data:', error);
@@ -516,7 +517,25 @@ document.addEventListener('DOMContentLoaded', function () {
     $(document).ready(function () {
         $('#tableLaporan tbody').on('dblclick', 'tr', function () {
             var data = $('#tableLaporan').DataTable().row(this).data();
-
+            var detailArray = [
+                data[1], // Kel. Utama
+                data[2], // Kelompok
+                data[3], // Sub Kelompok
+                data[4], // Type
+                data[5], // Saldo Awal Primer
+                data[6], // Saldo Awal Sekunder
+                data[7], // Saldo Awal Tritier
+                data[8], // Pemasukan Primer
+                data[9], // Pemasukan Sekunder
+                data[10], // Pemasukan Tritier
+                data[11], // Pengeluaran Primer
+                data[12], // Pengeluaran Sekunder
+                data[13], // Pengeluaran Tritier
+                data[14], // Saldo Akhir Primer
+                data[15], // Saldo Akhir Sekunder
+                data[16]  // Saldo Akhir Tritier
+            ];
+    
             var content = `
                 <div class="container-fluid">
                     <!-- General Data -->
@@ -525,7 +544,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             <label class="swalDetailLabel"><strong>Kel. Utama:</strong></label>
                         </div>
                         <div class="col-md-5">
-                            <input type="text" class="form-control swalInputDetail" value="${data[1]}" readonly>
+                            <input type="text" class="form-control swalInputDetail" value="${detailArray[0]}" readonly>
                         </div>
                     </div>
                     <div class="row">
@@ -533,7 +552,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             <label class="swalDetailLabel"><strong>Kelompok:</strong></label>
                         </div>
                         <div class="col-md-5">
-                            <input type="text" class="form-control swalInputDetail" value="${data[2]}" readonly>
+                            <input type="text" class="form-control swalInputDetail" value="${detailArray[1]}" readonly>
                         </div>
                     </div>
                     <div class="row">
@@ -541,7 +560,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             <label class="swalDetailLabel"><strong>Sub Kelompok:</strong></label>
                         </div>
                         <div class="col-md-5">
-                            <input type="text" class="form-control swalInputDetail" value="${data[3]}" readonly>
+                            <input type="text" class="form-control swalInputDetail" value="${detailArray[2]}" readonly>
                         </div>
                     </div>
                     <div class="row">
@@ -549,7 +568,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             <label class="swalDetailLabel"><strong>Type:</strong></label>
                         </div>
                         <div class="col-md-6">
-                            <input type="text" class="form-control swalInputDetail" value="${data[4]}" readonly>
+                            <input type="text" class="form-control swalInputDetail" value="${detailArray[3]}" readonly>
                         </div>
                     </div>
                     <!-- Saldo Awal -->
@@ -561,19 +580,19 @@ document.addEventListener('DOMContentLoaded', function () {
                             <label class="swalDetailLabel"><strong>Primer</strong></label>
                         </div>
                         <div class="col-md-2">
-                            <input type="text" class="form-control swalInputDetail" value="${data[5]}" readonly>
+                            <input type="text" class="form-control swalInputDetail" value="${detailArray[4]}" readonly>
                         </div>
                         <div class="col-md-1" style="padding:0">
                             <label class="swalDetailLabel"><strong>Sekunder</strong></label>
                         </div>
                         <div class="col-md-2">
-                            <input type="text" class="form-control swalInputDetail" value="${data[6]}" readonly>
+                            <input type="text" class="form-control swalInputDetail" value="${detailArray[5]}" readonly>
                         </div>
                         <div class="col-md-1">
                             <label class="swalDetailLabel"><strong>Tritier</strong></label>
                         </div>
                         <div class="col-md-2">
-                            <input type="text" class="form-control swalInputDetail" value="${data[7]}" readonly>
+                            <input type="text" class="form-control swalInputDetail" value="${detailArray[6]}" readonly>
                         </div>
                     </div>
                     <!-- Pemasukan -->
@@ -585,19 +604,19 @@ document.addEventListener('DOMContentLoaded', function () {
                             <label class="swalDetailLabel"><strong>Primer</strong></label>
                         </div>
                         <div class="col-md-2">
-                            <input type="text" class="form-control swalInputDetail" value="${data[8]}" readonly>
+                            <input type="text" class="form-control swalInputDetail" value="${detailArray[7]}" readonly>
                         </div>
                         <div class="col-md-1" style="padding:0">
                             <label class="swalDetailLabel"><strong>Sekunder</strong></label>
                         </div>
                         <div class="col-md-2">
-                            <input type="text" class="form-control swalInputDetail" value="${data[9]}" readonly>
+                            <input type="text" class="form-control swalInputDetail" value="${detailArray[8]}" readonly>
                         </div>
                         <div class="col-md-1">
                             <label class="swalDetailLabel"><strong>Tritier</strong></label>
                         </div>
                         <div class="col-md-2">
-                            <input type="text" class="form-control swalInputDetail" value="${data[10]}" readonly>
+                            <input type="text" class="form-control swalInputDetail" value="${detailArray[9]}" readonly>
                         </div>
                     </div>
                     <!-- Pengeluaran -->
@@ -609,19 +628,19 @@ document.addEventListener('DOMContentLoaded', function () {
                             <label class="swalDetailLabel"><strong>Primer</strong></label>
                         </div>
                         <div class="col-md-2">
-                            <input type="text" class="form-control swalInputDetail" value="${data[11]}" readonly>
+                            <input type="text" class="form-control swalInputDetail" value="${detailArray[10]}" readonly>
                         </div>
                         <div class="col-md-1" style="padding:0">
                             <label class="swalDetailLabel"><strong>Sekunder</strong></label>
                         </div>
                         <div class="col-md-2">
-                            <input type="text" class="form-control swalInputDetail" value="${data[12]}" readonly>
+                            <input type="text" class="form-control swalInputDetail" value="${detailArray[11]}" readonly>
                         </div>
                         <div class="col-md-1">
                             <label class="swalDetailLabel"><strong>Tritier</strong></label>
                         </div>
                         <div class="col-md-2">
-                            <input type="text" class="form-control swalInputDetail" value="${data[13]}" readonly>
+                            <input type="text" class="form-control swalInputDetail" value="${detailArray[12]}" readonly>
                         </div>
                     </div>
                     <!-- Saldo Akhir -->
@@ -633,19 +652,19 @@ document.addEventListener('DOMContentLoaded', function () {
                             <label class="swalDetailLabel"><strong>Primer</strong></label>
                         </div>
                         <div class="col-md-2">
-                            <input type="text" class="form-control swalInputDetail" value="${data[14]}" readonly>
+                            <input type="text" class="form-control swalInputDetail" value="${detailArray[13]}" readonly>
                         </div>
                         <div class="col-md-1" style="padding:0">
                             <label class="swalDetailLabel"><strong>Sekunder</strong></label>
                         </div>
                         <div class="col-md-2">
-                            <input type="text" class="form-control swalInputDetail" value="${data[15]}" readonly>
+                            <input type="text" class="form-control swalInputDetail" value="${detailArray[14]}" readonly>
                         </div>
                         <div class="col-md-1">
                             <label class="swalDetailLabel"><strong>Tritier</strong></label>
                         </div>
                         <div class="col-md-2">
-                            <input type="text" class="form-control swalInputDetail" value="${data[16]}" readonly>
+                            <input type="text" class="form-control swalInputDetail" value="${detailArray[15]}" readonly>
                         </div>
                     </div>
                     <!-- Table Detail -->
@@ -675,7 +694,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     </div>
                 </div>
             `;
-
+    
             Swal.fire({
                 title: 'Detail Laporan',
                 html: content,
@@ -698,10 +717,6 @@ document.addEventListener('DOMContentLoaded', function () {
                             "data": function (d) {
                                 d._token = csrfToken;
                             },
-                            "dataSrc": function (json) {
-                                detailArray= json.data;
-                                return json.data;
-                            }
                         },
                         "columns": [
                             { "data": "TypeTransaksi" },
@@ -716,11 +731,11 @@ document.addEventListener('DOMContentLoaded', function () {
                             "emptyTable": "No data available in table"
                         }
                     });
-            
+    
                     // Event listener for Excel export
                     document.getElementById("excelButtonDetail").addEventListener("click", function () {
                         var tableDetailExcel = $('#dataDetail').DataTable();
-            
+    
                         var workbook = XLSX.utils.book_new();
                         var worksheet_data = [
                             ["Tanggal:", tanggalAwal.value + " s/d " + tanggalAkhir.value],
@@ -729,20 +744,20 @@ document.addEventListener('DOMContentLoaded', function () {
                                 , "Pemasukan Primer", "Pemasukan Sekunder", "Pemasukan Tritier"
                                 , "Pengeluaran Primer", "Pengeluaran Sekunder", "Pengeluaran Tritier"]
                         ];
-            
+    
                         tableDetailExcel.rows().every(function () {
                             var row = this.data();
                             worksheet_data.push(row);
                         });
-            
+    
                         var worksheet = XLSX.utils.aoa_to_sheet(worksheet_data);
                         XLSX.utils.book_append_sheet(workbook, worksheet, "Laporan Data");
-            
+    
                         XLSX.writeFile(workbook, 'Detail_data.xlsx');
                     });
                 },
                 didClose: () => {
-                    namaType.value = detailArray[4];
+                    namaType.value = detailArray[3];
                     $.ajax({
                         type: 'GET',
                         url: 'LaporanStok/getType',
@@ -753,6 +768,24 @@ document.addEventListener('DOMContentLoaded', function () {
                         success: function (result) {
                             console.log('Data refreshed:', result);
                             idType.value = result[0].IdType.trim();
+
+                            $.ajax({
+                                type: 'GET',
+                                url: 'LaporanStok/getLaporan1',
+                                data: {
+                                    _token: csrfToken,
+                                    tanggal1: tanggalAwal.value,
+                                    tanggal2: tanggalAkhir.value,
+                                    IdObjek: objek.value,
+                                    IdType: idType.value
+                                },
+                                success: function (data) {
+                                    console.log('Stored procedure result:', data);
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error('Error calling stored procedure:', error);
+                                }
+                            });
                         },
                         error: function (xhr, status, error) {
                             console.error('Error fetching data on modal close:', error);
@@ -760,10 +793,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     });
                 }
             });
-            
         });
     });
-
+    
 
     // button excel laporan
     document.getElementById("excelButton").addEventListener("click", function () {
@@ -814,15 +846,13 @@ document.addEventListener('DOMContentLoaded', function () {
     // disable proses dan excel kalau kosong
     function cekFields() {
         // blom dipake
-        if (objek.value && namaObjek.value && namaType.value && idType.value && namaKelUtama.value
+        if (objek.value && namaObjek.value && namaKelUtama.value
             && divisi.value && namaDivisi.value) {
             prosesButton.disabled = false;
-            excelButton.disabled = false;
         }
-        // else {
-        //     prosesButton.disabled = true;
-        //     excelButton.disabled = true;
-        // }
+        else {
+            prosesButton.disabled = true;
+        }
     }
 
     function handleTableKeydown(e, tableId) {

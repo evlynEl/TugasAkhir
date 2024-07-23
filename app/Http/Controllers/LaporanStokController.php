@@ -216,10 +216,35 @@ class LaporanStokController extends Controller
                 ->where('Type', $namaType)
                 ->get();
 
-            // dd($idTypeConn);
-
             return response()->json($idTypeConn);
+        }
 
+        // transaction lapporan 2
+        else if ($id === 'getLaporan2') {
+            $tanggal1 = $request->input('tanggal1');
+            $tanggal2 = $request->input('tanggal2');
+            $IdObjek = $request->input('IdObjek');
+            $IdType = $request->input('IdType');
+
+            DB::connection('ConnInventory')->beginTransaction();
+
+            try {
+                $result = DB::connection('ConnInventory')->select('EXEC Sp_Laporan2
+                    @tanggal1 = ?, @tanggal2 = ?, @IdObjek = ?, @IdType = ?', [
+                    $tanggal1,
+                    $tanggal2,
+                    $IdObjek,
+                    $IdType
+                ]);
+
+                DB::connection('ConnInventory')->commit();
+
+                return response()->json($result);
+            } catch (\Exception $e) {
+                DB::connection('ConnInventory')->rollBack();
+
+                return response()->json(['error' => $e->getMessage()], 500);
+            }
         }
 
     }
