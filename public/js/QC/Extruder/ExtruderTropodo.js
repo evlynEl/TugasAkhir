@@ -171,6 +171,7 @@ function setUpAwal() {
     isiButton.disabled = false;
     koreksiButton.disabled = false;
     hapusButton.disabled = false;
+    fullScreenButton.disabled = false;
 
     jamSkrg();
     tanggalToday();
@@ -186,6 +187,39 @@ var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
 document.addEventListener('DOMContentLoaded', function () {
 
     let currentIndex = null;
+
+    // full screen button
+    fullScreenButton.addEventListener('click', function () {
+        if (!document.fullscreenElement) {
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            } else if (document.documentElement.mozRequestFullScreen) { // Firefox
+                document.documentElement.mozRequestFullScreen();
+            } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari, and Opera
+                document.documentElement.webkitRequestFullscreen();
+            } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
+                document.documentElement.msRequestFullscreen();
+            }
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.mozCancelFullScreen) { // Firefox
+                document.mozCancelFullScreen();
+            } else if (document.webkitExitFullscreen) { // Chrome, Safari, and Opera
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) { // IE/Edge
+                document.msExitFullscreen();
+            }
+        }
+    });
+
+    document.addEventListener('fullscreenchange', function () {
+        if (document.fullscreenElement) {
+            fullScreenButton.textContent = 'Exit Full Screen';
+        } else {
+            fullScreenButton.textContent = 'Full Screen';
+        }
+    });
 
     // next index untuk keypress arrow di modal
     function handleTableKeydown(e, tableId) {
@@ -262,7 +296,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const enteredDate = new Date(tanggal.value);
             const hariIni = new Date();
-    
+
             if (enteredDate > hariIni) {
                 Swal.fire({
                     icon: 'error',
@@ -270,7 +304,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     text: 'Tanggal tidak bisa melebihi hari ini.',
                     confirmButtonText: 'OK'
                 }).then(() => {
-                    tanggalToday() 
+                    tanggalToday()
                 });
             } else {
                 shiftLetter.focus();
@@ -606,7 +640,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         if (!nomorTransaksi.value) {
                             buttonNomorTransaksi.focus();
                         }
-                        else{
+                        else {
                             buttonSpekBenang.focus();
                         }
                     } else {
@@ -1633,7 +1667,7 @@ document.addEventListener('DOMContentLoaded', function () {
         isiButton.disabled = true;
         koreksiButton.disabled = true;
         hapusButton.disabled = true;
-        
+
 
         tanggal.focus();
 
@@ -1662,6 +1696,7 @@ document.addEventListener('DOMContentLoaded', function () {
         hapusButton.disabled = false;
         prosesButton.disabled = true;
         batalButton.disabled = false;
+        fullScreenButton.disabled = false;
 
 
         document.querySelectorAll('input').forEach(input => {
@@ -1675,6 +1710,7 @@ document.addEventListener('DOMContentLoaded', function () {
         isiButton.disabled = false;
         koreksiButton.disabled = false;
         hapusButton.disabled = false;
+        fullScreenButton.disabled = false;
 
         jamSkrg();
         tanggalToday();

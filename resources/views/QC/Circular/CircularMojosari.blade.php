@@ -23,7 +23,7 @@
                             <div class="container">
                                 <div class="row" style="padding-top: 10px">
                                     <div class="col-sm-4">
-                                        <label><strong>Potong Gelondongan Circular Tropodo</strong></label>
+                                        <label><strong>Potong Gelondongan Circular Mojosari</strong></label>
                                     </div>
                                     <div class="col-sm-3 offset-sm-5">
 
@@ -100,7 +100,7 @@
                     {{-- REALITA --}}
                     <div class="card">
                         <div class="card-body RDZOverflow RDZMobilePaddingLR0" style="padding: 0">
-                            <label>Realita</label>
+                            <label style="padding-left: 1.5%"><strong>Realita</strong></label>
                             <div class="container">
                                 <div class="row">
                                     <div class="col-sm-2">
@@ -139,7 +139,7 @@
                         {{-- ACTUAL ST --}}
                         <div class="card">
                             <div class="card-body RDZOverflow RDZMobilePaddingLR0" style="padding: 0">
-                                <label>Actual (ST)</label>
+                                <label style="padding-left: 1.5%"><strong>Actual (ST)</strong></label>
                                 <div class="container">
                                     <div class="row">
                                         <div class="col-sm-4 text-center">
@@ -191,7 +191,7 @@
                         {{-- Standart --}}
                         <div class="card">
                             <div class="card-body RDZOverflow RDZMobilePaddingLR0" style="padding: 0">
-                                <label>Standart</label>
+                                <label style="padding-left: 1.5%"><strong>Standart</strong></label>
                                 <div class="container">
                                     <div class="row">
                                         <div class="col-sm-4 text-center">

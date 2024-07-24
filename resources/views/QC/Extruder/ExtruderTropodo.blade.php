@@ -17,6 +17,15 @@
                     @endif
                     <div class="card">
                         <div class="card-body RDZOverflow RDZMobilePaddingLR0" style="padding-left: 20px">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <label style="padding: 0; text-decoration: underline;">Extruder Tropodo</label>
+                                </div>
+                                <div class="col-sm-2 offset-sm-8">
+                                    <button type="button" class="btn btn-primary" id="fullScreenButton">Full
+                                        Screen</button>
+                                </div>
+                            </div>
 
                             <!-- Row 1: Jam Input, Nomor Transaksi, and Button Nomor Transaksi -->
                             <div class="row" style="padding-top: 10px">

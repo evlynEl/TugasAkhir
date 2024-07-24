@@ -101,6 +101,7 @@ var prosesButton = document.getElementById('prosesButton');
 var isiButton = document.getElementById('isiButton');
 var koreksiButton = document.getElementById('koreksiButton');
 var batalButton = document.getElementById('batalButton');
+var fullScreenButton = document.getElementById('fullScreenButton');
 var nomorButton;
 
 prosesButton.disabled = true;
@@ -129,6 +130,7 @@ function setUpAwal() {
     isiButton.disabled = false;
     koreksiButton.disabled = false;
     hapusButton.disabled = false;
+    fullScreenButton.disabled = false;
 
     jamSkrg();
     tanggalToday();
@@ -144,6 +146,39 @@ var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
 document.addEventListener('DOMContentLoaded', function () {
 
     let currentIndex = null;
+
+    // full screen button
+    fullScreenButton.addEventListener('click', function () {
+        if (!document.fullscreenElement) {
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            } else if (document.documentElement.mozRequestFullScreen) { // Firefox
+                document.documentElement.mozRequestFullScreen();
+            } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari, and Opera
+                document.documentElement.webkitRequestFullscreen();
+            } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
+                document.documentElement.msRequestFullscreen();
+            }
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.mozCancelFullScreen) { // Firefox
+                document.mozCancelFullScreen();
+            } else if (document.webkitExitFullscreen) { // Chrome, Safari, and Opera
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) { // IE/Edge
+                document.msExitFullscreen();
+            }
+        }
+    });
+
+    document.addEventListener('fullscreenchange', function () {
+        if (document.fullscreenElement) {
+            fullScreenButton.textContent = 'Exit Full Screen';
+        } else {
+            fullScreenButton.textContent = 'Full Screen';
+        }
+    });
 
     // next index untuk keypress arrow di modal
     function handleTableKeydown(e, tableId) {
@@ -342,7 +377,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         serverSide: true,
                         order: [1, "asc"],
                         ajax: {
-                            url: "ExtruderB/getNomorTransaksi",
+                            url: "ExtruderD/getNomorTransaksi",
                             dataType: "json",
                             data: {
                                 tgl: tanggal.value,
@@ -534,7 +569,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         serverSide: true,
                         order: [1, "asc"],
                         ajax: {
-                            url: "ExtruderB/getIdMesin",
+                            url: "ExtruderD/getIdMesin",
                             dataType: "json",
                             data: {
                                 tgl: tanggal.value,
@@ -575,7 +610,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     $.ajax({
                         type: 'GET',
-                        url: 'ExtruderB/getShiftData',
+                        url: 'ExtruderD/getShiftData',
                         data: {
                             _token: csrfToken,
                             tgl: tanggal.value,
@@ -630,7 +665,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             serverSide: true,
                             order: [1, "asc"],
                             ajax: {
-                                url: "ExtruderB/getSpekBenang",
+                                url: "ExtruderD/getSpekBenang",
                                 dataType: "json",
                                 data: {
                                     tgl: tanggal.value,
@@ -664,7 +699,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     $.ajax({
                         type: 'GET',
-                        url: 'ExtruderB/getIdKonversi',
+                        url: 'ExtruderD/getIdKonversi',
                         data: {
                             _token: csrfToken,
                             tgl: tanggal.value,
@@ -721,7 +756,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             serverSide: true,
                             order: [1, "asc"],
                             ajax: {
-                                url: "ExtruderB/getBahanBaku",
+                                url: "ExtruderD/getBahanBaku",
                                 dataType: "json",
                                 data: {
                                     tgl: tanggal.value,
@@ -774,7 +809,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 } else {
                     $.ajax({
                         type: 'GET',
-                        url: 'ExtruderB/getQuantityBahanBaku',
+                        url: 'ExtruderD/getQuantityBahanBaku',
                         data: {
                             _token: csrfToken,
                             tgl: tanggal.value,
@@ -1532,6 +1567,7 @@ document.addEventListener('DOMContentLoaded', function () {
         hapusButton.disabled = false;
         prosesButton.disabled = true;
         batalButton.disabled = false;
+        fullScreenButton.disabled = false;
 
 
         document.querySelectorAll('input').forEach(input => {
@@ -1545,6 +1581,7 @@ document.addEventListener('DOMContentLoaded', function () {
         isiButton.disabled = false;
         koreksiButton.disabled = false;
         hapusButton.disabled = false;
+        fullScreenButton.disabled = false;
 
         jamSkrg();
         tanggalToday();
