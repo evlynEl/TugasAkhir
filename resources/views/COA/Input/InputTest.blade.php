@@ -108,7 +108,7 @@
 
                                 <div class="form-group">
                                     <label><strong>D. Cyclic Top Lift Data</strong></label>
-                                    <div class="cyclic30box">
+                                    <div id="cyclic30box">
                                         <!-- Row 1 -->
                                         <div class="form-row mt-1 ">
                                             <label for="Data_1" class="data-label"> &nbsp; 1.</label><input
@@ -241,10 +241,8 @@
                                     <div style="display: flex;">
                                         <div class="col-md-2">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="Cyclic"
-                                                    name="Cyclic">
-                                                <label class="form-check-label" for="Cyclic"><strong>Cyclic
-                                                        Test</strong></label>
+                                                <input class="form-check-input" type="checkbox" id="Cyclic_Lift" name="Cyclic_Lift">
+                                                <label class="form-check-label" for="Cyclic_Lift"><strong>Cyclic Test</strong></label>
                                             </div>
                                         </div>
 
@@ -284,10 +282,9 @@
                                         <div class="col-md-10">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox"
-                                                    id="No visible damages occured" name="No visible damages occured">
-                                                <label class="form-check-label" for="No visible damages occured">No
-                                                    visible damages
-                                                    occurred</label>
+                                                    id="No visible damages occurred" name="No visible damages occurred">
+                                                <label class="form-check-label" for="No visible damages occurred">No
+                                                    visible damages occurred</label>
                                             </div>
                                             <div class="form-check" style="display: flex; align-items: center;">
                                                 <input class="form-check-input" type="checkbox"
@@ -311,10 +308,8 @@
                                     <div style="display: flex; align-items: center;">
                                         <div class="col-md-2">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="Top_Lift"
-                                                    name="Top_Lift">
-                                                <label class="form-check-label" for="Top_Lift"><strong>Top Lift
-                                                        Test</strong></label>
+                                                <input class="form-check-input" type="checkbox" id="Top_Lift" name="Top_Lift">
+                                                <label class="form-check-label" for="Top_Lift"><strong>Top Lift Test</strong></label>
                                             </div>
                                         </div>
 
@@ -444,18 +439,16 @@
                                     <div class="form-row" style="display: flex;">
                                         <div class="col-md-2 ml-3">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="Drop_Result"
-                                                    name="Drop_Result">
-                                                <label class="form-check-label" for="Drop_Result"><strong>Drop Test (80
-                                                        cm)</strong></label>
+                                                <input class="form-check-input" type="checkbox" id="Drop_Result" name="Drop_Result">
+                                                <label class="form-check-label" for="Drop_Result"><strong>Drop Test (80 cm)</strong></label>
                                             </div>
                                         </div>
                                         <label class="ml-1">Result :</label>
                                         <div class="col-md-9" id="dropResult">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox"
-                                                    id="No visible damages occured" name="No visible damages occured">
-                                                <label class="form-check-label" for="No visible damages occured">No
+                                                    id="No visible" name="No visible">
+                                                <label class="form-check-label" for="No visible">No
                                                     visible damages occurred</label>
                                             </div>
                                             <div class="form-check" style="display: flex; align-items: center;">
@@ -464,15 +457,13 @@
                                                 <label class="form-check-label" for="Visible damages found at*">Visible
                                                     damages found at</label>
                                                 <div class="input-group" style="flex: 1; margin-left: 1%;">
-                                                    <input type="text" class="form-control" id="damageFoundDescCy"
-                                                        name="damageFoundDescCy">
+                                                    <input type="text" class="form-control" id="damageFoundDescDrop"
+                                                        name="damageFoundDescDrop">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-
-
                             </div>
                         </div>
 
@@ -508,15 +499,15 @@
                                                         <input type="text" class="form-control" id="Pict_1"
                                                             name="Pict_1" readonly>
                                                         <div class="input-group-append">
-                                                            <button type="button" id="btn_pict"
+                                                            <button type="button" id="btn_pict1"
                                                                 class="btn btn-info">...</button>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="mt-2 ml-3">
-                                                    <input type="text" class="form-control" id="picture1"
-                                                        name="picture1" readonly>
+                                                <div class="mt-2 ml-3 image-container">
+                                                    <img id="imagePreview1" src="" alt="Image Preview" >
                                                 </div>
+
                                             </div>
                                         </div>
 
@@ -529,14 +520,13 @@
                                                         <input type="text" class="form-control" id="Pict_2"
                                                             name="Pict_2" readonly>
                                                         <div class="input-group-append">
-                                                            <button type="button" id="btn_pict"
+                                                            <button type="button" id="btn_pict2"
                                                                 class="btn btn-info">...</button>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="mt-2 ml-3">
-                                                    <input type="text" class="form-control" id="picture2"
-                                                        name="picture2" readonly>
+                                                <div class="mt-2 ml-3 image-container">
+                                                    <img id="imagePreview2" src="" alt="Image Preview" >
                                                 </div>
                                             </div>
                                         </div>
@@ -550,14 +540,13 @@
                                                         <input type="text" class="form-control" id="Pict_3"
                                                             name="Pict_3" readonly>
                                                         <div class="input-group-append">
-                                                            <button type="button" id="btn_pict"
+                                                            <button type="button" id="btn_pict3"
                                                                 class="btn btn-info">...</button>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="mt-2 ml-3">
-                                                    <input type="text" class="form-control" id="picture3"
-                                                        name="picture3" readonly>
+                                                <div class="mt-2 ml-3 image-container">
+                                                    <img id="imagePreview3" src="" alt="Image Preview" >
                                                 </div>
                                             </div>
                                         </div>
@@ -571,14 +560,13 @@
                                                         <input type="text" class="form-control" id="Pict_4"
                                                             name="Pict_4" readonly>
                                                         <div class="input-group-append">
-                                                            <button type="button" id="btn_pict"
+                                                            <button type="button" id="btn_pict4"
                                                                 class="btn btn-info">...</button>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="mt-2 ml-3">
-                                                    <input type="text" class="form-control" id="picture4"
-                                                        name="picture4" readonly>
+                                                <div class="mt-2 ml-3 image-container">
+                                                    <img id="imagePreview4" src="" alt="Image Preview" >
                                                 </div>
                                             </div>
                                         </div>

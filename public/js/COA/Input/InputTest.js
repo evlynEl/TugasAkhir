@@ -44,7 +44,7 @@ var Data_30 = document.getElementById('Data_30');
 var Drop_Test = document.getElementById('Drop_Test');
 
 // Test Result Section
-var cyclicCheckbox = document.getElementById('Cyclic');
+var Cyclic_Lift = document.getElementById('Cyclic_Lift');
 // Cyclic Test Lift Checkboxes
 var singleCCheckbox = document.getElementById('Single Loops');
 var fourCCheckbox = document.getElementById('Four Loops');
@@ -75,7 +75,7 @@ var othersCheckbox = document.getElementById('Others :*');
 var othersTextInput = document.getElementById('othersText');
 // Drop Test Section
 var Drop_Result = document.getElementById('Drop_Result');
-var noDamageDropCheckbox = document.getElementById('No visible damages occured');
+var noDamageDropCheckbox = document.getElementById('No visible damages occurred');
 var damageDropCheckbox = document.getElementById('Visible damages found at*');
 var damageFoundDescDropInput = document.getElementById('damageFoundDescCy');
 
@@ -93,20 +93,26 @@ var Pict_4 = document.getElementById('Pict_4');
 var picture4 = document.getElementById('picture4');
 
 // specific div
-var cyclicCheckDiv = document.getElementById('cyclicCheck');
-var cyclicCheckDetail = cyclicCheckDiv.querySelectorAll('input');
+var pressureboxDiv = document.getElementById('pressurebox');
+var pressureboxDetail = pressureboxDiv.querySelectorAll('input');
+var testmethodDiv = document.getElementById('test_method');
+var testmethodDetail = testmethodDiv.querySelectorAll('input');
+var cyclic30Detail = document.querySelectorAll('#cyclic30box input');
 var cyclicResultDiv = document.getElementById('cyclicResult');
 var cyclicResultDetail = cyclicResultDiv.querySelectorAll('input');
 var topLiftCheckDiv = document.getElementById('topLiftCheck');
 var topLiftChecDetail = topLiftCheckDiv.querySelectorAll('input');
-var breakageCheckDiv = document.getElementById('breakageCheck');
-var breakageCheckDetail = breakageCheckkDiv.querySelectorAll('input');
+var breakageCheckDiv = document.getElementById('Breakage_Location');
+var breakageCheckDetail = breakageCheckDiv.querySelectorAll('input');
 var dropResultDiv = document.getElementById('dropResult');
 var dropResultDetail = dropResultDiv.querySelectorAll('input');
 
 // button
 var btn_info = document.getElementById('btn_info');
-var btn_pict = document.getElementById('btn_pict');
+var btn_pict1 = document.getElementById('btn_pict1');
+var btn_pict2 = document.getElementById('btn_pict2');
+var btn_pict3 = document.getElementById('btn_pict3');
+var btn_pict4 = document.getElementById('btn_pict4');
 var btn_isi = document.getElementById('btn_isi');
 var btn_simpan = document.getElementById('btn_simpan');
 var btn_batal = document.getElementById('btn_batal');
@@ -128,25 +134,69 @@ var centangCheck = [];
 
 var sections = [
     { id: 'pressurebox', checkboxes: ['Dia', 'Square'] },
-    { id: 'cyclicCheck', checkboxes: [ 'Single Loops', 'Four Loops', 'Two Loops', 'Stevedore', 'Auxiliary' ] },
-    { id: 'cyclicResult', checkboxes: [ 'No visible damages occured', 'Visible damages found at*' ] },
+    { id: 'cyclicCheck', checkboxes: ['Single Loops', 'Four Loops', 'Two Loops', 'Stevedore', 'Auxiliary'] },
+    { id: 'cyclicResult', checkboxes: ['No visible damages occurred', 'Visible damages found at*'] },
     { id: 'topLiftCheck', checkboxes: ['Single Loops', 'Four Loops', 'Two Loops', 'Stevedore', 'Auxiliary'] },
     { id: 'Breakage_Location', checkboxes: ['Body fabric', 'Petal', 'Side body\'s thread', 'Bottom fabric', 'Lifting belt', 'Bottom body\'s thread', 'Starcut of bottom spout', 'Lifting belt\'s thread', 'Others :*'] },
-    { id: 'dropResult', checkboxes: ['No visible damages occured', 'Visible damages found at*'] }
+    { id: 'dropResult', checkboxes: ['No visible', 'Visible damages found at*'] }
 ];
 
+const indexMapping = {
+    1: 21, 2: 24, 3: 16, 4: 26, 5: 27,
+    6: 30, 7: 17, 8: 23, 9: 22, 10: 18,
+    11: 28, 12: 19, 13: 25, 14: 20, 15: 29
+};
 
 // fungsi berhubungan dengan ENTER
 inputs.forEach((masuk, index) => {
     masuk.addEventListener('keypress', function (event) {
         if (event.key === 'Enter') {
-            // console.log(masuk.id);
-            if (index < inputs.length - 1) {
-                inputs[index + 1].focus();
+            if (masuk.value.trim() !== '') {
+                console.log(masuk.id);
+                if (masuk.id === 'Height_Approx') {
+                    Load_Speed.focus();
+                }  else if (masuk.id.startsWith('Data_')) {
+                    handleData(masuk);
+                } else if (index + 1 < inputs.length) {
+                    inputs[index + 1].focus();
+                }
             }
         }
     });
 });
+
+// fungsi untuk autofill & buka 1" inputnya
+function handleData(masuk) {
+    const currentDataNumber = parseInt(masuk.id.split('_')[1], 10);
+    let currentIndex = Array.from(cyclic30Detail).findIndex(input => input.disabled === true);
+
+    if (currentDataNumber < 15) {
+
+        while (cyclic30Detail[currentIndex] && parseInt(cyclic30Detail[currentIndex].id.split('_')[1], 10) >= 16) {
+            currentIndex++;
+        }
+
+        if (currentIndex !== -1 && currentIndex < cyclic30Detail.length) {
+            cyclic30Detail[currentIndex].disabled = false;
+            cyclic30Detail[currentIndex].focus();
+        }
+
+        // Auto-fill the related index
+        const relatedIndex = indexMapping[currentDataNumber];
+        if (relatedIndex && relatedIndex <= cyclic30Detail.length) {
+            cyclic30Detail[relatedIndex - 1].value = masuk.value;
+        }
+    } else if (currentDataNumber == 15) {
+        cyclic30Detail[currentIndex].disabled = false;
+        cyclic30Detail[indexMapping[currentDataNumber] - 1].value = masuk.value;
+        Drop_Test.focus();
+
+        const data16Index = Array.from(cyclic30Detail).findIndex(input => input.id === 'Data_16');
+        if (data16Index !== -1) {
+            cyclic30Detail[data16Index].disabled = true;
+        }
+    }
+}
 
 // fungsi swal select pake arrow
 function handleTableKeydown(e, tableId) {
@@ -281,32 +331,76 @@ btn_info.addEventListener("click", function (e) {
                     },
                     timeout: 30000,
                     success: function (response) {
-                        // console.log('Cyclic Test Value:', response.cyclicTestValue);
+                        console.log(response.refCopy);
                         Cyclic_Test.value = response.cyclicTestValue;
 
                         if (a === 1) { // fill dari no ref isi
-                            if (response.refCopy) {
+                            if (response.refCopy === '') { // tidak ada copy ref no
                                 setTimeout(() => {
+                                    Height_Approx.disabled = false;
+                                    Height_Approx.focus();
+                                }, 70);
+
+                                pressureboxDetail.forEach(function (input) {
+                                    input.disabled = false;
+                                });
+                                Load_Speed.disabled = false;
+                                Drop_Test.disabled = false;
+
+
+                                cyclic30Detail.forEach(function (input) {
+                                    Data_1.disabled = false;
+                                    input.disabled = true;
+                                });
+
+                            } else { // ada copy ref no
+                                setTimeout(() => {
+                                    Data_1.disabled = false;
                                     Data_1.focus();
                                 }, 100);
-                            } else {
+
+                                Ketik.forEach(function (input) {
+                                    input.disabled = false;
+                                });
+                                cyclic30Detail.forEach(function (input) {
+                                    input.disabled = true;
+                                });
+
                                 if (response.additionalData && response.additionalData.length > 0) {
                                     const data = response.additionalData[0];
+                                    // console.log("Data from response:", data);
+
                                     Height_Approx.value = data.Height_Approx;
                                     dia_val.value = data.dia_val;
                                     square_val.value = data.square_val;
                                     Cyclic_Test.value = data.Cyclic_Test;
                                     Load_Speed.value = data.Load_Speed;
-                                    Drop_Test.value = data.Drop_Test;
-                                    Cyclic_Lift.value = data.Cyclic_Lift;              // belom ada var nya
-                                    Cyclic_Result.value = data.Cyclic_Result;          //
-                                    Top_Lift.value = data.Top_Lift;
                                     Top_Result.value = data.Top_Result;
-                                    Breakage_Location.value = data.Breakage_Location;  //
+                                    Drop_Test.value = data.Drop_Test;
+
+                                    pressure = data.pressure;
+                                    cLift = data.Cyclic_Lift;
+                                    cResult = data.Cyclic_Result;
+                                    tLift = data.Top_Lift;
+                                    breakage = data.Breakage_Location;
+                                    dResult = data.Drop_Result;
+
+                                    // console.log("Arrays populated:", {
+                                    //     pressure,
+                                    //     cLift,
+                                    //     cResult,
+                                    //     tLift,
+                                    //     breakage,
+                                    //     dResult
+                                    // });
+
+                                    retrieveCheck('pressurebox', pressure);
+                                    retrieveCheck('cyclicCheck', cLift);
+                                    retrieveCheck('cyclicResult', cResult);
+                                    retrieveCheck('topLiftCheck', tLift);
+                                    retrieveCheck('Breakage_Location', breakage);
+                                    retrieveCheck('dropResult', dResult);
                                 }
-                                setTimeout(() => {
-                                    Height_Approx.focus();
-                                }, 100);
                             }
                         } else { // fill dari no ref koreksi
                             if (response.additionalData && response.additionalData.length > 0) {
@@ -373,6 +467,61 @@ btn_info.addEventListener("click", function (e) {
         console.error("An error occurred:", error);
     }
 });
+
+// fungsi memunculkan centang sesuai isi database
+function retrieveCheck(sectionId, value) {
+    // console.log(`Retrieving check for section: ${sectionId} with value:`, value);
+    var section = sections.find(s => s.id === sectionId);
+
+    if (!section) {
+        console.log(`Section ${sectionId} not found.`);
+        return;
+    }
+
+    section.checkboxes.forEach(function (checkboxName) {
+        var checkbox = document.querySelector(`#${sectionId} input[name="${checkboxName}"]`);
+        if (checkbox) {
+            switch (sectionId) {
+                case 'pressurebox':
+                    checkbox.checked = (data.dia_val > '0.00') ||
+                        (data.square_val !== '');
+                    break;
+                case 'cyclicCheck':
+                    Cyclic_Lift.checked = Boolean(value);
+                    checkbox.checked = value === checkboxName;
+                    break;
+                case 'topLiftCheck':
+                    Top_Lift.checked = Boolean(value);
+                    checkbox.checked = value === checkboxName;
+                    break;
+                case 'dropResult':
+                    Drop_Result.checked = Boolean(value);
+                    checkbox.checked = value === checkboxName;
+                    break;
+                default:
+                    checkbox.checked = value.includes(checkboxName);
+                    break;
+            }
+            // console.log(`Checkbox ${checkboxName} checked: ${checkbox.checked}`);
+        }
+    });
+    if (sectionId === 'cyclicResult') {
+        if (value !== 'Visible damages found at*') {
+            damageFoundDescCy.disabled = true;
+        } else {
+            damageFoundDescCy.disabled = false;
+        }
+    }
+
+    if (sectionId === 'dropResult') {
+        if (value !== 'Visible damages found at*') {
+            damageFoundDescDrop.disabled = true;
+        } else {
+            damageFoundDescDrop.disabled = false;
+        }
+    }
+}
+
 // cek checkbox
 // fungsi track aktifitas checkbox
 function setupCheckboxListeners() {
@@ -404,22 +553,28 @@ function handleCheckboxChange(sectionId) {
 
     // simpan nilai checkbox
     switch (sectionId) {
-        case 'jenis':
-            jenis = checkedName ? [checkedName] : [];
+        case 'pressurebox':
+            pressure = checkedName ? [checkedName] : [];
             break;
-        case 'sewingMethod':
-            sewing = checkedName ? [checkedName] : [];
+        case 'cyclicCheck':
+            cLift = checkedName ? [checkedName] : [];
             break;
-        case 'stitchApprox':
-            stitch = checkedName ? [checkedName] : [];
+        case 'cyclicResult':
+            cResult = checkedName ? [checkedName] : [];
             break;
-        case 'fitDraw':
-            draw = checkedName ? [checkedName] : [];
+        case 'topLiftCheck':
+            tLift = checkedName ? [checkedName] : [];
+            break;
+        case 'Breakage_Location':
+            breakage = checkedName ? [checkedName] : [];
+            break;
+        case 'dropResult':
+            dResult = checkedName ? [checkedName] : [];
             break;
         default:
             break;
     }
-    centangCheck = [sewing.length, stitch.length, draw.length];
+    centangCheck = [pressure.length, cLift.length, cResult.length, tLift.length, breakage, length, dResult.length];
 
     // console.log(jenis);
     // console.log(sewing);
@@ -430,18 +585,61 @@ function handleCheckboxChange(sectionId) {
 // panggil fungsi cek checkbox
 setupCheckboxListeners();
 
+// fungsi mengambil gambar
+// Define an array of button IDs in the order they should be focused
+const buttonIds = ['btn_pict1', 'btn_pict2', 'btn_pict3', 'btn_pict4'];
+
+function setupImageUpload(buttonId, imageId, textInputId, nextButtonId) {
+    var button = document.getElementById(buttonId);
+    var image = document.getElementById(imageId);
+    var textInput = document.getElementById(textInputId);
+
+    button.addEventListener('click', function() {
+        var fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = 'image/png';
+        fileInput.style.display = 'none';
+
+        fileInput.addEventListener('change', function() {
+            var file = fileInput.files[0];
+            if (file) {
+                var reader = new FileReader();
+
+                reader.onload = function(e) {
+                    image.src = e.target.result;
+                    image.style.display = 'block'; // Show image
+                    textInput.value = file.name; // Update text input with file name
+
+                    // Focus on the next button if it exists
+                    if (nextButtonId) {
+                        var nextButton = document.getElementById(nextButtonId);
+                        if (nextButton) {
+                            nextButton.focus();
+                        }
+                    }
+                }
+
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.body.appendChild(fileInput);
+        fileInput.click();
+        document.body.removeChild(fileInput);
+    });
+}
+
+// Call the function for each button, passing the ID of the next button to focus on
+setupImageUpload('btn_pict1', 'imagePreview1', 'Pict_1', 'btn_pict2');
+setupImageUpload('btn_pict2', 'imagePreview2', 'Pict_2', 'btn_pict3');
+setupImageUpload('btn_pict3', 'imagePreview3', 'Pict_3', 'btn_pict4');
+setupImageUpload('btn_pict4', 'imagePreview4', 'Pict_4', null);
+
+
 var Ketik = document.querySelectorAll('input');
 
 // fungsi bisa ketik
 function enableKetik() {
-    Ketik.forEach(function (input) {
-        input.value = '';
-        input.disabled = false;
-    });
-    // inputsInBagDetail.forEach(function (input) { // menutup input pada div bag detail
-    //     input.disabled = true;
-    // });
-
     // hide button isi, tampilkan button simpan
     btn_isi.style.display = 'none';
     btn_simpan.style.display = 'inline-block';
@@ -450,6 +648,10 @@ function enableKetik() {
     btn_batal.style.display = 'inline-block';
 
     btn_info.disabled = false;
+    btn_pict1.disabled = false;
+    btn_pict2.disabled = false;
+    btn_pict3.disabled = false;
+    btn_pict4.disabled = false;
 }
 
 // fungsi gak bisa ketik
@@ -463,6 +665,7 @@ function disableKetik() {
             input.disabled = true;
         }
     });
+    btn_info.disabled = true;
 
     btn_simpan.style.display = 'none';
     btn_isi.style.display = 'inline-block';
@@ -470,8 +673,11 @@ function disableKetik() {
     btn_batal.style.display = 'none';
     btn_koreksi.style.display = 'inline-block';
 
-    btn_info.disabled = true;
     btn_hapus.disabled = false;
+    btn_pict1.disabled = true;
+    btn_pict2.disabled = true;
+    btn_pict3.disabled = true;
+    btn_pict4.disabled = true;
 }
 
 // Initially disable Ketik on page load
@@ -480,9 +686,8 @@ disableKetik();
 btn_isi.addEventListener('click', function () {
     a = 1;
     enableKetik();
-    btn_info.focus();
     btn_info.disabled = false;
-
+    btn_info.focus();
 });
 
 // Button batal event listener
@@ -495,10 +700,9 @@ btn_batal.addEventListener('click', function () {
 btn_koreksi.addEventListener('click', function () {
     a = 2;
     enableKetik();
-    btn_info.focus();
     btn_info.disabled = false;
+    btn_info.focus();
     btn_hapus.disabled = true;
-
 });
 
 btn_hapus.addEventListener('click', function () {

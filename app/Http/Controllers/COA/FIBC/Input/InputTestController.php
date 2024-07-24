@@ -61,7 +61,7 @@ class InputTestController extends Controller
                 if (empty($refCopy)) {
                     return response()->json([
                         'cyclicTestValue' => $cyclicTestValue,
-                        'refCopy' => null
+                        'refCopy' => ''
                     ]);
                 } else {
                     $selectIsi = DB::connection('ConnTestQC')->select('exec [SP_1273_QTC_LIST_FIBC] @kode = ?, @RefNo = ?', [3, $refCopy]);
@@ -83,9 +83,11 @@ class InputTestController extends Controller
                             'Drop_Result' => $data_detailIsi->Drop_Result
                         ];
                     }
+                    // dd($data_additional);
 
                     $data_full = [
                         'cyclicTestValue' => $cyclicTestValue,
+                        'refCopy' => $refCopy,
                         'additionalData' => $data_additional
                     ];
 
