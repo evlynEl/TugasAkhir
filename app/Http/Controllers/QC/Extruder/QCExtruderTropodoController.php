@@ -542,7 +542,6 @@ class QCExtruderTropodoController extends Controller
             try {
                 DB::connection('ConnExtruder')
                     ->statement('exec [SP_5298_QC_INSERT_MASTERQC] 
-        @Kode = ?, 
         @jam = ?, 
         @tgl = ?, 
         @shift = ?, 
@@ -555,7 +554,6 @@ class QCExtruderTropodoController extends Controller
         @ket = ?, 
         @idKonv = ?',
                         [
-                            0,
                             $jamDate,
                             $tgl,
                             $shift,
@@ -577,12 +575,12 @@ class QCExtruderTropodoController extends Controller
         }
 
         // insert data komposisi
+        // Insert Komposisi Data
         else if ($id == 'insertDataKomposisi') {
             $noTr = $request->input('noTr');
             $dataArray = $request->input('dataArray');
 
             try {
-                DB::beginTransaction();
                 foreach ($dataArray as $data) {
                     $idType = $data[0];
                     $jenis = $data[2];
@@ -591,11 +589,11 @@ class QCExtruderTropodoController extends Controller
 
                     DB::connection('ConnExtruder')
                         ->statement('exec [SP_5409_QC_INSERT_KOMPOSISI] 
-                            @noTr = ?, 
-                            @idType = ?, 
-                            @qty = ?, 
-                            @idKelut = ?,
-                            @idKel = ?',
+                    @noTr = ?, 
+                    @idType = ?, 
+                    @qty = ?, 
+                    @idKelut = ?,
+                    @idKel = ?',
                             [
                                 $noTr,
                                 $idType,
@@ -606,21 +604,18 @@ class QCExtruderTropodoController extends Controller
                         );
                 }
 
-                DB::commit();
                 return response()->json(['success' => 'Data berhasil disimpan.'], 200);
             } catch (\Exception $e) {
-                DB::rollback();
                 return response()->json(['error' => $e->getMessage()], 500);
             }
         }
 
-        // insert detail data (additional data)
+        // Insert Additional Data
         else if ($id == 'insertAdditionalData') {
             $noTr = $request->input('noTr');
             $dataArray = $request->input('dataArray');
 
             try {
-                DB::beginTransaction();
                 foreach ($dataArray as $data) {
                     $lebar = $data[0];
                     $denier = $data[1];
@@ -630,12 +625,12 @@ class QCExtruderTropodoController extends Controller
 
                     DB::connection('ConnExtruder')
                         ->statement('exec [SP_5298_QC_INSERT_DETAILQC] 
-                            @noTr = ?, 
-                            @lebar = ?, 
-                            @denier = ?, 
-                            @strength = ?,
-                            @elgn = ?,
-                            @ketS = ?',
+                    @noTr = ?, 
+                    @lebar = ?, 
+                    @denier = ?, 
+                    @strength = ?,
+                    @elgn = ?,
+                    @ketS = ?',
                             [
                                 $noTr,
                                 $lebar,
@@ -647,13 +642,12 @@ class QCExtruderTropodoController extends Controller
                         );
                 }
 
-                DB::commit();
                 return response()->json(['success' => 'Data berhasil disimpan.'], 200);
             } catch (\Exception $e) {
-                DB::rollback();
                 return response()->json(['error' => $e->getMessage()], 500);
             }
         }
+
 
         // update nomor counter by id trx
         else if ($id == 'updateCounter') {

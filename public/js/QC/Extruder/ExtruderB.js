@@ -473,7 +473,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 success: function (result) {
                     console.log('AJAX request succeeded:', result); // Debugging log
 
-                    tableKomposisi.clear();
+                    tableKomposisi.clear().draw();
 
                     result.forEach(function (row) {
                         const rowData = [
@@ -505,7 +505,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     noTr: nomorTransaksi.value,
                 },
                 success: function (result) {
-                    tableAdd.clear();
+                    tableAdd.clear().draw();
 
                     result.forEach(function (row) {
                         const rowData = [

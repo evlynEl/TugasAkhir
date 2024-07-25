@@ -269,65 +269,91 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // buat keypress enter tiap input
+    // buat keypress enter tiap input
+    const debounceTime = 100;
+    let debounceTimer;
+    let processingInput = false;
     inputs.forEach((input, index) => {
         input.addEventListener('keydown', async (event) => {
             if (event.key === 'Enter') {
-                if (input.id === 'ukuranLebar' || input.id === 'panjangPotongan' || input.id === 'beratBarang') {
-                    if (input.value.trim() === '' || parseFloat(input.value.trim()) <= 0) {
-                        Swal.fire({
-                            title: 'Isi Data!',
-                            text: `Isi ${input.previousElementSibling.innerText} dengan angka lebih dari 0 sebelum lanjut ke yang lain!`,
-                            icon: 'warning',
-                            confirmButtonText: 'OK'
-                        }).then(() => {
-                            input.focus();
-                        });
-                        event.preventDefault();
-                        return;
+                if (input.id === 'beratBarang') {
+                    if (debounceTimer) {
+                        clearTimeout(debounceTimer);
                     }
-                } else if (input.value.trim() === '') {
-                    input.value = '0.00';
-                }
-    
-                // Update berat reinforced dan ambil berat standart
-                if (input.id === 'panjangPotongan') {
-                    updateBeratReinforced();
-                    await ambilBeratStandart(); 
-    
-                    if (beratStandart.value == 0) {
-                        updateBeratStandart();
-                    }
-                }
-    
-                const nextIndex = index + 1;
-                if (nextIndex < inputs.length) {
+
+                    debounceTimer = setTimeout(async () => {
+                        if (!processingInput) {
+                            processingInput = true;
+                            await handleInput(input, index);
+                            processingInput = false;
+                        }
+                    }, debounceTime);
+
                     event.preventDefault();
-                    setTimeout(() => inputs[nextIndex].focus(), 0);
+                    return;
                 } else {
-                    setTimeout(() => prosesButton.focus(), 0);
+                    await handleInput(input, index);
+                    event.preventDefault();
                 }
             }
         });
     });
-    
+
+    async function handleInput(input, index) {
+        if (input.id === 'ukuranLebar' || input.id === 'panjangPotongan' || input.id === 'beratBarang') {
+            if (input.value.trim() === '' || parseFloat(input.value.trim()) <= 0) {
+                Swal.fire({
+                    title: 'Isi Data!',
+                    text: `Isi ${input.previousElementSibling.innerText} dengan angka lebih dari 0 sebelum lanjut ke yang lain!`,
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    input.focus();
+                });
+                return;
+            }
+        } else if (input.value.trim() === '') {
+            input.value = '0.00';
+        }
+
+        if (input.id === 'panjangPotongan') {
+            updateBeratReinforced();
+            await ambilBeratStandart();
+
+            if (beratStandart.value == 0) {
+                updateBeratStandart();
+            }
+        }
+
+        const nextIndex = index + 1;
+        if (nextIndex < inputs.length) {
+            setTimeout(() => inputs[nextIndex].focus(), 0);
+        } else {
+            setTimeout(() => prosesButton.focus(), 0);
+        }
+    }
+
     // Event listener untuk input panjangPotongan
     panjangPotongan.addEventListener('input', function () {
         updateBeratReinforced(); // Update berat reinforced ketika input berubah
     });
-    
+
     // Format angka 2 desimal
     function FormatNumber(num, decimalPlaces) {
         return num.toFixed(decimalPlaces);
     }
-    
+
     // Update berat reinforced
     function updateBeratReinforced() {
         if (Lebar > 0 && D_TEK9 > 0) {
             let totalReinforced = FormatNumber((panjangPotongan.value * Lebar * (waftRajutan.value * waftDenier.value) / (1143000 * D_TEK9)) / 2, 2);
             beratReinforced.value = totalReinforced;
         }
+        else {
+            beratReinforced.value = 0.00;
+        }
     }
-    
+
     // Update berat standart kalo value di database masih 0
     function updateBeratStandart() {
         if (/^BELAH/.test(JenisKrg) || /^BLH/.test(JenisKrg)) {
@@ -341,7 +367,7 @@ document.addEventListener('DOMContentLoaded', function () {
             beratStandart.value = totalStandart;
         }
     }
-    
+
     // Ambil berat standart dari server
     async function ambilBeratStandart() {
         try {
@@ -351,7 +377,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 data: { IdLog: idLog.value },
                 dataType: 'json'
             });
-    
+
             if (response && response.length > 0) {
                 beratStandart.value = response[0].beratStandart.trim();
             } else {
@@ -462,17 +488,22 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // button proses ISI
+    let canClickProsesButton = true;
+
     prosesButton.addEventListener('click', async () => {
+        if (!canClickProsesButton) return; // Prevent further clicks
+        canClickProsesButton = false; // Disable further clicks
 
         if (!allInputsFilled()) {
+            canClickProsesButton = true; // Re-enable button if inputs are not filled
             return;
         }
 
         // ISI
         if (nomorButton == 1) {
             $.ajax({
-                type: 'PUT', //update
-                url: 'CircularMojosari/prosesIsiData', //update
+                type: 'PUT', // update
+                url: 'CircularMojosari/prosesIsiData', // update
                 data: {
                     _token: csrfToken,
                     IdLog: idLog.value,
@@ -509,6 +540,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
                 error: function (xhr, status, error) {
                     console.error(error);
+                },
+                complete: function () {
+                    // Re-enable the button after a delay of 1 second
+                    setTimeout(() => {
+                        canClickProsesButton = true;
+                    }, 1000);
                 }
             });
         }
@@ -551,6 +588,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
                 error: function (xhr, status, error) {
                     console.error(error);
+                },
+                complete: function () {
+                    setTimeout(() => {
+                        canClickProsesButton = true;
+                    }, 1000);
                 }
             });
         }
@@ -578,10 +620,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
                 error: function (xhr, status, error) {
                     console.error(error);
+                },
+                complete: function () {
+                    setTimeout(() => {
+                        canClickProsesButton = true;
+                    }, 1000);
                 }
             });
         }
 
+        document.activeElement.blur();
+
     });
+
 
 });
