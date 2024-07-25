@@ -44,7 +44,6 @@ class InputTestController extends Controller
                 ];
             }
             return datatables($data_Ref)->make(true);
-
         } else if ($id == 'getCyclic') {
             $cyclic = DB::connection('ConnTestQC')->select('exec [SP_1273_QTC_MAINT_FIBC] @Kode = ?, @RefNo = ?', [10, $request->input('no_ref')]);
 
@@ -66,8 +65,22 @@ class InputTestController extends Controller
                 } else {
                     $selectIsi = DB::connection('ConnTestQC')->select('exec [SP_1273_QTC_LIST_FIBC] @kode = ?, @RefNo = ?', [3, $refCopy]);
                     // dd($request->input('no_ref'), $refCopy,  $selectIsi);
+
                     $data_additional = [];
                     foreach ($selectIsi as $data_detailIsi) {
+                        $cyclicResultParts = explode('Visible damages found at', $data_detailIsi->Cyclic_Result);
+                        $dropResultParts = explode('Visible damages found at', $data_detailIsi->Drop_Result);
+
+                        $cyclicResultRemaining = count($cyclicResultParts) > 1 ? trim($cyclicResultParts[1]) : '';
+                        $dropResultRemaining = count($dropResultParts) > 1 ? trim($dropResultParts[1]) : '';
+
+                        $breakageLocationParts = explode('Others :', $data_detailIsi->Breakage_Location);
+                        $breakageLocationRemaining = count($breakageLocationParts) > 1 ? trim($breakageLocationParts[1]) : '';
+
+                        $cyclicResult = count($cyclicResultParts) > 1 ? 'Visible damages found at' : $data_detailIsi->Cyclic_Result;
+                        $dropResult = count($dropResultParts) > 1 ? 'Visible damages found at' : $data_detailIsi->Drop_Result;
+                        $breakageLocation = count($breakageLocationParts) > 1 ? 'Others :' : $data_detailIsi->Breakage_Location;
+
                         $data_additional[] = [
                             'Height_Approx' => $data_detailIsi->Height_Approx,
                             'dia_val' => $data_detailIsi->Dia,
@@ -76,14 +89,17 @@ class InputTestController extends Controller
                             'Load_Speed' => $data_detailIsi->Load_Speed,
                             'Drop_Test' => $data_detailIsi->Drop_Test,
                             'Cyclic_Lift' => $data_detailIsi->Cyclic_Lift,
-                            'Cyclic_Result' => $data_detailIsi->Cyclic_Result,
+                            'Cyclic_Result' => $cyclicResult,
+                            'Cyclic_Result_Remaining' => $cyclicResultRemaining,
                             'Top_Lift' => $data_detailIsi->Top_Lift,
                             'Top_Result' => $data_detailIsi->Top_Result,
-                            'Breakage_Location' => $data_detailIsi->Breakage_Location,
-                            'Drop_Result' => $data_detailIsi->Drop_Result
+                            'Breakage_Location' => $breakageLocation,
+                            'Breakage_Location_Remaining' => $breakageLocationRemaining,
+                            'Drop_Result' => $dropResult,
+                            'Drop_Result_Remaining' => $dropResultRemaining
                         ];
                     }
-                    // dd($data_additional);
+                    // dd($data_additional);  
 
                     $data_full = [
                         'cyclicTestValue' => $cyclicTestValue,

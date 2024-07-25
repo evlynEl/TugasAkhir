@@ -46,38 +46,14 @@ var Drop_Test = document.getElementById('Drop_Test');
 // Test Result Section
 var Cyclic_Lift = document.getElementById('Cyclic_Lift');
 // Cyclic Test Lift Checkboxes
-var singleCCheckbox = document.getElementById('Single Loops');
-var fourCCheckbox = document.getElementById('Four Loops');
-var twoCCCheckbox = document.getElementById('Two Loops');
-var stevedoreCCheckbox = document.getElementById('Stevedore');
-var auxiliaryCCheckbox = document.getElementById('Auxalary');
-var noDamageCyCheckbox = document.getElementById('No visible damages occured');
-var damageCyCheckbox = document.getElementById('Visible damages found at*');
 var damageFoundDescCyInput = document.getElementById('damageFoundDescCy');
 // Top Lift Test Section
 var Top_Lift = document.getElementById('Top_Lift');
-var singleTCheckbox = document.getElementById('Single Loops');
-var fourTCheckbox = document.getElementById('Four Loops');
-var twoTCheckbox = document.getElementById('twoT');
-var stevedoreTCheckbox = document.getElementById('stevedoreT');
-var auxiliaryTCheckbox = document.getElementById('auxiliaryT');
 // Top Lift Test Result Input
-var Top_Result = document.getElementById('Top_Result');
-var bodyFabricCheckbox = document.getElementById('Body fabric');
-var petalCheckbox = document.getElementById('Petal');
-var sideBodyThreadCheckbox = document.getElementById('Side body\'s thread');
-var bottomFabricCheckbox = document.getElementById('Bottom fabric');
-var liftingBeltCheckbox = document.getElementById('Lifting belt');
-var bottomBodyThreadCheckbox = document.getElementById('Bottom body\'s thread');
-var starcutBottomSpoutCheckbox = document.getElementById('Starcut of bottom spout');
-var liftingBeltThreadCheckbox = document.getElementById('Lifting belt\'s thread');
-var othersCheckbox = document.getElementById('Others :*');
 var othersTextInput = document.getElementById('othersText');
 // Drop Test Section
 var Drop_Result = document.getElementById('Drop_Result');
-var noDamageDropCheckbox = document.getElementById('No visible damages occurred');
-var damageDropCheckbox = document.getElementById('Visible damages found at*');
-var damageFoundDescDropInput = document.getElementById('damageFoundDescCy');
+var damageFoundDescDropInput = document.getElementById('damageFoundDescDrop');
 
 // Picture of Breakage Section
 var Jumlah = document.getElementById('Jumlah');
@@ -93,8 +69,8 @@ var Pict_4 = document.getElementById('Pict_4');
 var picture4 = document.getElementById('picture4');
 
 // specific div
-var pressureboxDiv = document.getElementById('pressurebox');
-var pressureboxDetail = pressureboxDiv.querySelectorAll('input');
+// var pressureboxDiv = document.getElementById('pressurebox');
+// var pressureboxDetail = pressureboxDiv.querySelectorAll('input');
 var testmethodDiv = document.getElementById('test_method');
 var testmethodDetail = testmethodDiv.querySelectorAll('input');
 var cyclic30Detail = document.querySelectorAll('#cyclic30box input');
@@ -123,6 +99,7 @@ let a; // isi = 1, koreksi = 2, hapus = 3
 var refCopy;
 
 const inputs = Array.from(document.querySelectorAll('.card-body input[type="text"]:not([readonly]), .card-body input[type="date"]:not([readonly])'));
+const inputTestMethod = Array.from(document.querySelectorAll('#test_method input[type="text"]'));
 
 var pressure = [];
 var cLift = [];
@@ -135,10 +112,10 @@ var centangCheck = [];
 var sections = [
     { id: 'pressurebox', checkboxes: ['Dia', 'Square'] },
     { id: 'cyclicCheck', checkboxes: ['Single Loops', 'Four Loops', 'Two Loops', 'Stevedore', 'Auxiliary'] },
-    { id: 'cyclicResult', checkboxes: ['No visible damages occurred', 'Visible damages found at*'] },
+    { id: 'cyclicResult', checkboxes: ['No visible damages occurred', 'Visible damages found at'] },
     { id: 'topLiftCheck', checkboxes: ['Single Loops', 'Four Loops', 'Two Loops', 'Stevedore', 'Auxiliary'] },
-    { id: 'Breakage_Location', checkboxes: ['Body fabric', 'Petal', 'Side body\'s thread', 'Bottom fabric', 'Lifting belt', 'Bottom body\'s thread', 'Starcut of bottom spout', 'Lifting belt\'s thread', 'Others :*'] },
-    { id: 'dropResult', checkboxes: ['No visible', 'Visible damages found at*'] }
+    { id: 'Breakage_Location', checkboxes: ['Body fabric', 'Petal', 'Side body\'s thread', 'Bottom fabric', 'Lifting belt', 'Bottom body\'s thread', 'Starcut of bottom spout', 'Lifting belt\'s thread', 'Others :'] },
+    { id: 'dropResult', checkboxes: ['No visible damages occurred', 'Visible damages found at'] }
 ];
 
 const indexMapping = {
@@ -147,25 +124,47 @@ const indexMapping = {
     11: 28, 12: 19, 13: 25, 14: 20, 15: 29
 };
 
+// TO DO LIST
+// notif berturut turut
+// disable btn pict 4 klo centang 3 picture
+
 // fungsi berhubungan dengan ENTER
 inputs.forEach((masuk, index) => {
     masuk.addEventListener('keypress', function (event) {
         if (event.key === 'Enter') {
             if (masuk.value.trim() !== '') {
                 console.log(masuk.id);
+
                 if (masuk.id === 'Height_Approx') {
+                    Load_Speed.disabled = false;
                     Load_Speed.focus();
-                }  else if (masuk.id.startsWith('Data_')) {
+                } else if (masuk.id === 'Load_Speed') {
+                    Data_1.disabled = false;
+                    Data_1.focus();
+                } else if (masuk.id.startsWith('Data_')) {
                     handleData(masuk);
+                } else if (masuk.id === 'Drop_Test' && !areAllInputsDisabled(testmethodDetail)) {
+                    Cyclic_Lift.disabled = false;
+                    Top_Lift.disabled = false;
+                    Drop_Result.disabled = false;
                 } else if (index + 1 < inputs.length) {
                     inputs[index + 1].focus();
                 }
+            } else if (/^Data_[1-9]$|^Data_1[0-5]$/.test(masuk.id)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Inputkan Data Cyclic Top Lift Data Terlebih Dahulu!',
+                    returnFocus: false
+                }).then(() => {
+                    masuk.focus();
+                });
             }
         }
     });
 });
 
-// fungsi untuk autofill & buka 1" inputnya
+// fungsi untuk autofill & buka 1" input unk 30 data
 function handleData(masuk) {
     const currentDataNumber = parseInt(masuk.id.split('_')[1], 10);
     let currentIndex = Array.from(cyclic30Detail).findIndex(input => input.disabled === true);
@@ -179,6 +178,16 @@ function handleData(masuk) {
         if (currentIndex !== -1 && currentIndex < cyclic30Detail.length) {
             cyclic30Detail[currentIndex].disabled = false;
             cyclic30Detail[currentIndex].focus();
+            if (inputNumber >= 1 && inputNumber <= 15) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Inputkan Data Cyclic Top Lift Data Terlebih Dahulu !',
+                    returnFocus: false
+                }).then(() => {
+                    input.focus();
+                });
+            }
         }
 
         // Auto-fill the related index
@@ -189,6 +198,7 @@ function handleData(masuk) {
     } else if (currentDataNumber == 15) {
         cyclic30Detail[currentIndex].disabled = false;
         cyclic30Detail[indexMapping[currentDataNumber] - 1].value = masuk.value;
+        Drop_Test.disabled = false;
         Drop_Test.focus();
 
         const data16Index = Array.from(cyclic30Detail).findIndex(input => input.id === 'Data_16');
@@ -197,6 +207,66 @@ function handleData(masuk) {
         }
     }
 }
+
+// fungsi cek apakah input pd div tertentu disabled
+function areAllInputsDisabled(inputs) {
+    return Array.from(inputs).every(input => input.disabled);
+}
+
+// fungsi unk membuka input pd div tertentu jika checkbox tertentu di centang
+function toggleInputs(checkboxId, divId, descId) {
+    const checkbox = document.getElementById(checkboxId);
+    const div = document.getElementById(divId);
+    const descInput = document.getElementById(descId);
+
+    checkbox.addEventListener("change", function () {
+        console.log(`Checkbox ${checkboxId} changed to ${checkbox.checked}`);
+        const inputs = div.querySelectorAll('input');
+
+        if (checkbox.checked) {
+            inputs.forEach(input => {
+                input.disabled = false;
+                damageFoundDescCyInput.disabled = true;
+                othersText.disabled = true;
+                damageFoundDescDropInput.disabled = true;
+            });
+
+            if (checkboxId === 'Cyclic_Lift') {
+                document.querySelector('#cyclicResult input[name="Visible damages found at"]').addEventListener('change', function () {
+                    descInput.disabled = false;
+                    damageFoundDescCyInput.focus();
+                });
+            } else if (checkboxId === 'Top_Lift') {
+                document.querySelector('#Breakage_Location input[name="Others"]').addEventListener('change', function () {
+                    descInput.disabled = false;
+                    othersTextInput.focus();
+                });
+            } else if (checkboxId === 'Drop_Result') {
+                document.querySelector('#dropResult input[name="Visible damages found at"]').addEventListener('change', function () {
+                    descInput.disabled = false;
+                    damageFoundDescDropInput.focus();
+                });
+            }
+        }
+        // else {
+        //     inputs.forEach(input => {
+        //         if (!input.disabled) {
+        //             input.disabled = true;
+        //             console.log(`Input ${input.id} disabled set to ${input.disabled}`);
+        //         }
+        //     });
+        //     descInput.disabled = true;
+        // }
+    });
+}
+
+// memanggil fungsi membuka div centang
+toggleInputs("Dia", "inputDia", null);
+toggleInputs("Square", "inputSq", null);
+toggleInputs("Cyclic_Lift", "cyclicbesar", "damageFoundDescCy");
+toggleInputs("Top_Lift", "topbesar", "othersText");
+toggleInputs("Drop_Result", "dropResult", "damageFoundDescDrop");
+
 
 // fungsi swal select pake arrow
 function handleTableKeydown(e, tableId) {
@@ -331,27 +401,20 @@ btn_info.addEventListener("click", function (e) {
                     },
                     timeout: 30000,
                     success: function (response) {
-                        console.log(response.refCopy);
+                        // console.log(response.refCopy);
                         Cyclic_Test.value = response.cyclicTestValue;
 
                         if (a === 1) { // fill dari no ref isi
                             if (response.refCopy === '') { // tidak ada copy ref no
                                 setTimeout(() => {
-                                    Height_Approx.disabled = false;
-                                    Height_Approx.focus();
+                                    // Height_Approx.disabled = false;
+                                    diaCheckbox.disabled = false;
+                                    squareCheckbox.disabled = false;
+                                    // Height_Approx.focus();
+
+                                    Drop_Test.disabled = false;
+                                    Drop_Test.focus();
                                 }, 70);
-
-                                pressureboxDetail.forEach(function (input) {
-                                    input.disabled = false;
-                                });
-                                Load_Speed.disabled = false;
-                                Drop_Test.disabled = false;
-
-
-                                cyclic30Detail.forEach(function (input) {
-                                    Data_1.disabled = false;
-                                    input.disabled = true;
-                                });
 
                             } else { // ada copy ref no
                                 setTimeout(() => {
@@ -385,21 +448,20 @@ btn_info.addEventListener("click", function (e) {
                                     breakage = data.Breakage_Location;
                                     dResult = data.Drop_Result;
 
-                                    // console.log("Arrays populated:", {
-                                    //     pressure,
-                                    //     cLift,
-                                    //     cResult,
-                                    //     tLift,
-                                    //     breakage,
-                                    //     dResult
-                                    // });
+                                    retrieveCheck('pressurebox', pressure, data);
+                                    retrieveCheck('cyclicCheck', cLift, data);
+                                    retrieveCheck('cyclicResult', cResult, data);
+                                    retrieveCheck('topLiftCheck', tLift, data);
+                                    retrieveCheck('Breakage_Location', breakage, data);
+                                    retrieveCheck('dropResult', dResult, data);
 
-                                    retrieveCheck('pressurebox', pressure);
-                                    retrieveCheck('cyclicCheck', cLift);
-                                    retrieveCheck('cyclicResult', cResult);
-                                    retrieveCheck('topLiftCheck', tLift);
-                                    retrieveCheck('Breakage_Location', breakage);
-                                    retrieveCheck('dropResult', dResult);
+                                    // if (data.Cyclic_Result_Remaining !== '') {
+                                    //     damageFoundDescCyInput.value = data.Cyclic_Result_Remaining;
+                                    // } else if (data.Drop_Result_Remaining !== '') {
+                                    //     damageFoundDescDropInput.value = data.Drop_Result_Remaining;
+                                    // } else if (data.Breakage_Location_Remaining !== '') {
+                                    //     othersText.value = data.Breakage_Location_Remaining;
+                                    // }
                                 }
                             }
                         } else { // fill dari no ref koreksi
@@ -458,7 +520,7 @@ btn_info.addEventListener("click", function (e) {
                     error: function (xhr, status, error) {
                         console.error("AJAX request failed:", status, error);
                         Swal.fire('Error', 'AJAX request failed: ' + status + ' ' + error, 'error');
-                        top1.focus();
+                        Data_1.focus();
                     }
                 });
             }
@@ -469,12 +531,11 @@ btn_info.addEventListener("click", function (e) {
 });
 
 // fungsi memunculkan centang sesuai isi database
-function retrieveCheck(sectionId, value) {
-    // console.log(`Retrieving check for section: ${sectionId} with value:`, value);
+function retrieveCheck(sectionId, value, data) {
     var section = sections.find(s => s.id === sectionId);
 
     if (!section) {
-        console.log(`Section ${sectionId} not found.`);
+        console.error(`Section with id ${sectionId} not found.`);
         return;
     }
 
@@ -483,8 +544,8 @@ function retrieveCheck(sectionId, value) {
         if (checkbox) {
             switch (sectionId) {
                 case 'pressurebox':
-                    checkbox.checked = (data.dia_val > '0.00') ||
-                        (data.square_val !== '');
+                    diaCheckbox.checked = (data.dia_val > '0.00');
+                    squareCheckbox.checked = (data.square_val !== '');
                     break;
                 case 'cyclicCheck':
                     Cyclic_Lift.checked = Boolean(value);
@@ -493,34 +554,31 @@ function retrieveCheck(sectionId, value) {
                 case 'topLiftCheck':
                     Top_Lift.checked = Boolean(value);
                     checkbox.checked = value === checkboxName;
+                    if (checkboxName === 'Others :') {
+                        othersTextInput.value = data.Breakage_Location_Remaining;
+                    }
                     break;
                 case 'dropResult':
                     Drop_Result.checked = Boolean(value);
                     checkbox.checked = value === checkboxName;
+                    if (checkboxName === 'Visible damages found at') {
+                        damageFoundDescDropInput.value = data.Drop_Result_Remaining
+                    }
+                    break;
+                case 'cyclicResult':
+                    checkbox.checked = value === checkboxName;
+                    if (checkboxName === 'Visible damages found at') {
+                        damageFoundDescCyInput.value = data.Cyclic_Result_Remaining
+                    }
                     break;
                 default:
                     checkbox.checked = value.includes(checkboxName);
                     break;
             }
-            // console.log(`Checkbox ${checkboxName} checked: ${checkbox.checked}`);
         }
     });
-    if (sectionId === 'cyclicResult') {
-        if (value !== 'Visible damages found at*') {
-            damageFoundDescCy.disabled = true;
-        } else {
-            damageFoundDescCy.disabled = false;
-        }
-    }
-
-    if (sectionId === 'dropResult') {
-        if (value !== 'Visible damages found at*') {
-            damageFoundDescDrop.disabled = true;
-        } else {
-            damageFoundDescDrop.disabled = false;
-        }
-    }
 }
+
 
 // cek checkbox
 // fungsi track aktifitas checkbox
@@ -594,18 +652,18 @@ function setupImageUpload(buttonId, imageId, textInputId, nextButtonId) {
     var image = document.getElementById(imageId);
     var textInput = document.getElementById(textInputId);
 
-    button.addEventListener('click', function() {
+    button.addEventListener('click', function () {
         var fileInput = document.createElement('input');
         fileInput.type = 'file';
         fileInput.accept = 'image/png';
         fileInput.style.display = 'none';
 
-        fileInput.addEventListener('change', function() {
+        fileInput.addEventListener('change', function () {
             var file = fileInput.files[0];
             if (file) {
                 var reader = new FileReader();
 
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     image.src = e.target.result;
                     image.style.display = 'block'; // Show image
                     textInput.value = file.name; // Update text input with file name
@@ -634,6 +692,117 @@ setupImageUpload('btn_pict1', 'imagePreview1', 'Pict_1', 'btn_pict2');
 setupImageUpload('btn_pict2', 'imagePreview2', 'Pict_2', 'btn_pict3');
 setupImageUpload('btn_pict3', 'imagePreview3', 'Pict_3', 'btn_pict4');
 setupImageUpload('btn_pict4', 'imagePreview4', 'Pict_4', null);
+
+
+// fungsi cek semua form yang kosong
+function allInputsFilled() {
+    for (const input of inputTestMethod) {
+        const inputId = input.id;
+        const inputNumber = parseInt(inputId.split('_')[1], 10);
+
+        if (inputId.startsWith('Data_') && (inputNumber >= 1 && inputNumber <= 15)) {
+            continue;
+        }
+        if (input.value.trim() === '') {
+            const inputId = input.id;
+            const inputNumber = parseInt(inputId.split('_')[1], 10);
+
+            let label = '';
+                let parentElement = input.parentElement;
+                while (parentElement) {
+                    if (parentElement.tagName === 'DIV' && parentElement.classList.contains('form-group')) {
+                        const labelElement = parentElement.querySelector('label[for="' + input.id + '"]');
+                        if (labelElement) {
+                            label = labelElement.innerText.trim();
+                            break;
+                        }
+                    }
+                    parentElement = parentElement.parentElement;
+                }
+
+                if (label) {
+                    console.log(`Found label: ${label} for input: ${inputId}`);
+                    Swal.fire({
+                        icon: 'question',
+                        text: `Apakah Data ${label} Mau Anda Lengkapi ?`,
+                        showCancelButton: true,
+                        confirmButtonText: 'Ya',
+                        cancelButtonText: 'Tidak'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            requestAnimationFrame(() => {
+                                input.focus();
+                            });
+                        } else {
+                            const nextInput = inputTestMethod.find(i => i.value.trim() === '' && parseInt(i.id.split('_')[1], 10) > inputNumber);
+                            if (nextInput) {
+                                requestAnimationFrame(() => {
+                                    nextInput.focus();
+                                });
+                            }
+                        }
+                    });
+                } else {
+                    console.log(`No label found for input: ${inputId}`);
+                }
+                return false;
+        }
+    }
+    return true;
+}
+
+
+function focusOnInput(input) {
+    requestAnimationFrame(() => {
+        input.focus();
+    });
+}
+
+async function allInputsFilled() {
+    for (const input of inputTestMethod) {
+        if (input.value.trim() === '') {
+            const inputId = input.id;
+            const inputNumber = parseInt(inputId.split('_')[1], 10);
+
+            let label = '';
+                let parentElement = input.parentElement;
+                while (parentElement) {
+                    if (parentElement.tagName === 'DIV' && parentElement.classList.contains('form-group')) {
+                        const labelElement = parentElement.querySelector('label[for="' + input.id + '"]');
+                        if (labelElement) {
+                            label = labelElement.innerText.trim();
+                            break;
+                        }
+                    }
+                    parentElement = parentElement.parentElement;
+                }
+
+                if (label) {
+                    console.log(`Found label: ${label} for input: ${inputId}`);
+                    const result = await Swal.fire({
+                        icon: 'question',
+                        text: `Apakah Data ${label} Mau Anda Lengkapi ?`,
+                        showCancelButton: true,
+                        confirmButtonText: 'Ya',
+                        cancelButtonText: 'Tidak'
+                    });
+
+                    if (result.isConfirmed) {
+                        focusOnInput(input);
+                    } else {
+                        const nextInput = inputTestMethod.find(i => i.value.trim() === '' && parseInt(i.id.split('_')[1], 10) > inputNumber);
+                        if (nextInput) {
+                            focusOnInput(nextInput);
+                        }
+                    }
+                } else {
+                    console.log(`No label found for input: ${inputId}`);
+                }
+                return false;
+        }
+    }
+    return true;
+}
 
 
 var Ketik = document.querySelectorAll('input');
@@ -696,6 +865,16 @@ btn_batal.addEventListener('click', function () {
     disableKetik();
 });
 
+btn_simpan.addEventListener('click', async function (e) {
+    if (a === 1) { // ISI
+        if (!(await allInputsFilled())) {
+            return;
+        }
+        console.log("BERHASIL SIMPAN");
+    } else if (a === 2) { // KOREKSI
+    } else if (a === 3) { //HAPUS
+    }
+});
 
 btn_koreksi.addEventListener('click', function () {
     a = 2;
@@ -709,9 +888,3 @@ btn_hapus.addEventListener('click', function () {
     a = 3;
 });
 
-btn_simpan.addEventListener('click', async function (e) {
-    if (a === 1) { // ISI
-    } else if (a === 2) { // KOREKSI
-    } else if (a === 3) { //HAPUS
-    }
-});

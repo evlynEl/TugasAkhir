@@ -1199,6 +1199,13 @@ function enableInputs() {
 
 // fungsi unk submit isi
 async function submitForm(jenisString, sewingString, stitchString, drawString) {
+    function formatInput(input) {
+        return input !== undefined && !isNaN(input) ? parseFloat(input).toFixed(2) : '0.00';
+    }
+
+    let parsedInputs1 = inputs1.map(input => parseFloat(input.value) || 0);
+    let parsedInputs2 = inputs2.map(input => parseFloat(input.value) || 0);
+
     $.ajax({
         type: 'POST',
         url: 'FrmInputFIBC',
@@ -1216,12 +1223,12 @@ async function submitForm(jenisString, sewingString, stitchString, drawString) {
             reinforced: reinforced.value.trim(),
             colour: colour.value.trim(),
 
-            panjang1: parsedInputs1[0] !== undefined ? parsedInputs1[0].toFixed(2) : '0.00',
-            lebar1: parsedInputs1[1] !== undefined ? parsedInputs1[1].toFixed(2) : '0.00',
-            waft1: parsedInputs1[2] !== undefined ? parsedInputs1[2].toFixed(2) : '0.00',
-            denierWaft1: parsedInputs1[3] !== undefined ? parsedInputs1[3].toFixed(2) : '0.00',
-            weft1: parsedInputs1[4] !== undefined ? parsedInputs1[4].toFixed(2) : '0.00',
-            denierWeft1: parsedInputs1[5] !== undefined ? parsedInputs1[5].toFixed(2) : '0.00',
+            panjang1: formatInput(parsedInputs1[0]),
+            lebar1: formatInput(parsedInputs1[1]),
+            waft1: formatInput(parsedInputs1[2]),
+            denierWaft1: formatInput(parsedInputs1[3]),
+            weft1: formatInput(parsedInputs1[4]),
+            denierWeft1: formatInput(parsedInputs1[5]),
             weight1: weight1.value ? weight1.value.trim() : 0.00,
 
             swl: swl.value.trim(),
@@ -1233,12 +1240,12 @@ async function submitForm(jenisString, sewingString, stitchString, drawString) {
             stitch: stitchString.trim(),
             draw: drawString.trim(),
 
-            panjang2: parsedInputs2[0] !== undefined ? parsedInputs2[0].toFixed(2) : '0.00',
-            lebar2: parsedInputs2[1] !== undefined ? parsedInputs2[1].toFixed(2) : '0.00',
-            waft2: parsedInputs2[2] !== undefined ? parsedInputs2[2].toFixed(2) : '0.00',
-            denierWaft2: parsedInputs2[3] !== undefined ? parsedInputs2[3].toFixed(2) : '0.00',
-            weft2: parsedInputs2[4] !== undefined ? parsedInputs2[4].toFixed(2) : '0.00',
-            denierWeft2: parsedInputs2[5] !== undefined ? parsedInputs2[5].toFixed(2) : '0.00',
+            panjang2: formatInput(parsedInputs2[0]),
+            lebar2: formatInput(parsedInputs2[1]),
+            waft2: formatInput(parsedInputs2[2]),
+            denierWaft2: formatInput(parsedInputs2[3]),
+            weft2: formatInput(parsedInputs2[4]),
+            denierWeft2: formatInput(parsedInputs2[5]),
             weight2: weight2.value ? weight2.value.trim() : 0.00,
 
             topS1: topS1.value.trim(),
@@ -1288,7 +1295,12 @@ async function submitForm(jenisString, sewingString, stitchString, drawString) {
 
 // fungsi unk submit koreksi
 async function koreksiFIBC(jenisString, sewingString, stitchString, drawString) {
-    console.log(bottomE5.value);
+    function formatInput(input) {
+        return input !== undefined && !isNaN(input) ? parseFloat(input).toFixed(2) : '0.00';
+    }
+
+    let parsedInputs1 = inputs1.map(input => parseFloat(input.value) || 0);
+    let parsedInputs2 = inputs2.map(input => parseFloat(input.value) || 0);
 
     $.ajax({
         url: "FrmInputFIBC/koreksiDetailFIBC",
@@ -1307,12 +1319,12 @@ async function koreksiFIBC(jenisString, sewingString, stitchString, drawString) 
             reinforced: reinforced.value.trim(),
             colour: colour.value.trim(),
 
-            panjang1: parsedInputs1[0] !== undefined ? parsedInputs1[0].toFixed(2) : '0.00',
-            lebar1: parsedInputs1[1] !== undefined ? parsedInputs1[1].toFixed(2) : '0.00',
-            waft1: parsedInputs1[2] !== undefined ? parsedInputs1[2].toFixed(2) : '0.00',
-            denierWaft1: parsedInputs1[3] !== undefined ? parsedInputs1[3].toFixed(2) : '0.00',
-            weft1: parsedInputs1[4] !== undefined ? parsedInputs1[4].toFixed(2) : '0.00',
-            denierWeft1: parsedInputs1[5] !== undefined ? parsedInputs1[5].toFixed(2) : '0.00',
+            panjang1: formatInput(parsedInputs1[0]),
+            lebar1: formatInput(parsedInputs1[1]),
+            waft1: formatInput(parsedInputs1[2]),
+            denierWaft1: formatInput(parsedInputs1[3]),
+            weft1: formatInput(parsedInputs1[4]),
+            denierWeft1: formatInput(parsedInputs1[5]),
             weight1: weight1.value ? weight1.value.trim() : '0.00',
 
             swl: swl.value.trim(),
@@ -1324,13 +1336,12 @@ async function koreksiFIBC(jenisString, sewingString, stitchString, drawString) 
             stitch: stitchString.trim(),
             draw: drawString.trim(),
 
-            panjang2: parsedInputs2[0] !== undefined ? parsedInputs2[0].toFixed(2) : '0.00',
-            lebar2: parsedInputs2[1] !== undefined ? parsedInputs2[1].toFixed(2) : '0.00',
-            waft2: parsedInputs2[2] !== undefined ? parsedInputs2[2].toFixed(2) : '0.00',
-            denierWaft2: parsedInputs2[3] !== undefined ? parsedInputs2[3].toFixed(2) : '0.00',
-            weft2: parsedInputs2[4] !== undefined ? parsedInputs2[4].toFixed(2) : '0.00',
-            denierWeft2: parsedInputs2[5] !== undefined ? parsedInputs2[5].toFixed(2) : '0.00',
-
+            panjang2: formatInput(parsedInputs2[0]),
+            lebar2: formatInput(parsedInputs2[1]),
+            waft2: formatInput(parsedInputs2[2]),
+            denierWaft2: formatInput(parsedInputs2[3]),
+            weft2: formatInput(parsedInputs2[4]),
+            denierWeft2: formatInput(parsedInputs2[5]),
             weight2: weight2.value ? weight2.value.trim() : '0.00',
 
             topS1: topS1.value.trim(),
