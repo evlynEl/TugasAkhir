@@ -868,8 +868,8 @@ document.addEventListener('DOMContentLoaded', function () {
                             $('#tableKomposisi').DataTable().row.add([
                                 selectedRow.IdType.trim(),
                                 selectedRow.Merk.trim(),
-                                result[0].StatusType.trim(),
-                                result[0].NamaKelompok.trim(),
+                                'BB',
+                                'Bahan Baku',
                                 result[0].Quantity.trim(),
                                 0
                             ]).draw(false);

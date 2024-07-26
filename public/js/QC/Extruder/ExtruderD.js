@@ -400,7 +400,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     currentIndex = null;
                     Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_noTransaksi'));
-                    
+
                 },
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -824,23 +824,19 @@ document.addEventListener('DOMContentLoaded', function () {
                             $('#tableKomposisi').DataTable().row.add([
                                 selectedRow.IdType.trim(),
                                 selectedRow.Merk.trim(),
-                                result[0].NamaKelompok.trim(),
+                                'Bahan Baku',
                                 result[0].Quantity.trim(),
                                 0,
-                                result[0].StatusType.trim(),
                             ]).draw(false);
 
-                            let StatusTypeVariable = result[0].StatusType.trim();
-                            let NamaKelompokVariable = result[0].NamaKelompok.trim();
                             let QuantityVariable = result[0].Quantity.trim();
 
                             dataArrKomposisi.push([
                                 selectedRow.IdType.trim(),
                                 selectedRow.Merk.trim(),
-                                NamaKelompokVariable,
+                                'Bahan Baku',
                                 QuantityVariable,
                                 0,
-                                StatusTypeVariable,
                             ]);
                         },
                         error: function (xhr, status, error) {
@@ -934,48 +930,75 @@ document.addEventListener('DOMContentLoaded', function () {
                     const selectedRow = result.value;
 
                     var typeSelected;
+                    var bahanPembantu;
+
+                    // Decode if necessary
+                    const decodedMerk = decodeHtmlEntities(selectedRow.Merk);
+                    console.log("Selected Row Merk:", decodedMerk);
+
+                    function setValue(element, value) {
+                        // Set value directly without encoding
+                        element.value = value;
+                    }
+
+                    function decodeHtmlEntities(str) {
+                        let textarea = document.createElement('textarea');
+                        textarea.innerHTML = str;
+                        return textarea.value;
+                    }
+                    
 
                     switch (selectedButtonQuantity) {
                         case 'getCalpetCaco3':
-                            calpetCaco3.value = selectedRow.IdType.trim();
-                            typeCalpetCaco3.value = selectedRow.Merk.trim();
+                            setValue(calpetCaco3, selectedRow.IdType.trim());
+                            setValue(typeCalpetCaco3, selectedRow.Merk.trim());
                             typeSelected = calpetCaco3.value.trim();
+                            bahanPembantu = 'CaCo3';
                             break;
 
                         case 'getMasterBath':
-                            masterBath.value = selectedRow.IdType.trim();
-                            typeMasterBath.value = selectedRow.Merk.trim();
+                            setValue(masterBath, selectedRow.IdType.trim());
+                            setValue(typeMasterBath, selectedRow.Merk.trim());
                             typeSelected = masterBath.value.trim();
+                            bahanPembantu = 'Masterbath';
                             break;
 
                         case 'getUv':
-                            uv.value = selectedRow.IdType.trim();
-                            typeUv.value = selectedRow.Merk.trim();
+                            // Decode HTML entities if needed
+                            const decodedMerk = decodeHtmlEntities(selectedRow.Merk.trim());
+                            setValue(uv, selectedRow.IdType.trim());
+                            setValue(typeUv, decodedMerk);
                             typeSelected = uv.value.trim();
+                            bahanPembantu = 'UV';
                             break;
 
-                        case 'getLdpe':
-                            ldpe.value = selectedRow.IdType.trim();
-                            typeLdpe.value = selectedRow.Merk.trim();
-                            typeSelected = ldpe.value.trim();
-                            break;
 
                         case 'getAntiStatic':
-                            antiStatic.value = selectedRow.IdType.trim();
-                            typeAntiStatic.value = selectedRow.Merk.trim();
+                            setValue(antiStatic, selectedRow.IdType.trim());
+                            setValue(typeAntiStatic, selectedRow.Merk.trim());
                             typeSelected = antiStatic.value.trim();
+                            bahanPembantu = 'Anti Static';
                             break;
 
                         case 'getPeletan':
-                            peletan.value = selectedRow.IdType.trim();
-                            typePeletan.value = selectedRow.Merk.trim();
+                            setValue(peletan, selectedRow.IdType.trim());
+                            setValue(typePeletan, selectedRow.Merk.trim());
                             typeSelected = peletan.value.trim();
+                            bahanPembantu = 'Pelletan';
                             break;
 
                         case 'getAdditif':
-                            additif.value = selectedRow.IdType.trim();
-                            typeAdditif.value = selectedRow.Merk.trim();
+                            setValue(additif, selectedRow.IdType.trim());
+                            setValue(typeAdditif, selectedRow.Merk.trim());
                             typeSelected = additif.value.trim();
+                            bahanPembantu = 'Additif';
+                            break;
+
+                        case 'getLdpe':
+                            setValue(ldpe, selectedRow.IdType.trim());
+                            setValue(typeLdpe, selectedRow.Merk.trim());
+                            typeSelected = ldpe.value.trim();
+                            bahanPembantu = 'LDPE';
                             break;
 
                         default:
@@ -998,11 +1021,9 @@ document.addEventListener('DOMContentLoaded', function () {
                         },
                         success: function (result) {
 
-                            let StatusTypeVariable = result[0].StatusType.trim();
-                            let NamaKelompokVariable = result[0].NamaKelompok.trim();
                             let QuantityVariable = result[0].Quantity.trim();
                             let ProsentaseVariable = result[0].Prosentase.trim();
-                            let merkSwal = result[0].Merk.trim();
+                            let merkSwal = selectedRow.Merk.trim();
 
                             let dataExists = false;
                             $("#tableKomposisi tbody tr").each(function () {
@@ -1024,20 +1045,17 @@ document.addEventListener('DOMContentLoaded', function () {
                                 $('#tableKomposisi').DataTable().row.add([
                                     selectedRow.IdType.trim(),
                                     selectedRow.Merk.trim(),
-                                    NamaKelompokVariable,
+                                    bahanPembantu,
                                     QuantityVariable,
                                     ProsentaseVariable,
-                                    StatusTypeVariable,
                                 ]).draw(false);
 
-                                // Push data to dataArrKomposisi array
                                 dataArrKomposisi.push([
                                     selectedRow.IdType.trim(),
                                     selectedRow.Merk.trim(),
-                                    NamaKelompokVariable,
+                                    bahanPembantu,
                                     QuantityVariable,
                                     ProsentaseVariable,
-                                    StatusTypeVariable,
                                 ]);
 
                                 switch (selectedButtonQuantity) {

@@ -162,7 +162,7 @@ class QCExtruderBController extends Controller
                 @nama = ?,
                 @benang = ?',
                     [
-                        1,
+                        5,
                         $tgl,
                         $shift,
                         $nama,
@@ -193,14 +193,14 @@ class QCExtruderBController extends Controller
                 @shift = ?,
                 @nama = ?,
                 @benang = ?,
-                @type = ?', [4, $tgl, $shift, $nama, $benang, $type]);
+                @type = ?', [6, $tgl, $shift, $nama, $benang, $type]);
             $quantityBahanBakuArr = [];
             foreach ($quantityBahanBakuConn as $listQuantity) {
                 $quantityBahanBakuArr[] = [
                     'Quantity' => $listQuantity->JumlahTritier,
-                    'Prosentase' => $listQuantity->Persentase,
-                    'StatusType' => $listQuantity->StatusType,
-                    'NamaKelompok' => $listQuantity->NamaKelompok
+                    // 'Prosentase' => $listQuantity->Persentase,
+                    // 'StatusType' => $listQuantity->StatusType,
+                    // 'NamaKelompok' => $listQuantity->NamaKelompok
                 ];
             }
             return response()->json($quantityBahanBakuArr);
@@ -219,8 +219,8 @@ class QCExtruderBController extends Controller
             // kalau buat table
             switch ($id) {
                 case 'getCalpetCaco3':
-                    $kelompok = 'CACO3';
-                    $kelompok1 = 'Calpet';
+                    $kelompok = 'Calpet';
+                    $kelompok1 = 'CACO3';
                     break;
 
                 case 'getMasterBath':
@@ -259,7 +259,7 @@ class QCExtruderBController extends Controller
                 @kelompok = ?,
                 @kelompok1 = ?',
                     [
-                        2,
+                        7,
                         $tgl,
                         $shift,
                         $nama,
@@ -291,8 +291,8 @@ class QCExtruderBController extends Controller
 
             switch ($id) {
                 case 'getCalpetCaco3Quantity':
-                    $kelompok = 'CACO3';
-                    $kelompok1 = 'Calpet';
+                    $kelompok = 'Calpet';
+                    $kelompok1 = 'CACO3';
                     break;
 
                 case 'getMasterBathQuantity':
@@ -331,7 +331,7 @@ class QCExtruderBController extends Controller
                 @kelompok1 = ?,
                 @type = ?',
                     [
-                        3,
+                        8,
                         $tgl,
                         $shift,
                         $nama,
@@ -347,8 +347,8 @@ class QCExtruderBController extends Controller
                 $qtyArr[] = [
                     'Quantity' => $listQuantity->JumlahTritier,
                     'Prosentase' => $listQuantity->Persentase,
-                    'StatusType' => $listQuantity->StatusType,
-                    'NamaKelompok' => $listQuantity->NamaKelompok,
+                    // 'StatusType' => $listQuantity->StatusType,
+                    // 'NamaKelompok' => $listQuantity->NamaKelompok,
                     'Merk' => $listQuantity->Merk
                 ];
             }
@@ -501,25 +501,71 @@ class QCExtruderBController extends Controller
             try {
                 foreach ($dataArray as $data) {
                     $idType = $data[0];
-                    $jenis = $data[5];
-                    $kelompok = $data[2];
-                    $qty = ($jenis === "BB") ? $data[3] : $data[4];
+                    $tipeBahan = $data[2];
+                    $persentase = $data[4];
 
-                    DB::connection('ConnExtruder')
-                        ->statement('exec [SP_5409_QC_INSERT_KOMPOSISI] 
-                    @noTr = ?, 
-                    @idType = ?, 
-                    @qty = ?, 
-                    @idKelut = ?,
-                    @idKel = ?',
-                            [
-                                $noTr,
-                                $idType,
-                                $qty,
-                                $jenis,
-                                $kelompok
-                            ]
-                        );
+                    switch ($tipeBahan) {
+                        case 'Bahan Baku':
+                            $spString = 'SP_5298_QC_INSERT_BB';
+                            DB::connection('ConnExtruder')
+                                ->statement(
+                                    "exec [$spString] 
+                                    @noTr = ?, 
+                                    @idBahan = ?",
+                                    [
+                                        $noTr,
+                                        $idType,
+                                    ]
+                                );
+                            break;
+                        case 'CaCo3':
+                            $spString = 'SP_5298_QC_INSERT_CALPET';
+                            $spId = '@idCalpet';
+                            $spName = '@Calpet';
+                            break;
+                        case 'Masterbath':
+                            $spString = 'SP_5298_QC_INSERT_MB';
+                            $spId = '@idMB';
+                            $spName = '@MB';
+                            break;
+                        case 'UV':
+                            $spString = 'SP_5298_QC_INSERT_UV';
+                            $spId = '@idUV';
+                            $spName = '@UV';
+                            break;
+                        case 'Anti Static':
+                            $spString = 'SP_5298_QC_INSERT_AS';
+                            $spId = '@idAS';
+                            $spName = '@AS';
+                            break;
+                        case 'Peletan':
+                            $spString = 'SP_5298_QC_INSERT_PELETAN';
+                            $spId = '@idPeletan';
+                            $spName = '@Peletan';
+                            break;
+                        case 'Additif':
+                            $spString = 'SP_5298_QC_INSERT_ADDITIF';
+                            $spId = '@idAdditif';
+                            $spName = '@Additif';
+                            break;
+                        default:
+                            break;
+                    }
+
+                    if ($spString !== 'SP_5298_QC_INSERT_BB' && $spId && $spName) {
+                        DB::connection('ConnExtruder')
+                            ->statement(
+                                "exec [$spString] 
+                                @noTr = ?, 
+                                $spId = ?, 
+                                $spName = ?",
+                                [
+                                    $noTr,
+                                    $idType,
+                                    $persentase
+                                ]
+                            );
+                    }
                 }
 
                 return response()->json(['success' => 'Data berhasil disimpan.'], 200);
