@@ -24,7 +24,109 @@ class InputTestController extends Controller
 
     public function store(Request $request)
     {
-        //
+        $referenceNo = $request->input('refNo');
+        $customer = $request->input('customer');
+        $heightApprox = $request->input('Height_Approx');
+        $diaVal = $request->input('dia_val');
+        $squareVal = $request->input('square_val');
+        $cyclicTest = $request->input('Cyclic_Test');
+        $loadSpeed = $request->input('Load_Speed');
+        $cyclicLift = $request->input('Cyclic_Lift');
+        $cyclicResult = $request->input('Cyclic_Result');
+        $damageFoundDescCy = $request->input('damageFoundDescCy');
+        $topLift = $request->input('Top_Lift');
+        $breakageLocation = $request->input('Breakage_Location');
+        $othersText = $request->input('othersText');
+        $dropResult = $request->input('Drop_Result');
+        $damageFoundDescDrop = $request->input('damageFoundDescDrop');
+        $dropTest = $request->input('Drop_Test');
+        $jumlah = $request->input('Jumlah');
+        $UserInput = Auth::user()->NomorUser;
+
+
+        // Data from Data_1 to Data_30
+        $dataValues = [];
+        for ($i = 1; $i <= 30; $i++) {
+            $dataValues["Data_$i"] = $request->input("Data_$i");
+        }
+
+        // Data for pictures
+        $pictures = [
+            'picture1' => $request->input('picture1'),
+            'picture2' => $request->input('picture2'),
+            'picture3' => $request->input('picture3'),
+            'picture4' => $request->input('picture4'),
+        ];
+
+        try {
+            DB::connection('ConnTestQC')->statement(
+                'exec SP_1273_QTC_MAINT_RESULT_FIBC
+                @Kode = 1,
+                @RefNo = ?,
+                @Cust = ?,
+                @Height_Approx = ?,
+                @dia_val = ?,
+                @square_val = ?,
+                @Cyclic_Test = ?,
+                @Load_Speed = ?,
+                @Cyclic_Lift = ?,
+                @Cyclic_Result = ?,
+                @damageFoundDescCy = ?,
+                @Top_Lift = ?,
+                @Breakage_Location = ?,
+                @othersText = ?,
+                @Drop_Result = ?,
+                @damageFoundDescDrop = ?,
+                @Drop_Test = ?,
+                @Jumlah = ?,
+                @UserInput = ?,
+                @Data_1 = ?,
+                @Data_2 = ?,
+                @Data_3 = ?,
+                @Data_4 = ?,
+                @Data_5 = ?,
+                @Data_6 = ?,
+                @Data_7 = ?,
+                @Data_8 = ?,
+                @Data_9 = ?,
+                @Data_10 = ?,
+                @Data_11 = ?,
+                @Data_12 = ?,
+                @Data_13 = ?,
+                @Data_14 = ?,
+                @Data_15 = ?,
+                @Data_16 = ?,
+                @Data_17 = ?,
+                @Data_18 = ?,
+                @Data_19 = ?,
+                @Data_20 = ?,
+                @Data_21 = ?,
+                @Data_22 = ?,
+                @Data_23 = ?,
+                @Data_24 = ?,
+                @Data_25 = ?,
+                @Data_26 = ?,
+                @Data_27 = ?,
+                @Data_28 = ?,
+                @Data_29 = ?,
+                @Data_30 = ?,
+                @picture1 = ?,
+                @picture2 = ?,
+                @picture3 = ?,
+                @picture4 = ?',
+                array_merge([
+                    $referenceNo, $customer,
+                    $heightApprox, $diaVal, $squareVal, $cyclicTest, $loadSpeed,
+                    $cyclicLift, $cyclicResult, $damageFoundDescCy, $topLift,
+                    $breakageLocation, $othersText, $dropResult, $damageFoundDescDrop,
+                    $dropTest, $jumlah, $UserInput
+                ], array_values($dataValues), array_values($pictures))
+            );
+
+            return response()->json(['success' => 'Data inserted successfully'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to insert data: ' . $e->getMessage()], 500);
+        }
     }
 
     public function show($id, Request $request)
@@ -64,7 +166,6 @@ class InputTestController extends Controller
                     ]);
                 } else {
                     $selectIsi = DB::connection('ConnTestQC')->select('exec [SP_1273_QTC_LIST_FIBC] @kode = ?, @RefNo = ?', [3, $refCopy]);
-                    // dd($request->input('no_ref'), $refCopy,  $selectIsi);
 
                     $data_additional = [];
                     foreach ($selectIsi as $data_detailIsi) {
@@ -82,24 +183,25 @@ class InputTestController extends Controller
                         $breakageLocation = count($breakageLocationParts) > 1 ? 'Others :' : $data_detailIsi->Breakage_Location;
 
                         $data_additional[] = [
-                            'Height_Approx' => $data_detailIsi->Height_Approx,
-                            'dia_val' => $data_detailIsi->Dia,
+                            'Height_Approx' => number_format($data_detailIsi->Height_Approx, 2, '.', ''),
+                            'dia_val' => number_format($data_detailIsi->Dia, 2, '.', ''),
                             'square_val' => $data_detailIsi->Square,
-                            'Cyclic_Test' => $data_detailIsi->Cyclic_Test,
-                            'Load_Speed' => $data_detailIsi->Load_Speed,
+                            'Cyclic_Test' => number_format($data_detailIsi->Cyclic_Test, 2, '.', ''),
+                            'Load_Speed' => number_format($data_detailIsi->Load_Speed, 2, '.', ''),
                             'Drop_Test' => $data_detailIsi->Drop_Test,
                             'Cyclic_Lift' => $data_detailIsi->Cyclic_Lift,
                             'Cyclic_Result' => $cyclicResult,
                             'Cyclic_Result_Remaining' => $cyclicResultRemaining,
                             'Top_Lift' => $data_detailIsi->Top_Lift,
-                            'Top_Result' => $data_detailIsi->Top_Result,
+                            'Top_Result' => number_format($data_detailIsi->Top_Result, 2, '.', ''),
                             'Breakage_Location' => $breakageLocation,
                             'Breakage_Location_Remaining' => $breakageLocationRemaining,
                             'Drop_Result' => $dropResult,
-                            'Drop_Result_Remaining' => $dropResultRemaining
+                            'Drop_Result_Remaining' => $dropResultRemaining,
+                            'data_attribute' => 'cyclic',
+                            'data_attribute' => 'drop'
                         ];
                     }
-                    // dd($data_additional);  
 
                     $data_full = [
                         'cyclicTestValue' => $cyclicTestValue,
@@ -182,7 +284,7 @@ class InputTestController extends Controller
             //                          Picture_FIBC ON Result_FIBC.Reference_No = Picture_FIBC.Reference_No
             // WHERE Result_FIBC.Reference_No = @RefNo
             // End
-        } else if ($id === '...') {
+        } else if ($id === '') {
         }
     }
 

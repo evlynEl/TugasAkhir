@@ -69,7 +69,7 @@
                                     <div class="form-check-inline">
                                         <input class="form-check-input" type="checkbox" name="Square" id="Square"
                                             value="Square">
-                                        <label for="Square" class="form-check-label" for="Square">Square</label>
+                                        <label for="square_val" class="form-check-label" for="square_val">Square</label>
                                         <div class="input-group" id="inputSq" style="max-width: 70%; margin-left: 2%;">
                                             <input type="text" class="form-control" id="square_val" name="square_val">
                                             <div class="input-group-append">
@@ -101,7 +101,8 @@
                                         Load speed:
                                         <label for="Load_Speed" style="display: none">Speed</label>
                                         <div class="input-group" id="topliftbox" style="flex: 1; margin-left: 1%;">
-                                            <input type="text" class="form-control" id="Load_Speed" name="Load_Speed">
+                                            <input type="text" class="form-control" id="Load_Speed"
+                                                name="Load_Speed">
                                             <div class="input-group-append">
                                                 <span class="input-group-text">cm / mnt (Bag dalam keadaan kosong)</span>
                                             </div>
@@ -284,24 +285,26 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-row ml-4" id="cyclicResult" style="display: flex;">
+                                    <div class="form-row ml-4" id="cyclicResult" data-type="cyclic"
+                                        style="display: flex;">
                                         <label class="col-md-2">Result :</label>
                                         <div class="col-md-10">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox"
-                                                    id="No visible damages occurred" name="No visible damages occurred">
-                                                <label class="form-check-label" for="No visible damages occurred">No
-                                                    visible damages occurred</label>
+                                                    id="No_visible_damages_occurred_cyclic"
+                                                    name="No visible damages occurred" data-type="cyclic">
+                                                <label class="form-check-label" for="No_visible_damages_occurred_cyclic"
+                                                    data-type="cyclic">No visible damages occurred</label>
                                             </div>
                                             <div class="form-check" style="display: flex; align-items: center;">
                                                 <input class="form-check-input" type="checkbox"
-                                                    id="Visible damages found at" name="Visible damages found at">
-                                                <label class="form-check-label" for="Visible damages found at">Visible
-                                                    damages found
-                                                    at</label>
+                                                    id="Visible_damages_found_at_cyclic" name="Visible damages found at"
+                                                    data-type="cyclic">
+                                                <label class="form-check-label" for="Visible_damages_found_at_cyclic"
+                                                    data-type="cyclic">Visible damages found at</label>
                                                 <div class="input-group" style="flex: 1; margin-left: 1%;">
                                                     <input type="text" class="form-control" id="damageFoundDescCy"
-                                                        name="damageFoundDescCy">
+                                                        name="damageFoundDescCy" data-type="cyclic">
                                                 </div>
                                             </div>
                                         </div>
@@ -428,9 +431,12 @@
                                                             for="Lifting belt's thread">Lifting belt's thread</label>
                                                     </div>
                                                     <div class="form-check d-flex align-items-center">
-                                                        <input class="form-check-input mr-2" type="checkbox" id="Others :" name="Others :">
-                                                        <label class="form-check-label mr-2" for="Others :">Others&nbsp;:</label>
-                                                        <input type="text" class="form-control" id="othersText" name="othersText">
+                                                        <input class="form-check-input mr-2" type="checkbox"
+                                                            id="Others :" name="Others :">
+                                                        <label class="form-check-label mr-2"
+                                                            for="Others :">Others&nbsp;:</label>
+                                                        <input type="text" class="form-control" id="othersText"
+                                                            name="othersText">
                                                     </div>
                                                 </div>
                                             </div>
@@ -452,21 +458,23 @@
                                             </div>
                                         </div>
                                         <label class="ml-1">Result :</label>
-                                        <div class="col-md-9" id="dropResult">
+                                        <div class="col-md-9" id="dropResult" data-type="drop">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="No visible damages occurred"
-                                                    name="No visible damages occurred">
-                                                <label class="form-check-label" for="No visible damages occurred">No
-                                                    visible damages occurred</label>
+                                                <input class="form-check-input" type="checkbox"
+                                                    id="No_visible_damages_occurred_drop"
+                                                    name="No visible damages occurred" data-type="drop">
+                                                <label class="form-check-label" for="No_visible_damages_occurred_drop"
+                                                    data-type="drop">No visible damages occurred</label>
                                             </div>
                                             <div class="form-check" style="display: flex; align-items: center;">
                                                 <input class="form-check-input" type="checkbox"
-                                                    id="Visible damages found at" name="Visible damages found at">
-                                                <label class="form-check-label" for="Visible damages found at">Visible
-                                                    damages found at</label>
+                                                    id="Visible_damages_found_at_drop" name="Visible damages found at"
+                                                    data-type="drop">
+                                                <label class="form-check-label" for="Visible_damages_found_at_drop"
+                                                    data-type="drop">Visible damages found at</label>
                                                 <div class="input-group" style="flex: 1; margin-left: 1%;">
                                                     <input type="text" class="form-control" id="damageFoundDescDrop"
-                                                        name="damageFoundDescDrop">
+                                                        name="damageFoundDescDrop" data-type="drop">
                                                 </div>
                                             </div>
                                         </div>
