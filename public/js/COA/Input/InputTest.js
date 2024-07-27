@@ -11,36 +11,6 @@ var squareCheckbox = document.getElementById('Square');
 var square_val = document.getElementById('square_val');
 var Cyclic_Test = document.getElementById('Cyclic_Test');
 var Load_Speed = document.getElementById('Load_Speed');
-var Data_1 = document.getElementById('Data_1');
-var Data_2 = document.getElementById('Data_2');
-var Data_3 = document.getElementById('Data_3');
-var Data_4 = document.getElementById('Data_4');
-var Data_5 = document.getElementById('Data_5');
-var Data_6 = document.getElementById('Data_6');
-var Data_7 = document.getElementById('Data_7');
-var Data_8 = document.getElementById('Data_8');
-var Data_9 = document.getElementById('Data_9');
-var Data_10 = document.getElementById('Data_10');
-var Data_11 = document.getElementById('Data_11');
-var Data_12 = document.getElementById('Data_12');
-var Data_13 = document.getElementById('Data_13');
-var Data_14 = document.getElementById('Data_14');
-var Data_15 = document.getElementById('Data_15');
-var Data_16 = document.getElementById('Data_16');
-var Data_17 = document.getElementById('Data_17');
-var Data_18 = document.getElementById('Data_18');
-var Data_19 = document.getElementById('Data_19');
-var Data_20 = document.getElementById('Data_20');
-var Data_21 = document.getElementById('Data_21');
-var Data_22 = document.getElementById('Data_22');
-var Data_23 = document.getElementById('Data_23');
-var Data_24 = document.getElementById('Data_24');
-var Data_25 = document.getElementById('Data_25');
-var Data_26 = document.getElementById('Data_26');
-var Data_27 = document.getElementById('Data_27');
-var Data_28 = document.getElementById('Data_28');
-var Data_29 = document.getElementById('Data_29');
-var Data_30 = document.getElementById('Data_30');
 var Drop_Test = document.getElementById('Drop_Test');
 
 // Test Result Section
@@ -55,14 +25,20 @@ var damageFoundDescDropInput = document.getElementById('damageFoundDescDrop');
 var jumlah;
 var threePictures = document.getElementById('threePictures');
 var fourPictures = document.getElementById('fourPictures');
-var Pict_1 = document.getElementById('Pict_1');
-var picture1 = document.getElementById('picture1');
-var Pict_2 = document.getElementById('Pict_2');
-var picture2 = document.getElementById('picture2');
-var Pict_3 = document.getElementById('Pict_3');
-var picture3 = document.getElementById('picture3');
-var Pict_4 = document.getElementById('Pict_4');
-var picture4 = document.getElementById('picture4');
+// var Pict_1 = document.getElementById('Pict_1');
+// var Pict_2 = document.getElementById('Pict_2');
+// var Pict_3 = document.getElementById('Pict_3');
+// var Pict_4 = document.getElementById('Pict_4');
+// var picture1 = document.getElementById('imagePreview1');
+// var picture2 = document.getElementById('imagePreview2');
+// var picture3 = document.getElementById('imagePreview3');
+// var picture4 = document.getElementById('imagePreview4');
+var imageFiles = {
+    'picture1': null,
+    'picture2': null,
+    'picture3': null,
+    'picture4': null
+};
 
 // specific div
 // var pressureboxDiv = document.getElementById('pressurebox');
@@ -173,6 +149,7 @@ function handleData(masuk) {
 
         if (currentIndex !== -1 && currentIndex < cyclic30Detail.length) {
             cyclic30Detail[currentIndex].disabled = false;
+            cyclic30Detail[currentIndex].focus();
 
         }
 
@@ -183,7 +160,7 @@ function handleData(masuk) {
         }
     } else if (currentDataNumber === 15) {
         cyclic30Detail[currentIndex].disabled = false;
-        cyclic30Detail[currentIndex].focus();
+        cyclic30Detail[currentIndex]
         cyclic30Detail[indexMapping[currentDataNumber] - 1].value = masuk.value;
         Drop_Test.disabled = false;
         Drop_Test.focus();
@@ -214,9 +191,9 @@ function toggleInputs(checkboxId, divId, descId) {
         if (checkbox.checked) {
             inputs.forEach(input => {
                 input.disabled = false;
-                damageFoundDescCyInput.disabled = true;
-                othersText.disabled = true;
-                damageFoundDescDropInput.disabled = true;
+                // damageFoundDescCyInput.disabled = true;
+                // othersText.disabled = true;
+                // damageFoundDescDropInput.disabled = true;
             });
 
             if (checkboxId === 'Cyclic_Lift') {
@@ -236,15 +213,6 @@ function toggleInputs(checkboxId, divId, descId) {
                 });
             }
         }
-        // else {
-        //     inputs.forEach(input => {
-        //         if (!input.disabled) {
-        //             input.disabled = true;
-        //             console.log(`Input ${input.id} disabled set to ${input.disabled}`);
-        //         }
-        //     });
-        //     descInput.disabled = true;
-        // }
     });
 }
 
@@ -523,91 +491,87 @@ function retrieveCheck(sectionId, value, data) {
         checkboxes.forEach(function (checkbox) {
             if (checkbox) {
                 var dataType = checkbox.getAttribute('data-type');
+                var isChecked = checkbox.checked;
+
                 switch (sectionId) {
-                    case 'pressurebox':
-                        diaCheckbox.checked = (data.dia_val > '0.00');
-                        squareCheckbox.checked = (data.square_val !== '');
-                        break;
                     case 'cyclicCheck':
-                        Cyclic_Lift.checked = Boolean(value);
                         checkbox.checked = value === checkboxName;
-                        break;
-                    case 'topLiftCheck':
-                        Top_Lift.checked = Boolean(value);
-                        checkbox.checked = value === checkboxName;
-                        break;
-                    case 'Breakage_Location':
-                        Breakage_Location.checked = Boolean(value);
-                        checkbox.checked = value === checkboxName;
-                        if (checkboxName === 'Others :') {
-                            othersTextInput.disabled = false;
-                            othersTextInput.value = data.Breakage_Location_Remaining;
-                            checkbox.addEventListener('change', function () {
-                                if (checkbox.checked) {
-                                    othersTextInput.value = data.Breakage_Location_Remaining;
-                                    othersTextInput.focus();
-                                } else {
-                                    // othersTextInput.value = '';
-                                    othersTextInput.blur();
-                                }
-                            });
+                        if (checkbox.checked) {
+                            cLift = [checkboxName];
+                            if (cLift.length > 0) {
+                                Cyclic_Lift.checked = true;
+                            }
                         }
                         break;
+
+                    case 'topLiftCheck':
+                        checkbox.checked = value === checkboxName;
+                        if (checkbox.checked) {
+                            tLift = [checkboxName];
+                            if (tLift.length > 0) {
+                                Top_Lift.checked = true;
+                            }
+                        }
+                        break;
+
+                    case 'Breakage_Location':
+                        checkbox.checked = value === checkboxName;
+                        if (checkbox.checked) {
+                            breakage = [checkboxName];
+                            if (checkboxName === 'Others :') {
+                                othersTextInput.disabled = false;
+                                othersTextInput.value = data.Breakage_Location_Remaining;
+                            }
+                        }
+                        break;
+
                     case 'dropResult':
                         if (dataType === 'drop') {
-                            Drop_Result.checked = Boolean(value);
                             checkbox.checked = value === checkboxName;
-                            if (checkboxName === 'Visible damages found at') {
-                                damageFoundDescDropInput.disabled = false;
-                                damageFoundDescDropInput.value = data.Drop_Result_Remaining;
-                                checkbox.addEventListener('change', function () {
-                                    if (checkbox.checked) {
-                                        damageFoundDescDropInput.value = data.Drop_Result_Remaining;
-                                        damageFoundDescDropInput.focus();
-                                    } else {
-                                        // damageFoundDescDropInput.value = '';
-                                        damageFoundDescDropInput.blur();
-                                    }
-                                });
-                            } else if (checkboxName === 'No visible damages occurred') {
-                                damageFoundDescDropInput.disabled = true;
-                                damageFoundDescDropInput.value = '';
-                                // damageFoundDescDropInput.blur();
+                            if (checkbox.checked) {
+                                dResult = [checkboxName];
+                                if (dResult.length > 0) {
+                                    Drop_Result.checked = true;
+                                }
+                                if (checkboxName === 'Visible damages found at') {
+                                    damageFoundDescDropInput.disabled = false;
+                                    damageFoundDescDropInput.value = data.Drop_Result_Remaining;
+                                }
                             }
                         }
                         break;
+
                     case 'cyclicResult':
                         if (dataType === 'cyclic') {
-                            var damageFoundDescCyInput = document.querySelector('#cyclicResult input[name="damageFoundDescCy"]');
                             checkbox.checked = value === checkboxName;
-                            if (checkboxName === 'Visible damages found at') {
-                                damageFoundDescCyInput.disabled = false;
-                                damageFoundDescCyInput.value = data.Cyclic_Result_Remaining;
-                                checkbox.addEventListener('change', function () {
-                                    // damageFoundDescCyInput.disabled = !checkbox.checked;
-                                    if (checkbox.checked) {
-                                        damageFoundDescCyInput.value = data.Cyclic_Result_Remaining;
-                                        damageFoundDescCyInput.focus();
-                                    } else {
-                                        // damageFoundDescCyInput.value = '';
-                                        damageFoundDescCyInput.blur();
-                                    }
-                                });
-                            } else if (checkboxName === 'No visible damages occurred') {
-                                damageFoundDescCyInput.disabled = true;
-                                damageFoundDescCyInput.value = '';
-                                // damageFoundDescCyInput.blur();
+                            if (checkbox.checked) {
+                                cResult = [checkboxName];
+                                var damageFoundDescCyInput = document.querySelector('#cyclicResult input[name="damageFoundDescCy"]');
+                                if (checkboxName === 'Visible damages found at') {
+                                    damageFoundDescCyInput.disabled = false;
+                                    damageFoundDescCyInput.value = data.Cyclic_Result_Remaining;
+                                }
                             }
                         }
                         break;
+
                     default:
-                        checkbox.checked = value.includes(checkboxName);
+                        if (checkbox.checked) {
+                            console.log(`Checked: ${checkboxName} in ${sectionId}`);
+                            // Update the array based on sectionId
+                            if (sectionId === 'someOtherSectionId') {
+                                // Example for another section
+                            }
+                        }
                         break;
                 }
             }
         });
     });
 }
+
+
+
 
 // cek checkbox
 // fungsi track aktifitas checkbox
@@ -666,16 +630,24 @@ function handleCheckboxChange(sectionId) {
     // console.log(tLift);
     // console.log(breakage);
     // console.log(dResult);
+    // console.log(centangCheck);
 }
 
 // panggil fungsi cek checkbox
 setupCheckboxListeners();
 
 // fungsi mengambil gambar
+var imageFiles = {}; // Global object to store file references
+
 function setupImageUpload(buttonId, imageId, textInputId, nextButtonId) {
     var button = document.getElementById(buttonId);
     var image = document.getElementById(imageId);
     var textInput = document.getElementById(textInputId);
+
+    if (!image) {
+        console.error('Image element not found:', imageId);
+        return;
+    }
 
     button.addEventListener('click', function () {
         var fileInput = document.createElement('input');
@@ -690,16 +662,20 @@ function setupImageUpload(buttonId, imageId, textInputId, nextButtonId) {
 
                 reader.onload = function (e) {
                     image.src = e.target.result;
-                    image.style.display = 'block';
+                    image.style.display = 'block'; // Show the image
                     textInput.value = file.name;
 
+                    // Update the imageFiles object with the correct key
+                    imageFiles[textInputId] = file;
+
+                    // Move focus to the next button if provided
                     if (nextButtonId) {
                         var nextButton = document.getElementById(nextButtonId);
                         if (nextButton) {
                             nextButton.focus();
                         }
                     }
-                }
+                };
 
                 reader.readAsDataURL(file);
             }
@@ -710,6 +686,8 @@ function setupImageUpload(buttonId, imageId, textInputId, nextButtonId) {
         document.body.removeChild(fileInput);
     });
 }
+
+
 
 // fungsi unk fokus button pict
 function updateFocus() {
@@ -871,11 +849,21 @@ btn_batal.addEventListener('click', function () {
 
 btn_simpan.addEventListener('click', async function (e) {
     if (a === 1) { // ISI
-        let cLiftTxt = cLift.join(', ');
-        let cResultTxt = cResult.join(', ');
-        let tLiftTxt = tLift.join(', ');
-        let breakageTxt = breakage.join(', ');
-        let dResultTxt = dResult.join(', ');
+
+        if (!(allInputsFilled())) {
+            return;
+        }
+
+        // console.log(pressure);
+        // console.log(cLift);
+        // console.log(cResult);
+        // console.log(tLift);
+        // console.log(breakage);
+        // console.log(dResult);
+
+        let cResultTxt = cResult.includes('Visible damages found at') ? `${cResult} ${damageFoundDescCyInput.value.trim()}` : cResult;
+        let dResultTxt = dResult.includes('Visible damages found at') ? `${dResult} ${damageFoundDescDropInput.value.trim()}` : dResult;
+        let breakageTxt = breakage.includes('Others :') ? `${breakage} ${othersTextInput.value.trim()}` : breakage;
 
         let text = ['Cyclic Test', 'Cyclic Test Result', 'Top Lift Test', 'Breakage Location', 'Drop Test'];
         let tidakTercentang = [];
@@ -899,25 +887,18 @@ btn_simpan.addEventListener('click', async function (e) {
                     } else {
                         currentIndex++;
                         if (currentIndex < tidakTercentang.length) {
-                            disableInputs();
                             showSweetAlert();
                         } else {
-                            submitForm(cLiftTxt, cResultTxt, tLiftTxt, breakageTxt, dResultTxt)
+                            submitForm(cLift, cResultTxt, tLift, breakageTxt, dResultTxt);
                             return;
                         }
                     }
                 });
             }
-            disableInputs();
             await showSweetAlert();
         } else {
-            submitForm(cLiftTxt, cResultTxt, tLiftTxt, breakageTxt, dResultTxt);
+            submitForm(cLift, cResultTxt, tLift, breakageTxt, dResultTxt);
         }
-
-        if (!(allInputsFilled())) {
-            return;
-        }
-
 
         console.log("BERHASIL SIMPAN");
     } else if (a === 2) { // KOREKSI
@@ -937,73 +918,54 @@ btn_hapus.addEventListener('click', function () {
     a = 3;
 });
 
-async function submitForm(cLiftTxt, cResultTxt, tLiftTxt, breakageTxt, dResultTxt) {
+
+async function submitForm(cLift, cResultTxt, tLift, breakageTxt, dResultTxt) {
     function formatInput(input) {
         return input !== undefined && !isNaN(input) ? parseFloat(input).toFixed(2) : '0.00';
     }
 
-    const dataToSend = {
-        _token: csrfToken,
-        Height_Approx: formatInput(Height_Approx.value),
-        dia_val: formatInput(dia_val.value),
-        square_val: square_val.value.trim(),
-        Cyclic_Test: formatInput(Cyclic_Test.value),
-        Load_Speed: formatInput(Load_Speed.value),
+    var formData = new FormData();
+    formData.append('_token', csrfToken);
+    formData.append('RefNo', refNo.value);
+    formData.append('Height_Approx', formatInput(Height_Approx.value));
+    formData.append('dia_val', formatInput(dia_val.value));
+    formData.append('square_val', square_val.value.trim());
+    formData.append('Cyclic_Test', formatInput(Cyclic_Test.value));
+    formData.append('Load_Speed', formatInput(Load_Speed.value));
 
-        Cyclic_Lift: cLiftTxt.value.trim(),
-        Cyclic_Result: cResultTxt.value.trim(),
-        damageFoundDescCy: damageFoundDescCyInput.value,
-        Top_Lift: tLiftTxt.value.trim(),
-        Breakage_Location: breakageTxt.value.trim(),
-        othersText: othersTextInput.value,
-        Drop_Result: dResultTxt.value.trim(),
-        damageFoundDescDrop: damageFoundDescDropInput.value,
+    formData.append('Cyclic_Lift', cLift.trim());
+    formData.append('Cyclic_Result', cResult.trim());
+    formData.append('Top_Lift', tLift.trim());
+    formData.append('Breakage_Location', breakage.trim());
+    formData.append('Drop_Result', dResult.trim());
+    formData.append('Drop_Test', Drop_Test.value.trim());
 
-        Data_1: formatInput(Data_1.value),
-        Data_2: formatInput(Data_2.value),
-        Data_3: formatInput(Data_3.value),
-        Data_4: formatInput(Data_4.value),
-        Data_5: formatInput(Data_5.value),
-        Data_6: formatInput(Data_6.value),
-        Data_7: formatInput(Data_7.value),
-        Data_8: formatInput(Data_8.value),
-        Data_9: formatInput(Data_9.value),
-        Data_10: formatInput(Data_10.value),
-        Data_11: formatInput(Data_11.value),
-        Data_12: formatInput(Data_12.value),
-        Data_13: formatInput(Data_13.value),
-        Data_14: formatInput(Data_14.value),
-        Data_15: formatInput(Data_15.value),
-        Data_16: formatInput(Data_16.value),
-        Data_17: formatInput(Data_17.value),
-        Data_18: formatInput(Data_18.value),
-        Data_19: formatInput(Data_19.value),
-        Data_20: formatInput(Data_20.value),
-        Data_21: formatInput(Data_21.value),
-        Data_22: formatInput(Data_22.value),
-        Data_23: formatInput(Data_23.value),
-        Data_24: formatInput(Data_24.value),
-        Data_25: formatInput(Data_25.value),
-        Data_26: formatInput(Data_26.value),
-        Data_27: formatInput(Data_27.value),
-        Data_28: formatInput(Data_28.value),
-        Data_29: formatInput(Data_29.value),
-        Data_30: formatInput(Data_30.value),
-        Drop_Test: Drop_Test.value.trim(),
+    for (let i = 1; i <= 30; i++) {
+        let dataElement = document.getElementById('Data_' + i);
+        if (dataElement) {
+            formData.append('Data_' + i, formatInput(dataElement.value));
+        }
+    }
 
-        picture1: picture1.value,
-        picture2: picture2.value,
-        picture3: picture3.value,
-        picture4: picture4.value,
-        Jumlah: jumlah.value,
-    };
+    // Menambahkan gambar ke FormData
+    for (var key in imageFiles) {
+        if (imageFiles.hasOwnProperty(key) && imageFiles[key]) {
+            formData.append(key, imageFiles[key]);
+        }
+    }
 
-    console.log('Data to be sent:', dataToSend); // Debugging
+    formData.append('Jumlah', jumlah);
+
+    for (let pair of formData.entries()) {
+        console.log(`${pair[0]}: ${pair[1]}`);
+    }
 
     $.ajax({
         type: 'POST',
         url: 'FrmInputTest',
-        data: dataToSend,
+        data: formData,
+        processData: false,
+        contentType: false,
         timeout: 30000,
         success: function (response) {
             if (response.success) {
@@ -1018,7 +980,6 @@ async function submitForm(cLiftTxt, cResultTxt, tLiftTxt, breakageTxt, dResultTx
         },
         error: function (xhr, status, error) {
             console.error('AJAX Error:', error);
-            console.error('Response Text:', xhr.responseText); // Debugging
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
@@ -1026,6 +987,94 @@ async function submitForm(cLiftTxt, cResultTxt, tLiftTxt, breakageTxt, dResultTx
             });
         }
     });
+
+
+
+    // const dataToSend = {
+    //     _token: csrfToken,
+    //     RefNo: refNo.value,
+    //     Height_Approx: formatInput(Height_Approx.value),
+    //     dia_val: formatInput(dia_val.value),
+    //     square_val: square_val.value.trim(),
+    //     Cyclic_Test: formatInput(Cyclic_Test.value),
+    //     Load_Speed: formatInput(Load_Speed.value),
+
+    //     Cyclic_Lift: cLift.trim(),
+    //     Cyclic_Result: cResult.trim(),
+    //     Top_Lift: tLift.trim(),
+    //     Breakage_Location: breakage.trim(),
+    //     Drop_Result: dResult.trim(),
+    //     Drop_Test: Drop_Test.value.trim(),
+
+
+    //     Data_1: formatInput(Data_1.value),
+    //     Data_2: formatInput(Data_2.value),
+    //     Data_3: formatInput(Data_3.value),
+    //     Data_4: formatInput(Data_4.value),
+    //     Data_5: formatInput(Data_5.value),
+    //     Data_6: formatInput(Data_6.value),
+    //     Data_7: formatInput(Data_7.value),
+    //     Data_8: formatInput(Data_8.value),
+    //     Data_9: formatInput(Data_9.value),
+    //     Data_10: formatInput(Data_10.value),
+    //     Data_11: formatInput(Data_11.value),
+    //     Data_12: formatInput(Data_12.value),
+    //     Data_13: formatInput(Data_13.value),
+    //     Data_14: formatInput(Data_14.value),
+    //     Data_15: formatInput(Data_15.value),
+    //     Data_16: formatInput(Data_16.value),
+    //     Data_17: formatInput(Data_17.value),
+    //     Data_18: formatInput(Data_18.value),
+    //     Data_19: formatInput(Data_19.value),
+    //     Data_20: formatInput(Data_20.value),
+    //     Data_21: formatInput(Data_21.value),
+    //     Data_22: formatInput(Data_22.value),
+    //     Data_23: formatInput(Data_23.value),
+    //     Data_24: formatInput(Data_24.value),
+    //     Data_25: formatInput(Data_25.value),
+    //     Data_26: formatInput(Data_26.value),
+    //     Data_27: formatInput(Data_27.value),
+    //     Data_28: formatInput(Data_28.value),
+    //     Data_29: formatInput(Data_29.value),
+    //     Data_30: formatInput(Data_30.value),
+
+    //     picture1: picture1 ? picture1.value : '',
+    //     picture2: picture2 ? picture2.value : '',
+    //     picture3: picture3 ? picture3.value : '',
+    //     picture4: picture4 ? picture4.value : '',
+    //     Jumlah: jumlah,
+    // };
+
+    // console.log('data to send: ', dataToSend);
+
+    // $.ajax({
+    //     type: 'POST',
+    //     url: 'FrmInputTest',
+    //     data: formData,
+    //     processData: false,
+    //     contentType: false,
+    //     timeout: 30000,
+    //     success: function (response) {
+    //         if (response.success) {
+    //             Swal.fire({
+    //                 icon: 'success',
+    //                 title: 'Success',
+    //                 text: 'Data Telah Tersimpan',
+    //             }).then(() => {
+    //                 disableKetik();
+    //             });
+    //         }
+    //     },
+    //     error: function (xhr, status, error) {
+    //         console.error('AJAX Error:', error);
+    //         Swal.fire({
+    //             icon: 'error',
+    //             title: 'Error',
+    //             text: 'Data Belum Lengkap Terisi',
+    //         });
+    //     }
+    // });
+
 }
 
 

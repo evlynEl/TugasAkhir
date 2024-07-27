@@ -142,7 +142,7 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="Panjang">Panjang 1</label>
+                                                <label for="Panjang">Panjang</label>
                                                 <input type="text" class="form-control" id="Panjang"
                                                     name="Panjang">
                                             </div>
@@ -208,7 +208,7 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="Panjang2">Panjang 2</label>
+                                                <label for="Panjang2">Panjang</label>
                                                 <input type="text" class="form-control" id="Panjang2"
                                                     name="Panjang2">
                                             </div>

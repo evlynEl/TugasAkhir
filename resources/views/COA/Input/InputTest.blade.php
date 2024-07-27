@@ -256,8 +256,8 @@
 
                                         <label class="ml-3">Lift at:</label>
 
-                                        <div id="cyclicCheck" style="display: flex;">
-                                            <div class="form-check mb-1 ml-2">
+                                        <div id="cyclicCheck" style="display: flex; flex; align-items: center;">
+                                            <div class="form-check mb-1 ml-4 mr-3">
                                                 <input class="form-check-input" type="checkbox" id="Single Loops"
                                                     name="Single Loops">
                                                 <label class="form-check-label" for="Single Loops">Single Loops</label>

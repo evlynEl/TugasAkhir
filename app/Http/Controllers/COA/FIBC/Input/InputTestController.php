@@ -24,8 +24,7 @@ class InputTestController extends Controller
 
     public function store(Request $request)
     {
-        $referenceNo = $request->input('refNo');
-        $customer = $request->input('customer');
+        $referenceNo = $request->input('RefNo');
         $heightApprox = $request->input('Height_Approx');
         $diaVal = $request->input('dia_val');
         $squareVal = $request->input('square_val');
@@ -33,12 +32,9 @@ class InputTestController extends Controller
         $loadSpeed = $request->input('Load_Speed');
         $cyclicLift = $request->input('Cyclic_Lift');
         $cyclicResult = $request->input('Cyclic_Result');
-        $damageFoundDescCy = $request->input('damageFoundDescCy');
         $topLift = $request->input('Top_Lift');
         $breakageLocation = $request->input('Breakage_Location');
-        $othersText = $request->input('othersText');
         $dropResult = $request->input('Drop_Result');
-        $damageFoundDescDrop = $request->input('damageFoundDescDrop');
         $dropTest = $request->input('Drop_Test');
         $jumlah = $request->input('Jumlah');
         $UserInput = Auth::user()->NomorUser;
@@ -58,68 +54,86 @@ class InputTestController extends Controller
             'picture4' => $request->input('picture4'),
         ];
 
+        dd([
+            'referenceNo' => $referenceNo,
+            'heightApprox' => $heightApprox,
+            'diaVal' => $diaVal,
+            'squareVal' => $squareVal,
+            'cyclicTest' => $cyclicTest,
+            'loadSpeed' => $loadSpeed,
+            'cyclicLift' => $cyclicLift,
+            'cyclicResult' => $cyclicResult,
+            'topLift' => $topLift,
+            'breakageLocation' => $breakageLocation,
+            'dropResult' => $dropResult,
+            'dropTest' => $dropTest,
+            'jumlah' => $jumlah,
+            'UserInput' => $UserInput,
+            'dataValues' => $dataValues,
+            'pictures' => $pictures,
+        ]);
+
         try {
             DB::connection('ConnTestQC')->statement(
                 'exec SP_1273_QTC_MAINT_RESULT_FIBC
                 @Kode = 1,
                 @RefNo = ?,
-                @Cust = ?,
                 @Height_Approx = ?,
-                @dia_val = ?,
-                @square_val = ?,
-                @Cyclic_Test = ?,
-                @Load_Speed = ?,
-                @Cyclic_Lift = ?,
-                @Cyclic_Result = ?,
-                @damageFoundDescCy = ?,
-                @Top_Lift = ?,
-                @Breakage_Location = ?,
-                @othersText = ?,
-                @Drop_Result = ?,
-                @damageFoundDescDrop = ?,
-                @Drop_Test = ?,
-                @Jumlah = ?,
+                @Dia = ?,
+                @Square = ?,
+                @CyclicTest = ?,
+                @Speed = ?,
+                @DropTest = ?,
+                @CyclicLift = ?,
+                @CyclicResult = ?,
+                @TopLift = ?,
+                @TopResult = ?,
+                @Breakage = ?,
+                @DropResult = ?,
+                @TestResult = ?,
                 @UserInput = ?,
-                @Data_1 = ?,
-                @Data_2 = ?,
-                @Data_3 = ?,
-                @Data_4 = ?,
-                @Data_5 = ?,
-                @Data_6 = ?,
-                @Data_7 = ?,
-                @Data_8 = ?,
-                @Data_9 = ?,
-                @Data_10 = ?,
-                @Data_11 = ?,
-                @Data_12 = ?,
-                @Data_13 = ?,
-                @Data_14 = ?,
-                @Data_15 = ?,
-                @Data_16 = ?,
-                @Data_17 = ?,
-                @Data_18 = ?,
-                @Data_19 = ?,
-                @Data_20 = ?,
-                @Data_21 = ?,
-                @Data_22 = ?,
-                @Data_23 = ?,
-                @Data_24 = ?,
-                @Data_25 = ?,
-                @Data_26 = ?,
-                @Data_27 = ?,
-                @Data_28 = ?,
-                @Data_29 = ?,
-                @Data_30 = ?,
-                @picture1 = ?,
-                @picture2 = ?,
-                @picture3 = ?,
-                @picture4 = ?',
+                @damageFoundDescCy = ?,
+                @othersText = ?,
+                @damageFoundDescDrop = ?,
+                @JumlahPict = ?,
+                @CyclicData1 = ?,
+                @CyclicData2 = ?,
+                @CyclicData3 = ?,
+                @CyclicData4 = ?,
+                @CyclicData5 = ?,
+                @CyclicData6 = ?,
+                @CyclicData7 = ?,
+                @CyclicData8 = ?,
+                @CyclicData9 = ?,
+                @CyclicData10 = ?,
+                @CyclicData11 = ?,
+                @CyclicData12 = ?,
+                @CyclicData13 = ?,
+                @CyclicData14 = ?,
+                @CyclicData15 = ?,
+                @CyclicData16 = ?,
+                @CyclicData17 = ?,
+                @CyclicData18 = ?,
+                @CyclicData19 = ?,
+                @CyclicData20 = ?,
+                @CyclicData21 = ?,
+                @CyclicData22 = ?,
+                @CyclicData23 = ?,
+                @CyclicData24 = ?,
+                @CyclicData25 = ?,
+                @CyclicData26 = ?,
+                @CyclicData27 = ?,
+                @CyclicData28 = ?,
+                @CyclicData29 = ?,
+                @CyclicData30 = ?,
+                @Pict11 = ?,
+                @Pict12 = ?,
+                @Pict13 = ?,
+                @Pict14 = ?',
                 array_merge([
-                    $referenceNo, $customer,
-                    $heightApprox, $diaVal, $squareVal, $cyclicTest, $loadSpeed,
-                    $cyclicLift, $cyclicResult, $damageFoundDescCy, $topLift,
-                    $breakageLocation, $othersText, $dropResult, $damageFoundDescDrop,
-                    $dropTest, $jumlah, $UserInput
+                    $referenceNo, $heightApprox, $diaVal, $squareVal,
+                    $cyclicTest, $loadSpeed, $cyclicLift, $cyclicResult, $topLift,
+                    $breakageLocation, $dropResult, $dropTest, $jumlah, $UserInput
                 ], array_values($dataValues), array_values($pictures))
             );
 
