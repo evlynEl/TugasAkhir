@@ -289,12 +289,19 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+
+    let previousTanggalValue;
+    $('#tanggal').on('focus', function () {
+        previousTanggalValue = $(this).val().trim();
+    });
+
     $('#tanggal').on('keydown', function (e) {
         if (e.key === 'Enter') {
             e.preventDefault();
-            shiftLetter.focus();
 
-            const enteredDate = new Date(tanggal.value);
+            const currentTanggalValue = $(this).val().trim();
+
+            const enteredDate = new Date(currentTanggalValue);
             const hariIni = new Date();
 
             if (enteredDate > hariIni) {
@@ -304,21 +311,61 @@ document.addEventListener('DOMContentLoaded', function () {
                     text: 'Tanggal tidak bisa melebihi hari ini.',
                     confirmButtonText: 'OK'
                 }).then(() => {
-                    tanggalToday()
+                    tanggalToday();
                 });
             } else {
-                shiftLetter.focus();
+                if (currentTanggalValue !== previousTanggalValue) {
+                    $('#mesin').val('');
+                    $('#namaMesin').val('');
+                    $('#shiftAwal').val('');
+                    $('#shiftAkhir').val('');
+                    $('#idKonversi').val('');
+                    $('#spekBenang').val('');
+                    clearAllInputs();
+                    clearTableChange();
+                }
+                previousTanggalValue = currentTanggalValue;
             }
+
+            shiftLetter.focus();
         }
+    });
+
+
+    let previousShiftLetterValue = '';
+
+    // Capture the previous value in uppercase when the input gains focus
+    $('#shiftLetter').on('focus', function () {
+        previousShiftLetterValue = $(this).val().trim().toUpperCase();
     });
 
     $('#shiftLetter').on('keydown', function (e) {
         if (e.key === 'Enter') {
             e.preventDefault();
-            var shiftLetterValue = $(this).val().trim();
-            if (shiftLetterValue !== '') {
-                buttonIdMesin.focus();
+
+            const currentShiftLetterValue = $(this).val().trim().toUpperCase();
+
+            if (currentShiftLetterValue === '') {
+                $(this).focus();
+                return;
             }
+
+            if (currentShiftLetterValue !== previousShiftLetterValue) {
+                $('#mesin').val('');
+                $('#namaMesin').val('');
+                $('#shiftAwal').val('');
+                $('#shiftAkhir').val('');
+                $('#idKonversi').val('');
+                $('#spekBenang').val('');
+                clearAllInputs();
+                clearTableChange();
+            }
+
+            $(this).val(currentShiftLetterValue);
+
+            previousShiftLetterValue = currentShiftLetterValue;
+
+            buttonIdMesin.focus();
         }
     });
 
@@ -366,6 +413,18 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     });
+
+    function clearAllInputs() {
+        const container = document.querySelector('.hapusElement');
+
+        if (container) {
+            const inputs = container.querySelectorAll('input[type="text"]');
+
+            inputs.forEach(input => {
+                input.value = '';
+            });
+        }
+    }
 
     // table komposisi
     const tableKomposisi = $('#tableKomposisi').DataTable({
@@ -522,25 +581,23 @@ document.addEventListener('DOMContentLoaded', function () {
                     idKonv: idKonversi.value
                 },
                 success: function (result) {
-                    console.log('AJAX request succeeded:', result); // Debugging log
-
                     tableKomposisi.clear().draw();
 
                     result.forEach(function (row) {
                         const rowData = [
-                            row['IdBahan'],
-                            row['NamaType'],
-                            row['Jenis'],
-                            row['NamaKelompok'],
-                            row['Jml'],
-                            row['Prosen']
+                            $.fn.dataTable.render.text().display(row['IdBahan']),
+                            $.fn.dataTable.render.text().display(row['NamaType']),
+                            $.fn.dataTable.render.text().display(row['Jenis']),
+                            $.fn.dataTable.render.text().display(row['NamaKelompok']),
+                            $.fn.dataTable.render.text().display(row['Jml']),
+                            $.fn.dataTable.render.text().display(row['Prosen'])
                         ];
                         tableKomposisi.row.add(rowData).draw(false);
-                        dataArrKomposisi.push(rowData); // Isi array dataArrKomposisi
+                        dataArrKomposisi.push(rowData);
                     });
                 },
                 error: function (xhr, status, error) {
-                    console.error('AJAX request failed:', error); // Debugging log
+                    console.error('AJAX request failed:', error);
                 }
             });
         }
@@ -582,17 +639,17 @@ document.addEventListener('DOMContentLoaded', function () {
     // button ... ambil id mesin dan shift
     buttonIdMesin.addEventListener('click', async () => {
         try {
-            let result = Swal.fire({
+            let result = await Swal.fire({
                 title: "Pilih Id Mesin",
                 html: `<table id="table_IdMesin" class="display" style="width:100%">
-                            <thead>
-                                <tr>
-                                    <th>ID Mesin</th>
-                                    <th>Type Mesin</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>`,
+                    <thead>
+                        <tr>
+                            <th>ID Mesin</th>
+                            <th>Type Mesin</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>`,
                 showCancelButton: true,
                 confirmButtonText: 'Pilih',
                 cancelButtonText: 'Close',
@@ -639,39 +696,49 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (nomorButton === 2 || nomorButton === 3) {
                         if (!nomorTransaksi.value) {
                             buttonNomorTransaksi.focus();
-                        }
-                        else {
+                        } else {
                             buttonSpekBenang.focus();
                         }
                     } else {
                         buttonSpekBenang.focus();
                     }
                 }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    const selectedRow = result.value;
-                    mesin.value = selectedRow.IdMesin.trim();
-                    namaMesin.value = selectedRow.NamaMesin.trim();
-
-                    $.ajax({
-                        type: 'GET',
-                        url: 'ExtruderTropodo/getShiftData',
-                        data: {
-                            _token: csrfToken,
-                            tgl: tanggal.value,
-                            Shift: shiftLetter.value,
-                            IdMesin: mesin.value
-                        },
-                        success: function (result) {
-                            shiftAkhir.value = result[0].AkhirShift.trim();
-                            shiftAwal.value = result[0].AwalShift.trim();
-                        },
-                        error: function (xhr, status, error) {
-                            console.error(error);
-                        }
-                    });
-                }
             });
+
+            if (result.isConfirmed) {
+                const selectedRow = result.value;
+                const currentMesinValue = selectedRow.IdMesin.trim();
+
+                // Retrieve previous value and then assign the new value
+                const previousMesin = $('#mesin').val().trim();
+                mesin.value = currentMesinValue;
+                namaMesin.value = selectedRow.NamaMesin.trim();
+
+                if (currentMesinValue !== previousMesin) {
+                    clearTable();
+                    clearAllInputs();
+                    spekBenang.value = '';
+                    idKonversi.value = '';
+                }
+
+                $.ajax({
+                    type: 'GET',
+                    url: 'ExtruderTropodo/getShiftData',
+                    data: {
+                        _token: csrfToken,
+                        tgl: tanggal.value,
+                        Shift: shiftLetter.value,
+                        IdMesin: mesin.value
+                    },
+                    success: function (result) {
+                        shiftAkhir.value = result[0].AkhirShift.trim();
+                        shiftAwal.value = result[0].AwalShift.trim();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+            }
         } catch (error) {
             console.error("An error occurred:", error);
         }
@@ -680,17 +747,17 @@ document.addEventListener('DOMContentLoaded', function () {
     // button ... spek benang
     buttonSpekBenang.addEventListener('click', async () => {
         try {
-            let result = Swal.fire({
+            let result = await Swal.fire({
                 title: "Pilih Spek Benang",
                 html: `<table id="table_spekBenang" class="display" style="width:100%">
-                            <thead>
-                                <tr>
-                                    <th>Type Benang</th>
-                                    <th>Id Mesin</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>`,
+                    <thead>
+                        <tr>
+                            <th>Type Benang</th>
+                            <th>Id Mesin</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>`,
                 showCancelButton: true,
                 confirmButtonText: 'Pilih',
                 cancelButtonText: 'Close',
@@ -736,11 +803,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 didClose: () => {
                     buttonBahanBaku.focus();
                 }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    const selectedRow = result.value;
-                    spekBenang.value = selectedRow.TypeBenang.trim();
+            });
 
+            if (result.isConfirmed) {
+                const selectedRow = result.value;
+                const currentSpekBenangValue = selectedRow.TypeBenang.trim();
+
+                const previousSpekBenang = $('#spekBenang').val().trim();
+                spekBenang.value = currentSpekBenangValue;
+
+                if (currentSpekBenangValue !== previousSpekBenang) {
                     $.ajax({
                         type: 'GET',
                         url: 'ExtruderTropodo/getIdKonversi',
@@ -753,17 +825,20 @@ document.addEventListener('DOMContentLoaded', function () {
                         },
                         success: function (result) {
                             idKonversi.value = result[0].IdKonversi.trim();
+                            clearTable();
+                            clearAllInputs();
                         },
                         error: function (xhr, status, error) {
                             console.error(error);
                         }
                     });
                 }
-            });
+            }
         } catch (error) {
             console.error("An error occurred:", error);
         }
     });
+
 
     let dataArrKomposisi = [];
 
@@ -831,13 +906,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (result.isConfirmed) {
                 const selectedRow = result.value;
-                bahan.value = selectedRow.IdType.trim();
-                typeBahan.value = selectedRow.Merk.trim();
+                setValue(bahan, decodeHtmlEntities(selectedRow.IdType.trim()));
+                setValue(typeBahan, decodeHtmlEntities(selectedRow.Merk.trim()));
 
                 let dataExists = false;
                 $("#tableKomposisi tbody tr").each(function () {
                     const idType = $(this).find("td:eq(0)").text().trim();
-                    // const merk = $(this).find("td:eq(0)").text().trim();
                     if (idType === selectedRow.IdType.trim()) {
                         dataExists = true;
                         return false;
@@ -863,7 +937,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             type: bahan.value
                         },
                         success: function (result) {
-                            quantityBahanBaku.value = result[0].Quantity.trim();
+                            setValue(quantityBahanBaku, decodeHtmlEntities(result[0].Quantity.trim()));
 
                             $('#tableKomposisi').DataTable().row.add([
                                 selectedRow.IdType.trim(),
@@ -898,10 +972,20 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    function setValue(element, value) {
+        element.value = value;
+    }
+
+    function decodeHtmlEntities(str) {
+        let textarea = document.createElement('textarea');
+        textarea.innerHTML = str;
+        return textarea.value;
+    }
+
     // untuk ambil data semua bahan, selain bahan baku
     function openAllModal(selectedButtonQuantity) {
         try {
-            let result = Swal.fire({
+            Swal.fire({
                 title: "Pilih Bahan",
                 html: `<table id="table_bahan" class="display" style="width:100%">
                         <thead>
@@ -956,116 +1040,89 @@ document.addEventListener('DOMContentLoaded', function () {
                     });
                 },
                 didClose: () => {
-                    if (selectedButtonQuantity == 'getCalpetCaco3') {
-                        buttonMasterBath.focus();
-                    } else if (selectedButtonQuantity == 'getMasterBath') {
-                        buttonUv.focus();
-                    } else if (selectedButtonQuantity == 'getUv') {
-                        buttonAntiStatic.focus();
-                    } else if (selectedButtonQuantity == 'getAntiStatic') {
-                        buttonPeletan.focus();
-                    } else if (selectedButtonQuantity == 'getPeletan') {
-                        buttonAdditif.focus();
-                    } else if (selectedButtonQuantity == 'getAdditif') {
-                        buttonLldpe.focus();
-                    } else if (selectedButtonQuantity == 'getLldpe') {
-                        buttonLdpeLami.focus();
-                    } else if (selectedButtonQuantity == 'getLdpeLami') {
-                        buttonLdpe.focus();
-                    } else if (selectedButtonQuantity == 'getLdpe') {
-                        buttonConductive.focus();
-                    } else if (selectedButtonQuantity == 'getConductive') {
-                        buttonHdpe.focus();
-                    } else if (selectedButtonQuantity == 'getHdpe') {
-                        buttonSweeping.focus();
-                    } else if (selectedButtonQuantity == 'getSweeping') {
-                        buttonInjection.focus();
-                    } else {
-                        keterangan.focus();
-                    }
+                    focusNextButton(selectedButtonQuantity);
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
                     const selectedRow = result.value;
-
-                    var typeSelected;
+                    let typeSelected;
 
                     switch (selectedButtonQuantity) {
                         case 'getCalpetCaco3':
-                            calpetCaco3.value = selectedRow.IdType.trim();
-                            typeCalpetCaco3.value = selectedRow.Merk.trim();
+                            setValue(calpetCaco3, decodeHtmlEntities(selectedRow.IdType.trim()));
+                            setValue(typeCalpetCaco3, decodeHtmlEntities(selectedRow.Merk.trim()));
                             typeSelected = calpetCaco3.value.trim();
                             break;
 
                         case 'getMasterBath':
-                            masterBath.value = selectedRow.IdType.trim();
-                            typeMasterBath.value = selectedRow.Merk.trim();
+                            setValue(masterBath, decodeHtmlEntities(selectedRow.IdType.trim()));
+                            setValue(typeMasterBath, decodeHtmlEntities(selectedRow.Merk.trim()));
                             typeSelected = masterBath.value.trim();
                             break;
 
                         case 'getUv':
-                            uv.value = selectedRow.IdType.trim();
-                            typeUv.value = selectedRow.Merk.trim();
+                            setValue(uv, decodeHtmlEntities(selectedRow.IdType.trim()));
+                            setValue(typeUv, decodeHtmlEntities(selectedRow.Merk.trim()));
                             typeSelected = uv.value.trim();
                             break;
 
                         case 'getAntiStatic':
-                            antiStatic.value = selectedRow.IdType.trim();
-                            typeAntiStatic.value = selectedRow.Merk.trim();
+                            setValue(antiStatic, decodeHtmlEntities(selectedRow.IdType.trim()));
+                            setValue(typeAntiStatic, decodeHtmlEntities(selectedRow.Merk.trim()));
                             typeSelected = antiStatic.value.trim();
                             break;
 
                         case 'getPeletan':
-                            peletan.value = selectedRow.IdType.trim();
-                            typePeletan.value = selectedRow.Merk.trim();
+                            setValue(peletan, decodeHtmlEntities(selectedRow.IdType.trim()));
+                            setValue(typePeletan, decodeHtmlEntities(selectedRow.Merk.trim()));
                             typeSelected = peletan.value.trim();
                             break;
 
                         case 'getAdditif':
-                            additif.value = selectedRow.IdType.trim();
-                            typeAdditif.value = selectedRow.Merk.trim();
+                            setValue(additif, decodeHtmlEntities(selectedRow.IdType.trim()));
+                            setValue(typeAdditif, decodeHtmlEntities(selectedRow.Merk.trim()));
                             typeSelected = additif.value.trim();
                             break;
 
                         case 'getLldpe':
-                            lldpe.value = selectedRow.IdType.trim();
-                            typeLldpe.value = selectedRow.Merk.trim();
+                            setValue(lldpe, decodeHtmlEntities(selectedRow.IdType.trim()));
+                            setValue(typeLldpe, decodeHtmlEntities(selectedRow.Merk.trim()));
                             typeSelected = lldpe.value.trim();
                             break;
 
                         case 'getLdpeLami':
-                            ldpeLami.value = selectedRow.IdType.trim();
-                            typeLdpeLami.value = selectedRow.Merk.trim();
+                            setValue(ldpeLami, decodeHtmlEntities(selectedRow.IdType.trim()));
+                            setValue(typeLdpeLami, decodeHtmlEntities(selectedRow.Merk.trim()));
                             typeSelected = ldpeLami.value.trim();
                             break;
 
                         case 'getLdpe':
-                            ldpe.value = selectedRow.IdType.trim();
-                            typeLdpe.value = selectedRow.Merk.trim();
+                            setValue(ldpe, decodeHtmlEntities(selectedRow.IdType.trim()));
+                            setValue(typeLdpe, decodeHtmlEntities(selectedRow.Merk.trim()));
                             typeSelected = ldpe.value.trim();
                             break;
 
                         case 'getConductive':
-                            conductive.value = selectedRow.IdType.trim();
-                            typeConductive.value = selectedRow.Merk.trim();
+                            setValue(conductive, decodeHtmlEntities(selectedRow.IdType.trim()));
+                            setValue(typeConductive, decodeHtmlEntities(selectedRow.Merk.trim()));
                             typeSelected = conductive.value.trim();
                             break;
 
                         case 'getHdpe':
-                            hdpe.value = selectedRow.IdType.trim();
-                            typeHdpe.value = selectedRow.Merk.trim();
+                            setValue(hdpe, decodeHtmlEntities(selectedRow.IdType.trim()));
+                            setValue(typeHdpe, decodeHtmlEntities(selectedRow.Merk.trim()));
                             typeSelected = hdpe.value.trim();
                             break;
 
                         case 'getSweeping':
-                            sweeping.value = selectedRow.IdType.trim();
-                            typeSweeping.value = selectedRow.Merk.trim();
+                            setValue(sweeping, decodeHtmlEntities(selectedRow.IdType.trim()));
+                            setValue(typeSweeping, decodeHtmlEntities(selectedRow.Merk.trim()));
                             typeSelected = sweeping.value.trim();
                             break;
 
                         case 'getInjection':
-                            injection.value = selectedRow.IdType.trim();
-                            typeInjection.value = selectedRow.Merk.trim();
+                            setValue(injection, decodeHtmlEntities(selectedRow.IdType.trim()));
+                            setValue(typeInjection, decodeHtmlEntities(selectedRow.Merk.trim()));
                             typeSelected = injection.value.trim();
                             break;
 
@@ -1088,17 +1145,15 @@ document.addEventListener('DOMContentLoaded', function () {
                             type: typeSelected
                         },
                         success: function (result) {
-
-                            let StatusTypeVariable = result[0].StatusType.trim();
-                            let NamaKelompokVariable = result[0].NamaKelompok.trim();
-                            let QuantityVariable = result[0].Quantity.trim();
-                            let ProsentaseVariable = result[0].Prosentase.trim();
-                            let merkSwal = result[0].Merk.trim();
+                            let StatusTypeVariable = decodeHtmlEntities(result[0].StatusType.trim());
+                            let NamaKelompokVariable = decodeHtmlEntities(result[0].NamaKelompok.trim());
+                            let QuantityVariable = decodeHtmlEntities(result[0].Quantity.trim());
+                            let ProsentaseVariable = decodeHtmlEntities(result[0].Prosentase.trim());
+                            let merkSwal = decodeHtmlEntities(result[0].Merk.trim());
 
                             let dataExists = false;
                             $("#tableKomposisi tbody tr").each(function () {
                                 const idType = $(this).find("td:eq(0)").text().trim();
-                                // const merk = $(this).find("td:eq(0)").text().trim();
                                 if (idType === selectedRow.IdType.trim()) {
                                     dataExists = true;
                                     return false;
@@ -1113,94 +1168,24 @@ document.addEventListener('DOMContentLoaded', function () {
                                 });
                             } else {
                                 $('#tableKomposisi').DataTable().row.add([
-                                    selectedRow.IdType.trim(),
-                                    selectedRow.Merk.trim(),
+                                    (selectedRow.IdType.trim()),
+                                    (selectedRow.Merk.trim()),
                                     StatusTypeVariable,
                                     NamaKelompokVariable,
                                     QuantityVariable,
                                     ProsentaseVariable
                                 ]).draw(false);
 
-                                // Push data to dataArrKomposisi array
                                 dataArrKomposisi.push([
-                                    selectedRow.IdType.trim(),
-                                    selectedRow.Merk.trim(),
+                                    (selectedRow.IdType.trim()),
+                                    (selectedRow.Merk.trim()),
                                     StatusTypeVariable,
                                     NamaKelompokVariable,
                                     QuantityVariable,
                                     ProsentaseVariable
                                 ]);
 
-                                switch (selectedButtonQuantity) {
-                                    case 'getCalpetCaco3':
-                                        quantityCalpetCaco3.value = QuantityVariable;
-                                        prosentaseCalpetCaco3.value = ProsentaseVariable;
-                                        break;
-
-                                    case 'getMasterBath':
-                                        quantityMasterBath.value = QuantityVariable;
-                                        prosentaseMasterBath.value = ProsentaseVariable;
-                                        break;
-
-                                    case 'getUv':
-                                        quantityUv.value = QuantityVariable;
-                                        prosentaseUv.value = ProsentaseVariable;
-                                        break;
-
-                                    case 'getAntiStatic':
-                                        quantityAntiStatic.value = QuantityVariable;
-                                        prosentaseAntiStatic.value = ProsentaseVariable;
-                                        break;
-
-                                    case 'getPeletan':
-                                        quantityPeletan.value = QuantityVariable;
-                                        prosentasePeletan.value = ProsentaseVariable;
-                                        break;
-
-                                    case 'getAdditif':
-                                        quantityAdditif.value = QuantityVariable;
-                                        prosentaseAdditif.value = ProsentaseVariable;
-                                        break;
-
-                                    case 'getLldpe':
-                                        quantityLldpe.value = QuantityVariable;
-                                        prosentaseLldpe.value = ProsentaseVariable;
-                                        break;
-
-                                    case 'getLdpeLami':
-                                        quantityLdpeLami.value = QuantityVariable;
-                                        prosentaseLdpeLami.value = ProsentaseVariable;
-                                        break;
-
-                                    case 'getLdpe':
-                                        quantityLdpe.value = QuantityVariable;
-                                        prosentaseLdpe.value = ProsentaseVariable;
-                                        break;
-
-                                    case 'getConductive':
-                                        quantityConductive.value = QuantityVariable;
-                                        prosentaseConductive.value = ProsentaseVariable;
-                                        break;
-
-                                    case 'getHdpe':
-                                        quantityHdpe.value = QuantityVariable;
-                                        prosentaseHdpe.value = ProsentaseVariable;
-                                        break;
-
-                                    case 'getSweeping':
-                                        quantitySweeping.value = QuantityVariable;
-                                        prosentaseSweeping.value = ProsentaseVariable;
-                                        break;
-
-                                    case 'getInjection':
-                                        quantityInjection.value = QuantityVariable;
-                                        prosentaseInjection.value = ProsentaseVariable;
-                                        break;
-
-                                    default:
-                                        console.log('No matching case found for selectedButtonQuantity:', selectedButtonQuantity);
-                                        break;
-                                }
+                                updateFormValues(selectedButtonQuantity, QuantityVariable, ProsentaseVariable);
                             }
                         },
                         error: function (xhr, status, error) {
@@ -1213,6 +1198,134 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error("An error occurred:", error);
         }
     }
+
+    function setValue(element, value) {
+        element.value = value;
+    }
+
+    function decodeHtmlEntities(str) {
+        let textarea = document.createElement('textarea');
+        textarea.innerHTML = str;
+        return textarea.value;
+    }
+
+    function updateFormValues(selectedButtonQuantity, quantity, prosentase) {
+        switch (selectedButtonQuantity) {
+            case 'getCalpetCaco3':
+                setValue(quantityCalpetCaco3, quantity);
+                setValue(prosentaseCalpetCaco3, prosentase);
+                break;
+
+            case 'getMasterBath':
+                setValue(quantityMasterBath, quantity);
+                setValue(prosentaseMasterBath, prosentase);
+                break;
+
+            case 'getUv':
+                setValue(quantityUv, quantity);
+                setValue(prosentaseUv, prosentase);
+                break;
+
+            case 'getAntiStatic':
+                setValue(quantityAntiStatic, quantity);
+                setValue(prosentaseAntiStatic, prosentase);
+                break;
+
+            case 'getPeletan':
+                setValue(quantityPeletan, quantity);
+                setValue(prosentasePeletan, prosentase);
+                break;
+
+            case 'getAdditif':
+                setValue(quantityAdditif, quantity);
+                setValue(prosentaseAdditif, prosentase);
+                break;
+
+            case 'getLldpe':
+                setValue(quantityLldpe, quantity);
+                setValue(prosentaseLldpe, prosentase);
+                break;
+
+            case 'getLdpeLami':
+                setValue(quantityLdpeLami, quantity);
+                setValue(prosentaseLdpeLami, prosentase);
+                break;
+
+            case 'getLdpe':
+                setValue(quantityLdpe, quantity);
+                setValue(prosentaseLdpe, prosentase);
+                break;
+
+            case 'getConductive':
+                setValue(quantityConductive, quantity);
+                setValue(prosentaseConductive, prosentase);
+                break;
+
+            case 'getHdpe':
+                setValue(quantityHdpe, quantity);
+                setValue(prosentaseHdpe, prosentase);
+                break;
+
+            case 'getSweeping':
+                setValue(quantitySweeping, quantity);
+                setValue(prosentaseSweeping, prosentase);
+                break;
+
+            case 'getInjection':
+                setValue(quantityInjection, quantity);
+                setValue(prosentaseInjection, prosentase);
+                break;
+
+            default:
+                console.log('No matching case found for selectedButtonQuantity:', selectedButtonQuantity);
+                break;
+        }
+    }
+
+    function focusNextButton(selectedButtonQuantity) {
+        switch (selectedButtonQuantity) {
+            case 'getCalpetCaco3':
+                buttonMasterBath.focus();
+                break;
+            case 'getMasterBath':
+                buttonUv.focus();
+                break;
+            case 'getUv':
+                buttonAntiStatic.focus();
+                break;
+            case 'getAntiStatic':
+                buttonPeletan.focus();
+                break;
+            case 'getPeletan':
+                buttonAdditif.focus();
+                break;
+            case 'getAdditif':
+                buttonLldpe.focus();
+                break;
+            case 'getLldpe':
+                buttonLdpeLami.focus();
+                break;
+            case 'getLdpeLami':
+                buttonLdpe.focus();
+                break;
+            case 'getLdpe':
+                buttonConductive.focus();
+                break;
+            case 'getConductive':
+                buttonHdpe.focus();
+                break;
+            case 'getHdpe':
+                buttonSweeping.focus();
+                break;
+            case 'getSweeping':
+                buttonInjection.focus();
+                break;
+            default:
+                keterangan.focus();
+                break;
+        }
+    }
+
 
     // langsung ke function ambil data
     buttonCalpetCaco3.addEventListener('click', function () { openAllModal('getCalpetCaco3'); });
@@ -1346,6 +1459,38 @@ document.addEventListener('DOMContentLoaded', function () {
         $('#ketStrength').val('');
     }
 
+    function cekFieldMinimum() {
+        if (mesin.value === '' || shiftLetter.value === '' || idKonversi.value === '' || spekBenang.value === '') {
+            let errorMessage = 'Isi ';
+            const emptyFields = [];
+
+            if (mesin.value === '') {
+                emptyFields.push('Mesin');
+            }
+            if (shiftLetter.value === '') {
+                emptyFields.push('Shift');
+            }
+            if (idKonversi.value === '') {
+                emptyFields.push('Id Konversi');
+            }
+            if (spekBenang.value === '') {
+                emptyFields.push('Spek Benang');
+            }
+
+            if (emptyFields.length > 1) {
+                errorMessage += emptyFields.slice(0, -1).join(', ') + ' dan ' + emptyFields.slice(-1);
+            } else {
+                errorMessage += emptyFields[0];
+            }
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: errorMessage
+            });
+            return;
+        }
+    }
 
     // PROSES button
     prosesButton.addEventListener('click', async () => {
@@ -1353,24 +1498,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // ISI
         if (nomorButton === 1) {
             // kalau mau proses isi,minim ada shift, mesin
-            if (mesin.value === '' || shiftLetter.value === '') {
-                let errorMessage = 'Isi ';
-                if (mesin.value === '') {
-                    errorMessage += 'Mesin';
-                }
-                if (mesin.value === '' && shiftLetter.value === '') {
-                    errorMessage += ' dan ';
-                }
-                if (shiftLetter.value === '') {
-                    errorMessage += 'Shift';
-                }
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: errorMessage
-                });
-                return;
-            }
+            cekFieldMinimum();
 
             dataArrayDetail = [];
             tableAdd.rows().every(function () {
@@ -1442,7 +1570,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 dataArrayDetail.push(data);
             });
 
-            console.log('additional', dataArrayDetail);
+            cekFieldMinimum();
 
             // update data
             $.ajax({
@@ -1726,6 +1854,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
         dataArrKomposisi = [];
         dataArrayDetail = [];
+    }
+
+    function clearTableChange() {
+        tableKomposisi.clear().draw();
+
+        dataArrKomposisi = [];
     }
 
     function deleteDetail() {

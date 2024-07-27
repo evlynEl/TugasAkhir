@@ -49,22 +49,22 @@
                                     <div class="row">
                                         <div class="col-sm-1">
                                             <label for="mesin">Mesin</label>
-                                            <input type="text" id="mesin" name="mesin" class="form-control mb-1"
+                                            <input type="text" id="mesin" name="mesin" class="form-control mb-1" style="width: 125%"
                                                 readonly>
                                         </div>
                                         <div class="col-sm-1">
                                             <label for="ukuran">Ukuran</label>
-                                            <input type="text" id="ukuran" name="ukuran" class="form-control mb-1"
+                                            <input type="text" id="ukuran" name="ukuran" class="form-control mb-1" style="width: 125%"
                                                 readonly>
                                         </div>
                                         <div class="col-sm-1">
                                             <label for="waftRajutan">Waft</label>
-                                            <input type="text" id="waftRajutan" name="waftRajutan"
+                                            <input type="text" id="waftRajutan" name="waftRajutan" style="width: 125%"
                                                 class="form-control mb-2" readonly>
                                         </div>
                                         <div class="col-sm-1">
                                             <label for="weftRajutan">Weft</label>
-                                            <input type="text" id="weftRajutan" name="weftRajutan"
+                                            <input type="text" id="weftRajutan" name="weftRajutan" style="width: 125%"
                                                 class="form-control mb-1" readonly>
                                         </div>
                                         <div class="col-sm-2">
@@ -74,17 +74,17 @@
                                         </div>
                                         <div class="col-sm-2">
                                             <label for="weftBenang">Weft</label>
-                                            <input type="text" id="weftBenang" name="weftBenang"
+                                            <input type="text" id="weftBenang" name="weftBenang" 
                                                 class="form-control mb-2" readonly>
                                         </div>
                                         <div class="col-sm-1">
                                             <label for="waftDenier">Waft</label>
-                                            <input type="text" id="waftDenier" name="waftDenier"
+                                            <input type="text" id="waftDenier" name="waftDenier" style="width: 125%"
                                                 class="form-control mb-1" readonly>
                                         </div>
                                         <div class="col-sm-1">
                                             <label for="weftDenier">Weft</label>
-                                            <input type="text" id="weftDenier" name="weftDenier"
+                                            <input type="text" id="weftDenier" name="weftDenier" style="width: 125%"
                                                 class="form-control mb-1" readonly>
                                         </div>
                                         <div class="col-sm-2">

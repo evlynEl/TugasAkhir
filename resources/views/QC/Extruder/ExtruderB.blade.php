@@ -125,181 +125,184 @@
                                 Prosentase
                             </div>
 
-                            {{-- Bahan Baku --}}
-                            <div class="row">
-                                <div class="col-sm-2">
-                                    <label>Bahan Baku</label>
+                            <div class="hapusElement">
+                                {{-- Bahan Baku --}}
+                                <div class="row">
+                                    <div class="col-sm-2">
+                                        <label>Bahan Baku</label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input type="text" id="bahan" name="bahan" class="form-control mb-1"
+                                            readonly>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input type="text" id="typeBahan" name="typeBahan" class="form-control mb-1"
+                                            readonly>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <button type="button" class="btn btn-primary" id="buttonBahanBaku">...</button>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <input type="text" id="quantityBahanBaku" name="quantityBahanBaku"
+                                            class="form-control mb-1" readonly>
+                                    </div>
                                 </div>
-                                <div class="col-sm-2">
-                                    <input type="text" id="bahan" name="bahan" class="form-control mb-1"
-                                        readonly>
-                                </div>
-                                <div class="col-sm-4">
-                                    <input type="text" id="typeBahan" name="typeBahan" class="form-control mb-1"
-                                        readonly>
-                                </div>
-                                <div class="col-sm-1">
-                                    <button type="button" class="btn btn-primary" id="buttonBahanBaku">...</button>
-                                </div>
-                                <div class="col-sm-1">
-                                    <input type="text" id="quantityBahanBaku" name="quantityBahanBaku"
-                                        class="form-control mb-1" readonly>
-                                </div>
-                            </div>
 
-                            <!-- CACO3 -->
-                            <div class="row">
-                                <div class="col-sm-2">
-                                    <label>CACO3</label>
+                                <!-- CACO3 -->
+                                <div class="row">
+                                    <div class="col-sm-2">
+                                        <label>CACO3</label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input type="text" id="calpetCaco3" name="calpetCaco3"
+                                            class="form-control mb-1" readonly>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input type="text" id="typeCalpetCaco3" name="typeCalpetCaco3"
+                                            class="form-control mb-1" readonly>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <button type="button" class="btn btn-primary"
+                                            id="buttonCalpetCaco3">...</button>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <input type="text" id="quantityCalpetCaco3" name="quantityCalpetCaco3"
+                                            class="form-control mb-1" readonly>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <input type="text" id="prosentaseCalpetCaco3" name="prosentaseCalpetCaco3"
+                                            class="form-control mb-1" readonly>
+                                    </div>
                                 </div>
-                                <div class="col-sm-2">
-                                    <input type="text" id="calpetCaco3" name="calpetCaco3" class="form-control mb-1"
-                                        readonly>
-                                </div>
-                                <div class="col-sm-4">
-                                    <input type="text" id="typeCalpetCaco3" name="typeCalpetCaco3"
-                                        class="form-control mb-1" readonly>
-                                </div>
-                                <div class="col-sm-1">
-                                    <button type="button" class="btn btn-primary" id="buttonCalpetCaco3">...</button>
-                                </div>
-                                <div class="col-sm-1">
-                                    <input type="text" id="quantityCalpetCaco3" name="quantityCalpetCaco3"
-                                        class="form-control mb-1" readonly>
-                                </div>
-                                <div class="col-sm-1">
-                                    <input type="text" id="prosentaseCalpetCaco3" name="prosentaseCalpetCaco3"
-                                        class="form-control mb-1" readonly>
-                                </div>
-                            </div>
 
-                            <!-- MasterBath -->
-                            <div class="row">
-                                <div class="col-sm-2">
-                                    <label>MasterBath</label>
+                                <!-- MasterBath -->
+                                <div class="row">
+                                    <div class="col-sm-2">
+                                        <label>MasterBath</label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input type="text" id="masterBath" name="masterBath"
+                                            class="form-control mb-1" readonly>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input type="text" id="typeMasterBath" name="typeMasterBath"
+                                            class="form-control mb-1" readonly>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <button type="button" class="btn btn-primary" id="buttonMasterBath">...</button>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <input type="text" id="quantityMasterBath" name="quantityMasterBath"
+                                            class="form-control mb-1" readonly>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <input type="text" id="prosentaseMasterBath" name="prosentaseMasterBath"
+                                            class="form-control mb-1" readonly>
+                                    </div>
                                 </div>
-                                <div class="col-sm-2">
-                                    <input type="text" id="masterBath" name="masterBath" class="form-control mb-1"
-                                        readonly>
-                                </div>
-                                <div class="col-sm-4">
-                                    <input type="text" id="typeMasterBath" name="typeMasterBath"
-                                        class="form-control mb-1" readonly>
-                                </div>
-                                <div class="col-sm-1">
-                                    <button type="button" class="btn btn-primary" id="buttonMasterBath">...</button>
-                                </div>
-                                <div class="col-sm-1">
-                                    <input type="text" id="quantityMasterBath" name="quantityMasterBath"
-                                        class="form-control mb-1" readonly>
-                                </div>
-                                <div class="col-sm-1">
-                                    <input type="text" id="prosentaseMasterBath" name="prosentaseMasterBath"
-                                        class="form-control mb-1" readonly>
-                                </div>
-                            </div>
 
-                            <!-- U V -->
-                            <div class="row">
-                                <div class="col-sm-2">
-                                    <label>U V</label>
+                                <!-- U V -->
+                                <div class="row">
+                                    <div class="col-sm-2">
+                                        <label>U V</label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input type="text" id="uv" name="uv" class="form-control mb-1"
+                                            readonly>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input type="text" id="typeUv" name="typeUv" class="form-control mb-1"
+                                            readonly>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <button type="button" class="btn btn-primary" id="buttonUv">...</button>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <input type="text" id="quantityUv" name="quantityUv"
+                                            class="form-control mb-1" readonly>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <input type="text" id="prosentaseUv" name="prosentaseUv"
+                                            class="form-control mb-1" readonly>
+                                    </div>
                                 </div>
-                                <div class="col-sm-2">
-                                    <input type="text" id="uv" name="uv" class="form-control mb-1"
-                                        readonly>
-                                </div>
-                                <div class="col-sm-4">
-                                    <input type="text" id="typeUv" name="typeUv" class="form-control mb-1"
-                                        readonly>
-                                </div>
-                                <div class="col-sm-1">
-                                    <button type="button" class="btn btn-primary" id="buttonUv">...</button>
-                                </div>
-                                <div class="col-sm-1">
-                                    <input type="text" id="quantityUv" name="quantityUv" class="form-control mb-1"
-                                        readonly>
-                                </div>
-                                <div class="col-sm-1">
-                                    <input type="text" id="prosentaseUv" name="prosentaseUv"
-                                        class="form-control mb-1" readonly>
-                                </div>
-                            </div>
 
-                            <!-- Anti Static -->
-                            <div class="row">
-                                <div class="col-sm-2">
-                                    <label>Anti Static</label>
+                                <!-- Anti Static -->
+                                <div class="row">
+                                    <div class="col-sm-2">
+                                        <label>Anti Static</label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input type="text" id="antiStatic" name="antiStatic"
+                                            class="form-control mb-1" readonly>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input type="text" id="typeAntiStatic" name="typeAntiStatic"
+                                            class="form-control mb-1" readonly>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <button type="button" class="btn btn-primary" id="buttonAntiStatic">...</button>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <input type="text" id="quantityAntiStatic" name="quantityAntiStatic"
+                                            class="form-control mb-1" readonly>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <input type="text" id="prosentaseAntiStatic" name="prosentaseAntiStatic"
+                                            class="form-control mb-1" readonly>
+                                    </div>
                                 </div>
-                                <div class="col-sm-2">
-                                    <input type="text" id="antiStatic" name="antiStatic" class="form-control mb-1"
-                                        readonly>
-                                </div>
-                                <div class="col-sm-4">
-                                    <input type="text" id="typeAntiStatic" name="typeAntiStatic"
-                                        class="form-control mb-1" readonly>
-                                </div>
-                                <div class="col-sm-1">
-                                    <button type="button" class="btn btn-primary" id="buttonAntiStatic">...</button>
-                                </div>
-                                <div class="col-sm-1">
-                                    <input type="text" id="quantityAntiStatic" name="quantityAntiStatic"
-                                        class="form-control mb-1" readonly>
-                                </div>
-                                <div class="col-sm-1">
-                                    <input type="text" id="prosentaseAntiStatic" name="prosentaseAntiStatic"
-                                        class="form-control mb-1" readonly>
-                                </div>
-                            </div>
 
-                            <!-- Peletan -->
-                            <div class="row">
-                                <div class="col-sm-2">
-                                    <label>Peletan</label>
+                                <!-- Peletan -->
+                                <div class="row">
+                                    <div class="col-sm-2">
+                                        <label>Peletan</label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input type="text" id="peletan" name="peletan" class="form-control mb-1"
+                                            readonly>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input type="text" id="typePeletan" name="typePeletan"
+                                            class="form-control mb-1" readonly>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <button type="button" class="btn btn-primary" id="buttonPeletan">...</button>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <input type="text" id="quantityPeletan" name="quantityPeletan"
+                                            class="form-control mb-1" readonly>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <input type="text" id="prosentasePeletan" name="prosentasePeletan"
+                                            class="form-control mb-1" readonly>
+                                    </div>
                                 </div>
-                                <div class="col-sm-2">
-                                    <input type="text" id="peletan" name="peletan" class="form-control mb-1"
-                                        readonly>
-                                </div>
-                                <div class="col-sm-4">
-                                    <input type="text" id="typePeletan" name="typePeletan" class="form-control mb-1"
-                                        readonly>
-                                </div>
-                                <div class="col-sm-1">
-                                    <button type="button" class="btn btn-primary" id="buttonPeletan">...</button>
-                                </div>
-                                <div class="col-sm-1">
-                                    <input type="text" id="quantityPeletan" name="quantityPeletan"
-                                        class="form-control mb-1" readonly>
-                                </div>
-                                <div class="col-sm-1">
-                                    <input type="text" id="prosentasePeletan" name="prosentasePeletan"
-                                        class="form-control mb-1" readonly>
-                                </div>
-                            </div>
 
-                            <!-- Additif -->
-                            <div class="row">
-                                <div class="col-sm-2">
-                                    <label>Additif</label>
-                                </div>
-                                <div class="col-sm-2">
-                                    <input type="text" id="additif" name="additif" class="form-control mb-1"
-                                        readonly>
-                                </div>
-                                <div class="col-sm-4">
-                                    <input type="text" id="typeAdditif" name="typeAdditif" class="form-control mb-1"
-                                        readonly>
-                                </div>
-                                <div class="col-sm-1">
-                                    <button type="button" class="btn btn-primary" id="buttonAdditif">...</button>
-                                </div>
-                                <div class="col-sm-1">
-                                    <input type="text" id="quantityAdditif" name="quantityAdditif"
-                                        class="form-control mb-1" readonly>
-                                </div>
-                                <div class="col-sm-1">
-                                    <input type="text" id="prosentaseAdditif" name="prosentaseAdditif"
-                                        class="form-control mb-1" readonly>
+                                <!-- Additif -->
+                                <div class="row">
+                                    <div class="col-sm-2">
+                                        <label>Additif</label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input type="text" id="additif" name="additif" class="form-control mb-1"
+                                            readonly>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input type="text" id="typeAdditif" name="typeAdditif"
+                                            class="form-control mb-1" readonly>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <button type="button" class="btn btn-primary" id="buttonAdditif">...</button>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <input type="text" id="quantityAdditif" name="quantityAdditif"
+                                            class="form-control mb-1" readonly>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <input type="text" id="prosentaseAdditif" name="prosentaseAdditif"
+                                            class="form-control mb-1" readonly>
+                                    </div>
                                 </div>
                             </div>
 

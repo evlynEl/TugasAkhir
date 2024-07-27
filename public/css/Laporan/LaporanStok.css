@@ -32,8 +32,12 @@ body {
 
 .no-wrap-header thead th {
     white-space: nowrap;
-    background-color: white;
+    background-color: lightgoldenrodyellow;
     padding: 0;
+}
+
+.table-responsive.fixed-height tbody{
+    background-color: white;
 }
 
 .table-responsive.fixed-height {
@@ -43,6 +47,7 @@ body {
     border: 2px solid black;
     width: 100%;
     table-layout: fixed;
+    background-color: white;
 }
 
 .swalDetailLabel {
