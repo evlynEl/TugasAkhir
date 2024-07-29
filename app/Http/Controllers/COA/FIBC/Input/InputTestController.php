@@ -24,123 +24,7 @@ class InputTestController extends Controller
 
     public function store(Request $request)
     {
-        $referenceNo = $request->input('RefNo');
-        $heightApprox = $request->input('Height_Approx');
-        $diaVal = $request->input('dia_val');
-        $squareVal = $request->input('square_val');
-        $cyclicTest = $request->input('Cyclic_Test');
-        $loadSpeed = $request->input('Load_Speed');
-        $cyclicLift = $request->input('Cyclic_Lift');
-        $cyclicResult = $request->input('Cyclic_Result');
-        $topLift = $request->input('Top_Lift');
-        $breakageLocation = $request->input('Breakage_Location');
-        $dropResult = $request->input('Drop_Result');
-        $dropTest = $request->input('Drop_Test');
-        $jumlah = $request->input('Jumlah');
-        $UserInput = Auth::user()->NomorUser;
-
-
-        // Data from Data_1 to Data_30
-        $dataValues = [];
-        for ($i = 1; $i <= 30; $i++) {
-            $dataValues["Data_$i"] = $request->input("Data_$i");
-        }
-
-        // Data for pictures
-        $pictures = [
-            'picture1' => $request->input('picture1'),
-            'picture2' => $request->input('picture2'),
-            'picture3' => $request->input('picture3'),
-            'picture4' => $request->input('picture4'),
-        ];
-
-        dd([
-            'referenceNo' => $referenceNo,
-            'heightApprox' => $heightApprox,
-            'diaVal' => $diaVal,
-            'squareVal' => $squareVal,
-            'cyclicTest' => $cyclicTest,
-            'loadSpeed' => $loadSpeed,
-            'cyclicLift' => $cyclicLift,
-            'cyclicResult' => $cyclicResult,
-            'topLift' => $topLift,
-            'breakageLocation' => $breakageLocation,
-            'dropResult' => $dropResult,
-            'dropTest' => $dropTest,
-            'jumlah' => $jumlah,
-            'UserInput' => $UserInput,
-            'dataValues' => $dataValues,
-            'pictures' => $pictures,
-        ]);
-
-        try {
-            DB::connection('ConnTestQC')->statement(
-                'exec SP_1273_QTC_MAINT_RESULT_FIBC
-                @Kode = 1,
-                @RefNo = ?,
-                @Height_Approx = ?,
-                @Dia = ?,
-                @Square = ?,
-                @CyclicTest = ?,
-                @Speed = ?,
-                @DropTest = ?,
-                @CyclicLift = ?,
-                @CyclicResult = ?,
-                @TopLift = ?,
-                @TopResult = ?,
-                @Breakage = ?,
-                @DropResult = ?,
-                @TestResult = ?,
-                @UserInput = ?,
-                @damageFoundDescCy = ?,
-                @othersText = ?,
-                @damageFoundDescDrop = ?,
-                @JumlahPict = ?,
-                @CyclicData1 = ?,
-                @CyclicData2 = ?,
-                @CyclicData3 = ?,
-                @CyclicData4 = ?,
-                @CyclicData5 = ?,
-                @CyclicData6 = ?,
-                @CyclicData7 = ?,
-                @CyclicData8 = ?,
-                @CyclicData9 = ?,
-                @CyclicData10 = ?,
-                @CyclicData11 = ?,
-                @CyclicData12 = ?,
-                @CyclicData13 = ?,
-                @CyclicData14 = ?,
-                @CyclicData15 = ?,
-                @CyclicData16 = ?,
-                @CyclicData17 = ?,
-                @CyclicData18 = ?,
-                @CyclicData19 = ?,
-                @CyclicData20 = ?,
-                @CyclicData21 = ?,
-                @CyclicData22 = ?,
-                @CyclicData23 = ?,
-                @CyclicData24 = ?,
-                @CyclicData25 = ?,
-                @CyclicData26 = ?,
-                @CyclicData27 = ?,
-                @CyclicData28 = ?,
-                @CyclicData29 = ?,
-                @CyclicData30 = ?,
-                @Pict11 = ?,
-                @Pict12 = ?,
-                @Pict13 = ?,
-                @Pict14 = ?',
-                array_merge([
-                    $referenceNo, $heightApprox, $diaVal, $squareVal,
-                    $cyclicTest, $loadSpeed, $cyclicLift, $cyclicResult, $topLift,
-                    $breakageLocation, $dropResult, $dropTest, $jumlah, $UserInput
-                ], array_values($dataValues), array_values($pictures))
-            );
-
-            return response()->json(['success' => 'Data inserted successfully'], 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to insert data: ' . $e->getMessage()], 500);
-        }
+        //
     }
 
     public function show($id, Request $request)
@@ -170,12 +54,15 @@ class InputTestController extends Controller
             $cyclicData = $cyclic[0];
             $swl = $cyclicData->SWL;
             $cyclicTestValue = 2 * $swl;
+            $sf = $cyclicData->SF;
+            $TestResult = $swl * $sf;
             $refCopy = $cyclicData->Copy_RefNo;
 
             if ($request->input('a') == 1) { // isi
                 if (empty($refCopy)) {
                     return response()->json([
                         'cyclicTestValue' => $cyclicTestValue,
+                        'TestResult' => $TestResult,
                         'refCopy' => ''
                     ]);
                 } else {
@@ -219,6 +106,7 @@ class InputTestController extends Controller
 
                     $data_full = [
                         'cyclicTestValue' => $cyclicTestValue,
+                        'TestResult' => $TestResult,
                         'refCopy' => $refCopy,
                         'additionalData' => $data_additional
                     ];
@@ -309,8 +197,109 @@ class InputTestController extends Controller
 
     public function update(Request $request, $id)
     {
-        //
+        $referenceNo = $request->input('RefNo');
+        $heightApprox = $request->input('Height_Approx');
+        $diaVal = $request->input('dia_val');
+        $squareVal = $request->input('square_val');
+        $cyclicTest = $request->input('Cyclic_Test');
+        $loadSpeed = $request->input('Load_Speed');
+        $cyclicLift = $request->input('Cyclic_Lift');
+        $cyclicResult = $request->input('Cyclic_Result');
+        $topLift = $request->input('Top_Lift');
+        $topResult = $request->input('Top_Result');
+        $breakageLocation = $request->input('Breakage_Location');
+        $testResult = $request->input('TestResult');
+        $dropResult = $request->input('Drop_Result');
+        $dropTest = $request->input('Drop_Test');
+        $jumlah = $request->input('Jumlah');
+        $UserInput = Auth::user()->NomorUser;
+
+        // Data from Data_1 to Data_30
+        $dataValues = [];
+        for ($i = 1; $i <= 30; $i++) {
+            $dataValues["Data_$i"] = $request->input("Data_$i");
+        }
+
+        // Data for pictures
+        $filePaths = [];
+        if ($id === 'store3pict') {
+            foreach (['picture1', 'picture2', 'picture3'] as $picture) {
+                if ($request->hasFile($picture)) {
+                    $filePaths[$picture] = $request->file($picture)->store('images');
+                }
+            }
+            $kode = 1;
+        } elseif ($id === 'store4pict') {
+            foreach (['picture1', 'picture2', 'picture3', 'picture4'] as $picture) {
+                if ($request->hasFile($picture)) {
+                    $filePaths[$picture] = $request->file($picture)->store('images');
+                }
+            }
+            $kode = 2;
+        }
+
+        // Debugging: Uncomment to see the data structure
+        // dd([
+        //     'kode' => $kode,
+        //     'referenceNo' => $referenceNo,
+        //     'heightApprox' => $heightApprox,
+        //     'diaVal' => $diaVal,
+        //     'squareVal' => $squareVal,
+        //     'cyclicTest' => $cyclicTest,
+        //     'loadSpeed' => $loadSpeed,
+        //     'cyclicLift' => $cyclicLift,
+        //     'cyclicResult' => $cyclicResult,
+        //     'topLift' => $topLift,
+        //     'topResult' => $topResult,
+        //     'breakageLocation' => $breakageLocation,
+        //     'testResult' => $testResult,
+        //     'dropResult' => $dropResult,
+        //     'dropTest' => $dropTest,
+        //     'jumlah' => $jumlah,
+        //     'UserInput' => $UserInput,
+        //     'dataValues' => $dataValues,
+        //     'filePaths' => $filePaths
+        // ]);
+
+        try {
+            // Construct the SQL statement dynamically based on the number of pictures
+            $pictureParams = array_map(fn ($key) => "@$key = ?", array_keys($filePaths));
+            $pictureParams = implode(', ', $pictureParams);
+
+            $sql = "exec SP_1273_QTC_MAINT_RESULT_FIBC
+        @Kode = $kode,
+        @RefNo = ?, @Height_Approx = ?, @Dia = ?, @Square = ?,
+        @CyclicTest = ?, @Speed = ?, @DropTest = ?, @CyclicLift = ?,
+        @CyclicResult = ?, @TopLift = ?, @TopResult = ?, @Breakage = ?,
+        @DropResult = ?, @TestResult = ?, @UserInput = ?,
+        @JumlahPict = ?, @CyclicData1 = ?, @CyclicData2 = ?,
+        @CyclicData3 = ?, @CyclicData4 = ?, @CyclicData5 = ?,
+        @CyclicData6 = ?, @CyclicData7 = ?, @CyclicData8 = ?,
+        @CyclicData9 = ?, @CyclicData10 = ?, @CyclicData11 = ?,
+        @CyclicData12 = ?, @CyclicData13 = ?, @CyclicData14 = ?,
+        @CyclicData15 = ?, @CyclicData16 = ?, @CyclicData17 = ?,
+        @CyclicData18 = ?, @CyclicData19 = ?, @CyclicData20 = ?,
+        @CyclicData21 = ?, @CyclicData22 = ?, @CyclicData23 = ?,
+        @CyclicData24 = ?, @CyclicData25 = ?, @CyclicData26 = ?,
+        @CyclicData27 = ?, @CyclicData28 = ?, @CyclicData29 = ?,
+        @CyclicData30 = ?, $pictureParams";
+
+            DB::connection('ConnTestQC')->statement(
+                $sql,
+                array_merge([
+                    $referenceNo, $heightApprox, $diaVal, $squareVal,
+                    $cyclicTest, $loadSpeed, $dropTest, $cyclicLift,
+                    $cyclicResult, $topLift, $topResult, $breakageLocation,
+                    $dropResult, $testResult, $UserInput, $jumlah
+                ], array_values($dataValues), array_values($filePaths))
+            );
+
+            return response()->json(['success' => 'Data inserted successfully'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to insert data: ' . $e->getMessage()], 500);
+        }
     }
+
 
     public function destroy($id)
     {

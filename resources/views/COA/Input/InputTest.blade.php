@@ -69,7 +69,7 @@
                                     <div class="form-check-inline">
                                         <input class="form-check-input" type="checkbox" name="Square" id="Square"
                                             value="Square">
-                                        <label for="square_val" class="form-check-label" for="square_val">Square</label>
+                                        <label for="Square" class="form-check-label" for="Square">Square</label>
                                         <div class="input-group" id="inputSq" style="max-width: 70%; margin-left: 2%;">
                                             <input type="text" class="form-control" id="square_val" name="square_val">
                                             <div class="input-group-append">

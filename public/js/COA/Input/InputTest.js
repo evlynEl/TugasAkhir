@@ -17,6 +17,7 @@ var Drop_Test = document.getElementById('Drop_Test');
 var Cyclic_Lift = document.getElementById('Cyclic_Lift');
 var damageFoundDescCyInput = document.getElementById('damageFoundDescCy');
 var Top_Lift = document.getElementById('Top_Lift');
+var Top_Result = document.getElementById('Top_Result');
 var othersTextInput = document.getElementById('othersText');
 var Drop_Result = document.getElementById('Drop_Result');
 var damageFoundDescDropInput = document.getElementById('damageFoundDescDrop');
@@ -33,12 +34,7 @@ var fourPictures = document.getElementById('fourPictures');
 // var picture2 = document.getElementById('imagePreview2');
 // var picture3 = document.getElementById('imagePreview3');
 // var picture4 = document.getElementById('imagePreview4');
-var imageFiles = {
-    'picture1': null,
-    'picture2': null,
-    'picture3': null,
-    'picture4': null
-};
+var imageFiles;
 
 // specific div
 // var pressureboxDiv = document.getElementById('pressurebox');
@@ -69,9 +65,11 @@ var btn_hapus = document.getElementById('btn_hapus');
 
 let a; // isi = 1, koreksi = 2, hapus = 3
 var refCopy;
+var hasil;
 
 const inputs = Array.from(document.querySelectorAll('.card-body input[type="text"]:not([readonly]), .card-body input[type="date"]:not([readonly])'));
-const inputTestMethod = Array.from(document.querySelectorAll('#test_method input[type="text"]'));
+const inputTestMethod = Array.from(document.querySelectorAll('#test_method input[type="text"]')).filter(input => !/^Data_\d{1,2}$/.test(input.id) && input.id !== 'Drop_Test');
+
 
 var pressure = [];
 var cLift = [];
@@ -96,10 +94,6 @@ const indexMapping = {
     11: 28, 12: 19, 13: 25, 14: 20, 15: 29
 };
 
-// TO DO LIST
-// notif berturut turut
-// disable btn pict 4 klo centang 3 picture
-
 // fungsi berhubungan dengan ENTER
 inputs.forEach((masuk, index) => {
     masuk.addEventListener('keypress', function (event) {
@@ -122,6 +116,72 @@ inputs.forEach((masuk, index) => {
                 } else if (index + 1 < inputs.length) {
                     inputs[index + 1].focus();
                 }
+            } else if (masuk.id === 'Height_Approx') {
+                Swal.fire({
+                    icon: 'question',
+                    text: `Apakah Data Height Approx Mau Anda Lengkapi?`,
+                    returnFocus: false,
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya',
+                    cancelButtonText: 'Tidak'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Height_Approx
+                            .focus();
+                    }
+                });
+            } else if (masuk.id === 'dia_val') {
+                Swal.fire({
+                    icon: 'question',
+                    text: `Apakah Data Diameter Mau Anda Lengkapi?`,
+                    returnFocus: false,
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya',
+                    cancelButtonText: 'Tidak'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        dia_val.focus();
+                    }
+                });
+            } else if (masuk.id === 'square_val') {
+                Swal.fire({
+                    icon: 'question',
+                    text: `Apakah Data Square Mau Anda Lengkapi?`,
+                    returnFocus: false,
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya',
+                    cancelButtonText: 'Tidak'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        square_val.focus();
+                    }
+                });
+            } else if (masuk.id === 'Load_Speed') {
+                Swal.fire({
+                    icon: 'question',
+                    text: `Apakah Data Speed Mau Anda Lengkapi?`,
+                    returnFocus: false,
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya',
+                    cancelButtonText: 'Tidak'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Load_Speed.focus();
+                    }
+                });
+            } else if (masuk.id === 'Drop_Test') {
+                Swal.fire({
+                    icon: 'question',
+                    text: `Apakah Data Drop Test Mau Anda Lengkapi?`,
+                    returnFocus: false,
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya',
+                    cancelButtonText: 'Tidak'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Load_Speed.focus();
+                    }
+                });
             } else if (/^Data_[1-9]$|^Data_1[0-5]$/.test(masuk.id)) {
                 Swal.fire({
                     icon: 'error',
@@ -359,6 +419,7 @@ btn_info.addEventListener("click", function (e) {
                     success: function (response) {
                         // console.log(response.refCopy);
                         Cyclic_Test.value = response.cyclicTestValue;
+                        TestResult = response.TestResult;
 
                         if (a === 1) { // fill dari no ref isi
                             if (response.refCopy === '') { // tidak ada copy ref no
@@ -367,9 +428,6 @@ btn_info.addEventListener("click", function (e) {
                                     diaCheckbox.disabled = false;
                                     squareCheckbox.disabled = false;
                                     Height_Approx.focus();
-
-                                    // Drop_Test.disabled = false;
-                                    // Drop_Test.focus();
                                 }, 70);
 
                             } else { // ada copy ref no
@@ -486,18 +544,20 @@ function retrieveCheck(sectionId, value, data) {
         return;
     }
 
+    let isAnyChecked = false;
+
     section.checkboxes.forEach(function (checkboxName) {
         var checkboxes = document.querySelectorAll(`#${sectionId} input[name="${checkboxName}"]`);
         checkboxes.forEach(function (checkbox) {
             if (checkbox) {
                 var dataType = checkbox.getAttribute('data-type');
-                var isChecked = checkbox.checked;
 
                 switch (sectionId) {
                     case 'cyclicCheck':
                         checkbox.checked = value === checkboxName;
                         if (checkbox.checked) {
                             cLift = [checkboxName];
+                            isAnyChecked = true;
                             if (cLift.length > 0) {
                                 Cyclic_Lift.checked = true;
                             }
@@ -508,6 +568,7 @@ function retrieveCheck(sectionId, value, data) {
                         checkbox.checked = value === checkboxName;
                         if (checkbox.checked) {
                             tLift = [checkboxName];
+                            isAnyChecked = true;
                             if (tLift.length > 0) {
                                 Top_Lift.checked = true;
                             }
@@ -518,6 +579,7 @@ function retrieveCheck(sectionId, value, data) {
                         checkbox.checked = value === checkboxName;
                         if (checkbox.checked) {
                             breakage = [checkboxName];
+                            isAnyChecked = true;
                             if (checkboxName === 'Others :') {
                                 othersTextInput.disabled = false;
                                 othersTextInput.value = data.Breakage_Location_Remaining;
@@ -530,6 +592,7 @@ function retrieveCheck(sectionId, value, data) {
                             checkbox.checked = value === checkboxName;
                             if (checkbox.checked) {
                                 dResult = [checkboxName];
+                                isAnyChecked = true;
                                 if (dResult.length > 0) {
                                     Drop_Result.checked = true;
                                 }
@@ -546,6 +609,7 @@ function retrieveCheck(sectionId, value, data) {
                             checkbox.checked = value === checkboxName;
                             if (checkbox.checked) {
                                 cResult = [checkboxName];
+                                isAnyChecked = true;
                                 var damageFoundDescCyInput = document.querySelector('#cyclicResult input[name="damageFoundDescCy"]');
                                 if (checkboxName === 'Visible damages found at') {
                                     damageFoundDescCyInput.disabled = false;
@@ -556,20 +620,32 @@ function retrieveCheck(sectionId, value, data) {
                         break;
 
                     default:
-                        if (checkbox.checked) {
-                            console.log(`Checked: ${checkboxName} in ${sectionId}`);
-                            // Update the array based on sectionId
-                            if (sectionId === 'someOtherSectionId') {
-                                // Example for another section
-                            }
-                        }
                         break;
                 }
             }
         });
     });
-}
 
+    switch (sectionId) {
+        case 'cyclicCheck':
+            if (!isAnyChecked) cLift = null;
+            break;
+        case 'topLiftCheck':
+            if (!isAnyChecked) tLift = null;
+            break;
+        case 'Breakage_Location':
+            if (!isAnyChecked) breakage = null;
+            break;
+        case 'dropResult':
+            if (!isAnyChecked) dResult = null;
+            break;
+        case 'cyclicResult':
+            if (!isAnyChecked) cResult = null;
+            break;
+        default:
+            break;
+    }
+}
 
 
 
@@ -602,43 +678,41 @@ function handleCheckboxChange(sectionId) {
         }
     });
 
-    // simpan nilai checkbox
+    // Save checkbox value
     switch (sectionId) {
         case 'cyclicCheck':
-            cLift = checkedName ? [checkedName] : [];
+            cLift = checkedName ? [checkedName] : null;
             break;
         case 'cyclicResult':
-            cResult = checkedName ? [checkedName] : [];
+            cResult = checkedName ? [checkedName] : null;
             break;
         case 'topLiftCheck':
-            tLift = checkedName ? [checkedName] : [];
+            tLift = checkedName ? [checkedName] : null;
             break;
         case 'Breakage_Location':
-            breakage = checkedName ? [checkedName] : [];
+            breakage = checkedName ? [checkedName] : null;
             break;
         case 'dropResult':
-            dResult = checkedName ? [checkedName] : [];
+            dResult = checkedName ? [checkedName] : null;
             break;
         default:
             break;
     }
-    centangCheck = [cLift.length, cResult.length, tLift.length, breakage.length, dResult.length];
+    centangCheck = [cLift ? cLift.length : 0, cResult ? cResult.length : 0, tLift ? tLift.length : 0, breakage ? breakage.length : 0, dResult ? dResult.length : 0];
 
-    // console.log(pressure);
     // console.log(cLift);
     // console.log(cResult);
     // console.log(tLift);
     // console.log(breakage);
     // console.log(dResult);
-    // console.log(centangCheck);
 }
+
 
 // panggil fungsi cek checkbox
 setupCheckboxListeners();
 
 // fungsi mengambil gambar
-var imageFiles = {}; // Global object to store file references
-
+var imageFiles = {}; // variabel unk simpan file references
 function setupImageUpload(buttonId, imageId, textInputId, nextButtonId) {
     var button = document.getElementById(buttonId);
     var image = document.getElementById(imageId);
@@ -662,13 +736,11 @@ function setupImageUpload(buttonId, imageId, textInputId, nextButtonId) {
 
                 reader.onload = function (e) {
                     image.src = e.target.result;
-                    image.style.display = 'block'; // Show the image
+                    image.style.display = 'block';
                     textInput.value = file.name;
 
-                    // Update the imageFiles object with the correct key
                     imageFiles[textInputId] = file;
 
-                    // Move focus to the next button if provided
                     if (nextButtonId) {
                         var nextButton = document.getElementById(nextButtonId);
                         if (nextButton) {
@@ -687,15 +759,18 @@ function setupImageUpload(buttonId, imageId, textInputId, nextButtonId) {
     });
 }
 
-
-
-// fungsi unk fokus button pict
+// fungsi unk fokus button pict & setup gambar sesuai jumlah yg tercentang
 function updateFocus() {
     var threePicturesChecked = threePictures.checked;
     var fourPicturesChecked = fourPictures.checked;
 
     if (threePicturesChecked) {
         jumlah = 3;
+        imageFiles = {
+            'picture1': null,
+            'picture2': null,
+            'picture3': null
+        };
         btn_pict1.focus();
         setupImageUpload('btn_pict1', 'imagePreview1', 'Pict_1', 'btn_pict2');
         setupImageUpload('btn_pict2', 'imagePreview2', 'Pict_2', 'btn_pict3');
@@ -703,15 +778,16 @@ function updateFocus() {
         btn_pict4.disabled = true;
     } else if (fourPicturesChecked) {
         jumlah = 4;
+        imageFiles = {
+            'picture1': null,
+            'picture2': null,
+            'picture3': null,
+            'picture4': null
+        };
         setupImageUpload('btn_pict1', 'imagePreview1', 'Pict_1', 'btn_pict2');
         setupImageUpload('btn_pict2', 'imagePreview2', 'Pict_2', 'btn_pict3');
         setupImageUpload('btn_pict3', 'imagePreview3', 'Pict_3', 'btn_pict4');
         setupImageUpload('btn_pict4', 'imagePreview4', 'Pict_4', 'btn_simpan');
-    } else {
-        btn_pict1.disabled = false;
-        btn_pict2.disabled = false;
-        btn_pict3.disabled = false;
-        btn_pict4.disabled = false;
     }
 }
 
@@ -719,72 +795,75 @@ threePictures.addEventListener('change', updateFocus);
 fourPictures.addEventListener('change', updateFocus);
 
 
-// fungsi untuk menampilkan konfirmasi Swal
-function showConfirmation(input, text) {
-    return Swal.fire({
-        icon: 'question',
-        text: `Apakah Data ${text} Mau Anda Lengkapi ?`,
-        showCancelButton: true,
-        confirmButtonText: 'Ya',
-        cancelButtonText: 'Tidak'
-    }).then(result => {
-        if (result.isConfirmed) {
-            input.focus();
-        }
-        return result.isConfirmed;
-    });
-}
+// fungsi utama memeriksa semua input
+async function checkAllInputs() {
+    for (const input of inputTestMethod) {
+        const textForInput = getTextForInput(input.id);
 
-// Fungsi untuk memeriksa apakah input kosong dan menampilkan konfirmasi
-function checkEmptyInput(input) {
-    if (input.value.trim() === '') {
-        switch (input.id) {
-            case 'Height_Approx':
-                return showConfirmation(input, 'Height Approx');
-            case 'dia_val':
-                return showConfirmation(input, 'Diameter');
-            case 'square_val':
-                return showConfirmation(input, 'Square');
-            case 'Load_Speed':
-                return showConfirmation(input, 'Speed');
-            case 'Drop_Test':
-                return showConfirmation(input, 'Drop Test');
-            default:
-                return Promise.resolve(false);
+        // Special case for Top Lift Test Result
+        if (input.id === 'Top_Result' && (input.value.trim() === '' || input.value.trim() === '0' || input.value.trim() === '0.00')) {
+            await Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Inputkan Top Lift Test Result Terlebih Dahulu!',
+                returnFocus: false
+            });
+
+            input.focus();
+            return false;
         }
-    } else if (input.value.trim() === '' || input.value.trim() === 0 || input.value.trim() === 0.00) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Inputkan Top Lift Test Result Terlebih Dahulu !',
-            returnFocus: false
-        }).then(result => {
+
+        // General case for empty inputs
+        if (input.value.trim() === '') {
+            const result = await Swal.fire({
+                icon: 'question',
+                text: `Apakah Data ${textForInput} Mau Anda Lengkapi?`,
+                returnFocus: false,
+                showCancelButton: true,
+                confirmButtonText: 'Ya',
+                cancelButtonText: 'Tidak'
+            });
+
             if (result.isConfirmed) {
                 input.focus();
             }
-            return result.isConfirmed;
-        });
-    }
-    return Promise.resolve(false);
-}
-
-// fungsi utama memeriksa semua input
-async function allInputsFilled() {
-    for (const input of inputTestMethod) {
-        const inputId = input.id;
-        const inputNumber = parseInt(inputId.split('_')[1], 10);
-
-        if (inputId.startsWith('Data_') && (inputNumber >= 1 && inputNumber <= 15)) {
-            continue;
-        }
-
-        const isInputEmpty = await checkEmptyInput(input);
-        if (isInputEmpty) {
             return false;
         }
     }
     return true;
 }
+
+
+function getTextForInput(inputId) {
+    switch (inputId) {
+        case 'dia_val':
+            return 'Diameter';
+        case 'square_val':
+            return 'Square';
+        case 'Top_Result':
+            return 'Top Lift Test Result';
+        default:
+            return '';
+    }
+}
+
+
+// function getTextForInput(inputId) {
+//     switch (inputId) {
+//         case 'Height_Approx':
+//             return 'Height Approx';
+//         case 'dia_val':
+//             return 'Diameter';
+//         case 'square_val':
+//             return 'Square';
+//         case 'Load_Speed':
+//             return 'Speed';
+//         case 'Drop_Test':
+//             return 'Drop Test';
+//         default:
+//             return '';
+//     }
+// }
 
 
 var Ketik = document.querySelectorAll('input');
@@ -849,62 +928,85 @@ btn_batal.addEventListener('click', function () {
 
 btn_simpan.addEventListener('click', async function (e) {
     if (a === 1) { // ISI
+        if (await checkAllInputs()) {
+            let cLiftTxt = cLift && cLift.length > 0 ? cLift.join(', ') : null;
+            let tLiftTxt = tLift && tLift.length > 0 ? tLift.join(', ') : null;
+            let cyclicResultTxt = cResult && cResult.length > 0 ?
+                (cResult.includes('Visible damages found at') ? cResult.join(', ') + ' ' + damageFoundDescCyInput.value.trim() : cResult.join(', '))
+                : null;
+            let breakageTxt = breakage && breakage.length > 0 ?
+                (breakage.includes('Others :') ? breakage.join(', ') + ' ' + othersTextInput.value.trim() : breakage.join(', '))
+                : null;
+            let dropResultTxt = dResult && dResult.length > 0 ?
+                (dResult.includes('Visible damages found at') ? dResult.join(', ') + ' ' + damageFoundDescDropInput.value.trim() : dResult.join(', '))
+                : null;
 
-        if (!(allInputsFilled())) {
-            return;
-        }
+            // Define the sections and corresponding text
+            let text = ['Cyclic Test', 'Cyclic Test Result', 'Top Lift Test', 'Breakage Location', 'Drop Test'];
+            let tidakTercentang = [];
 
-        // console.log(pressure);
-        // console.log(cLift);
-        // console.log(cResult);
-        // console.log(tLift);
-        // console.log(breakage);
-        // console.log(dResult);
+            // Logic to populate tidakTercentang with missing sections
+            if (cLiftTxt === null) tidakTercentang.push(0);
+            if (cyclicResultTxt === null) tidakTercentang.push(1);
+            if (tLiftTxt === null) tidakTercentang.push(2);
+            if (breakageTxt === null) tidakTercentang.push(3);
+            if (dropResultTxt === null) tidakTercentang.push(4);
 
-        let cResultTxt = cResult.includes('Visible damages found at') ? `${cResult} ${damageFoundDescCyInput.value.trim()}` : cResult;
-        let dResultTxt = dResult.includes('Visible damages found at') ? `${dResult} ${damageFoundDescDropInput.value.trim()}` : dResult;
-        let breakageTxt = breakage.includes('Others :') ? `${breakage} ${othersTextInput.value.trim()}` : breakage;
+            console.log('cyclic lift: ', cLiftTxt);
+            console.log('top lift: ', tLiftTxt);
+            console.log('cyclic result: ', cyclicResultTxt);
+            console.log('breakage loc: ', breakageTxt);
+            console.log('drop result: ', dropResultTxt);
+            console.log(tidakTercentang.length);
 
-        let text = ['Cyclic Test', 'Cyclic Test Result', 'Top Lift Test', 'Breakage Location', 'Drop Test'];
-        let tidakTercentang = [];
-
-        if (tidakTercentang.length > 0) {
-            let currentIndex = 0;
-
-            async function showSweetAlert() {
-                let index = tidakTercentang[currentIndex];
+            // Show SweetAlerts for any missing sections
+            for (let i = 0; i < tidakTercentang.length; i++) {
+                let index = tidakTercentang[i];
                 let questionText = `Apakah Data ${text[index]} Mau Anda Lengkapi?`;
 
-                await Swal.fire({
+                const result = await Swal.fire({
                     icon: 'question',
                     text: questionText,
+                    returnFocus: false,
                     showCancelButton: true,
                     confirmButtonText: 'Ya',
                     cancelButtonText: 'Tidak'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        return;
-                    } else {
-                        currentIndex++;
-                        if (currentIndex < tidakTercentang.length) {
-                            showSweetAlert();
-                        } else {
-                            submitForm(cLift, cResultTxt, tLift, breakageTxt, dResultTxt);
-                            return;
-                        }
-                    }
                 });
-            }
-            await showSweetAlert();
-        } else {
-            submitForm(cLift, cResultTxt, tLift, breakageTxt, dResultTxt);
-        }
 
+                if (result.isConfirmed) {
+                    return;
+                }
+            }
+
+            // If all inputs are filled, submit the form
+            submitForm(cLiftTxt, tLiftTxt, cyclicResultTxt, breakageTxt, dropResultTxt);
+            console.log("BERHASIL SIMPAN");
+        }
+        // else {
+        //     await Swal.fire({
+        //         icon: 'warning',
+        //         title: 'Incomplete Data',
+        //         text: 'Data Belum Lengkap Terisi'
+        //     });
+        // }
         console.log("BERHASIL SIMPAN");
     } else if (a === 2) { // KOREKSI
     } else if (a === 3) { //HAPUS
     }
 });
+
+// console.log('before trim');
+// console.log('cyclic lift: ', cLift);
+// console.log('top lift: ', tLift);
+// console.log('cyclic result: ', cResult);
+// console.log('breakage loc: ', breakage);
+// console.log('drop result: ', dResult);
+// console.log('after trim');
+// console.log('cyclic lift: ', cLiftTxt);
+// console.log('top lift: ', tLiftTxt);
+// console.log('cyclic result: ', cyclicResultTxt);
+// console.log('breakage loc: ', breakageTxt);
+// console.log('drop result: ', dropResultTxt);
 
 btn_koreksi.addEventListener('click', function () {
     a = 2;
@@ -919,53 +1021,59 @@ btn_hapus.addEventListener('click', function () {
 });
 
 
-async function submitForm(cLift, cResultTxt, tLift, breakageTxt, dResultTxt) {
-    function formatInput(input) {
-        return input !== undefined && !isNaN(input) ? parseFloat(input).toFixed(2) : '0.00';
-    }
+function submitForm(cLiftTxt, tLiftTxt, cyclicResultTxt, breakageTxt, dropResultTxt) {
+    const hasil = TestResult < Top_Result.value ? 'PASS' : 'FAIL';
 
-    var formData = new FormData();
-    formData.append('_token', csrfToken);
-    formData.append('RefNo', refNo.value);
+    const formatInput = (input) => input !== undefined && !isNaN(input) ? parseFloat(input).toFixed(2) : '0.00';
+
+    const formData = new FormData();
+    formData.append('RefNo', (refNo.value || '').trim());
     formData.append('Height_Approx', formatInput(Height_Approx.value));
     formData.append('dia_val', formatInput(dia_val.value));
-    formData.append('square_val', square_val.value.trim());
+    formData.append('square_val', (square_val.value || '').trim());
     formData.append('Cyclic_Test', formatInput(Cyclic_Test.value));
     formData.append('Load_Speed', formatInput(Load_Speed.value));
+    formData.append('Drop_Test', (Drop_Test.value || '').trim());
 
-    formData.append('Cyclic_Lift', cLift.trim());
-    formData.append('Cyclic_Result', cResult.trim());
-    formData.append('Top_Lift', tLift.trim());
-    formData.append('Breakage_Location', breakage.trim());
-    formData.append('Drop_Result', dResult.trim());
-    formData.append('Drop_Test', Drop_Test.value.trim());
+    formData.append('Cyclic_Lift', (cLiftTxt || '').trim());
+    formData.append('Top_Lift', (tLiftTxt || '').trim());
+    formData.append('Top_Result', (Top_Result.value || '').trim());
+    formData.append('Cyclic_Result', (cyclicResultTxt || '').trim());
+    formData.append('Breakage_Location', (breakageTxt || '').trim());
+    formData.append('Drop_Result', (dropResultTxt || '').trim());
+    formData.append('TestResult', hasil);
+    formData.append('Jumlah', String(jumlah));
 
     for (let i = 1; i <= 30; i++) {
-        let dataElement = document.getElementById('Data_' + i);
+        const dataElement = document.getElementById('Data_' + i);
         if (dataElement) {
             formData.append('Data_' + i, formatInput(dataElement.value));
         }
     }
 
-    // Menambahkan gambar ke FormData
-    for (var key in imageFiles) {
-        if (imageFiles.hasOwnProperty(key) && imageFiles[key]) {
+    Object.keys(imageFiles).forEach(key => {
+        if (imageFiles[key]) {
             formData.append(key, imageFiles[key]);
         }
-    }
+    });
 
-    formData.append('Jumlah', jumlah);
+    const url = jumlah == '3' ? 'FrmInputTest/store3pict' : 'FrmInputTest/store4pict';
 
-    for (let pair of formData.entries()) {
-        console.log(`${pair[0]}: ${pair[1]}`);
-    }
+    // console.log("CEK DATA bfr post");
+    // for (const pair of formData.entries()) {
+    //     console.log(`${pair[0]}: ${pair[1]}`);
+    // }
 
+    // Send AJAX request
     $.ajax({
-        type: 'POST',
-        url: 'FrmInputTest',
+        type: 'PUT',
+        url: url,
         data: formData,
         processData: false,
         contentType: false,
+        headers: {
+            'X-CSRF-TOKEN': csrfToken
+        },
         timeout: 30000,
         success: function (response) {
             if (response.success) {
@@ -987,95 +1095,10 @@ async function submitForm(cLift, cResultTxt, tLift, breakageTxt, dResultTxt) {
             });
         }
     });
-
-
-
-    // const dataToSend = {
-    //     _token: csrfToken,
-    //     RefNo: refNo.value,
-    //     Height_Approx: formatInput(Height_Approx.value),
-    //     dia_val: formatInput(dia_val.value),
-    //     square_val: square_val.value.trim(),
-    //     Cyclic_Test: formatInput(Cyclic_Test.value),
-    //     Load_Speed: formatInput(Load_Speed.value),
-
-    //     Cyclic_Lift: cLift.trim(),
-    //     Cyclic_Result: cResult.trim(),
-    //     Top_Lift: tLift.trim(),
-    //     Breakage_Location: breakage.trim(),
-    //     Drop_Result: dResult.trim(),
-    //     Drop_Test: Drop_Test.value.trim(),
-
-
-    //     Data_1: formatInput(Data_1.value),
-    //     Data_2: formatInput(Data_2.value),
-    //     Data_3: formatInput(Data_3.value),
-    //     Data_4: formatInput(Data_4.value),
-    //     Data_5: formatInput(Data_5.value),
-    //     Data_6: formatInput(Data_6.value),
-    //     Data_7: formatInput(Data_7.value),
-    //     Data_8: formatInput(Data_8.value),
-    //     Data_9: formatInput(Data_9.value),
-    //     Data_10: formatInput(Data_10.value),
-    //     Data_11: formatInput(Data_11.value),
-    //     Data_12: formatInput(Data_12.value),
-    //     Data_13: formatInput(Data_13.value),
-    //     Data_14: formatInput(Data_14.value),
-    //     Data_15: formatInput(Data_15.value),
-    //     Data_16: formatInput(Data_16.value),
-    //     Data_17: formatInput(Data_17.value),
-    //     Data_18: formatInput(Data_18.value),
-    //     Data_19: formatInput(Data_19.value),
-    //     Data_20: formatInput(Data_20.value),
-    //     Data_21: formatInput(Data_21.value),
-    //     Data_22: formatInput(Data_22.value),
-    //     Data_23: formatInput(Data_23.value),
-    //     Data_24: formatInput(Data_24.value),
-    //     Data_25: formatInput(Data_25.value),
-    //     Data_26: formatInput(Data_26.value),
-    //     Data_27: formatInput(Data_27.value),
-    //     Data_28: formatInput(Data_28.value),
-    //     Data_29: formatInput(Data_29.value),
-    //     Data_30: formatInput(Data_30.value),
-
-    //     picture1: picture1 ? picture1.value : '',
-    //     picture2: picture2 ? picture2.value : '',
-    //     picture3: picture3 ? picture3.value : '',
-    //     picture4: picture4 ? picture4.value : '',
-    //     Jumlah: jumlah,
-    // };
-
-    // console.log('data to send: ', dataToSend);
-
-    // $.ajax({
-    //     type: 'POST',
-    //     url: 'FrmInputTest',
-    //     data: formData,
-    //     processData: false,
-    //     contentType: false,
-    //     timeout: 30000,
-    //     success: function (response) {
-    //         if (response.success) {
-    //             Swal.fire({
-    //                 icon: 'success',
-    //                 title: 'Success',
-    //                 text: 'Data Telah Tersimpan',
-    //             }).then(() => {
-    //                 disableKetik();
-    //             });
-    //         }
-    //     },
-    //     error: function (xhr, status, error) {
-    //         console.error('AJAX Error:', error);
-    //         Swal.fire({
-    //             icon: 'error',
-    //             title: 'Error',
-    //             text: 'Data Belum Lengkap Terisi',
-    //         });
-    //     }
-    // });
-
 }
+
+
+
 
 
 async function koreksiTest(cLiftTxt, cResultTxt, tLiftTxt, breakageTxt, dResultTxt) {
