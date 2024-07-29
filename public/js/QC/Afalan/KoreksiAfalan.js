@@ -20,7 +20,7 @@ let prosesButton = document.getElementById('btn_submit')
 var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 document.addEventListener("DOMContentLoaded", function() {
-    btn_noRoll.focus();
+    no_roll.focus();
 });
 
 $('#afalan').on('keydown', function (e) {
@@ -30,93 +30,30 @@ $('#afalan').on('keydown', function (e) {
     }
 });
 
-// button nomor roll (show, etc)
-btn_noRoll.addEventListener("click", function (e) {
-    try {
-        let result = Swal.fire({
-            title: "Pilih No Roll",
-            html: `<table id="table_noRoll" class="display" style="width:100%">
-                        <thead>
-                            <tr>
-                                <th>No Roll</th>
-                                <th>Nama Type</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>`,
-            showCancelButton: true,
-            confirmButtonText: 'Pilih',
-            cancelButtonText: 'Close',
-            preConfirm: () => {
-                const selectedData = $("#table_noRoll")
-                    .DataTable()
-                    .row(".selected")
-                    .data();
-                if (!selectedData) {
-                    Swal.showValidationMessage("Please select a row");
-                    return false;
-                }
-                return selectedData;
-            },
-            didClose: () => {
-                afalanInput.focus();
-            },
-            didOpen: () => {
-                $(document).ready(function () {
-                    const table = $("#table_noRoll").DataTable({
-                        responsive: true,
-                        processing: true,
-                        serverSide: true,
-                        order: [1, "asc"],
-                        ajax: {
-                            url: "InputAfalanQC/getDataNoRoll",
-                            dataType: "json",
-                            type: "GET",
-                        },
-                        columns: [
-                            {
-                                data: "NoRoll",
-                            },
-                            {
-                                data: "NamaType"
-                            },
-                        ],
-                    });
-                    $("#table_noRoll tbody").on("click", "tr", function () {
-                        table.$("tr.selected").removeClass("selected");
-                        $(this).addClass("selected");
-                    });
+// Function to handle data retrieval and updating fields
+function handleRollSelection(noRoll) {
+    $.ajax({
+        url: "InputAfalanQC/getDataDetailNoRoll",
+        type: "GET",
+        data: { noRoll: noRoll },
+        success: function (result) {
+            no_indeks.value = result[0].NoIndeks.trim(); // item number
+            kode_barang.value = result[0].Kode_Barang.trim(); // kode barang
+            meter_bruto.value = result[0].MeterBruto.trim(); // bruto
+            qty_sekunder.value = result[0].Qty_Sekunder.trim(); // netto
+            qty.value = result[0].Qty.trim(); // kg
+            lblSekunder.innerText = result[0].lblSekunder.trim(); // lbl Sekunder
+            lblTritier.innerText = result[0].SatTritier.trim(); // lbl Tritier
+            nama_type.value = result[0].NamaType.trim();
+        }
+    });
+}
 
-                    currentIndex = null;
-                    Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_noRoll'));
-
-                });
-            },
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const selectedRow = result.value;
-                no_roll.value = selectedRow.NoRoll.trim();//no roll
-                nama_type.value = selectedRow.NamaType.trim();//nama type
-                $.ajax({
-                    url: "InputAfalanQC/getDataDetailNoRoll",
-                    type: "GET",
-                    data: { noRoll: no_roll.value },
-                    success: function (result) {
-                        // console.log(result);
-                        no_indeks.value = result[0].NoIndeks.trim();//item number
-                        kode_barang.value = result[0].Kode_Barang.trim();//kode barang
-                        meter_bruto.value = result[0].MeterBruto.trim();//bruto
-                        qty_sekunder.value = result[0].Qty_Sekunder.trim();//netto
-                        qty.value = result[0].Qty.trim();//kg
-
-                        lblSekunder.innerText = result[0].lblSekunder.trim();
-                        lblTritier.innerText = result[0].SatTritier.trim();
-                    }
-                });
-            }
-        });
-    } catch (error) {
-        console.error("An error occurred:", error);
+// Event listener for the no_roll input's Enter key
+document.getElementById("no_roll").addEventListener("keypress", function (e) {
+    if (e.key === "Enter") {
+        handleRollSelection(this.value.trim());
+        afalanInput.focus();
     }
 });
 
@@ -150,7 +87,7 @@ btn_submit.addEventListener("click", function (e) {
                         title: 'Success',
                         text: response.success,
                         didClose: () => {
-                            btn_noRoll.focus();
+                            no_roll.focus();
                         },
                     });
 

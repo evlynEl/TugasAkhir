@@ -1,7 +1,6 @@
 @extends('layouts.appQC')
 @section('content')
     <div class="container-fluid">
-        <link href="{{ asset('css/Contoh/contoh.css') }}" rel="stylesheet">
         <div class="row justify-content-center">
             <div class="col-md-10 RDZMobilePaddingLR0">
                 @if (Session::has('success'))
@@ -18,41 +17,96 @@
                     <div class="card-body RDZOverflow RDZMobilePaddingLR0">
                         <div class="acs-div-container">
                             <div class="acs-div-container1">
-                                <form>
-                                    <div class="form-group">
-                                        <label for="no-roll">No Roll</label>
-                                        <input type="number" id="no-roll" name="no-roll" class="form-control" required>
+                                <div class="row mb-3">
+                                    <div class="col-sm-2">
+                                        <label for="no_roll">No Roll</label>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="item-number">Item Number</label>
-                                        <input type="number" id="item-number" name="item-number" class="form-control" disabled>
+                                    <div class="col-sm-3">
+                                        <div class="input-group">
+                                            <input type="text" id="no_roll" name="no_roll" class="form-control">
+                                        </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="kode-barang">Kode Barang</label>
-                                        <input type="text" id="kode-barang" name="kode-barang" class="form-control" disabled>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-sm-2">
+                                        <label for="item_number">Item Number</label>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="nama-type">Nama Type</label>
-                                        <input type="text" id="nama-type" name="nama-type" class="form-control" disabled>
+                                    <div class="col-sm-3">
+                                        <input type="text" id="item_number" name="item_number" class="form-control"
+                                            readonly>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="meter-bruto">Meter Bruto</label>
-                                        <input type="number" id="meter-bruto" name="meter-bruto" class="form-control" disabled>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-sm-2">
+                                        <label for="kode_barang">Kode Barang</label>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="meter-netto">Meter Netto</label>
-                                        <input type="number" id="meter-netto" name="meter-netto" class="form-control" disabled>
+                                    <div class="col-sm-3">
+                                        <input type="text" id="kode_barang" name="kode_barang" class="form-control"
+                                            readonly>
                                     </div>
-                                    <div class="form-group">
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-sm-2">
+                                        <label for="nama_type">Nama Type</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="text" id="nama_type" name="nama_type" class="form-control" readonly>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-sm-2">
+                                        <label for="meter_bruto">Meter Bruto</label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input type="text" id="meter_bruto" name="meter_bruto" class="form-control"
+                                            readonly>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <label id="lblSekunder" class="col-form-label"></label>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-sm-2">
+                                        <label for="meter_netto">Meter Netto</label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input type="text" id="meter_netto" name="meter_netto" class="form-control"
+                                            readonly>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-sm-2">
                                         <label for="kg">KG</label>
-                                        <input type="number" id="kg" name="kg" class="form-control" disabled>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="col-sm-2">
+                                        <input type="text" id="kg" name="kg" class="form-control" readonly>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <label id="lblTritier" class="col-form-label"></label>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-sm-2">
                                         <label for="afalan">Afalan (Angka)</label>
-                                        <input type="number" id="afalan" name="afalan" class="form-control" required>
                                     </div>
-                                    <button type="submit" class="btn btn-primary">Submit</button>
-                                </form>
+                                    <div class="col-sm-2">
+                                        <input type="text" id="afalan" name="afalan" class="form-control"
+                                            placeholder="0" min="0" required>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-sm-2">
+                                        <button id="btn_submit" class="btn btn-primary">Submit</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -60,5 +114,7 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="{{ asset('js/Sales/permohonan-sp.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/QC/Afalan/KoreksiAfalan.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('css/sweetalert2.min.css') }}">
+    <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>
 @endsection

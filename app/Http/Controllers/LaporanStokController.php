@@ -125,9 +125,185 @@ class LaporanStokController extends Controller
             try {
                 $laporan1Arr = DB::transaction(function () use ($tanggal1, $tanggal2, $idObjek, $idKelUtama) {
                     if (empty($idKelUtama)) {
-                        DB::connection('ConnInventory')->statement('EXEC SP_Laporan1 @tanggal1 = ?, @tanggal2 = ?, @IdObjek = ?', [$tanggal1, $tanggal2, $idObjek]);
+                        // DB::connection('ConnInventory')->statement('EXEC SP_Laporan1 @tanggal1 = ?, @tanggal2 = ?, @IdObjek = ?', [$tanggal1, $tanggal2, $idObjek]);
+
+                        // hapus laporan
+                        DB::connection('ConnInventory')->table('laporan')->delete();
+
+                        // fetch
+                        $data = DB::connection('ConnInventory')->table('VW_PRG_TYPE')
+                            ->join('VW_PRG_SUBKEL', 'VW_PRG_TYPE.IdSubkelompok_Type', '=', 'VW_PRG_SUBKEL.IdSubkelompok')
+                            ->select(
+                                'VW_PRG_SUBKEL.NamaObjek',
+                                'VW_PRG_SUBKEL.NamaKelompokUtama',
+                                'VW_PRG_SUBKEL.NamaKelompok',
+                                'VW_PRG_SUBKEL.NamaSubKelompok',
+                                'VW_PRG_TYPE.NamaType',
+                                'VW_PRG_TYPE.IdType',
+                                'VW_PRG_TYPE.KodeBarang'
+                            )
+                            ->where('VW_PRG_SUBKEL.IdObjek', $idObjek)
+                            ->groupBy(
+                                'VW_PRG_SUBKEL.NamaObjek',
+                                'VW_PRG_SUBKEL.NamaKelompokUtama',
+                                'VW_PRG_SUBKEL.NamaKelompok',
+                                'VW_PRG_SUBKEL.NamaSubKelompok',
+                                'VW_PRG_TYPE.NamaType',
+                                'VW_PRG_TYPE.IdType',
+                                'VW_PRG_TYPE.KodeBarang'
+                            )
+                            ->orderBy('VW_PRG_SUBKEL.NamaKelompokUtama')
+                            ->orderBy('VW_PRG_SUBKEL.NamaKelompok')
+                            ->orderBy('VW_PRG_SUBKEL.NamaSubKelompok')
+                            ->orderBy('VW_PRG_TYPE.NamaType')
+                            ->get();
                     } else {
-                        DB::connection('ConnInventory')->statement('EXEC SP_1273_INV_LaporanStok @tanggal1 = ?, @tanggal2 = ?, @IdObjek = ?, @IdKelUtama = ?', [$tanggal1, $tanggal2, $idObjek, $idKelUtama]);
+                        // DB::connection('ConnInventory')->statement('EXEC SP_1273_INV_LaporanStok @tanggal1 = ?, @tanggal2 = ?, @IdObjek = ?, @IdKelUtama = ?', [$tanggal1, $tanggal2, $idObjek, $idKelUtama]);
+
+                        // hapus laporan
+                        DB::connection('ConnInventory')->table('laporan')->delete();
+
+                        // fetch
+                        $data = DB::connection('ConnInventory')->table('VW_PRG_TYPE')
+                            ->join('VW_PRG_SUBKEL', 'VW_PRG_TYPE.IdSubkelompok_Type', '=', 'VW_PRG_SUBKEL.IdSubkelompok')
+                            ->select(
+                                'VW_PRG_SUBKEL.NamaObjek',
+                                'VW_PRG_SUBKEL.NamaKelompokUtama',
+                                'VW_PRG_SUBKEL.NamaKelompok',
+                                'VW_PRG_SUBKEL.NamaSubKelompok',
+                                'VW_PRG_TYPE.NamaType',
+                                'VW_PRG_TYPE.IdType',
+                                'VW_PRG_TYPE.KodeBarang'
+                            )
+                            ->where('VW_PRG_SUBKEL.IdObjek', $idObjek)
+                            ->where('VW_PRG_SUBKEL.IdKelompokUtama', $idKelUtama)
+                            ->groupBy(
+                                'VW_PRG_SUBKEL.NamaObjek',
+                                'VW_PRG_SUBKEL.NamaKelompokUtama',
+                                'VW_PRG_SUBKEL.NamaKelompok',
+                                'VW_PRG_SUBKEL.NamaSubKelompok',
+                                'VW_PRG_TYPE.NamaType',
+                                'VW_PRG_TYPE.IdType',
+                                'VW_PRG_TYPE.KodeBarang'
+                            )
+                            ->orderBy('VW_PRG_SUBKEL.NamaKelompokUtama')
+                            ->orderBy('VW_PRG_SUBKEL.NamaKelompok')
+                            ->orderBy('VW_PRG_SUBKEL.NamaSubKelompok')
+                            ->orderBy('VW_PRG_TYPE.NamaType')
+                            ->get();
+                    }
+
+                    foreach ($data as $row) {
+                        $NmObjek = $row->NamaObjek;
+                        $NmKelut = $row->NamaKelompokUtama;
+                        $NmKel = $row->NamaKelompok;
+                        $NmSubKel = $row->NamaSubKelompok;
+                        $NamaType = $row->NamaType;
+                        $Idtype = $row->IdType;
+                        $KodeBarang = $row->KodeBarang;
+
+                        // Inisialisasi variabel
+                        $AwalPrimer = $AwalSekunder = $AwalTritier = 0;
+                        $MasukPrimer = $MasukSekunder = $MasukTritier = 0;
+                        $KeluarPrimer = $KeluarSekunder = $KeluarTritier = 0;
+                        $AkhirPrimer = $AkhirSekunder = $AkhirTritier = 0;
+
+                        $maxIdTrans = DB::connection('ConnInventory')
+                            ->table('VW_PRG_TRANSAKSI as a')
+                            ->select(DB::raw('MAX(IdTransaksi) as MaxIdTrans'))
+                            ->whereExists(function ($query) use ($tanggal1, $Idtype) {
+                                $query->select('IdType')
+                                    ->from('VW_PRG_TRANSAKSI')
+                                    ->whereColumn('a.Saatlog', '<=', DB::raw("DATEADD(day, -1, '{$tanggal1}')"))
+                                    ->where('a.IdType', $Idtype);
+                            })
+                            ->groupBy('a.IdType')
+                            ->first();
+
+                        // cari saldo awal
+                        if ($maxIdTrans) {
+                            $maxIdTransValue = $maxIdTrans->MaxIdTrans;
+
+                            $awalSaldo = DB::connection('ConnInventory')
+                                ->table('VW_PRG_TRANSAKSI')
+                                ->select('SaldoPrimer', 'SaldoSekunder', 'SaldoTritier')
+                                ->where('IdTransaksi', $maxIdTransValue)
+                                ->first();
+
+                            $AwalPrimer = $awalSaldo->SaldoPrimer;
+                            $AwalSekunder = $awalSaldo->SaldoSekunder;
+                            $AwalTritier = $awalSaldo->SaldoTritier;
+                        }
+
+                        // kalau saldo awal tritier == 0
+                        if ($AwalTritier == 0) {
+                            $cariStok = DB::connection('ConnInventory')
+                                ->table('dbo.T_Saldo_Awal_Gudang')
+                                ->select('SaldoPrimer', 'SaldoSekunder', 'saldoTritier')
+                                ->where('IDType', $Idtype)
+                                ->first();
+
+                            // kalau ada yg null, jadikan 0
+                            $AwalPrimer = $cariStok->SaldoPrimer ?? 0;
+                            $AwalSekunder = $cariStok->SaldoSekunder ?? 0;
+                            $AwalTritier = $cariStok->SaldoTritier ?? 0;
+                        }
+
+                        // cari masuk keluar
+                        $cariKeluarMasuk = DB::connection('ConnInventory')
+                            ->table('VW_PRG_TRANSAKSI')
+                            ->select(
+                                DB::raw('SUM(jumlahpemasukanPrimer) as jumlahpemasukanPrimer'),
+                                DB::raw('SUM(jumlahpemasukanSekunder) as jumlahpemasukanSekunder'),
+                                DB::raw('SUM(jumlahpemasukanTritier) as jumlahpemasukanTritier'),
+                                DB::raw('SUM(jumlahpengeluaranPrimer) as jumlahpengeluaranPrimer'),
+                                DB::raw('SUM(jumlahpengeluaranSekunder) as jumlahpengeluaranSekunder'),
+                                DB::raw('SUM(jumlahpengeluaranTritier) as jumlahpengeluaranTritier')
+                            )
+                            ->where('idtype', $Idtype)
+                            ->whereBetween('saatlog', [$tanggal1, $tanggal2])
+                            ->first();
+
+                        // Extract the results and handle null values
+                        $MasukPrimer = $cariKeluarMasuk->jumlahpemasukanPrimer ?? 0;
+                        $MasukSekunder = $cariKeluarMasuk->jumlahpemasukanSekunder ?? 0;
+                        $MasukTritier = $cariKeluarMasuk->jumlahpemasukanTritier ?? 0;
+                        $KeluarPrimer = $cariKeluarMasuk->jumlahpengeluaranPrimer ?? 0;
+                        $KeluarSekunder = $cariKeluarMasuk->jumlahpengeluaranSekunder ?? 0;
+                        $KeluarTritier = $cariKeluarMasuk->jumlahpengeluaranTritier ?? 0;
+
+                        $AkhirPrimer = $AwalPrimer + $MasukPrimer - $KeluarPrimer;
+                        $AkhirSekunder = $AwalSekunder + $MasukSekunder - $KeluarSekunder;
+                        $AkhirTritier = $AwalTritier + $MasukTritier - $KeluarTritier;
+
+                        if (
+                            !($AwalPrimer == 0 && $AwalSekunder == 0 && $AwalTritier == 0 &&
+                                $MasukPrimer == 0 && $MasukSekunder == 0 && $MasukTritier == 0 &&
+                                $KeluarPrimer == 0 && $KeluarSekunder == 0 && $KeluarTritier == 0)
+                        ) {
+                            // Insert the record into the 'laporan' table
+                            DB::connection('ConnInventory')->table('laporan')->insert([
+                                'Objek' => $NmObjek,
+                                'KelompokUtama' => $NmKelut,
+                                'Kelompok' => $NmKel,
+                                'SubKelompok' => $NmSubKel,
+                                'IdType' => $Idtype,
+                                'Type' => $NamaType,
+                                'SaldoAwalPrimer' => $AwalPrimer,
+                                'SaldoAwalSekunder' => $AwalSekunder,
+                                'SaldoAwalTritier' => $AwalTritier,
+                                'PemasukanPrimer' => $MasukPrimer,
+                                'PemasukanSekunder' => $MasukSekunder,
+                                'PemasukanTritier' => $MasukTritier,
+                                'PengeluaranPrimer' => $KeluarPrimer,
+                                'PengeluaranSekunder' => $KeluarSekunder,
+                                'PengeluaranTritier' => $KeluarTritier,
+                                'SaldoAkhirPrimer' => $AkhirPrimer,
+                                'SaldoAkhirSekunder' => $AkhirSekunder,
+                                'SaldoAkhirTritier' => $AkhirTritier,
+                                'KodeBarang' => $KodeBarang
+                            ]);
+                        }
                     }
 
                     // Fetch data from VW_Laporan

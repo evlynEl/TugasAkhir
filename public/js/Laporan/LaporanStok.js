@@ -366,7 +366,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 },
                                 success: function (result) {
                                     if (result.length > 0) {
-                                        kelUtama.value = result[0].NamaKelompokUtama ? result[0].NamaKelompokUtama.trim() : '';
+                                        kelUtama.value = result[0].IdKelompokUtama ? result[0].IdKelompokUtama.trim() : '';
                                         cekFields();
                                         prosesButton.focus();
                                     } else {
@@ -437,7 +437,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 _token: csrfToken,
                 tanggal1: tanggalAwal.value,
                 tanggal2: tanggalAkhir.value,
-                IdObjek: objek.value
+                IdObjek: objek.value,
+                IdKelUtama: kelUtama.value
             },
             success: function (result) {
                 updateDataTable(result);
@@ -777,7 +778,8 @@ document.addEventListener('DOMContentLoaded', function () {
                                     tanggal1: tanggalAwal.value,
                                     tanggal2: tanggalAkhir.value,
                                     IdObjek: objek.value,
-                                    IdType: idType.value
+                                    IdType: idType.value,
+                                    IdKelUtama: kelUtama.value
                                 },
                                 success: function (data) {
                                     console.log('Stored procedure result:', data);

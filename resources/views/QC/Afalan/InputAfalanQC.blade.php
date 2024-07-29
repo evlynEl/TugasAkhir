@@ -17,53 +17,96 @@
                     <div class="card-body RDZOverflow RDZMobilePaddingLR0">
                         <div class="acs-div-container">
                             <div class="acs-div-container1">
-                                <form>
-                                    <div class="form-group">
+
+                                <div class="row mb-3">
+                                    <div class="col-sm-2">
                                         <label for="no_roll">No Roll</label>
+                                    </div>
+                                    <div class="col-sm-3">
                                         <div class="input-group">
-                                            <input type="text" id="no_roll" name="no_roll" class="form-control"
-                                                readonly>
+                                            <input type="text" id="no_roll" name="no_roll" class="form-control" readonly>
                                             <div class="input-group-append">
-                                                <button type="button" class="btn btn-primary"
-                                                    id="btn_noRoll">Pilih</button>
+                                                <button type="button" class="btn btn-primary" id="btn_noRoll">Pilih</button>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-sm-2">
                                         <label for="item_number">Item Number</label>
-                                        <input type="double" id="item_number" name="item_number" class="form-control"
-                                            readonly>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="col-sm-3">
+                                        <input type="text" id="item_number" name="item_number" class="form-control" readonly>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-sm-2">
                                         <label for="kode_barang">Kode Barang</label>
-                                        <input type="text" id="kode_barang" name="kode_barang" class="form-control"
-                                            readonly>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="col-sm-3">
+                                        <input type="text" id="kode_barang" name="kode_barang" class="form-control" readonly>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-sm-2">
                                         <label for="nama_type">Nama Type</label>
+                                    </div>
+                                    <div class="col-sm-6">
                                         <input type="text" id="nama_type" name="nama_type" class="form-control" readonly>
                                     </div>
-                                    <div class="form-group">
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-sm-2">
                                         <label for="meter_bruto">Meter Bruto</label>
-                                        <input type="double" id="meter_bruto" name="meter_bruto" class="form-control"
-                                            readonly>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="col-sm-2">
+                                        <input type="text" id="meter_bruto" name="meter_bruto" class="form-control" readonly>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <label id="lblSekunder" class="col-form-label"></label>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-sm-2">
                                         <label for="meter_netto">Meter Netto</label>
-                                        <input type="double" id="meter_netto" name="meter_netto" class="form-control"
-                                            readonly>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="col-sm-2">
+                                        <input type="text" id="meter_netto" name="meter_netto" class="form-control" readonly>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-sm-2">
                                         <label for="kg">KG</label>
-                                        <input type="double" id="kg" name="kg" class="form-control" readonly>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="col-sm-2">
+                                        <input type="text" id="kg" name="kg" class="form-control" readonly>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <label id="lblTritier" class="col-form-label"></label>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-sm-2">
                                         <label for="afalan">Afalan (Angka)</label>
-                                        <input type="double" id="afalan" name="afalan" class="form-control"
-                                            placeholder="0" min="0" required>
                                     </div>
-                                    <button id="btn_submit" class="btn btn-primary">Submit</button>
-                                </form>
+                                    <div class="col-sm-2">
+                                        <input type="text" id="afalan" name="afalan" class="form-control" placeholder="0" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-sm-2">
+                                        <button id="btn_submit" class="btn btn-primary">Submit</button>
+                                    </div>
+                                </div>                                
+
                             </div>
                         </div>
                     </div>

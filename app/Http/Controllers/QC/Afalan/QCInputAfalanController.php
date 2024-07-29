@@ -51,8 +51,10 @@ class QCInputAfalanController extends Controller
                     'MeterBruto' => trim($NoRoll->MeterBruto),
                     'Qty_Sekunder' => trim($NoRoll->Qty_Sekunder),
                     'Qty' => trim($NoRoll->Qty),
+                    'lblSekunder' => trim($NoRoll->SatSekunder),
+                    'SatTritier' => trim($NoRoll->SatTritier),
                 ];
-                
+
             }
             return response()->json($dataDetailNoRoll);
         }
@@ -71,8 +73,13 @@ class QCInputAfalanController extends Controller
             $no_roll = $request->input('no_roll');
             $meter_netto = $request->input('meter_netto');
 
+            // dd($kode, $item_number, $no_roll, $meter_netto);
+
             try {
-                DB::connection('ConnInventory')->statement('exec SP_1273_INV_KoreksiAfalan @Kode_Barang = ?, @item_number = ?, @NoRoll = ?, @MeterNetto = ?', [$kode, $item_number, $no_roll, $meter_netto]);
+                $coba = DB::connection('ConnInventory')->statement('exec SP_1273_INV_KoreksiAfalan
+                @Kode_Barang = ?, @item_number = ?, @NoRoll = ?, @MeterNetto = ?',
+                    [$kode, $item_number, $no_roll, $meter_netto]
+                );
 
                 return response()->json(['success' => 'Data inserted successfully'], 200);
             } catch (\Exception $e) {
