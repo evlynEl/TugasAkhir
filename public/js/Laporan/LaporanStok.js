@@ -51,6 +51,17 @@ document.addEventListener('DOMContentLoaded', function () {
     prosesButton.disabled = true;
     excelButton.disabled = true;
 
+    function formatDateToMMDDYYYY(dateStr) {
+        var date = new Date(dateStr);
+        var month = ('0' + (date.getMonth() + 1)).slice(-2);
+        var day = ('0' + date.getDate()).slice(-2);
+        var year = date.getFullYear();
+        return month + '/' + day + '/' + year;
+    }
+
+    var formattedTanggalAwal = formatDateToMMDDYYYY(tanggalAwal.value);
+    var formattedTanggalAkhir = formatDateToMMDDYYYY(tanggalAkhir.value);
+
     $('#tanggalAwal').on('keydown', function (e) {
         if (e.key === 'Enter') {
             e.preventDefault();
@@ -536,7 +547,208 @@ document.addEventListener('DOMContentLoaded', function () {
                 data[15], // Saldo Akhir Sekunder
                 data[16]  // Saldo Akhir Tritier
             ];
-    
+
+            namaType.value = detailArray[3];
+            $.ajax({
+                type: 'GET',
+                url: 'LaporanStok/getType',
+                data: {
+                    _token: csrfToken,
+                    namaType: namaType.value
+                },
+                success: function (result) {
+                    idType.value = result[0].IdType.trim();
+
+                    $.ajax({
+                        type: 'GET',
+                        url: 'LaporanStok/getLaporan2',
+                        data: {
+                            _token: csrfToken,
+                            tanggal1: tanggalAwal.value,
+                            tanggal2: tanggalAkhir.value,
+                            IdObjek: objek.value,
+                            IdType: idType.value,
+                        },
+                        success: function (result) {
+                            Swal.fire({
+                                title: 'Detail Laporan',
+                                html: content,
+                                confirmButtonText: 'OK',
+                                width: '70%',
+                                customClass: {
+                                    container: 'swal2-container'
+                                },
+                                didOpen: () => {
+                                    $('#dataDetail').DataTable({
+                                        "processing": true,
+                                        "serverSide": true,
+                                        "paging": false,
+                                        "searching": false,
+                                        "info": false,
+                                        "ordering": false,
+                                        "ajax": {
+                                            "url": "LaporanStok/getDetailData",
+                                            "type": "GET",
+                                            "data": {
+                                                _token: csrfToken,
+                                                idObjek: objek.value
+                                            },
+                                        },
+                                        "columns": [
+                                            { "data": "TypeTransaksi" },
+                                            { "data": "PemasukanPrimer" },
+                                            { "data": "PemasukanSekunder" },
+                                            { "data": "PemasukanTritier" },
+                                            { "data": "PengeluaranPrimer" },
+                                            { "data": "PengeluaranSekunder" },
+                                            { "data": "PengeluaranTritier" }
+                                        ],
+                                        "language": {
+                                            "emptyTable": "No data available in table"
+                                        }
+                                    });
+
+                                    // Event listener for Excel export
+                                    document.getElementById("excelButtonDetail").addEventListener("click", async function () {
+                                        var tableDetailExcel = $('#dataDetail').DataTable();
+
+                                        var workbook = new ExcelJS.Workbook();
+                                        var worksheet = workbook.addWorksheet("Laporan Data");
+
+                                        // Define border style
+                                        var borderStyles = {
+                                            top: { style: "thin" },
+                                            left: { style: "thin" },
+                                            bottom: { style: "thin" },
+                                            right: { style: "thin" }
+                                        };
+
+                                        // Adding header rows
+                                        worksheet.addRow(["Tanggal: " + formattedTanggalAwal + " s/d " + formattedTanggalAkhir]);
+                                        worksheet.addRow([]);
+                                        worksheet.addRow(["Kelompok Utama", ": " + detailArray[0]]);
+                                        worksheet.addRow(["Kelompok", ": " + detailArray[1]]);
+                                        worksheet.addRow(["Sub Kelompok", ": " + detailArray[2]]);
+                                        worksheet.addRow(["Type", ": " + detailArray[3]]);
+                                        worksheet.addRow(["Saldo Awal Primer", ": " + detailArray[4], "Saldo Awal Sekunder", ": " + detailArray[5], "Saldo Awal Tritier", ": " + detailArray[6]]);
+                                        worksheet.addRow(["Pemasukan Primer", ": " + detailArray[7], "Pemasukan Sekunder", ": " + detailArray[8], "Pemasukan Tritier", ": " + detailArray[9]]);
+                                        worksheet.addRow(["Pengeluaran Primer", ": " + detailArray[10], "Pengeluaran Sekunder", ": " + detailArray[11], "Pengeluaran Tritier", ": " + detailArray[12]]);
+                                        worksheet.addRow(["Saldo Akhir Primer", ": " + detailArray[13], "Saldo Akhir Sekunder", ": " + detailArray[14], "Saldo Akhir Tritier", ": " + detailArray[15]]);
+                                        worksheet.addRow([]);
+                                        worksheet.addRow(["Type Transaksi"
+                                            , "Pemasukan Primer", "Pemasukan Sekunder", "Pemasukan Tritier"
+                                            , "Pengeluaran Primer", "Pengeluaran Sekunder", "Pengeluaran Tritier"]);
+
+                                        // Adding table data
+                                        tableDetailExcel.rows().every(function () {
+                                            var row = this.data();
+                                            worksheet.addRow([
+                                                row.TypeTransaksi,
+                                                row.PemasukanPrimer,
+                                                row.PemasukanSekunder,
+                                                row.PemasukanTritier,
+                                                row.PengeluaranPrimer,
+                                                row.PengeluaranSekunder,
+                                                row.PengeluaranTritier
+                                            ]);
+                                        });
+
+                                        var boldStyle = {
+                                            font: {
+                                                bold: true
+                                            }
+                                        };
+
+                                        // Apply styles to specific cells
+                                        // worksheet.getCell('A1').border = borderStyles;
+                                        worksheet.getCell('A1').font = boldStyle.font;
+
+                                        for (let i = 3; i <= 10; i++) {
+                                            // worksheet.getCell(`A${i}`).border = borderStyles;
+                                            worksheet.getCell(`A${i}`).font = boldStyle.font;
+                                        }
+
+                                        for (let i = 12; i <= 12; i++) {
+                                            for (let j = 1; j <= 7; j++) {
+                                                worksheet.getCell(`${String.fromCharCode(64 + j)}${i}`).border = borderStyles;
+                                                worksheet.getCell(`${String.fromCharCode(64 + j)}${i}`).font = boldStyle.font;
+                                            }
+                                        }
+
+                                        for (let i = 7; i <= 10; i++) {
+                                            for (let j = 3; j <= 3; j++) {
+                                                // worksheet.getCell(`${String.fromCharCode(64 + j)}${i}`).border = borderStyles;
+                                                worksheet.getCell(`${String.fromCharCode(64 + j)}${i}`).font = boldStyle.font;
+                                            }
+                                        }
+
+                                        for (let i = 7; i <= 10; i++) {
+                                            for (let j = 5; j <= 5; j++) {
+                                                // worksheet.getCell(`${String.fromCharCode(64 + j)}${i}`).border = borderStyles;
+                                                worksheet.getCell(`${String.fromCharCode(64 + j)}${i}`).font = boldStyle.font;
+                                            }
+                                        }
+
+                                        // Calculate column widths dynamically
+                                        function calculateColumnWidths(data) {
+                                            var colWidths = [];
+                                            data.forEach(row => {
+                                                row.forEach((cell, index) => {
+                                                    const cellLength = String(cell).length;
+                                                    if (!colWidths[index] || cellLength > colWidths[index]) {
+                                                        colWidths[index] = cellLength;
+                                                    }
+                                                });
+                                            });
+                                            return colWidths.map(length => length + 2); // Add some padding
+                                        }
+
+                                        var columnWidths = calculateColumnWidths([
+                                            ["Tanggal: " + formattedTanggalAwal + " s/d " + formattedTanggalAkhir],
+                                            [],
+                                            ["Kelompok Utama", ": " + detailArray[0]],
+                                            ["Kelompok", ": " + detailArray[1]],
+                                            ["Sub Kelompok", ": " + detailArray[2]],
+                                            ["Type", ": " + detailArray[3]],
+                                            ["Saldo Awal Primer", ": " + detailArray[4], "Saldo Awal Sekunder", ": " + detailArray[5], "Saldo Awal Tritier", ": " + detailArray[6]],
+                                            ["Pemasukan Primer", ": " + detailArray[7], "Pemasukan Sekunder", ": " + detailArray[8], "Pemasukan Tritier", ": " + detailArray[9]],
+                                            ["Pengeluaran Primer", ": " + detailArray[10], "Pengeluaran Sekunder", ": " + detailArray[11], "Pengeluaran Tritier", ": " + detailArray[12]],
+                                            ["Saldo Akhir Primer", ": " + detailArray[13], "Saldo Akhir Sekunder", ": " + detailArray[14], "Saldo Akhir Tritier", ": " + detailArray[15]],
+                                            [],
+                                            ["Type Transaksi"
+                                                , "Pemasukan Primer", "Pemasukan Sekunder", "Pemasukan Tritier"
+                                                , "Pengeluaran Primer", "Pengeluaran Sekunder", "Pengeluaran Tritier"]
+                                        ]);
+
+                                        worksheet.columns = columnWidths.map(width => ({ width }));
+
+                                        // Save the workbook
+                                        workbook.xlsx.writeBuffer().then(function (buffer) {
+                                            var blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+                                            var url = URL.createObjectURL(blob);
+                                            var a = document.createElement("a");
+                                            a.href = url;
+                                            a.download = 'Detail_data.xlsx';
+                                            a.click();
+                                            URL.revokeObjectURL(url);
+                                        });
+                                    });
+
+                                }
+                            });
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error fetching data on modal close:', error);
+                        }
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching data on modal close:', error);
+                }
+            });
+
+
+
             var content = `
                 <div class="container-fluid">
                     <!-- General Data -->
@@ -671,7 +883,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <!-- Table Detail -->
                     <div class="row" style="margin-top: 2%">
                         <div class="col-md-12">
-                            <table id="dataDetail" class="table table-striped table-bordered" style="font-size:12px">
+                            <table id="dataDetail" class="table table-bordered" style="font-size:12px">
                                 <thead>
                                     <tr>
                                         <th>Type Transaksi</th>
@@ -695,136 +907,91 @@ document.addEventListener('DOMContentLoaded', function () {
                     </div>
                 </div>
             `;
-    
-            Swal.fire({
-                title: 'Detail Laporan',
-                html: content,
-                confirmButtonText: 'OK',
-                width: '70%',
-                customClass: {
-                    container: 'swal2-container'
-                },
-                didOpen: () => {
-                    $('#dataDetail').DataTable({
-                        "processing": true,
-                        "serverSide": true,
-                        "paging": false,
-                        "searching": false,
-                        "info": false,
-                        "ordering": false,
-                        "ajax": {
-                            "url": "LaporanStok/getDetailData",
-                            "type": "GET",
-                            "data": function (d) {
-                                d._token = csrfToken;
-                            },
-                        },
-                        "columns": [
-                            { "data": "TypeTransaksi" },
-                            { "data": "PemasukanPrimer" },
-                            { "data": "PemasukanSekunder" },
-                            { "data": "PemasukanTritier" },
-                            { "data": "PengeluaranPrimer" },
-                            { "data": "PengeluaranSekunder" },
-                            { "data": "PengeluaranTritier" }
-                        ],
-                        "language": {
-                            "emptyTable": "No data available in table"
-                        }
-                    });
-    
-                    // Event listener for Excel export
-                    document.getElementById("excelButtonDetail").addEventListener("click", function () {
-                        var tableDetailExcel = $('#dataDetail').DataTable();
-    
-                        var workbook = XLSX.utils.book_new();
-                        var worksheet_data = [
-                            ["Tanggal:", tanggalAwal.value + " s/d " + tanggalAkhir.value],
-                            [],
-                            ["Type Transaksi"
-                                , "Pemasukan Primer", "Pemasukan Sekunder", "Pemasukan Tritier"
-                                , "Pengeluaran Primer", "Pengeluaran Sekunder", "Pengeluaran Tritier"]
-                        ];
-    
-                        tableDetailExcel.rows().every(function () {
-                            var row = this.data();
-                            worksheet_data.push(row);
-                        });
-    
-                        var worksheet = XLSX.utils.aoa_to_sheet(worksheet_data);
-                        XLSX.utils.book_append_sheet(workbook, worksheet, "Laporan Data");
-    
-                        XLSX.writeFile(workbook, 'Detail_data.xlsx');
-                    });
-                },
-                didClose: () => {
-                    namaType.value = detailArray[3];
-                    $.ajax({
-                        type: 'GET',
-                        url: 'LaporanStok/getType',
-                        data: {
-                            _token: csrfToken,
-                            namaType: namaType.value
-                        },
-                        success: function (result) {
-                            console.log('Data refreshed:', result);
-                            idType.value = result[0].IdType.trim();
 
-                            $.ajax({
-                                type: 'GET',
-                                url: 'LaporanStok/getLaporan1',
-                                data: {
-                                    _token: csrfToken,
-                                    tanggal1: tanggalAwal.value,
-                                    tanggal2: tanggalAkhir.value,
-                                    IdObjek: objek.value,
-                                    IdType: idType.value,
-                                    IdKelUtama: kelUtama.value
-                                },
-                                success: function (data) {
-                                    console.log('Stored procedure result:', data);
-                                },
-                                error: function (xhr, status, error) {
-                                    console.error('Error calling stored procedure:', error);
-                                }
-                            });
-                        },
-                        error: function (xhr, status, error) {
-                            console.error('Error fetching data on modal close:', error);
-                        }
-                    });
-                }
-            });
         });
     });
-    
+
 
     // button excel laporan
-    document.getElementById("excelButton").addEventListener("click", function () {
+    document.getElementById("excelButton").addEventListener("click", async function () {
         var tableLaporanExcel = $('#tableLaporan').DataTable();
+        var workbook = new ExcelJS.Workbook();
+        var worksheet = workbook.addWorksheet('Laporan Data');
 
-        var workbook = XLSX.utils.book_new();
-
-        var worksheet_data = [
-            ["Tanggal:", tanggalAwal.value + " s/d " + tanggalAkhir.value],
+        // Header data for Excel
+        var headerData = [
+            ["Tanggal: " + formattedTanggalAwal + " s/d " + formattedTanggalAkhir],
             [],
-            ["Objek", "Kel. Utama", "Kelompok", "Sub Kelompok", "Type"
-                , "S. Awal Primer", "S. Awal Sekunder", "S. Awal Tritier"
-                , "Pemasukan Primer", "Pemasukan Sekunder", "Pemasukan Tritier"
-                , "Pengeluaran Primer", "Pengeluaran Sekunder", "Pengeluaran Tritier"
-                , "S. Akhir Primer", "S. Akhir Sekunder", "S. Akhir Tritier"
-                , "KodeBarang"]
+            ["Objek", "Kel. Utama", "Kelompok", "Sub Kelompok", "Type",
+                "S. Awal Primer", "S. Awal Sekunder", "S. Awal Tritier",
+                "Pemasukan Primer", "Pemasukan Sekunder", "Pemasukan Tritier",
+                "Pengeluaran Primer", "Pengeluaran Sekunder", "Pengeluaran Tritier",
+                "S. Akhir Primer", "S. Akhir Sekunder", "S. Akhir Tritier",
+                "KodeBarang"]
         ];
 
-        tableLaporanExcel.rows().every(function () {
-            var row = this.data();
-            worksheet_data.push(row);
+        // Add header data to worksheet
+        headerData.forEach((row, rowIndex) => {
+            worksheet.addRow(row);
         });
 
-        var worksheet = XLSX.utils.aoa_to_sheet(worksheet_data);
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Laporan Data");
+        // Add table data to worksheet
+        tableLaporanExcel.rows().every(function () {
+            var row = this.data();
+            worksheet.addRow(row);
+        });
 
-        XLSX.writeFile(workbook, 'Laporan_Data.xlsx');
+        // Define border style
+        var borderStyle = {
+            top: { style: 'thin' },
+            left: { style: 'thin' },
+            bottom: { style: 'thin' },
+            right: { style: 'thin' }
+        };
+
+        var boldStyle = {
+            font: {
+                bold: true
+            }
+        };
+
+        // Apply borders and bold formatting to specific rows
+        worksheet.eachRow({ includeEmpty: true }, function (row, rowNumber) {
+            if (rowNumber === 3 || rowNumber === 1) { // Apply to rows 3 and 1 (1-based index)
+                row.eachCell({ includeEmpty: true }, function (cell) {
+                    cell.border = borderStyle;
+                    cell.font = boldStyle.font; // Apply bold formatting
+                });
+            }
+        });
+
+        // Calculate column widths dynamically
+        function calculateColumnWidths(data) {
+            var colWidths = [];
+            data.forEach(row => {
+                row.forEach((cell, index) => {
+                    const cellLength = String(cell).length;
+                    if (!colWidths[index] || cellLength > colWidths[index]) {
+                        colWidths[index] = cellLength;
+                    }
+                });
+            });
+            return colWidths.map(length => length + 2); // Add some padding
+        }
+
+        // Set column widths
+        worksheet.columns = worksheet.columns.map((col, index) => {
+            return { ...col, width: calculateColumnWidths(headerData.concat(tableLaporanExcel.rows().data().toArray()))[index] };
+        });
+
+        // Save workbook
+        workbook.xlsx.writeBuffer().then(function (buffer) {
+            var blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+            var link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'Laporan_Data.xlsx';
+            link.click();
+        });
     });
 
     // cancel
@@ -847,7 +1014,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // disable proses dan excel kalau kosong
     function cekFields() {
-        // blom dipake
         if (objek.value && namaObjek.value && namaKelUtama.value
             && divisi.value && namaDivisi.value) {
             prosesButton.disabled = false;

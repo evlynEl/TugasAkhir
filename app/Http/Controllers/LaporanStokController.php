@@ -382,7 +382,6 @@ class LaporanStokController extends Controller
         else if ($id === 'getType') {
             $namaType = $request->input('namaType');
 
-
             if (empty($namaType)) {
                 return datatables()->of([])->make(true);
             }
@@ -402,25 +401,108 @@ class LaporanStokController extends Controller
             $IdObjek = $request->input('IdObjek');
             $IdType = $request->input('IdType');
 
-            DB::connection('ConnInventory')->beginTransaction();
+            // DB::connection('ConnInventory')->beginTransaction();
+            DB::transaction(function () use ($tanggal1, $tanggal2, $IdObjek, $IdType) {
 
-            try {
-                $result = DB::connection('ConnInventory')->select('EXEC Sp_Laporan2
-                    @tanggal1 = ?, @tanggal2 = ?, @IdObjek = ?, @IdType = ?', [
-                    $tanggal1,
-                    $tanggal2,
-                    $IdObjek,
-                    $IdType
-                ]);
+                DB::connection('ConnInventory')->table('laporan1')->delete();
 
-                DB::connection('ConnInventory')->commit();
+                // fetch
+                $result = DB::connection('ConnInventory')
+                    ->table('dbo.VW_PRG_TYPE')
+                    ->join('dbo.VW_PRG_SUBKEL', 'dbo.VW_PRG_TYPE.IdSubkelompok_Type', '=', 'dbo.VW_PRG_SUBKEL.IdSubkelompok')
+                    ->join('dbo.VW_PRG_Transaksi', 'dbo.VW_PRG_Transaksi.IdType', '=', 'dbo.VW_PRG_TYPE.IdType')
+                    ->join('dbo.TypeTransaksi', 'dbo.TypeTransaksi.IdTypeTransaksi', '=', 'dbo.VW_PRG_Transaksi.IdTypeTransaksi')
+                    ->select(
+                        'dbo.VW_PRG_SUBKEL.NamaObjek',
+                        'dbo.VW_PRG_SUBKEL.NamaKelompokUtama',
+                        'dbo.VW_PRG_SUBKEL.NamaKelompok',
+                        'dbo.VW_PRG_SUBKEL.NamaSubKelompok',
+                        'dbo.VW_PRG_TYPE.NamaType',
+                        'dbo.VW_PRG_Transaksi.IdType',
+                        'dbo.VW_PRG_Transaksi.IdTypeTransaksi',
+                        'dbo.TypeTransaksi.TypeTransaksi'
+                    )
+                    ->where('dbo.VW_PRG_SUBKEL.IdObjek', $IdObjek)
+                    ->where('dbo.VW_PRG_TYPE.IdType', $IdType)
+                    ->groupBy(
+                        'dbo.VW_PRG_SUBKEL.NamaObjek',
+                        'dbo.VW_PRG_SUBKEL.NamaKelompokUtama',
+                        'dbo.VW_PRG_SUBKEL.NamaKelompok',
+                        'dbo.VW_PRG_SUBKEL.NamaSubKelompok',
+                        'dbo.VW_PRG_TYPE.NamaType',
+                        'dbo.VW_PRG_Transaksi.IdType',
+                        'dbo.VW_PRG_Transaksi.IdTypeTransaksi',
+                        'dbo.TypeTransaksi.TypeTransaksi'
+                    )
+                    ->orderBy('dbo.VW_PRG_SUBKEL.NamaKelompokUtama')
+                    ->orderBy('dbo.VW_PRG_SUBKEL.NamaKelompok')
+                    ->orderBy('dbo.VW_PRG_SUBKEL.NamaSubKelompok')
+                    ->orderBy('dbo.VW_PRG_TYPE.NamaType')
+                    ->orderBy('dbo.TypeTransaksi.TypeTransaksi')
+                    ->get();
 
-                return response()->json($result);
-            } catch (\Exception $e) {
-                DB::connection('ConnInventory')->rollBack();
+                // dd($result);
 
-                return response()->json(['error' => $e->getMessage()], 500);
-            }
+                foreach ($result as $row) {
+                    $NmObjek = $row->NamaObjek;
+                    $NmKelut = $row->NamaKelompokUtama;
+                    $NmKel = $row->NamaKelompok;
+                    $NmSubKel = $row->NamaSubKelompok;
+                    $NamaType = $row->NamaType;
+                    $Idtype = $row->IdType;
+                    $IdTypeTransaksi = $row->IdTypeTransaksi;
+                    $TypeTransaksi = $row->TypeTransaksi;
+
+                    $MasukPrimer = $MasukSekunder = $MasukTritier = 0;
+                    $KeluarPrimer = $KeluarSekunder = $KeluarTritier = 0;
+
+                    $cariKeluarMasuk = DB::connection('ConnInventory')
+                        ->table('VW_PRG_TRANSAKSI')
+                        ->select(
+                            DB::raw('SUM(jumlahpemasukanPrimer) as jumlahpemasukanPrimer'),
+                            DB::raw('SUM(jumlahpemasukanSekunder) as jumlahpemasukanSekunder'),
+                            DB::raw('SUM(jumlahpemasukanTritier) as jumlahpemasukanTritier'),
+                            DB::raw('SUM(jumlahpengeluaranPrimer) as jumlahpengeluaranPrimer'),
+                            DB::raw('SUM(jumlahpengeluaranSekunder) as jumlahpengeluaranSekunder'),
+                            DB::raw('SUM(jumlahpengeluaranTritier) as jumlahpengeluaranTritier')
+                        )
+                        ->where('idtype', $Idtype)
+                        ->where('IdTypeTransaksi', $IdTypeTransaksi)
+                        ->whereBetween('saatlog', [$tanggal1, $tanggal2])
+                        ->first();
+
+                    // Extract the results and handle null values
+                    $MasukPrimer = $cariKeluarMasuk->jumlahpemasukanPrimer ?? 0;
+                    $MasukSekunder = $cariKeluarMasuk->jumlahpemasukanSekunder ?? 0;
+                    $MasukTritier = $cariKeluarMasuk->jumlahpemasukanTritier ?? 0;
+                    $KeluarPrimer = $cariKeluarMasuk->jumlahpengeluaranPrimer ?? 0;
+                    $KeluarSekunder = $cariKeluarMasuk->jumlahpengeluaranSekunder ?? 0;
+                    $KeluarTritier = $cariKeluarMasuk->jumlahpengeluaranTritier ?? 0;
+
+                    if (
+                        !($MasukPrimer == 0 && $MasukSekunder == 0 && $MasukTritier == 0 &&
+                            $KeluarPrimer == 0 && $KeluarSekunder == 0 && $KeluarTritier == 0)
+                    ) {
+                        $data = [
+                            'Objek' => $NmObjek,
+                            'KelompokUtama' => $NmKelut,
+                            'Kelompok' => $NmKel,
+                            'SubKelompok' => $NmSubKel,
+                            'Type' => $NamaType,
+                            'TypeTransaksi' => $TypeTransaksi,
+                            'PemasukanPrimer' => $MasukPrimer,
+                            'PemasukanSekunder' => $MasukSekunder,
+                            'PemasukanTritier' => $MasukTritier,
+                            'PengeluaranPrimer' => $KeluarPrimer,
+                            'PengeluaranSekunder' => $KeluarSekunder,
+                            'PengeluaranTritier' => $KeluarTritier,
+                        ];
+                        
+                        DB::connection('ConnInventory')->table('Laporan1')->insert($data);
+                    }
+                }
+
+            });
         }
 
     }

@@ -715,7 +715,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 namaMesin.value = selectedRow.NamaMesin.trim();
 
                 if (currentMesinValue !== previousMesin) {
-                    clearTable();
+                    clearTableChange();
                     clearAllInputs();
                     spekBenang.value = '';
                     idKonversi.value = '';
@@ -825,7 +825,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         },
                         success: function (result) {
                             idKonversi.value = result[0].IdKonversi.trim();
-                            clearTable();
+                            clearTableChange();
                             clearAllInputs();
                         },
                         error: function (xhr, status, error) {

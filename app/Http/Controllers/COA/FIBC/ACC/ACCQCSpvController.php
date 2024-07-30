@@ -49,12 +49,12 @@ class ACCQCSpvController extends Controller
                 ];
             }
 
-            $tes = $result[0]->Test_Result;
             $count = $result[0]->Jumlah;
+            $tes = $result[0]->Test_Result;
 
             if ($count === 4) {
                 if ($tes === 'PASS') {
-
+                    
                 } else if ($tes === 'FAIL') {
                     
                 }

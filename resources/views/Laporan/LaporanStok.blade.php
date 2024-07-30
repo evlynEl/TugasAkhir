@@ -37,7 +37,7 @@
                                 <button type="button" class="btn btn-primary" id="buttonDivisi">...</button>
                             </div>
                             <div class="col-sm-3">
-                                <input type="text" class="form-control" id="namaType" readonly>
+                                <input type="text" class="form-control d-none" id="namaType" readonly>
                             </div>
                         </div>
                         <div class="row">
@@ -52,7 +52,7 @@
                                 <button type="button" class="btn btn-primary" id="buttonObjek">...</button>
                             </div>
                             <div class="col-sm-3">
-                                <input type="text" class="form-control" id="idType" readonly>
+                                <input type="text" class="form-control d-none" id="idType" readonly>
                             </div>
                         </div>
                         <div class="row">
@@ -103,6 +103,7 @@
 
     <script type="text/javascript" src="{{ asset('js/Laporan/LaporanStok.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/exceljs@4.3.0/dist/exceljs.min.js"></script>
     <link rel="stylesheet" href="{{ asset('css/sweetalert2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/Laporan/LaporanStok.css') }}">
     <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>

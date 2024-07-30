@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         serverSide: true,
                         order: [[0, "asc"]],
                         ajax: {
-                            url: "FrmACCFIBC/getRef",
+                            url: "FrmACCMng_FIBC/getRef",
                             dataType: "json",
                             type: "GET",
                             data: {
@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     customer.value = result.value.Customer;
 
                     $.ajax({
-                        url: "FrmACCFIBC/getDetail",
+                        url: "FrmACCMng_FIBC/getDetail",
                         type: "GET",
                         data: {
                             _token: csrfToken,
