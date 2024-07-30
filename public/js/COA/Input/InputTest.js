@@ -15,6 +15,7 @@ var Drop_Test = document.getElementById('Drop_Test');
 
 // Test Result Section
 var Cyclic_Lift = document.getElementById('Cyclic_Lift');
+var Cyclic_Result = document.getElementById('cyclicResult');
 var damageFoundDescCyInput = document.getElementById('damageFoundDescCy');
 var Top_Lift = document.getElementById('Top_Lift');
 var Top_Result = document.getElementById('Top_Result');
@@ -23,17 +24,9 @@ var Drop_Result = document.getElementById('Drop_Result');
 var damageFoundDescDropInput = document.getElementById('damageFoundDescDrop');
 
 // Picture of Breakage Section
-var jumlah;
+var jumlah = 0;
 var threePictures = document.getElementById('threePictures');
 var fourPictures = document.getElementById('fourPictures');
-// var Pict_1 = document.getElementById('Pict_1');
-// var Pict_2 = document.getElementById('Pict_2');
-// var Pict_3 = document.getElementById('Pict_3');
-// var Pict_4 = document.getElementById('Pict_4');
-// var picture1 = document.getElementById('imagePreview1');
-// var picture2 = document.getElementById('imagePreview2');
-// var picture3 = document.getElementById('imagePreview3');
-// var picture4 = document.getElementById('imagePreview4');
 var imageFiles;
 
 // specific div
@@ -99,7 +92,7 @@ inputs.forEach((masuk, index) => {
     masuk.addEventListener('keypress', function (event) {
         if (event.key === 'Enter') {
             if (masuk.value.trim() !== '') {
-                console.log(masuk.id);
+                // console.log(masuk.id);
 
                 if (masuk.id === 'Height_Approx') {
                     Load_Speed.disabled = false;
@@ -179,7 +172,7 @@ inputs.forEach((masuk, index) => {
                     cancelButtonText: 'Tidak'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        Load_Speed.focus();
+                        Drop_Test.focus();
                     }
                 });
             } else if (/^Data_[1-9]$|^Data_1[0-5]$/.test(masuk.id)) {
@@ -233,6 +226,8 @@ function handleData(masuk) {
 }
 
 
+
+
 // fungsi cek apakah input pd div tertentu disabled
 function areAllInputsDisabled(inputs) {
     return Array.from(inputs).every(input => input.disabled);
@@ -245,7 +240,7 @@ function toggleInputs(checkboxId, divId, descId) {
     const descInput = document.getElementById(descId);
 
     checkbox.addEventListener("change", function () {
-        console.log(`Checkbox ${checkboxId} changed to ${checkbox.checked}`);
+        // console.log(`Checkbox ${checkboxId} changed to ${checkbox.checked}`);
         const inputs = div.querySelectorAll('input');
 
         if (checkbox.checked) {
@@ -271,6 +266,12 @@ function toggleInputs(checkboxId, divId, descId) {
                     descInput.disabled = false;
                     damageFoundDescDropInput.focus();
                 });
+            } else if (checkboxId === 'Dia') {
+                dia_val.disabled = false;
+                dia_val.focus();
+            } else if (checkboxId === 'Square') {
+                square_val.disabled = false;
+                square_val.focus();
             }
         }
     });
@@ -423,12 +424,18 @@ btn_info.addEventListener("click", function (e) {
 
                         if (a === 1) { // fill dari no ref isi
                             if (response.refCopy === '') { // tidak ada copy ref no
+
                                 setTimeout(() => {
+                                    // Drop_Test.disabled = false;
+                                    // Drop_Test.focus();
+
                                     Height_Approx.disabled = false;
                                     diaCheckbox.disabled = false;
                                     squareCheckbox.disabled = false;
                                     Height_Approx.focus();
                                 }, 70);
+
+
 
                             } else { // ada copy ref no
                                 setTimeout(() => {
@@ -552,15 +559,15 @@ function retrieveCheck(sectionId, value, data) {
             if (checkbox) {
                 var dataType = checkbox.getAttribute('data-type');
 
+                console.log(`Data Type: ${dataType}, Checkbox Name: ${checkboxName}`); // Debugging line
+
                 switch (sectionId) {
                     case 'cyclicCheck':
                         checkbox.checked = value === checkboxName;
                         if (checkbox.checked) {
                             cLift = [checkboxName];
                             isAnyChecked = true;
-                            if (cLift.length > 0) {
-                                Cyclic_Lift.checked = true;
-                            }
+                            Cyclic_Lift.checked = cLift.length > 0;
                         }
                         break;
 
@@ -569,9 +576,7 @@ function retrieveCheck(sectionId, value, data) {
                         if (checkbox.checked) {
                             tLift = [checkboxName];
                             isAnyChecked = true;
-                            if (tLift.length > 0) {
-                                Top_Lift.checked = true;
-                            }
+                            Top_Lift.checked = tLift.length > 0;
                         }
                         break;
 
@@ -583,6 +588,8 @@ function retrieveCheck(sectionId, value, data) {
                             if (checkboxName === 'Others :') {
                                 othersTextInput.disabled = false;
                                 othersTextInput.value = data.Breakage_Location_Remaining;
+                            } else {
+                                othersTextInput.disabled = true;
                             }
                         }
                         break;
@@ -593,13 +600,13 @@ function retrieveCheck(sectionId, value, data) {
                             if (checkbox.checked) {
                                 dResult = [checkboxName];
                                 isAnyChecked = true;
-                                if (dResult.length > 0) {
-                                    Drop_Result.checked = true;
-                                }
+                                Drop_Result.checked = dResult.length > 0;
                                 if (checkboxName === 'Visible damages found at') {
                                     damageFoundDescDropInput.disabled = false;
                                     damageFoundDescDropInput.value = data.Drop_Result_Remaining;
                                 }
+                            } else {
+                                damageFoundDescDropInput.disabled = true;
                             }
                         }
                         break;
@@ -610,11 +617,13 @@ function retrieveCheck(sectionId, value, data) {
                             if (checkbox.checked) {
                                 cResult = [checkboxName];
                                 isAnyChecked = true;
-                                var damageFoundDescCyInput = document.querySelector('#cyclicResult input[name="damageFoundDescCy"]');
+                                Cyclic_Result.checked = cResult.length > 0;
                                 if (checkboxName === 'Visible damages found at') {
                                     damageFoundDescCyInput.disabled = false;
                                     damageFoundDescCyInput.value = data.Cyclic_Result_Remaining;
                                 }
+                            } else {
+                                damageFoundDescCyInput.disabled = true;
                             }
                         }
                         break;
@@ -649,8 +658,177 @@ function retrieveCheck(sectionId, value, data) {
 
 
 
+// function retrieveCheck(sectionId, value, data) {
+//     var section = sections.find(s => s.id === sectionId);
+
+//     if (!section) {
+//         console.error(`Section with id ${sectionId} not found.`);
+//         return;
+//     }
+
+//     let isAnyChecked = false;
+
+//     section.checkboxes.forEach(function (checkboxName) {
+//         var checkboxes = document.querySelectorAll(`#${sectionId} input[name="${checkboxName}"]`);
+//         checkboxes.forEach(function (checkbox) {
+//             if (checkbox) {
+//                 var dataType = checkbox.getAttribute('data-type');
+//                 let isChecked = Array.isArray(value) ? value.includes(checkboxName) : value === checkboxName;
+
+//                 checkbox.checked = isChecked;
+
+//                 switch (sectionId) {
+//                     case 'cyclicCheck':
+//                         if (isChecked) {
+//                             cLift = [checkboxName];
+//                             isAnyChecked = true;
+//                             if (cLift.length > 0) {
+//                                 Cyclic_Lift.checked = true;
+//                                 document.querySelector('#cyclicResult').classList.remove('disabled');
+//                                 document.querySelectorAll('#cyclicResult input').forEach(input => input.disabled = false);
+//                             }
+//                         } else if (checkboxName === cLift?.[0]) {
+//                             cLift = null;
+//                             document.querySelector('#cyclicResult').classList.add('disabled');
+//                             document.querySelectorAll('#cyclicResult input').forEach(input => input.disabled = true);
+//                         }
+//                         break;
+
+//                     case 'topLiftCheck':
+//                         if (isChecked) {
+//                             tLift = [checkboxName];
+//                             isAnyChecked = true;
+//                             if (tLift.length > 0) {
+//                                 Top_Lift.checked = true;
+//                                 document.querySelector('#Top_Result').classList.remove('disabled');
+//                                 document.querySelector('#Breakage_Location').classList.remove('disabled');
+//                                 document.querySelectorAll('#Top_Result input, #Breakage_Location input').forEach(input => input.disabled = false);
+//                             }
+//                         } else if (checkboxName === tLift?.[0]) {
+//                             tLift = null;
+//                             document.querySelector('#Top_Result').classList.add('disabled');
+//                             document.querySelector('#Breakage_Location').classList.add('disabled');
+//                             document.querySelectorAll('#Top_Result input, #Breakage_Location input').forEach(input => input.disabled = true);
+//                         }
+//                         break;
+
+//                     case 'Breakage_Location':
+//                         if (isChecked) {
+//                             breakage = [checkboxName];
+//                             isAnyChecked = true;
+//                             if (checkboxName === 'Others :') {
+//                                 othersTextInput.disabled = false;
+//                                 othersTextInput.value = data.Breakage_Location_Remaining;
+//                             }
+//                         } else if (checkboxName === breakage?.[0]) {
+//                             breakage = null;
+//                             if (checkboxName === 'Others :') {
+//                                 othersTextInput.disabled = true;
+//                                 othersTextInput.value = '';
+//                             }
+//                         }
+//                         break;
+
+//                     case 'dropResult':
+//                         if (dataType === 'drop') {
+//                             if (isChecked) {
+//                                 dResult = [checkboxName];
+//                                 isAnyChecked = true;
+//                                 if (dResult.length > 0) {
+//                                     Drop_Result.checked = true;
+//                                     document.querySelector('#dropResult').classList.remove('disabled');
+//                                     document.querySelectorAll('#dropResult input').forEach(input => input.disabled = false);
+//                                 }
+//                                 if (checkboxName === 'Visible damages found at') {
+//                                     damageFoundDescDropInput.disabled = false;
+//                                     damageFoundDescDropInput.value = data.Drop_Result_Remaining;
+//                                 }
+//                             } else if (checkboxName === dResult?.[0]) {
+//                                 dResult = null;
+//                                 if (checkboxName === 'Visible damages found at') {
+//                                     damageFoundDescDropInput.disabled = true;
+//                                     damageFoundDescDropInput.value = '';
+//                                 }
+//                             }
+//                         }
+//                         break;
+
+//                     case 'cyclicResult':
+//                         if (dataType === 'cyclic') {
+//                             if (isChecked) {
+//                                 cResult = [checkboxName];
+//                                 isAnyChecked = true;
+//                                 // var damageFoundDescCyInput = document.querySelector('#cyclicResult input[name="damageFoundDescCy"]');
+//                                 if (checkboxName === 'Visible damages found at') {
+//                                     damageFoundDescCyInput.disabled = false;
+//                                     damageFoundDescCyInput.value = data.Cyclic_Result_Remaining;
+//                                 }
+//                             } else if (checkboxName === cResult?.[0]) {
+//                                 cResult = null;
+//                                 // var damageFoundDescCyInput = document.querySelector('#cyclicResult input[name="damageFoundDescCy"]');
+//                                 if (checkboxName === 'Visible damages found at') {
+//                                     damageFoundDescCyInput.disabled = true;
+//                                     damageFoundDescCyInput.value = '';
+//                                 }
+//                             }
+//                         }
+//                         break;
+
+//                     default:
+//                         break;
+//                 }
+//             }
+//         });
+//     });
+
+//     // Update the states based on whether any checkboxes are checked
+//     switch (sectionId) {
+//         case 'cyclicCheck':
+//             if (!isAnyChecked) {
+//                 cLift = null;
+//                 document.querySelector('#cyclicResult').classList.add('disabled');
+//                 document.querySelectorAll('#cyclicResult input').forEach(input => input.disabled = true);
+//             }
+//             break;
+//         case 'topLiftCheck':
+//             if (!isAnyChecked) {
+//                 tLift = null;
+//                 document.querySelector('#Top_Result').classList.add('disabled');
+//                 document.querySelector('#Breakage_Location').classList.add('disabled');
+//                 document.querySelectorAll('#Top_Result input, #Breakage_Location input').forEach(input => input.disabled = true);
+//             }
+//             break;
+//         case 'Breakage_Location':
+//             if (!isAnyChecked) {
+//                 breakage = null;
+//                 if (document.querySelector('#Breakage_Location input[name="Others :"]').checked) {
+//                     othersTextInput.disabled = true;
+//                     othersTextInput.value = '';
+//                 }
+//             }
+//             break;
+//         case 'dropResult':
+//             if (!isAnyChecked) {
+//                 dResult = null;
+//                 document.querySelector('#dropResult').classList.add('disabled');
+//                 document.querySelectorAll('#dropResult input').forEach(input => input.disabled = true);
+//             }
+//             break;
+//         case 'cyclicResult':
+//             if (!isAnyChecked) {
+//                 cResult = null;
+//             }
+//             break;
+//         default:
+//             break;
+//     }
+// }
+
+
+
 // cek checkbox
 // fungsi track aktifitas checkbox
+
 function setupCheckboxListeners() {
     sections.forEach(function (section) {
         section.checkboxes.forEach(function (checkboxName) {
@@ -712,55 +890,52 @@ function handleCheckboxChange(sectionId) {
 setupCheckboxListeners();
 
 // fungsi mengambil gambar
-var imageFiles = {}; // variabel unk simpan file references
-function setupImageUpload(buttonId, imageId, textInputId, nextButtonId) {
-    var button = document.getElementById(buttonId);
-    var image = document.getElementById(imageId);
-    var textInput = document.getElementById(textInputId);
+function setupImageUpload(btnId, inputId, textId, previewId, nextBtnId, formData, imageKey) {
+    const btn = document.querySelector(btnId);
+    const fileInput = document.querySelector(inputId);
+    const textInput = document.querySelector(textId);
+    const imagePreview = document.querySelector(previewId);
+    const nextBtn = nextBtnId ? document.querySelector(nextBtnId) : null;
 
-    if (!image) {
-        console.error('Image element not found:', imageId);
-        return;
-    }
-
-    button.addEventListener('click', function () {
-        var fileInput = document.createElement('input');
-        fileInput.type = 'file';
-        fileInput.accept = 'image/png';
-        fileInput.style.display = 'none';
-
-        fileInput.addEventListener('change', function () {
-            var file = fileInput.files[0];
-            if (file) {
-                var reader = new FileReader();
-
-                reader.onload = function (e) {
-                    image.src = e.target.result;
-                    image.style.display = 'block';
-                    textInput.value = file.name;
-
-                    imageFiles[textInputId] = file;
-
-                    if (nextButtonId) {
-                        var nextButton = document.getElementById(nextButtonId);
-                        if (nextButton) {
-                            nextButton.focus();
-                        }
-                    }
-                };
-
-                reader.readAsDataURL(file);
-            }
-        });
-
-        document.body.appendChild(fileInput);
+    btn.addEventListener('click', function () {
         fileInput.click();
-        document.body.removeChild(fileInput);
+    });
+
+    fileInput.addEventListener('change', function () {
+        const file = fileInput.files[0];
+        if (file) {
+            textInput.value = file.name;
+
+            // Display the image preview
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const arrayBuffer = e.target.result;
+                const blob = new Blob([arrayBuffer], { type: file.type });
+                const url = URL.createObjectURL(blob);
+
+                imagePreview.src = url;
+                imagePreview.style.display = 'block';
+
+                // Store the binary data in the FormData object
+                formData.append(imageKey, blob);
+            };
+            reader.readAsArrayBuffer(file);
+
+            if (nextBtn) {
+                nextBtn.focus();
+            }
+        } else {
+            textInput.value = '';
+            imagePreview.src = '';
+            imagePreview.style.display = 'none';
+        }
     });
 }
 
+
 // fungsi unk fokus button pict & setup gambar sesuai jumlah yg tercentang
 function updateFocus() {
+    const formData = new FormData();
     var threePicturesChecked = threePictures.checked;
     var fourPicturesChecked = fourPictures.checked;
 
@@ -772,11 +947,12 @@ function updateFocus() {
             'picture3': null
         };
         btn_pict1.focus();
-        setupImageUpload('btn_pict1', 'imagePreview1', 'Pict_1', 'btn_pict2');
-        setupImageUpload('btn_pict2', 'imagePreview2', 'Pict_2', 'btn_pict3');
-        setupImageUpload('btn_pict3', 'imagePreview3', 'Pict_3', 'btn_simpan');
+        setupImageUpload('#btn_pict1', '#picture1', '#Pict_1', '#imagePreview1', '#btn_pict2', formData, 'Pict1');
+        setupImageUpload('#btn_pict2', '#picture2', '#Pict_2', '#imagePreview2', '#btn_pict3', formData, 'Pict2');
+        setupImageUpload('#btn_pict3', '#picture3', '#Pict_3', '#imagePreview3', '#btn_simpan', formData, 'Pict3');
         btn_pict4.disabled = true;
     } else if (fourPicturesChecked) {
+        btn_pict4.disabled = false;
         jumlah = 4;
         imageFiles = {
             'picture1': null,
@@ -784,10 +960,11 @@ function updateFocus() {
             'picture3': null,
             'picture4': null
         };
-        setupImageUpload('btn_pict1', 'imagePreview1', 'Pict_1', 'btn_pict2');
-        setupImageUpload('btn_pict2', 'imagePreview2', 'Pict_2', 'btn_pict3');
-        setupImageUpload('btn_pict3', 'imagePreview3', 'Pict_3', 'btn_pict4');
-        setupImageUpload('btn_pict4', 'imagePreview4', 'Pict_4', 'btn_simpan');
+        btn_pict1.focus();
+        setupImageUpload('#btn_pict1', '#picture1', '#Pict_1', '#imagePreview1', '#btn_pict2', formData, 'Pict1');
+        setupImageUpload('#btn_pict2', '#picture2', '#Pict_2', '#imagePreview2', '#btn_pict3', formData, 'Pict2');
+        setupImageUpload('#btn_pict3', '#picture3', '#Pict_3', '#imagePreview3', '#btn_pict4', formData, 'Pict3');
+        setupImageUpload('#btn_pict4', '#picture4', '#Pict_4', '#imagePreview4', '#btn_simpan', formData, 'Pict4');
     }
 }
 
@@ -798,9 +975,6 @@ fourPictures.addEventListener('change', updateFocus);
 // fungsi utama memeriksa semua input
 async function checkAllInputs() {
     for (const input of inputTestMethod) {
-        const textForInput = getTextForInput(input.id);
-
-        // Special case for Top Lift Test Result
         if (input.id === 'Top_Result' && (input.value.trim() === '' || input.value.trim() === '0' || input.value.trim() === '0.00')) {
             await Swal.fire({
                 icon: 'error',
@@ -813,11 +987,24 @@ async function checkAllInputs() {
             return false;
         }
 
-        // General case for empty inputs
-        if (input.value.trim() === '') {
+        if (input.id === 'dia_val' && input.value.trim() === '') {
             const result = await Swal.fire({
                 icon: 'question',
-                text: `Apakah Data ${textForInput} Mau Anda Lengkapi?`,
+                text: `Apakah Data Diameter Mau Anda Lengkapi?`,
+                returnFocus: false,
+                showCancelButton: true,
+                confirmButtonText: 'Ya',
+                cancelButtonText: 'Tidak'
+            });
+
+            if (result.isConfirmed) {
+                input.focus();
+            }
+            return false;
+        } else if (input.id === 'square_val' && input.value.trim() === '') {
+            const result = await Swal.fire({
+                icon: 'question',
+                text: `Apakah Data Square Mau Anda Lengkapi?`,
                 returnFocus: false,
                 showCancelButton: true,
                 confirmButtonText: 'Ya',
@@ -832,38 +1019,6 @@ async function checkAllInputs() {
     }
     return true;
 }
-
-
-function getTextForInput(inputId) {
-    switch (inputId) {
-        case 'dia_val':
-            return 'Diameter';
-        case 'square_val':
-            return 'Square';
-        case 'Top_Result':
-            return 'Top Lift Test Result';
-        default:
-            return '';
-    }
-}
-
-
-// function getTextForInput(inputId) {
-//     switch (inputId) {
-//         case 'Height_Approx':
-//             return 'Height Approx';
-//         case 'dia_val':
-//             return 'Diameter';
-//         case 'square_val':
-//             return 'Square';
-//         case 'Load_Speed':
-//             return 'Speed';
-//         case 'Drop_Test':
-//             return 'Drop Test';
-//         default:
-//             return '';
-//     }
-// }
 
 
 var Ketik = document.querySelectorAll('input');
@@ -928,38 +1083,36 @@ btn_batal.addEventListener('click', function () {
 
 btn_simpan.addEventListener('click', async function (e) {
     if (a === 1) { // ISI
-        if (await checkAllInputs()) {
-            let cLiftTxt = cLift && cLift.length > 0 ? cLift.join(', ') : null;
-            let tLiftTxt = tLift && tLift.length > 0 ? tLift.join(', ') : null;
-            let cyclicResultTxt = cResult && cResult.length > 0 ?
-                (cResult.includes('Visible damages found at') ? cResult.join(', ') + ' ' + damageFoundDescCyInput.value.trim() : cResult.join(', '))
-                : null;
-            let breakageTxt = breakage && breakage.length > 0 ?
-                (breakage.includes('Others :') ? breakage.join(', ') + ' ' + othersTextInput.value.trim() : breakage.join(', '))
-                : null;
-            let dropResultTxt = dResult && dResult.length > 0 ?
-                (dResult.includes('Visible damages found at') ? dResult.join(', ') + ' ' + damageFoundDescDropInput.value.trim() : dResult.join(', '))
-                : null;
+        const allInputsValid = await checkAllInputs();
+        if (!allInputsValid) {
+            console.log('checkAllInputs');
+            return;
+        }
+        console.log('keluar checkAllInputs');
 
-            // Define the sections and corresponding text
-            let text = ['Cyclic Test', 'Cyclic Test Result', 'Top Lift Test', 'Breakage Location', 'Drop Test'];
-            let tidakTercentang = [];
+        let cLiftTxt = cLift && cLift.length > 0 ? cLift.join(', ') : null;
+        let tLiftTxt = tLift && tLift.length > 0 ? tLift.join(', ') : null;
+        let cyclicResultTxt = cResult && cResult.length > 0 ?
+            (cResult.includes('Visible damages found at') ? cResult.join(', ') + ' ' + damageFoundDescCyInput.value.trim() : cResult.join(', '))
+            : null;
+        let breakageTxt = breakage && breakage.length > 0 ?
+            (breakage.includes('Others :') ? breakage.join(', ') + ' ' + othersTextInput.value.trim() : breakage.join(', '))
+            : null;
+        let dropResultTxt = dResult && dResult.length > 0 ?
+            (dResult.includes('Visible damages found at') ? dResult.join(', ') + ' ' + damageFoundDescDropInput.value.trim() : dResult.join(', '))
+            : null;
 
-            // Logic to populate tidakTercentang with missing sections
-            if (cLiftTxt === null) tidakTercentang.push(0);
-            if (cyclicResultTxt === null) tidakTercentang.push(1);
-            if (tLiftTxt === null) tidakTercentang.push(2);
-            if (breakageTxt === null) tidakTercentang.push(3);
-            if (dropResultTxt === null) tidakTercentang.push(4);
+        let text = ['Cyclic Test', 'Cyclic Test Result', 'Top Lift Test', 'Breakage Location', 'Drop Test'];
+        let tidakTercentang = [];
 
-            console.log('cyclic lift: ', cLiftTxt);
-            console.log('top lift: ', tLiftTxt);
-            console.log('cyclic result: ', cyclicResultTxt);
-            console.log('breakage loc: ', breakageTxt);
-            console.log('drop result: ', dropResultTxt);
-            console.log(tidakTercentang.length);
+        if (cLiftTxt === null) tidakTercentang.push(0);
+        if (cyclicResultTxt === null) tidakTercentang.push(1);
+        if (tLiftTxt === null) tidakTercentang.push(2);
+        if (breakageTxt === null) tidakTercentang.push(3);
+        if (dropResultTxt === null) tidakTercentang.push(4);
 
-            // Show SweetAlerts for any missing sections
+        if (tidakTercentang.length > 0) {
+            console.log('cek tidakTercentang');
             for (let i = 0; i < tidakTercentang.length; i++) {
                 let index = tidakTercentang[i];
                 let questionText = `Apakah Data ${text[index]} Mau Anda Lengkapi?`;
@@ -977,18 +1130,10 @@ btn_simpan.addEventListener('click', async function (e) {
                     return;
                 }
             }
-
-            // If all inputs are filled, submit the form
-            submitForm(cLiftTxt, tLiftTxt, cyclicResultTxt, breakageTxt, dropResultTxt);
-            console.log("BERHASIL SIMPAN");
         }
-        // else {
-        //     await Swal.fire({
-        //         icon: 'warning',
-        //         title: 'Incomplete Data',
-        //         text: 'Data Belum Lengkap Terisi'
-        //     });
-        // }
+
+        // If all inputs are filled, submit the form
+        submitForm(cLiftTxt, tLiftTxt, cyclicResultTxt, breakageTxt, dropResultTxt);
         console.log("BERHASIL SIMPAN");
     } else if (a === 2) { // KOREKSI
     } else if (a === 3) { //HAPUS
@@ -1022,11 +1167,14 @@ btn_hapus.addEventListener('click', function () {
 
 
 function submitForm(cLiftTxt, tLiftTxt, cyclicResultTxt, breakageTxt, dropResultTxt) {
+    // console.log(jumlah);
     const hasil = TestResult < Top_Result.value ? 'PASS' : 'FAIL';
 
     const formatInput = (input) => input !== undefined && !isNaN(input) ? parseFloat(input).toFixed(2) : '0.00';
 
+    const id = jumlah === 3 ? 'store3pict' : 'store4pict';
     const formData = new FormData();
+
     formData.append('RefNo', (refNo.value || '').trim());
     formData.append('Height_Approx', formatInput(Height_Approx.value));
     formData.append('dia_val', formatInput(dia_val.value));
@@ -1051,13 +1199,23 @@ function submitForm(cLiftTxt, tLiftTxt, cyclicResultTxt, breakageTxt, dropResult
         }
     }
 
-    Object.keys(imageFiles).forEach(key => {
-        if (imageFiles[key]) {
-            formData.append(key, imageFiles[key]);
+    const appendFile = (inputId) => {
+        const fileInput = document.querySelector(inputId);
+        if (fileInput.files.length > 0) {
+            const file = fileInput.files[0];
+            if (file) {
+                formData.append(inputId.slice(1), file);
+            }
         }
-    });
+    };
 
-    const url = jumlah == '3' ? 'FrmInputTest/store3pict' : 'FrmInputTest/store4pict';
+    appendFile('#picture1');
+    appendFile('#picture2');
+    appendFile('#picture3');
+    if (id === 'store4pict') {
+        appendFile('#picture4');
+    }
+
 
     // console.log("CEK DATA bfr post");
     // for (const pair of formData.entries()) {
@@ -1066,9 +1224,12 @@ function submitForm(cLiftTxt, tLiftTxt, cyclicResultTxt, breakageTxt, dropResult
 
     // Send AJAX request
     $.ajax({
-        type: 'PUT',
-        url: url,
-        data: formData,
+        type: 'POST',
+        url: 'FrmInputTest',
+        data: {
+            id: id,
+            formData
+        },
         processData: false,
         contentType: false,
         headers: {

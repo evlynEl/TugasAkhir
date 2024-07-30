@@ -64,7 +64,7 @@ textarea {
     height: 100px;
 }
 
-.image-container {
+/* /* .image-container {
     background-color: #eee;
     width: 200px;
     height: 100px;
@@ -74,11 +74,11 @@ textarea {
     overflow: hidden;
     border: 1px solid #ccc;
     margin-top: 10px;
-}
-
+} */
+/* 
 .image-container img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: none;
-}
+} */

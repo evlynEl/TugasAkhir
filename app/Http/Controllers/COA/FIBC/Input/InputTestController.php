@@ -24,7 +24,139 @@ class InputTestController extends Controller
 
     public function store(Request $request)
     {
-        //
+        $id = $request->input('id');
+        $referenceNo = $request->input('RefNo');
+        $heightApprox = $request->input('Height_Approx');
+        $diaVal = $request->input('dia_val');
+        $squareVal = $request->input('square_val');
+        $cyclicTest = $request->input('Cyclic_Test');
+        $loadSpeed = $request->input('Load_Speed');
+        $cyclicLift = $request->input('Cyclic_Lift');
+        $cyclicResult = $request->input('Cyclic_Result');
+        $topLift = $request->input('Top_Lift');
+        $topResult = $request->input('Top_Result');
+        $breakageLocation = $request->input('Breakage_Location');
+        $testResult = $request->input('TestResult');
+        $dropResult = $request->input('Drop_Result');
+        $dropTest = $request->input('Drop_Test');
+        $jumlah = $request->input('Jumlah');
+        $UserInput = Auth::user()->NomorUser;
+
+        $dataValues = [];
+        for ($i = 1; $i <= 30; $i++) {
+            $dataValues["Data_$i"] = $request->input("Data_$i");
+        }
+
+        // Data for pictures
+        $filePaths = [];
+        $pictureParams = [];
+        if ($id === 'store3pict') {
+            foreach (['picture1', 'picture2', 'picture3'] as $picture) {
+                if ($request->hasFile($picture)) {
+                    $file = $request->file($picture);
+                    $filePath = $file->store('images');
+                    $filePaths[$picture] = $filePath;
+
+                    // Get the binary data of the file
+                    $fileBinaryData = file_get_contents($file->getRealPath());
+                    $pictureParams[] = $fileBinaryData;
+                }
+            }
+            $kode = 1;
+        } elseif ($id === 'store4pict') {
+            foreach (['picture1', 'picture2', 'picture3', 'picture4'] as $picture) {
+                if ($request->hasFile($picture)) {
+                    $file = $request->file($picture);
+                    $filePath = $file->store('images');
+                    $filePaths[$picture] = $filePath;
+
+                    // Get the binary data of the file
+                    $fileBinaryData = file_get_contents($file->getRealPath());
+                    $pictureParams[] = $fileBinaryData;
+                }
+            }
+            $kode = 2;
+        }
+
+        // Debug the binary data if needed
+        // dd($pictureParams);
+
+        // dd($data['id'], $kode);
+        // dd($filePaths, $pictureParams);
+        // dd($data, $dataValues);
+
+        // $sqlParameters = array_merge(
+        //     [
+        //         $data['RefNo'], $data['Height_Approx'], $data['dia_val'], $data['square_val'],
+        //         $data['Cyclic_Test'], $data['Load_Speed'], $data['Drop_Test'], $data['Cyclic_Lift'],
+        //         $data['Cyclic_Result'], $data['Top_Lift'], $data['Top_Result'], $data['Breakage_Location'],
+        //         $data['Drop_Result'], $data['TestResult'],  Auth::user()->NomorUser, $data['Jumlah']
+        //     ],
+        //     $dataValues,
+        //     array_values($filePaths)
+        // );
+
+
+        try {
+            $pictureParams = array_map(fn ($key) => "@$key = ?", array_keys($filePaths));
+            $pictureParams = implode(', ', $pictureParams);
+
+            if ($kode === 1) {
+                DB::connection('ConnTestQC')->statement(
+                    'exec SP_1273_QTC_MAINT_RESULT_FIBC
+                    @Kode = 1,
+                    @RefNo = ?, @Height = ?, @Dia = ?, @Square = ?,
+                    @CyclicTest = ?, @Speed = ?, @DropTest = ?, @CyclicLift = ?,
+                    @CyclicResult = ?, @TopLift = ?, @TopResult = ?, @Breakage = ?,
+                    @DropResult = ?, @TestResult = ?, @UserInput = ?,
+                    @JumlahPict = ?, @CyclicData1 = ?, @CyclicData2 = ?,
+                    @CyclicData3 = ?, @CyclicData4 = ?, @CyclicData5 = ?,
+                    @CyclicData6 = ?, @CyclicData7 = ?, @CyclicData8 = ?,
+                    @CyclicData9 = ?, @CyclicData10 = ?, @CyclicData11 = ?,
+                    @CyclicData12 = ?, @CyclicData13 = ?, @CyclicData14 = ?,
+                    @CyclicData15 = ?, @CyclicData16 = ?, @CyclicData17 = ?,
+                    @CyclicData18 = ?, @CyclicData19 = ?, @CyclicData20 = ?,
+                    @CyclicData21 = ?, @CyclicData22 = ?, @CyclicData23 = ?,
+                    @CyclicData24 = ?, @CyclicData25 = ?, @CyclicData26 = ?, @CyclicData27 = ?,
+                    @CyclicData28 = ?, @CyclicData29 = ?, @CyclicData30 = ?, @Pict1 = ?, @Pict2 = ?, @Pict3 = ?',
+                    [
+                        $referenceNo, $heightApprox, $diaVal, $squareVal,
+                        $cyclicTest, $loadSpeed, $dropTest, $cyclicLift,
+                        $cyclicResult, $topLift, $topResult, $breakageLocation,
+                        $dropResult, $testResult, $UserInput, $jumlah, array_values($dataValues),
+                    ]
+                );
+            } else if ($kode === 2) {
+                DB::connection('ConnTestQC')->statement(
+                    'exec SP_1273_QTC_MAINT_RESULT_FIBC
+                    @Kode = 2,
+                    @RefNo = ?, @Height = ?, @Dia = ?, @Square = ?,
+                    @CyclicTest = ?, @Speed = ?, @DropTest = ?, @CyclicLift = ?,
+                    @CyclicResult = ?, @TopLift = ?, @TopResult = ?, @Breakage = ?,
+                    @DropResult = ?, @TestResult = ?, @UserInput = ?,
+                    @JumlahPict = ?, @CyclicData1 = ?, @CyclicData2 = ?,
+                    @CyclicData3 = ?, @CyclicData4 = ?, @CyclicData5 = ?,
+                    @CyclicData6 = ?, @CyclicData7 = ?, @CyclicData8 = ?,
+                    @CyclicData9 = ?, @CyclicData10 = ?, @CyclicData11 = ?,
+                    @CyclicData12 = ?, @CyclicData13 = ?, @CyclicData14 = ?,
+                    @CyclicData15 = ?, @CyclicData16 = ?, @CyclicData17 = ?,
+                    @CyclicData18 = ?, @CyclicData19 = ?, @CyclicData20 = ?,
+                    @CyclicData21 = ?, @CyclicData22 = ?, @CyclicData23 = ?,
+                    @CyclicData24 = ?, @CyclicData25 = ?, @CyclicData26 = ?, @CyclicData27 = ?,
+                    @CyclicData28 = ?, @CyclicData29 = ?, @CyclicData30 = ?, @Pict1 = ?, @Pict2 = ?, @Pict3 = ?, @Pict4 = ?',
+                    [
+                        $referenceNo, $heightApprox, $diaVal, $squareVal,
+                        $cyclicTest, $loadSpeed, $dropTest, $cyclicLift,
+                        $cyclicResult, $topLift, $topResult, $breakageLocation,
+                        $dropResult, $testResult, $UserInput, $jumlah, array_values($dataValues),
+                    ]
+                );
+            }
+
+            return response()->json(['success' => 'Data inserted successfully'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to insert data: ' . $e->getMessage()], 500);
+        }
     }
 
     public function show($id, Request $request)
@@ -197,107 +329,7 @@ class InputTestController extends Controller
 
     public function update(Request $request, $id)
     {
-        $referenceNo = $request->input('RefNo');
-        $heightApprox = $request->input('Height_Approx');
-        $diaVal = $request->input('dia_val');
-        $squareVal = $request->input('square_val');
-        $cyclicTest = $request->input('Cyclic_Test');
-        $loadSpeed = $request->input('Load_Speed');
-        $cyclicLift = $request->input('Cyclic_Lift');
-        $cyclicResult = $request->input('Cyclic_Result');
-        $topLift = $request->input('Top_Lift');
-        $topResult = $request->input('Top_Result');
-        $breakageLocation = $request->input('Breakage_Location');
-        $testResult = $request->input('TestResult');
-        $dropResult = $request->input('Drop_Result');
-        $dropTest = $request->input('Drop_Test');
-        $jumlah = $request->input('Jumlah');
-        $UserInput = Auth::user()->NomorUser;
-
-        // Data from Data_1 to Data_30
-        $dataValues = [];
-        for ($i = 1; $i <= 30; $i++) {
-            $dataValues["Data_$i"] = $request->input("Data_$i");
-        }
-
-        // Data for pictures
-        $filePaths = [];
-        if ($id === 'store3pict') {
-            foreach (['picture1', 'picture2', 'picture3'] as $picture) {
-                if ($request->hasFile($picture)) {
-                    $filePaths[$picture] = $request->file($picture)->store('images');
-                }
-            }
-            $kode = 1;
-        } elseif ($id === 'store4pict') {
-            foreach (['picture1', 'picture2', 'picture3', 'picture4'] as $picture) {
-                if ($request->hasFile($picture)) {
-                    $filePaths[$picture] = $request->file($picture)->store('images');
-                }
-            }
-            $kode = 2;
-        }
-
-        // Debugging: Uncomment to see the data structure
-        // dd([
-        //     'kode' => $kode,
-        //     'referenceNo' => $referenceNo,
-        //     'heightApprox' => $heightApprox,
-        //     'diaVal' => $diaVal,
-        //     'squareVal' => $squareVal,
-        //     'cyclicTest' => $cyclicTest,
-        //     'loadSpeed' => $loadSpeed,
-        //     'cyclicLift' => $cyclicLift,
-        //     'cyclicResult' => $cyclicResult,
-        //     'topLift' => $topLift,
-        //     'topResult' => $topResult,
-        //     'breakageLocation' => $breakageLocation,
-        //     'testResult' => $testResult,
-        //     'dropResult' => $dropResult,
-        //     'dropTest' => $dropTest,
-        //     'jumlah' => $jumlah,
-        //     'UserInput' => $UserInput,
-        //     'dataValues' => $dataValues,
-        //     'filePaths' => $filePaths
-        // ]);
-
-        try {
-            // Construct the SQL statement dynamically based on the number of pictures
-            $pictureParams = array_map(fn ($key) => "@$key = ?", array_keys($filePaths));
-            $pictureParams = implode(', ', $pictureParams);
-
-            $sql = "exec SP_1273_QTC_MAINT_RESULT_FIBC
-        @Kode = $kode,
-        @RefNo = ?, @Height_Approx = ?, @Dia = ?, @Square = ?,
-        @CyclicTest = ?, @Speed = ?, @DropTest = ?, @CyclicLift = ?,
-        @CyclicResult = ?, @TopLift = ?, @TopResult = ?, @Breakage = ?,
-        @DropResult = ?, @TestResult = ?, @UserInput = ?,
-        @JumlahPict = ?, @CyclicData1 = ?, @CyclicData2 = ?,
-        @CyclicData3 = ?, @CyclicData4 = ?, @CyclicData5 = ?,
-        @CyclicData6 = ?, @CyclicData7 = ?, @CyclicData8 = ?,
-        @CyclicData9 = ?, @CyclicData10 = ?, @CyclicData11 = ?,
-        @CyclicData12 = ?, @CyclicData13 = ?, @CyclicData14 = ?,
-        @CyclicData15 = ?, @CyclicData16 = ?, @CyclicData17 = ?,
-        @CyclicData18 = ?, @CyclicData19 = ?, @CyclicData20 = ?,
-        @CyclicData21 = ?, @CyclicData22 = ?, @CyclicData23 = ?,
-        @CyclicData24 = ?, @CyclicData25 = ?, @CyclicData26 = ?,
-        @CyclicData27 = ?, @CyclicData28 = ?, @CyclicData29 = ?,
-        @CyclicData30 = ?, $pictureParams";
-
-            DB::connection('ConnTestQC')->statement(
-                $sql,
-                array_merge([
-                    $referenceNo, $heightApprox, $diaVal, $squareVal,
-                    $cyclicTest, $loadSpeed, $dropTest, $cyclicLift,
-                    $cyclicResult, $topLift, $topResult, $breakageLocation,
-                    $dropResult, $testResult, $UserInput, $jumlah
-                ], array_values($dataValues), array_values($filePaths))
-            );
-
-            return response()->json(['success' => 'Data inserted successfully'], 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to insert data: ' . $e->getMessage()], 500);
-        }
+        //
     }
 
 
