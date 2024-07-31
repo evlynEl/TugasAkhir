@@ -1,3 +1,39 @@
 .bordered {
     border: 1px solid black;
 }
+
+/* .preview {
+    display: none;
+} */
+
+img{
+    padding: 2px;
+}
+
+.circle-border {
+    display: inline-block;
+    padding: 10px 20px; /* Adjust the size as needed */
+    border: 2px solid #000; /* Border color and thickness */
+    border-radius: 50%; /* Makes the border circular */
+    text-align: center; /* Center the text inside the circle */
+    line-height: 1.5; /* Adjust line height if necessary */
+}
+@media print {
+    /* Hide everything by default */
+    body * {
+        visibility: hidden;
+    }
+
+    /* Show only elements with the class 'preview' */
+    .preview, .preview * {
+        visibility: visible;
+    }
+
+    /* Ensure that the element with the class 'preview' is visible and properly formatted */
+    .preview {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+}
