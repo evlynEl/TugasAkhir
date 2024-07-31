@@ -44,6 +44,11 @@ var breakageCheckDetail = breakageCheckDiv.querySelectorAll('input');
 var dropResultDiv = document.getElementById('dropResult');
 var dropResultDetail = dropResultDiv.querySelectorAll('input');
 
+var picture1 = document.getElementById('picture1');
+var picture2 = document.getElementById('picture2');
+var picture3 = document.getElementById('picture3');
+var picture4 = document.getElementById('picture4');
+
 // button
 var btn_info = document.getElementById('btn_info');
 var btn_pict1 = document.getElementById('btn_pict1');
@@ -63,7 +68,6 @@ var hasil;
 const inputs = Array.from(document.querySelectorAll('.card-body input[type="text"]:not([readonly]), .card-body input[type="date"]:not([readonly])'));
 const inputTestMethod = Array.from(document.querySelectorAll('#test_method input[type="text"]')).filter(input => !/^Data_\d{1,2}$/.test(input.id) && input.id !== 'Drop_Test');
 
-
 var pressure = [];
 var cLift = [];
 var cResult = [];
@@ -72,20 +76,14 @@ var breakage = [];
 var dResult = [];
 var centangCheck = [];
 
-var sections = [
-    { id: 'pressurebox', checkboxes: ['Dia', 'Square'] },
-    { id: 'cyclicCheck', checkboxes: ['Single Loops', 'Four Loops', 'Two Loops', 'Stevedore', 'Auxiliary'] },
-    { id: 'cyclicResult', checkboxes: ['No visible damages occurred', 'Visible damages found at'] },
-    { id: 'topLiftCheck', checkboxes: ['Single Loops', 'Four Loops', 'Two Loops', 'Stevedore', 'Auxiliary'] },
-    { id: 'Breakage_Location', checkboxes: ['Body fabric', 'Petal', 'Side body\'s thread', 'Bottom fabric', 'Lifting belt', 'Bottom body\'s thread', 'Starcut of bottom spout', 'Lifting belt\'s thread', 'Others :'] },
-    { id: 'dropResult', checkboxes: ['No visible damages occurred', 'Visible damages found at'] }
-];
-
 const indexMapping = {
     1: 21, 2: 24, 3: 16, 4: 26, 5: 27,
     6: 30, 7: 17, 8: 23, 9: 22, 10: 18,
     11: 28, 12: 19, 13: 25, 14: 20, 15: 29
 };
+
+// SP_1273_QTC_MAINT_FIBC
+// SP_1273_QTC_MAINT_RESULT_FIBC
 
 // fungsi berhubungan dengan ENTER
 inputs.forEach((masuk, index) => {
@@ -226,8 +224,6 @@ function handleData(masuk) {
 }
 
 
-
-
 // fungsi cek apakah input pd div tertentu disabled
 function areAllInputsDisabled(inputs) {
     return Array.from(inputs).every(input => input.disabled);
@@ -240,30 +236,25 @@ function toggleInputs(checkboxId, divId, descId) {
     const descInput = document.getElementById(descId);
 
     checkbox.addEventListener("change", function () {
-        // console.log(`Checkbox ${checkboxId} changed to ${checkbox.checked}`);
         const inputs = div.querySelectorAll('input');
 
         if (checkbox.checked) {
             inputs.forEach(input => {
                 input.disabled = false;
-                // damageFoundDescCyInput.disabled = true;
-                // othersText.disabled = true;
-                // damageFoundDescDropInput.disabled = true;
             });
 
             if (checkboxId === 'Cyclic_Lift') {
+                console.log('tes');
                 document.querySelector('#cyclicResult input[name="Visible damages found at"]').addEventListener('change', function () {
-                    descInput.disabled = false;
                     damageFoundDescCyInput.focus();
                 });
             } else if (checkboxId === 'Top_Lift') {
-                document.querySelector('#Breakage_Location input[name="Others"]').addEventListener('change', function () {
-                    descInput.disabled = false;
+                document.querySelector('#Breakage_Location input[name="Others :"]').addEventListener('change', function () {
+                    console.log('tes 2');
                     othersTextInput.focus();
                 });
             } else if (checkboxId === 'Drop_Result') {
                 document.querySelector('#dropResult input[name="Visible damages found at"]').addEventListener('change', function () {
-                    descInput.disabled = false;
                     damageFoundDescDropInput.focus();
                 });
             } else if (checkboxId === 'Dia') {
@@ -426,13 +417,13 @@ btn_info.addEventListener("click", function (e) {
                             if (response.refCopy === '') { // tidak ada copy ref no
 
                                 setTimeout(() => {
-                                    // Drop_Test.disabled = false;
-                                    // Drop_Test.focus();
+                                    Drop_Test.disabled = false;
+                                    Drop_Test.focus();
 
-                                    Height_Approx.disabled = false;
+                                    // Height_Approx.disabled = false;
                                     diaCheckbox.disabled = false;
                                     squareCheckbox.disabled = false;
-                                    Height_Approx.focus();
+                                    // Height_Approx.focus();
                                 }, 70);
 
 
@@ -480,53 +471,28 @@ btn_info.addEventListener("click", function (e) {
                         } else { // fill dari no ref koreksi
                             if (response.additionalData && response.additionalData.length > 0) {
                                 const data = response.additionalData[0];
+
                                 Height_Approx.value = data.Height_Approx;
                                 dia_val.value = data.dia_val;
                                 square_val.value = data.square_val;
                                 Cyclic_Test.value = data.Cyclic_Test;
                                 Load_Speed.value = data.Load_Speed;
-                                Drop_Test.value = data.Drop_Test;
-                                Cyclic_Lift.value = data.Cyclic_Lift;
-                                Cyclic_Result.value = data.Cyclic_Result;
-                                Top_Lift.value = data.Top_Lift;
                                 Top_Result.value = data.Top_Result;
-                                Breakage_Location.value = data.Breakage_Location;
-                                Drop_Result.value = data.Drop_Result;
-                                Data_1.value = data.Data_1 || '';
-                                Data_2.value = data.Data_2 || '';
-                                Data_3.value = data.Data_3 || '';
-                                Data_4.value = data.Data_4 || '';
-                                Data_5.value = data.Data_5 || '';
-                                Data_6.value = data.Data_6 || '';
-                                Data_7.value = data.Data_7 || '';
-                                Data_8.value = data.Data_8 || '';
-                                Data_9.value = data.Data_9 || '';
-                                Data_10.value = data.Data_10 || '';
-                                Data_11.value = data.Data_11 || '';
-                                Data_12.value = data.Data_12 || '';
-                                Data_13.value = data.Data_13 || '';
-                                Data_14.value = data.Data_14 || '';
-                                Data_15.value = data.Data_15 || '';
-                                Data_16.value = data.Data_16 || '';
-                                Data_17.value = data.Data_17 || '';
-                                Data_18.value = data.Data_18 || '';
-                                Data_19.value = data.Data_19 || '';
-                                Data_20.value = data.Data_20 || '';
-                                Data_21.value = data.Data_21 || '';
-                                Data_22.value = data.Data_22 || '';
-                                Data_23.value = data.Data_23 || '';
-                                Data_24.value = data.Data_24 || '';
-                                Data_25.value = data.Data_25 || '';
-                                Data_26.value = data.Data_26 || '';
-                                Data_27.value = data.Data_27 || '';
-                                Data_28.value = data.Data_28 || '';
-                                Data_29.value = data.Data_29 || '';
-                                Data_30.value = data.Data_30 || '';
-                                Jumlah.value = data.Jumlah || '';
-                                Pict_1.src = data.Pict_1 || '';
-                                Pict_2.src = data.Pict_2 || '';
-                                Pict_3.src = data.Pict_3 || '';
-                                Pict_4.src = data.Pict_4 || '';
+                                Drop_Test.value = data.Drop_Test;
+
+                                pressure = data.pressure;
+                                cLift = data.Cyclic_Lift;
+                                cResult = data.Cyclic_Result;
+                                tLift = data.Top_Lift;
+                                breakage = data.Breakage_Location;
+                                dResult = data.Drop_Result;
+
+                                retrieveCheck('pressurebox', pressure, data);
+                                retrieveCheck('cyclicCheck', cLift, data);
+                                retrieveCheck('cyclicResult', cResult, data);
+                                retrieveCheck('topLiftCheck', tLift, data);
+                                retrieveCheck('Breakage_Location', breakage, data);
+                                retrieveCheck('dropResult', dResult, data);
                             }
                         }
                     },
@@ -541,6 +507,15 @@ btn_info.addEventListener("click", function (e) {
         console.error("An error occurred:", error);
     }
 });
+
+var sections = [
+    { id: 'pressurebox', checkboxes: ['Dia', 'Square'] },
+    { id: 'cyclicCheck', checkboxes: ['Single Loops', 'Four Loops', 'Two Loops', 'Stevedore', 'Auxiliary'] },
+    { id: 'cyclicResult', checkboxes: ['No visible damages occurred', 'Visible damages found at'] },
+    { id: 'topLiftCheck', checkboxes: ['Single Loops', 'Four Loops', 'Two Loops', 'Stevedore', 'Auxiliary'] },
+    { id: 'Breakage_Location', checkboxes: ['Body fabric', 'Petal', 'Side body\'s thread', 'Bottom fabric', 'Lifting belt', 'Bottom body\'s thread', 'Starcut of bottom spout', 'Lifting belt\'s thread', 'Others :'] },
+    { id: 'dropResult', checkboxes: ['No visible damages occurred', 'Visible damages found at'] }
+];
 
 // fungsi memunculkan centang sesuai isi database
 function retrieveCheck(sectionId, value, data) {
@@ -558,76 +533,79 @@ function retrieveCheck(sectionId, value, data) {
         checkboxes.forEach(function (checkbox) {
             if (checkbox) {
                 var dataType = checkbox.getAttribute('data-type');
+                let isChecked = Array.isArray(value) ? value.includes(checkboxName) : value === checkboxName;
 
-                console.log(`Data Type: ${dataType}, Checkbox Name: ${checkboxName}`); // Debugging line
+                checkbox.checked = isChecked;
 
                 switch (sectionId) {
                     case 'cyclicCheck':
-                        checkbox.checked = value === checkboxName;
-                        if (checkbox.checked) {
+                        if (isChecked) {
                             cLift = [checkboxName];
                             isAnyChecked = true;
-                            Cyclic_Lift.checked = cLift.length > 0;
+                            if (cLift.length > 0) {
+                                Cyclic_Lift.checked = true;
+                                document.querySelector('#cyclicResult').classList.remove('disabled');
+                                document.querySelectorAll('#cyclicResult input').forEach(input => input.disabled = false);
+
+                            }
                         }
                         break;
 
                     case 'topLiftCheck':
-                        checkbox.checked = value === checkboxName;
-                        if (checkbox.checked) {
+                        if (isChecked) {
                             tLift = [checkboxName];
                             isAnyChecked = true;
-                            Top_Lift.checked = tLift.length > 0;
+                            if (tLift.length > 0) {
+                                Top_Lift.checked = true;
+                                document.querySelector('#Top_Result').classList.remove('disabled');
+                                document.querySelector('#Breakage_Location').classList.remove('disabled');
+                                document.querySelectorAll('#Top_Result input, #Breakage_Location input').forEach(input => input.disabled = false);
+                            }
                         }
                         break;
 
                     case 'Breakage_Location':
-                        checkbox.checked = value === checkboxName;
-                        if (checkbox.checked) {
+                        if (isChecked) {
                             breakage = [checkboxName];
                             isAnyChecked = true;
                             if (checkboxName === 'Others :') {
                                 othersTextInput.disabled = false;
                                 othersTextInput.value = data.Breakage_Location_Remaining;
-                            } else {
-                                othersTextInput.disabled = true;
                             }
                         }
-                        break;
+                        break
 
                     case 'dropResult':
                         if (dataType === 'drop') {
-                            checkbox.checked = value === checkboxName;
-                            if (checkbox.checked) {
+                            if (isChecked) {
                                 dResult = [checkboxName];
                                 isAnyChecked = true;
-                                Drop_Result.checked = dResult.length > 0;
+                                if (dResult.length > 0) {
+                                    Drop_Result.checked = true;
+                                    document.querySelector('#dropResult').classList.remove('disabled');
+                                    document.querySelectorAll('#dropResult input').forEach(input => input.disabled = false);
+                                }
                                 if (checkboxName === 'Visible damages found at') {
                                     damageFoundDescDropInput.disabled = false;
                                     damageFoundDescDropInput.value = data.Drop_Result_Remaining;
                                 }
-                            } else {
-                                damageFoundDescDropInput.disabled = true;
                             }
                         }
                         break;
 
                     case 'cyclicResult':
                         if (dataType === 'cyclic') {
-                            checkbox.checked = value === checkboxName;
-                            if (checkbox.checked) {
+                            if (isChecked) {
                                 cResult = [checkboxName];
                                 isAnyChecked = true;
-                                Cyclic_Result.checked = cResult.length > 0;
+                                var damageFoundDescCyInput = document.querySelector('#cyclicResult input[name="damageFoundDescCy"]');
                                 if (checkboxName === 'Visible damages found at') {
                                     damageFoundDescCyInput.disabled = false;
                                     damageFoundDescCyInput.value = data.Cyclic_Result_Remaining;
                                 }
-                            } else {
-                                damageFoundDescCyInput.disabled = true;
                             }
                         }
                         break;
-
                     default:
                         break;
                 }
@@ -635,21 +613,49 @@ function retrieveCheck(sectionId, value, data) {
         });
     });
 
+    console.log('cyclic lift: ', cLift);
+    console.log('top lift: ', tLift);
+    console.log('cyclic result: ', cResult);
+    console.log('breakage loc: ', breakage);
+    console.log('drop result: ', dResult);
+
     switch (sectionId) {
         case 'cyclicCheck':
-            if (!isAnyChecked) cLift = null;
+            if (!isAnyChecked) {
+                cLift = null;
+                document.querySelector('#cyclicResult').classList.add('disabled');
+                document.querySelectorAll('#cyclicResult input').forEach(input => input.disabled = true);
+            }
             break;
         case 'topLiftCheck':
-            if (!isAnyChecked) tLift = null;
+            if (!isAnyChecked) {
+                tLift = null;
+                document.querySelector('#Top_Result').classList.add('disabled');
+                document.querySelector('#Breakage_Location').classList.add('disabled');
+                document.querySelectorAll('#Top_Result input, #Breakage_Location input').forEach(input => input.disabled = true);
+            }
             break;
         case 'Breakage_Location':
-            if (!isAnyChecked) breakage = null;
+            if (!isAnyChecked) {
+                breakage = null;
+                if (document.querySelector('#Breakage_Location input[name="Others :"]').checked) {
+                    othersTextInput.disabled = true;
+                    othersTextInput.value = '';
+                    othersTextInput.focus;
+                }
+            }
             break;
         case 'dropResult':
-            if (!isAnyChecked) dResult = null;
+            if (!isAnyChecked) {
+                dResult = null;
+                document.querySelector('#dropResult').classList.add('disabled');
+                document.querySelectorAll('#dropResult input').forEach(input => input.disabled = true);
+            }
             break;
         case 'cyclicResult':
-            if (!isAnyChecked) cResult = null;
+            if (!isAnyChecked) {
+                cResult = null;
+            }
             break;
         default:
             break;
@@ -658,177 +664,9 @@ function retrieveCheck(sectionId, value, data) {
 
 
 
-// function retrieveCheck(sectionId, value, data) {
-//     var section = sections.find(s => s.id === sectionId);
-
-//     if (!section) {
-//         console.error(`Section with id ${sectionId} not found.`);
-//         return;
-//     }
-
-//     let isAnyChecked = false;
-
-//     section.checkboxes.forEach(function (checkboxName) {
-//         var checkboxes = document.querySelectorAll(`#${sectionId} input[name="${checkboxName}"]`);
-//         checkboxes.forEach(function (checkbox) {
-//             if (checkbox) {
-//                 var dataType = checkbox.getAttribute('data-type');
-//                 let isChecked = Array.isArray(value) ? value.includes(checkboxName) : value === checkboxName;
-
-//                 checkbox.checked = isChecked;
-
-//                 switch (sectionId) {
-//                     case 'cyclicCheck':
-//                         if (isChecked) {
-//                             cLift = [checkboxName];
-//                             isAnyChecked = true;
-//                             if (cLift.length > 0) {
-//                                 Cyclic_Lift.checked = true;
-//                                 document.querySelector('#cyclicResult').classList.remove('disabled');
-//                                 document.querySelectorAll('#cyclicResult input').forEach(input => input.disabled = false);
-//                             }
-//                         } else if (checkboxName === cLift?.[0]) {
-//                             cLift = null;
-//                             document.querySelector('#cyclicResult').classList.add('disabled');
-//                             document.querySelectorAll('#cyclicResult input').forEach(input => input.disabled = true);
-//                         }
-//                         break;
-
-//                     case 'topLiftCheck':
-//                         if (isChecked) {
-//                             tLift = [checkboxName];
-//                             isAnyChecked = true;
-//                             if (tLift.length > 0) {
-//                                 Top_Lift.checked = true;
-//                                 document.querySelector('#Top_Result').classList.remove('disabled');
-//                                 document.querySelector('#Breakage_Location').classList.remove('disabled');
-//                                 document.querySelectorAll('#Top_Result input, #Breakage_Location input').forEach(input => input.disabled = false);
-//                             }
-//                         } else if (checkboxName === tLift?.[0]) {
-//                             tLift = null;
-//                             document.querySelector('#Top_Result').classList.add('disabled');
-//                             document.querySelector('#Breakage_Location').classList.add('disabled');
-//                             document.querySelectorAll('#Top_Result input, #Breakage_Location input').forEach(input => input.disabled = true);
-//                         }
-//                         break;
-
-//                     case 'Breakage_Location':
-//                         if (isChecked) {
-//                             breakage = [checkboxName];
-//                             isAnyChecked = true;
-//                             if (checkboxName === 'Others :') {
-//                                 othersTextInput.disabled = false;
-//                                 othersTextInput.value = data.Breakage_Location_Remaining;
-//                             }
-//                         } else if (checkboxName === breakage?.[0]) {
-//                             breakage = null;
-//                             if (checkboxName === 'Others :') {
-//                                 othersTextInput.disabled = true;
-//                                 othersTextInput.value = '';
-//                             }
-//                         }
-//                         break;
-
-//                     case 'dropResult':
-//                         if (dataType === 'drop') {
-//                             if (isChecked) {
-//                                 dResult = [checkboxName];
-//                                 isAnyChecked = true;
-//                                 if (dResult.length > 0) {
-//                                     Drop_Result.checked = true;
-//                                     document.querySelector('#dropResult').classList.remove('disabled');
-//                                     document.querySelectorAll('#dropResult input').forEach(input => input.disabled = false);
-//                                 }
-//                                 if (checkboxName === 'Visible damages found at') {
-//                                     damageFoundDescDropInput.disabled = false;
-//                                     damageFoundDescDropInput.value = data.Drop_Result_Remaining;
-//                                 }
-//                             } else if (checkboxName === dResult?.[0]) {
-//                                 dResult = null;
-//                                 if (checkboxName === 'Visible damages found at') {
-//                                     damageFoundDescDropInput.disabled = true;
-//                                     damageFoundDescDropInput.value = '';
-//                                 }
-//                             }
-//                         }
-//                         break;
-
-//                     case 'cyclicResult':
-//                         if (dataType === 'cyclic') {
-//                             if (isChecked) {
-//                                 cResult = [checkboxName];
-//                                 isAnyChecked = true;
-//                                 // var damageFoundDescCyInput = document.querySelector('#cyclicResult input[name="damageFoundDescCy"]');
-//                                 if (checkboxName === 'Visible damages found at') {
-//                                     damageFoundDescCyInput.disabled = false;
-//                                     damageFoundDescCyInput.value = data.Cyclic_Result_Remaining;
-//                                 }
-//                             } else if (checkboxName === cResult?.[0]) {
-//                                 cResult = null;
-//                                 // var damageFoundDescCyInput = document.querySelector('#cyclicResult input[name="damageFoundDescCy"]');
-//                                 if (checkboxName === 'Visible damages found at') {
-//                                     damageFoundDescCyInput.disabled = true;
-//                                     damageFoundDescCyInput.value = '';
-//                                 }
-//                             }
-//                         }
-//                         break;
-
-//                     default:
-//                         break;
-//                 }
-//             }
-//         });
-//     });
-
-//     // Update the states based on whether any checkboxes are checked
-//     switch (sectionId) {
-//         case 'cyclicCheck':
-//             if (!isAnyChecked) {
-//                 cLift = null;
-//                 document.querySelector('#cyclicResult').classList.add('disabled');
-//                 document.querySelectorAll('#cyclicResult input').forEach(input => input.disabled = true);
-//             }
-//             break;
-//         case 'topLiftCheck':
-//             if (!isAnyChecked) {
-//                 tLift = null;
-//                 document.querySelector('#Top_Result').classList.add('disabled');
-//                 document.querySelector('#Breakage_Location').classList.add('disabled');
-//                 document.querySelectorAll('#Top_Result input, #Breakage_Location input').forEach(input => input.disabled = true);
-//             }
-//             break;
-//         case 'Breakage_Location':
-//             if (!isAnyChecked) {
-//                 breakage = null;
-//                 if (document.querySelector('#Breakage_Location input[name="Others :"]').checked) {
-//                     othersTextInput.disabled = true;
-//                     othersTextInput.value = '';
-//                 }
-//             }
-//             break;
-//         case 'dropResult':
-//             if (!isAnyChecked) {
-//                 dResult = null;
-//                 document.querySelector('#dropResult').classList.add('disabled');
-//                 document.querySelectorAll('#dropResult input').forEach(input => input.disabled = true);
-//             }
-//             break;
-//         case 'cyclicResult':
-//             if (!isAnyChecked) {
-//                 cResult = null;
-//             }
-//             break;
-//         default:
-//             break;
-//     }
-// }
-
-
 
 // cek checkbox
 // fungsi track aktifitas checkbox
-
 function setupCheckboxListeners() {
     sections.forEach(function (section) {
         section.checkboxes.forEach(function (checkboxName) {
@@ -876,14 +714,30 @@ function handleCheckboxChange(sectionId) {
         default:
             break;
     }
-    centangCheck = [cLift ? cLift.length : 0, cResult ? cResult.length : 0, tLift ? tLift.length : 0, breakage ? breakage.length : 0, dResult ? dResult.length : 0];
 
-    // console.log(cLift);
-    // console.log(cResult);
-    // console.log(tLift);
-    // console.log(breakage);
-    // console.log(dResult);
+    centangCheck = [
+        cLift ? cLift.length : 0,
+        cResult ? cResult.length : 0,
+        tLift ? tLift.length : 0,
+        breakage ? breakage.length : 0,
+        dResult ? dResult.length : 0
+    ];
+
+
+    // Handle focus based on checkbox values
+    if (cResult && cResult.includes('Visible damages found at')) {
+        damageFoundDescCyInput.focus();
+    }
+
+    if (breakage && breakage.includes('Others :')) {
+        othersTextInput.focus();
+    }
+
+    if (dResult && dResult.includes('Visible damages found at')) {
+        damageFoundDescDropInput.focus();
+    }
 }
+
 
 
 // panggil fungsi cek checkbox
@@ -940,7 +794,7 @@ function updateFocus() {
     var fourPicturesChecked = fourPictures.checked;
 
     if (threePicturesChecked) {
-        jumlah = 3;
+        jumlah = '3';
         imageFiles = {
             'picture1': null,
             'picture2': null,
@@ -953,7 +807,7 @@ function updateFocus() {
         btn_pict4.disabled = true;
     } else if (fourPicturesChecked) {
         btn_pict4.disabled = false;
-        jumlah = 4;
+        jumlah = '4';
         imageFiles = {
             'picture1': null,
             'picture2': null,
@@ -1104,6 +958,12 @@ btn_simpan.addEventListener('click', async function (e) {
 
         let text = ['Cyclic Test', 'Cyclic Test Result', 'Top Lift Test', 'Breakage Location', 'Drop Test'];
         let tidakTercentang = [];
+        console.log('cyclic lift: ', cLift);
+        console.log('top lift: ', tLift);
+        console.log('cyclic result: ', cResult);
+        console.log('breakage loc: ', breakage);
+        console.log('drop result: ', dResult);
+        console.log(tidakTercentang.length);
 
         if (cLiftTxt === null) tidakTercentang.push(0);
         if (cyclicResultTxt === null) tidakTercentang.push(1);
@@ -1132,11 +992,41 @@ btn_simpan.addEventListener('click', async function (e) {
             }
         }
 
+
         // If all inputs are filled, submit the form
         submitForm(cLiftTxt, tLiftTxt, cyclicResultTxt, breakageTxt, dropResultTxt);
         console.log("BERHASIL SIMPAN");
     } else if (a === 2) { // KOREKSI
     } else if (a === 3) { //HAPUS
+        $.ajax({
+            url: "FrmInputTest/hapusTest",
+            type: "DELETE",
+            data: {
+                _token: csrfToken,
+                no_ref: refNo.value
+            },
+            timeout: 30000,
+            success: function (response) {
+                if (response.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Data Telah Terhapus',
+                    }).then(() => {
+                        disableKetik();
+                    });
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('AJAX Error:', error);
+                console.log('Response Status:', status);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Data Gagal Terhapus',
+                });
+            }
+        });
     }
 });
 
@@ -1167,12 +1057,9 @@ btn_hapus.addEventListener('click', function () {
 
 
 function submitForm(cLiftTxt, tLiftTxt, cyclicResultTxt, breakageTxt, dropResultTxt) {
-    // console.log(jumlah);
     const hasil = TestResult < Top_Result.value ? 'PASS' : 'FAIL';
-
     const formatInput = (input) => input !== undefined && !isNaN(input) ? parseFloat(input).toFixed(2) : '0.00';
 
-    const id = jumlah === 3 ? 'store3pict' : 'store4pict';
     const formData = new FormData();
 
     formData.append('RefNo', (refNo.value || '').trim());
@@ -1182,7 +1069,6 @@ function submitForm(cLiftTxt, tLiftTxt, cyclicResultTxt, breakageTxt, dropResult
     formData.append('Cyclic_Test', formatInput(Cyclic_Test.value));
     formData.append('Load_Speed', formatInput(Load_Speed.value));
     formData.append('Drop_Test', (Drop_Test.value || '').trim());
-
     formData.append('Cyclic_Lift', (cLiftTxt || '').trim());
     formData.append('Top_Lift', (tLiftTxt || '').trim());
     formData.append('Top_Result', (Top_Result.value || '').trim());
@@ -1190,7 +1076,7 @@ function submitForm(cLiftTxt, tLiftTxt, cyclicResultTxt, breakageTxt, dropResult
     formData.append('Breakage_Location', (breakageTxt || '').trim());
     formData.append('Drop_Result', (dropResultTxt || '').trim());
     formData.append('TestResult', hasil);
-    formData.append('Jumlah', String(jumlah));
+    formData.append('Jumlah', jumlah);
 
     for (let i = 1; i <= 30; i++) {
         const dataElement = document.getElementById('Data_' + i);
@@ -1199,37 +1085,25 @@ function submitForm(cLiftTxt, tLiftTxt, cyclicResultTxt, breakageTxt, dropResult
         }
     }
 
-    const appendFile = (inputId) => {
-        const fileInput = document.querySelector(inputId);
-        if (fileInput.files.length > 0) {
-            const file = fileInput.files[0];
-            if (file) {
-                formData.append(inputId.slice(1), file);
-            }
-        }
-    };
+    formData.append('picture1', picture1.files[0]);
+    formData.append('picture2', picture2.files[0]);
+    formData.append('picture3', picture3.files[0]);
 
-    appendFile('#picture1');
-    appendFile('#picture2');
-    appendFile('#picture3');
-    if (id === 'store4pict') {
-        appendFile('#picture4');
+    if (jumlah === '4') {
+        formData.append('picture4', picture4.files[0]);
     }
 
-
-    // console.log("CEK DATA bfr post");
-    // for (const pair of formData.entries()) {
-    //     console.log(`${pair[0]}: ${pair[1]}`);
-    // }
+    console.log("CEK DATA bfr post");
+    console.log("FormData contents:");
+    for (let [key, value] of formData.entries()) {
+        console.log(`${key}: ${value}`);
+    }
 
     // Send AJAX request
     $.ajax({
         type: 'POST',
         url: 'FrmInputTest',
-        data: {
-            id: id,
-            formData
-        },
+        data: formData,
         processData: false,
         contentType: false,
         headers: {
@@ -1295,3 +1169,5 @@ async function koreksiTest(cLiftTxt, cResultTxt, tLiftTxt, breakageTxt, dResultT
         }
     });
 }
+
+
