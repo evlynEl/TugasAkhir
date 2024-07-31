@@ -40,221 +40,633 @@
                         </div>
 
                         {{-- preview --}}
-                        <div class="row">
-                            <div class="col-sm-6 d-flex align-items-center justify-content-center bordered">
-                                <div>
-                                    <h3><strong>PT. KERTA RAJASA RAYA</strong></h3>
-                                    Woven Bag - Jumbo Bag Industrial
-                                    <br>
-                                    FM-8.2-04-QC-01-11
+                        <div class="container preview">
+                            <div class="row">
+                                <div class="col-sm-6 d-flex align-items-center justify-content-center bordered">
+                                    <div>
+                                        <h3><strong>PT. KERTA RAJASA RAYA</strong></h3>
+                                        Woven Bag - Jumbo Bag Industrial
+                                        <br>
+                                        FM-8.2-04-QC-01-11
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row bordered">
+                                        <div class="col-3">Reference No.</div>
+                                        <div class="col-1">:</div>
+                                        <div class="col-8">
+                                            <span id="refNumPreview">Ref no</span>
+                                        </div>
+                                    </div>
+                                    <div class="row bordered">
+                                        <div class="col-3">Rev No. :</div>
+                                        <div class="col-1">:</div>
+                                        <div class="col-8">
+                                            <span id="revNoPreview"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row bordered">
+                                        <div class="col-3">Date:</div>
+                                        <div class="col-1">:</div>
+                                        <div class="col-8">
+                                            <span id="datePreview">Date</span>
+                                        </div>
+                                    </div>
+                                    <div class="row bordered">
+                                        <div class="col-3">Page:</div>
+                                        <div class="col-1">:</div>
+                                        <div class="col-8">
+                                            <span id="pagePreview">1</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6">
-                                <div class="row">
-                                    <div class="col-12 bordered">Reference No.:</div>
+
+                            <div class="row">
+                                <div class="col-sm-6 d-flex align-items-center justify-content-center bordered">
+                                    <h4><strong>FIBC TESTREPORT</strong></h4>
                                 </div>
-                                <div class="row">
-                                    <div class="col-12 bordered">Rev No. :</div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12 bordered">Date:</div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12 bordered">Page:</div>
+                                <div class="col-sm-6 d-flex align-items-center justify-content-center bordered">
+                                    <h4><strong>FORMAT</strong></h4>
                                 </div>
                             </div>
+
+                            <div class="row mt-1 bordered">
+                                <div class="col-sm-12 d-flex align-items-center justify-content-center bordered"
+                                    style="background-color: lightgoldenrodyellow">
+                                    <h5><strong>FIBC DETAIL</strong></h5>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <!-- First Column -->
+                                <div class="col-sm-6 bordered">
+                                    <div class="row">
+                                        <div class="col-3">Customer</div>:
+                                        <div class="col-8">
+                                            <span id="customerName">Customer Name</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-3">Bag Code</div>:
+                                        <div class="col-8">
+                                            <span id="bagCode">Bag Code Value</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-3">Bag Type</div>:
+                                        <div class="col-8">
+                                            <span id="bagType">Bag Type Value</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-3">Po. No.</div>:
+                                        <div class="col-8">
+                                            <span id="poNo">PO Number</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-3">Prod. Date</div>:
+                                        <div class="col-8">
+                                            <span id="prodDate">Production Date</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-3">Testing Date</div>:
+                                        <div class="col-8">
+                                            <span id="testingDate">Testing Date</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Second Column -->
+                                <div class="col-sm-6 bordered">
+                                    <div class="row">
+                                        <div class="col-3">Size</div>:
+                                        <div class="col-8">
+                                            <span id="size">Size Value</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-3">Reinforced</div>:
+                                        <div class="col-8">
+                                            <span id="reinforced">Reinforced Value</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-3">Colour</div>:
+                                        <div class="col-8">
+                                            <span id="colour">Colour Value</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-3">Weight 1</div>:
+                                        <div class="col-8">
+                                            <span id="weight1">Weight 1 Value</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-3">Weight 2</div>:
+                                        <div class="col-8">
+                                            <span id="weight2">Weight 2 Value</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-3">SWL / S.F.</div>:
+                                        <div class="col-8">
+                                            <span id="swlSf">SWL / S.F. Value</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <div class="row mt-1 bordered">
+                                <div class="col-sm-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="sample" disabled>
+                                        <label class="form-check-label" for="sample">Sample</label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="production" disabled>
+                                        <label class="form-check-label" for="production">Production</label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="trial" disabled>
+                                        <label class="form-check-label" for="trial">Trial</label>
+                                    </div>
+                                </div>
+                                <!-- Second row of checkboxes -->
+                                <div class="col-sm-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="preProduction" disabled>
+                                        <label class="form-check-label" for="preProduction">Pre-production</label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="specModification" disabled>
+                                        <label class="form-check-label" for="specModification">Spec. Modification</label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="sampleFromCustomer" disabled>
+                                        <label class="form-check-label" for="sampleFromCustomer">Sample dari
+                                            Customer</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mt-1 bordered">
+                                <div class="col-sm-12 d-flex align-items-center justify-content-center bordered"
+                                    style="background-color: lightgoldenrodyellow">
+                                    <h5><strong>TEST RESULT</strong></h5>
+                                </div>
+                            </div>
+
+                            <div class=" row bordered">
+                                <div class="col-md-12">
+
+
+                                    {{-- CYCLIC TEST --}}
+                                    <div class="row m-0 mt-1">
+                                        <!-- First row of checkboxes -->
+                                        <div class="col-sm-2 p-0">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="cyclicTestCyclic"
+                                                    disabled>
+                                                <label class="form-check-label" for="cyclicTest"><strong>Cyclic
+                                                        Test</strong></label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-1 p-0">
+                                            <div class="form-check p-0">
+                                                <label class="form-check-label">Lift At:</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2 p-0">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="singleLoopsCyclic"
+                                                    disabled>
+                                                <label class="form-check-label" for="singleLoopsCyclic">Single
+                                                    Loops</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2 p-0">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="fourLoopsCyclic"
+                                                    disabled>
+                                                <label class="form-check-label" for="fourLoopsCyclic">Four Loops</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2 p-0">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="twoLoopsCyclic"
+                                                    disabled>
+                                                <label class="form-check-label" for="twoLoopsCyclic">Two Loops</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2 p-0">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="stevedoreCyclic"
+                                                    disabled>
+                                                <label class="form-check-label" for="stevedoreCyclic">Stevedore</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-1 p-0">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="auxiliaryCyclic"
+                                                    disabled>
+                                                <label class="form-check-label" for="auxiliaryCyclic">Auxiliary</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row m-0">
+                                        <!-- Second row -->
+                                        <div class="col-sm-1 p-0">
+                                            <div class="form-check">
+                                                <label class="form-check-label">Result</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-1 p-0">
+                                            <div class="form-check d-flex align-items-center justify-content-center">
+                                                <label class="form-check-label">:</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 p-0">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox"
+                                                    id="noVisibleDamageCyclic" disabled>
+                                                <label class="form-check-label" for="noVisibleDamageCyclic">No visible
+                                                    damage
+                                                    occurred</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row m-0">
+                                        <!-- Third row -->
+                                        <div class="col-sm-3 offset-sm-2 p-0">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="visibleDamagesCyclic"
+                                                    disabled>
+                                                <label class="form-check-label" for="visibleDamagesCyclic">Visible damages
+                                                    found
+                                                    at</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 p-0">
+                                            <input type="text" class="form-control" disabled
+                                                id="visibleDamageCyclicInput">
+                                        </div>
+                                    </div>
+
+
+                                    {{-- TOP LIFT --}}
+                                    <div class="row m-0 mt-1">
+                                        <!-- First row of checkboxes -->
+                                        <div class="col-sm-2 p-0">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="topLiftTest"
+                                                    disabled>
+                                                <label class="form-check-label" for="topLiftTest"><strong>Top Lift
+                                                        Test</strong></label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-1 p-0">
+                                            <div class="form-check p-0">
+                                                <label class="form-check-label">Lift At:</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2 p-0">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="singleLoopsTop"
+                                                    disabled>
+                                                <label class="form-check-label" for="singleLoopsTop">Single Loops</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2 p-0">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="fourLoopsTop"
+                                                    disabled>
+                                                <label class="form-check-label" for="fourLoopsTop">Four Loops</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2 p-0">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="twoLoopsTop"
+                                                    disabled>
+                                                <label class="form-check-label" for="twoLoopsTop">Two Loops</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2 p-0">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="stevedoreTop"
+                                                    disabled>
+                                                <label class="form-check-label" for="stevedoreTop">Stevedore</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-1 p-0">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="auxiliaryTop"
+                                                    disabled>
+                                                <label class="form-check-label" for="auxiliaryTop">Auxiliary</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row m-0">
+                                        <!-- Second row -->
+                                        <div class="col-sm-1 p-0">
+                                            <div class="form-check">
+                                                <label class="form-check-label">Result</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-1 p-0">
+                                            <div class="form-check d-flex align-items-center justify-content-center">
+                                                <label class="form-check-label">:</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-1 p-0">
+                                            <div class="form-check p-0">
+                                                <span id="angkaBerat"><strong>berat value</strong></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row m-0">
+                                        <!-- Third row -->
+                                        <div class="col-sm-2 p-0">
+                                            <div class="form-check">
+                                                <label class="form-check-label">Breakage
+                                                    Location&nbsp;&nbsp;&nbsp;:</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3 p-0">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="bodyFabric" disabled>
+                                                <label class="form-check-label" for="bodyFabric">Body Fabric</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3 p-0">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="petal" disabled>
+                                                <label class="form-check-label" for="petal">Petal</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3 p-0">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="sideBodyThread"
+                                                    disabled>
+                                                <label class="form-check-label" for="sideBodyThread">Side body's
+                                                    thread</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row m-0">
+                                        <!-- Fourth row -->
+                                        <div class="col-sm-3 p-0 offset-sm-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="bottomFabric"
+                                                    disabled>
+                                                <label class="form-check-label" for="bottomFabric">Bottom Fabric</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3 p-0">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="liftingBelt"
+                                                    disabled>
+                                                <label class="form-check-label" for="liftingBelt">Lifting Belt</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3 p-0">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="bottomBodyThread"
+                                                    disabled>
+                                                <label class="form-check-label" for="bottomBodyThread">Bottom body's
+                                                    thread</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row m-0">
+                                        <!-- Fifth row -->
+                                        <div class="col-sm-3 p-0 offset-sm-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="starcutBottomSprout"
+                                                    disabled>
+                                                <label class="form-check-label" for="starcutBottomSprout">Starcut of
+                                                    bottom
+                                                    sprout</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3 p-0">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="liftingBeltThread"
+                                                    disabled>
+                                                <label class="form-check-label" for="liftingBeltThread">Lifting belt's
+                                                    thread</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-1 p-0">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="others" disabled>
+                                                <label class="form-check-label" for="others">Others:</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2 p-0">
+                                            <input type="text" class="form-control" disabled id="topLiftOthers">
+                                        </div>
+                                    </div>
+
+
+                                    {{-- CHART --}}
+                                    <div class="row m-0 mt-1 mb-1 isiChart">cnart</div>
+
+                                    {{-- DROP TEST 80CM --}}
+                                    <div class="row m-0 mt-1">
+                                        <!-- First row of checkboxes -->
+                                        <div class="col-sm-2 p-0">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="dropTest" disabled>
+                                                <label class="form-check-label" for="dropTest"><strong>Drop Test
+                                                        (80 cm)</strong></label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-1 p-0">
+                                            <div class="form-check p-0">
+                                                <label class="form-check-label">Result</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 p-0">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="noVisibleDamageDrop"
+                                                    disabled>
+                                                <label class="form-check-label" for="noVisibleDamageDrop">No visible
+                                                    damage
+                                                    occurred</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row m-0">
+                                        <!-- Second row -->
+                                        <div class="col-sm-2 offset-sm-3 p-0">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="visibleDamageDrop"
+                                                    disabled>
+                                                <label class="form-check-label" for="visibleDamageDrop">Visible damages
+                                                    found at</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 p-0">
+                                            <input type="text" class="form-control" disabled
+                                                id="visibleDamageDropInput">
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+
+                            <div class="row bordered">
+                                <div class="col-md-12">
+
+                                    <div class="row mt-3 bordered">
+                                        <div class="col-sm-12 d-flex align-items-center justify-content-center bordered"
+                                            style="background-color: lightgoldenrodyellow">
+                                            <h5><strong>PICTURE OF BREAKAGE</strong></h5>
+                                        </div>
+                                    </div>
+
+                                    <div class="row bordered">
+                                        <div class="col-sm-3 d-flex align-items-center justify-content-center bordered">
+                                            <h6><strong>Before Test</strong></h6>
+                                        </div>
+                                        <div class="col-sm-3 d-flex align-items-center justify-content-center bordered">
+                                            <h6><strong>After Cyclic Test</strong></h6>
+                                        </div>
+                                        <div class="col-sm-3 d-flex align-items-center justify-content-center bordered">
+                                            <h6><strong>After Top Lift Test</strong></h6>
+                                        </div>
+                                        <div class="col-sm-3 d-flex align-items-center justify-content-center bordered">
+                                            <h6><strong>Test Result Display</strong></h6>
+                                        </div>
+                                    </div>
+
+                                    <div class="row bordered">
+                                        <div class="col-sm-3 d-flex align-items-center justify-content-center bordered"
+                                            style="width: 225px; height: 175px;">
+                                            <img id="beforeTest"
+                                                style="max-width: 100%; max-height: 100%;">
+                                        </div>
+                                        <div class="col-sm-3 d-flex align-items-center justify-content-center bordered"
+                                            style="width: 225px; height: 175px;">
+                                            <img id="afterCyclic"
+                                                style="max-width: 100%; max-height: 100%;">
+                                        </div>
+                                        <div class="col-sm-3 d-flex align-items-center justify-content-center bordered"
+                                            style="width: 225px; height: 175px;">
+                                            <img id="afterTop" 
+                                                style="max-width: 100%; max-height: 100%;">
+                                        </div>
+                                        <div class="col-sm-3 d-flex align-items-center justify-content-center bordered"
+                                            style="width: 225px; height: 175px;">
+                                            <img id="testResult"
+                                                style="max-width: 100%; max-height: 100%;">
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="row mt-3">
+                                <div class="col-sm-12 d-flex align-items-center justify-content-center bordered"
+                                    style="background-color: lightgoldenrodyellow">
+                                    <h5><strong>TEST RESULT</strong></h5>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="row bordered">
+                                        <div class="col-sm-5 d-flex align-items-center justify-content-center "
+                                            style="height: 100px;">
+                                            <span id="comments" class="circle-border h3"><strong>Pass</strong></span>
+
+                                        </div>
+                                        <div class="col-sm-1 d-flex align-items-center justify-content-center "
+                                            style="height: 100px;">
+                                            <span id="comments" class="h3"><strong>/</strong></span>
+                                        </div>
+                                        <div class="col-sm-5 d-flex align-items-center justify-content-center"
+                                            style="height: 100px;">
+                                            <span id="comments" class="h3"><strong>Fail</strong></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mt-3">
+                                <div class="col-md-12">
+                                    <div class="row bordered">
+                                        <div class="col-sm-8 d-flex align-items-center justify-content-center bordered">
+                                            <h6><strong>Comments</strong></h6>
+                                        </div>
+                                        <div class="col-sm-2 d-flex align-items-center justify-content-center bordered">
+                                            <h6><strong>Prepared By</strong></h6>
+                                        </div>
+                                        <div class="col-sm-2 d-flex align-items-center justify-content-center bordered">
+                                            <h6><strong>Approved By</strong></h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="row bordered">
+                                        <div class="col-sm-8 d-flex align-items-center justify-content-center bordered"
+                                            style="height: 100px;">
+                                            <span id="comments" class="h6"><strong></strong></span>
+                                        </div>
+                                        <div
+                                            class="col-sm-2 d-flex flex-column align-items-center justify-content-center bordered">
+                                            <span id="idSpv" class="h6"><strong></strong></span>
+                                        </div>
+                                        <div
+                                            class="col-sm-2 d-flex flex-column align-items-center justify-content-center bordered">
+                                            <span id="idMng" class="h6"><strong></strong></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div
+                                            class="col-sm-8 d-flex flex-column align-items-center justify-content-center bordered">
+                                        </div>
+                                        <div
+                                            class="col-sm-2 d-flex flex-column align-items-center justify-content-center bordered">
+                                            <h6><strong>Supervisor</strong></h6>
+                                        </div>
+                                        <div
+                                            class="col-sm-2 d-flex flex-column align-items-center justify-content-center bordered">
+                                            <h6><strong>QC Manager</strong></h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
-
-                        <div class="row">
-                            <div class="col-sm-6 d-flex align-items-center justify-content-center bordered">
-                                <h4><strong>FIBC TESTREPORT</strong></h4>
-                            </div>
-                            <div class="col-sm-6 d-flex align-items-center justify-content-center bordered">
-                                <h4><strong>FORMAT</strong></h4>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-sm-12 d-flex align-items-center justify-content-center bordered"
-                                style="background-color: lightgoldenrodyellow">
-                                <h5><strong>FIBC DETAIL</strong></h5>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-sm-6 bordered">
-                                <div class="row">
-                                    <div class="col-12">Customer</div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12">Bag Code</div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12">Bag Type</div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12">Po. No.</div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12">Prod. Date</div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12">Testing Date</div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 bordered">
-                                <div class="row">
-                                    <div class="col-12">Size</div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12">Reinforced</div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12">Colour</div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12">Weight 1</div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12">Weight 2</div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12">SWL / S.F.</div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="row mt-1 bordered">
-                            <div class="col-sm-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="sample" disabled>
-                                    <label class="form-check-label" for="sample">Sample</label>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="production" disabled>
-                                    <label class="form-check-label" for="production">Production</label>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="trial" disabled>
-                                    <label class="form-check-label" for="trial">Trial</label>
-                                </div>
-                            </div>
-                            <!-- Second row of checkboxes -->
-                            <div class="col-sm-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="preProduction" disabled>
-                                    <label class="form-check-label" for="preProduction">Pre-production</label>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="specModification" disabled>
-                                    <label class="form-check-label" for="specModification">Spec. Modification</label>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="sampleFromCustomer" disabled>
-                                    <label class="form-check-label" for="sampleFromCustomer">Sample dari
-                                        Customer</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row mt-1 bordered">
-                            <div class="col-sm-12 d-flex align-items-center justify-content-center bordered"
-                                style="background-color: lightgoldenrodyellow">
-                                <h5><strong>TEST RESULT</strong></h5>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <!-- First row of checkboxes -->
-                            <div class="col-sm-2">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="checkbox1" disabled>
-                                    <label class="form-check-label" for="checkbox1"><strong>Cyclic Test</strong></label>
-                                </div>
-                            </div>
-                            <div class="col-sm-1">
-                                <div class="form-check">
-                                    <label class="form-check-label" for="checkbox2">Lift At:</label>
-                                </div>
-                            </div>
-                            <div class="col-sm-2">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="checkbox3" disabled>
-                                    <label class="form-check-label" for="checkbox3">Single Loops</label>
-                                </div>
-                            </div>
-                            <div class="col-sm-2">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="checkbox4" disabled>
-                                    <label class="form-check-label" for="checkbox4">Four Loops</label>
-                                </div>
-                            </div>
-                            <div class="col-sm-2">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="checkbox5" disabled>
-                                    <label class="form-check-label" for="checkbox5">Two Loops</label>
-                                </div>
-                            </div>
-                            <div class="col-sm-2">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="checkbox6" disabled>
-                                    <label class="form-check-label" for="checkbox6">Stevedore</label>
-                                </div>
-                            </div>
-                            <div class="col-sm-1">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="checkbox6" disabled>
-                                    <label class="form-check-label" for="checkbox6">Auxalary</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <!-- First row of checkboxes -->
-                            <div class="col-sm-2">
-                                <div class="form-check">
-                                    <label class="form-check-label" for="checkbox1">Result</label>
-                                </div>
-                            </div>
-                            <div class="col-sm-1">
-                                <div class="form-check">
-                                    <label class="form-check-label" for="checkbox2">:</label>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="checkbox3" disabled>
-                                    <label class="form-check-label" for="checkbox3">No visible damage occured</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <!-- First row of checkboxes -->
-                            <div class="col-sm-3 offset-sm-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="checkbox3" disabled>
-                                    <label class="form-check-label" for="checkbox3">Visible damages found at</label>
-                                </div>
-                            </div>
-                            <div class="col-sm-6" style="width: 100%">
-                                <input type="text" disabled id="visibleDamage">
-                            </div>
-                        </div>
-
                     </div>
+
                 </div>
             </div>
         </div>
+    </div>
     </div>
 
     <script src="{{ asset('js/COA/ACC/ACCQCSpv.js') }}"></script>

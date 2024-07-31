@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\HakAksesController;
-use Illuminate\Support\Facades\DB;
 
 
 class ACCQCManController extends Controller
