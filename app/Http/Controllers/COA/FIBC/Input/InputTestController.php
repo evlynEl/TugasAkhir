@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Controllers\HakAksesController;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class InputTestController extends Controller
 {
@@ -21,85 +22,6 @@ class InputTestController extends Controller
     {
         //
     }
-    // public function postData(Request $request)
-    // {
-    //     try {
-    //         // dd($request->all());
-    //         $tanggal = $request->input('tanggal');
-    //         $l_div_pelapor = $request->input('divisi_pelapor1');
-    //         $nama_pelapor = $request->input('nama_pelapor');
-    //         $penerima_laporan = $request->input('penerima_laporan');
-    //         $jamlapor = $request->input('jam_lapor');
-    //         $jampelaksanaan = $request->input('jam_perbaikan');
-    //         $jamselesai = $request->input('jam_selesai');
-    //         $Type_gangguan = $request->input('tipe_gangguan');
-    //         $penyebab = $request->input('penyebab');
-    //         $penyelesaian = $request->input('penyelesaian');
-    //         $keterangan = $request->input('keterangan');
-    //         $teknisi = $request->input('teknisi');
-    //         $user_input = Auth::user()->NomorUser;
-    //         $lanjut = $request->input('agree');
-    //         $ketGambar1 = $request->input('ketgambar1');
-    //         $ketGambar2 = $request->input('ketgambar2');
-
-    //         $datetimeNow = now();
-    //         $datetimeWithTime1 = $datetimeNow->toDateString() . ' ' . $jamlapor;
-    //         $datetimeWithTime2 = $datetimeNow->toDateString() . ' ' . $jampelaksanaan;
-    //         $datetimeWithTime3 = $datetimeNow->toDateString() . ' ' . $jamselesai;
-
-    //         $image = $request->file('gambar1data');
-    //         $imageBinary = null;
-    //         if ($image) {
-    //             $binaryReader = fopen($image, 'rb');
-    //             $imageBinary = fread($binaryReader, $image->getSize());
-    //             fclose($binaryReader);
-    //         }
-
-    //         // gambar 2
-    //         $image2 = $request->file('gambar2data');
-    //         $imageBinary2 = null;
-    //         if ($image2) {
-    //             $binaryReader2 = fopen($image2, 'rb');
-    //             $imageBinary2 = fread($binaryReader2, $image2->getSize());
-    //             fclose($binaryReader2);
-    //         }
-
-    //         DB::connection('ConnUtility')->statement('exec SP_INSERT_GANGGUAN_ELEKTRIK ?,?,?,?,?,?,?,?,?,?,?,?,?,?', [
-    //             $tanggal,
-    //             $l_div_pelapor,
-    //             $nama_pelapor,
-    //             $penerima_laporan,
-    //             $datetimeWithTime1,
-    //             $datetimeWithTime2,
-    //             $datetimeWithTime3,
-    //             $Type_gangguan,
-    //             $penyebab,
-    //             $penyelesaian,
-    //             $keterangan,
-    //             $teknisi,
-    //             $user_input,
-    //             $lanjut
-    //         ]);
-
-    //         $insertedId = DB::connection('ConnUtility')->getPdo()->lastInsertId();
-
-    //         $save = DB::connection('ConnUtility')->table('GAMBAR_ELEKTRIK')->insert([
-    //             'IdLaporan' => $insertedId,
-    //             'Gambar1' => $imageBinary ? DB::raw('0x' . bin2hex($imageBinary)) : null,
-    //             'KeteranganGambar1' => $imageBinary ? $ketGambar1 : null,
-    //             'Gambar2' => $imageBinary2 ? DB::raw('0x' . bin2hex($imageBinary2)) : null,
-    //             'KeteranganGambar2' => $imageBinary2 ? $ketGambar2 : null,
-    //             'UserInput' => $user_input,
-    //             'UserKoreksi' => null,
-    //         ]);
-
-    //         return response()->json(['success' => true, 'message' => 'Sudah menyimpan data']);
-    //     } catch (\Throwable $th) {
-    //         report($th);
-    //         return response()->json(['error' => false, 'message' => 'Terjadi kesalahan saat menyimpan data']);
-    //     }
-    // }
-
 
     public function store(Request $request)
     {
@@ -125,32 +47,64 @@ class InputTestController extends Controller
             $dataValues["Data_$i"] = $request->input("Data_$i");
         }
         $cyclicDataValues = array_values($dataValues);
-        $picture1 = $request->file('picture1');
-        $picture2 = $request->file('picture2');
-        $picture3 = $request->file('picture3');
-        $picture4 = $request->file('picture4');
 
+        $request->validate([
+            'picture1' => 'nullable|file|mimes:jpeg,png',
+            'picture2' => 'nullable|file|mimes:jpeg,png',
+            'picture3' => 'nullable|file|mimes:jpeg,png',
+        ]);
 
-        if ($picture1) {
-            $binaryReader = fopen($picture1, 'rb');
-            $image1 = fread($binaryReader, $picture1->getSize());
-            fclose($binaryReader);
+        $imageBinary1 = null;
+        if ($request->hasFile('picture1')) {
+            $fileName1 = 'picture1_' . time() . '.' . $request->file('picture1')->getClientOriginalExtension();
+            $filePath1 = $request->file('picture1')->storeAs('images', $fileName1, 'public');
+            $imageBinary1 = file_get_contents(Storage::disk('public')->path($filePath1));
         }
 
-        if ($picture2) {
-            $binaryReader2 = fopen($picture2, 'rb');
-            $image2 = fread($binaryReader2, $picture2->getSize());
-            fclose($binaryReader2);
+        // Handle picture2 upload
+        $imageBinary2 = null;
+        if ($request->hasFile('picture2')) {
+            $fileName2 = 'picture2_' . time() . '.' . $request->file('picture2')->getClientOriginalExtension();
+            $filePath2 = $request->file('picture2')->storeAs('images', $fileName2, 'public');
+            $imageBinary2 = file_get_contents(Storage::disk('public')->path($filePath2));
         }
 
-        if ($picture3) {
-            $binaryReader3 = fopen($picture3, 'rb');
-            $image3 = fread($binaryReader3, $picture3->getSize());
-            fclose($binaryReader3);
+        // Handle picture3 upload
+        $imageBinary3 = null;
+        if ($request->hasFile('picture3')) {
+            $fileName3 = 'picture3_' . time() . '.' . $request->file('picture3')->getClientOriginalExtension();
+            $filePath3 = $request->file('picture3')->storeAs('images', $fileName3, 'public');
+            $imageBinary3 = file_get_contents(Storage::disk('public')->path($filePath3));
         }
+
+
+        // $picture1 = $request->file('picture1');
+        // $imageBinary1 = null;
+        // if ($picture1) {
+        //     $binaryReader1 = fopen($picture1, 'rb');
+        //     $imageBinary1 = fread($binaryReader1, $picture1->getSize());
+        //     fclose($binaryReader1);
+        // }
+
+        // $picture2 = $request->file('picture2');
+        // $imageBinary2 = null;
+        // if ($picture2) {
+        //     $binaryReader2 = fopen($picture2, 'rb');
+        //     $imageBinary2 = fread($binaryReader2, $picture2->getSize());
+        //     fclose($binaryReader2);
+        // }
+
+        // $picture3 = $request->file('picture3');
+        // $imageBinary3 = null;
+        // if ($picture3) {
+        //     $binaryReader3 = fopen($picture3, 'rb');
+        //     $imageBinary3 = fread($binaryReader3, $picture3->getSize());
+        //     fclose($binaryReader3);
+        // }
 
         try {
             if ($jumlah === '3') {
+                // dd('MASUK JUMLAH 3:', );
                 DB::connection('ConnTestQC')->statement(
                     'exec SP_1273_QTC_MAINT_RESULT_FIBC
                     @Kode = 1,
@@ -181,19 +135,25 @@ class InputTestController extends Controller
                 DB::connection('ConnTestQC')->table('Picture_FIBC')->insert([
                     'Reference_No' => $referenceNo,
                     'Jumlah' => $jumlah,
-                    'Pict_1' => $image1,
-                    'Pict_2' => $image2,
-                    'Pict_3' => $image3
+                    'Pict_1' => $imageBinary1,
+                    'Pict_2' => $imageBinary2,
+                    'Pict_3' => $imageBinary3,
                 ]);
 
-
+                // Optionally, you can use dd() to debug the binary data
+                dd('MASUK JUMLAH 3:', 'Pict_1', $imageBinary1, 'Pict_2', $imageBinary2, 'Pict_3', $imageBinary3);
             } else if ($jumlah === '4') {
+                dd('masuk 4');
                 // gambar 4
-                if ($picture4) {
-                    $binaryReader4 = fopen($picture4, 'rb');
-                    $image4 = fread($binaryReader4, $picture4->getSize());
-                    fclose($binaryReader4);
-                }
+                // $picture4 = $request->file('picture4');
+                // $imageBinary4 = null;
+                // if ($picture4) {
+                //     $binaryReader4 = fopen($picture4, 'rb');
+                //     $image4 = fread($binaryReader4, $picture4->getSize());
+                //     fclose($binaryReader4);
+                // }
+                $fileName4 = 'picture4_' . time() . '.' . $request->file('picture4')->getClientOriginalExtension();
+                $filePath4 = $request->file('picture4')->storeAs('images', $fileName4, 'public');
 
                 DB::connection('ConnTestQC')->statement(
                     'exec SP_1273_QTC_MAINT_RESULT_FIBC
@@ -224,12 +184,11 @@ class InputTestController extends Controller
                 DB::connection('ConnTestQC')->table('Picture_FIBC')->insert([
                     'Reference_No' => $referenceNo,
                     'Jumlah' => $jumlah,
-                    'Pict_1' => $image1,
-                    'Pict_2' => $image2,
-                    'Pict_3' => $image3,
-                    'Pict_4' => $image4
+                    'Pict_1' => $filePath1 ? Storage::disk('public')->get($filePath1) : null,
+                    'Pict_2' => $filePath2 ? Storage::disk('public')->get($filePath2) : null,
+                    'Pict_3' => $filePath3 ? Storage::disk('public')->get($filePath3) : null,
+                    'Pict_4' => $filePath4 ? Storage::disk('public')->get($filePath4) : null
                 ]);
-
             }
 
             return response()->json(['success' => 'Data inserted successfully'], 200);
@@ -373,10 +332,10 @@ class InputTestController extends Controller
                         'Data_29' => $data_detailKor->Data_29,
                         'Data_30' => $data_detailKor->Data_30,
                         'Jumlah' => $data_detailKor->Jumlah,
-                        'Pict_1' => $data_detailKor->Pict_1,
-                        'Pict_2' => $data_detailKor->Pict_2,
-                        'Pict_3' => $data_detailKor->Pict_3,
-                        'Pict_4' => $data_detailKor->Pict_4
+                        // 'Pict_1' => $data_detailKor->Pict_1,
+                        // 'Pict_2' => $data_detailKor->Pict_2,
+                        // 'Pict_3' => $data_detailKor->Pict_3,
+                        // 'Pict_4' => $data_detailKor->Pict_4
                     ];
                 }
                 $data_full = [

@@ -14,9 +14,12 @@ var Load_Speed = document.getElementById('Load_Speed');
 var Drop_Test = document.getElementById('Drop_Test');
 
 // Test Result Section
+
+var cyclicbesar = document.getElementById('cyclicbesar');
 var Cyclic_Lift = document.getElementById('Cyclic_Lift');
 var Cyclic_Result = document.getElementById('cyclicResult');
 var damageFoundDescCyInput = document.getElementById('damageFoundDescCy');
+var topbesar = document.getElementById('topbesar');
 var Top_Lift = document.getElementById('Top_Lift');
 var Top_Result = document.getElementById('Top_Result');
 var othersTextInput = document.getElementById('othersText');
@@ -28,6 +31,10 @@ var jumlah = 0;
 var threePictures = document.getElementById('threePictures');
 var fourPictures = document.getElementById('fourPictures');
 var imageFiles;
+var imagePreview = document.getElementById('imagePreview1');
+var imagePreview2 = document.getElementById('imagePreview2');
+var imagePreview3 = document.getElementById('imagePreview3');
+var imagePreview4 = document.getElementById('imagePreview4');
 
 // specific div
 // var pressureboxDiv = document.getElementById('pressurebox');
@@ -43,11 +50,6 @@ var breakageCheckDiv = document.getElementById('Breakage_Location');
 var breakageCheckDetail = breakageCheckDiv.querySelectorAll('input');
 var dropResultDiv = document.getElementById('dropResult');
 var dropResultDetail = dropResultDiv.querySelectorAll('input');
-
-var picture1 = document.getElementById('picture1');
-var picture2 = document.getElementById('picture2');
-var picture3 = document.getElementById('picture3');
-var picture4 = document.getElementById('picture4');
 
 // button
 var btn_info = document.getElementById('btn_info');
@@ -75,6 +77,15 @@ var tLift = [];
 var breakage = [];
 var dResult = [];
 var centangCheck = [];
+
+var sections = [
+    { id: 'pressurebox', checkboxes: ['Dia', 'Square'] },
+    { id: 'cyclicCheck', checkboxes: ['Single Loops', 'Four Loops', 'Two Loops', 'Stevedore', 'Auxiliary'] },
+    { id: 'cyclicResult', checkboxes: ['No visible damages occurred', 'Visible damages found at'] },
+    { id: 'topLiftCheck', checkboxes: ['Single Loops', 'Four Loops', 'Two Loops', 'Stevedore', 'Auxiliary'] },
+    { id: 'Breakage_Location', checkboxes: ['Body fabric', 'Petal', 'Side body\'s thread', 'Bottom fabric', 'Lifting belt', 'Bottom body\'s thread', 'Starcut of bottom spout', 'Lifting belt\'s thread', 'Others :'] },
+    { id: 'dropResult', checkboxes: ['No visible damages occurred', 'Visible damages found at'] }
+];
 
 const indexMapping = {
     1: 21, 2: 24, 3: 16, 4: 26, 5: 27,
@@ -329,6 +340,9 @@ function handleTableKeydown(e, tableId) {
     }
 }
 
+// format angka .00 jadi 0.00
+const formatInput = (input) => input !== undefined && !isNaN(input) ? parseFloat(input).toFixed(2) : '0.00';
+
 btn_info.addEventListener("click", function (e) {
     try {
         Swal.fire({
@@ -470,15 +484,53 @@ btn_info.addEventListener("click", function (e) {
                             }
                         } else { // fill dari no ref koreksi
                             if (response.additionalData && response.additionalData.length > 0) {
+
+                                // membuka disabled
+                                Height_Approx.disabled = false;
+                                if (dia_val !== '0.00') {
+                                    dia_val.disabled = false;
+                                } else if (square_val !== '') {
+                                    square_val.disabled = false;
+                                }
+                                Load_Speed.disabled = false;
+                                Drop_Test.disabled = false;
+
+
+                                btn_pict1.disabled = false;
+                                btn_pict2.disabled = false;
+                                btn_pict3.disabled = false;
+                                if (jumlah === '4') {
+                                    fourPictures.checked = true;
+                                    btn_pict4.disabled = false;
+                                } else {
+                                    threePictures.checked = true;
+                                }
+
                                 const data = response.additionalData[0];
 
-                                Height_Approx.value = data.Height_Approx;
-                                dia_val.value = data.dia_val;
-                                square_val.value = data.square_val;
-                                Cyclic_Test.value = data.Cyclic_Test;
-                                Load_Speed.value = data.Load_Speed;
-                                Top_Result.value = data.Top_Result;
+                                Height_Approx.value = formatInput(data.Height_Approx);
+                                dia_val.value = formatInput(data.dia_val);
+                                square_val.value = formatInput(data.square_val);
+                                Cyclic_Test.value = formatInput(data.Cyclic_Test);
+                                Load_Speed.value = formatInput(data.Load_Speed);
+                                Top_Result.value = formatInput(data.Top_Result);
                                 Drop_Test.value = data.Drop_Test;
+
+                                // mengisi nilai data_1 sampai data_30 dan membuka disabled pada data_1 - data_15
+                                for (let i = 1; i <= 30; i++) {
+                                    const dataKey = `Data_${i}`;
+                                    const elementId = `Data_${i}`;
+                                    const element = document.querySelector(`#${elementId}`);
+
+                                    if (element) {
+                                        if (data[dataKey] !== undefined) {
+                                            element.value = formatInput(data[dataKey]);
+                                        }
+                                        if (i <= 15) {
+                                            element.disabled = false;
+                                        }
+                                    }
+                                }
 
                                 pressure = data.pressure;
                                 cLift = data.Cyclic_Lift;
@@ -493,6 +545,33 @@ btn_info.addEventListener("click", function (e) {
                                 retrieveCheck('topLiftCheck', tLift, data);
                                 retrieveCheck('Breakage_Location', breakage, data);
                                 retrieveCheck('dropResult', dResult, data);
+
+                                console.log(Cyclic_Lift.checked);
+
+                                if (Cyclic_Lift.checked) {
+                                    cyclicbesar.classList.remove('disabled');
+                                    cyclicbesar.querySelectorAll('input').forEach(input => {
+                                        input.disabled = false;
+                                    });
+                                } else {
+                                    cyclicbesar.classList.add('disabled');
+                                    cyclicbesar.querySelectorAll('input').forEach(input => {
+                                        input.disabled = true;
+                                    });
+                                }
+
+                                if (Top_Lift.checked) {
+                                    topbesar.classList.remove('disabled');
+                                    topbesar.querySelectorAll('input').forEach(input => {
+                                        input.disabled = false;
+                                    });
+                                } else {
+                                    topbesar.classList.add('disabled');
+                                    topbesar.querySelectorAll('input').forEach(input => {
+                                        input.disabled = true;
+                                    });
+                                }
+
                             }
                         }
                     },
@@ -508,14 +587,7 @@ btn_info.addEventListener("click", function (e) {
     }
 });
 
-var sections = [
-    { id: 'pressurebox', checkboxes: ['Dia', 'Square'] },
-    { id: 'cyclicCheck', checkboxes: ['Single Loops', 'Four Loops', 'Two Loops', 'Stevedore', 'Auxiliary'] },
-    { id: 'cyclicResult', checkboxes: ['No visible damages occurred', 'Visible damages found at'] },
-    { id: 'topLiftCheck', checkboxes: ['Single Loops', 'Four Loops', 'Two Loops', 'Stevedore', 'Auxiliary'] },
-    { id: 'Breakage_Location', checkboxes: ['Body fabric', 'Petal', 'Side body\'s thread', 'Bottom fabric', 'Lifting belt', 'Bottom body\'s thread', 'Starcut of bottom spout', 'Lifting belt\'s thread', 'Others :'] },
-    { id: 'dropResult', checkboxes: ['No visible damages occurred', 'Visible damages found at'] }
-];
+
 
 // fungsi memunculkan centang sesuai isi database
 function retrieveCheck(sectionId, value, data) {
@@ -613,11 +685,11 @@ function retrieveCheck(sectionId, value, data) {
         });
     });
 
-    console.log('cyclic lift: ', cLift);
-    console.log('top lift: ', tLift);
-    console.log('cyclic result: ', cResult);
-    console.log('breakage loc: ', breakage);
-    console.log('drop result: ', dResult);
+    // console.log('cyclic lift: ', cLift);
+    // console.log('top lift: ', tLift);
+    // console.log('cyclic result: ', cResult);
+    // console.log('breakage loc: ', breakage);
+    // console.log('drop result: ', dResult);
 
     switch (sectionId) {
         case 'cyclicCheck':
@@ -739,7 +811,6 @@ function handleCheckboxChange(sectionId) {
 }
 
 
-
 // panggil fungsi cek checkbox
 setupCheckboxListeners();
 
@@ -760,20 +831,17 @@ function setupImageUpload(btnId, inputId, textId, previewId, nextBtnId, formData
         if (file) {
             textInput.value = file.name;
 
-            // Display the image preview
             const reader = new FileReader();
             reader.onload = function (e) {
                 const arrayBuffer = e.target.result;
-                const blob = new Blob([arrayBuffer], { type: file.type });
-                const url = URL.createObjectURL(blob);
 
-                imagePreview.src = url;
+                imagePreview.src = arrayBuffer;
                 imagePreview.style.display = 'block';
 
                 // Store the binary data in the FormData object
-                formData.append(imageKey, blob);
+                // formData.append(imageKey, blob);
             };
-            reader.readAsArrayBuffer(file);
+            reader.readAsDataURL(file);
 
             if (nextBtn) {
                 nextBtn.focus();
@@ -917,6 +985,12 @@ function disableKetik() {
     btn_pict2.disabled = true;
     btn_pict3.disabled = true;
     btn_pict4.disabled = true;
+
+    // kosongkan image preview
+    imagePreview.style.display = 'none';
+    imagePreview2.style.display = 'none';
+    imagePreview3.style.display = 'none';
+    imagePreview4.style.display = 'none';
 }
 
 // Initially disable Ketik on page load
@@ -927,14 +1001,16 @@ btn_isi.addEventListener('click', function () {
     enableKetik();
     btn_info.disabled = false;
     btn_info.focus();
+    btn_hapus.disabled = true;
 });
 
-// Button batal event listener
+// button batal event listener
 btn_batal.addEventListener('click', function () {
     btn_hapus.disabled = false;
     disableKetik();
 });
 
+// button simpan
 btn_simpan.addEventListener('click', async function (e) {
     if (a === 1) { // ISI
         const allInputsValid = await checkAllInputs();
@@ -958,12 +1034,12 @@ btn_simpan.addEventListener('click', async function (e) {
 
         let text = ['Cyclic Test', 'Cyclic Test Result', 'Top Lift Test', 'Breakage Location', 'Drop Test'];
         let tidakTercentang = [];
-        console.log('cyclic lift: ', cLift);
-        console.log('top lift: ', tLift);
-        console.log('cyclic result: ', cResult);
-        console.log('breakage loc: ', breakage);
-        console.log('drop result: ', dResult);
-        console.log(tidakTercentang.length);
+        // console.log('cyclic lift: ', cLift);
+        // console.log('top lift: ', tLift);
+        // console.log('cyclic result: ', cResult);
+        // console.log('breakage loc: ', breakage);
+        // console.log('drop result: ', dResult);
+        // console.log(tidakTercentang.length);
 
         if (cLiftTxt === null) tidakTercentang.push(0);
         if (cyclicResultTxt === null) tidakTercentang.push(1);
@@ -1058,8 +1134,6 @@ btn_hapus.addEventListener('click', function () {
 
 function submitForm(cLiftTxt, tLiftTxt, cyclicResultTxt, breakageTxt, dropResultTxt) {
     const hasil = TestResult < Top_Result.value ? 'PASS' : 'FAIL';
-    const formatInput = (input) => input !== undefined && !isNaN(input) ? parseFloat(input).toFixed(2) : '0.00';
-
     const formData = new FormData();
 
     formData.append('RefNo', (refNo.value || '').trim());
@@ -1085,12 +1159,20 @@ function submitForm(cLiftTxt, tLiftTxt, cyclicResultTxt, breakageTxt, dropResult
         }
     }
 
-    formData.append('picture1', picture1.files[0]);
-    formData.append('picture2', picture2.files[0]);
-    formData.append('picture3', picture3.files[0]);
+    // Ambil file gambar
+    var picture1 = document.getElementById('picture1').files[0];
+    var picture2 = document.getElementById('picture2').files[0];
+    var picture3 = document.getElementById('picture3').files[0];
+    var picture4 = document.getElementById('picture4').files[0];
+
+
+    formData.append('picture1', picture1);
+    formData.append('picture2', picture2);
+    formData.append('picture3', picture3);
 
     if (jumlah === '4') {
-        formData.append('picture4', picture4.files[0]);
+        picture4 = picture4.files[0];
+        formData.append('picture4', picture4);
     }
 
     console.log("CEK DATA bfr post");
@@ -1099,7 +1181,6 @@ function submitForm(cLiftTxt, tLiftTxt, cyclicResultTxt, breakageTxt, dropResult
         console.log(`${key}: ${value}`);
     }
 
-    // Send AJAX request
     $.ajax({
         type: 'POST',
         url: 'FrmInputTest',

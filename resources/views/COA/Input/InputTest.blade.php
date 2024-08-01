@@ -505,8 +505,7 @@
                                                 </div>
                                                 <div class="mt-2 ml-3 image-container">
                                                     <input type="file" id="picture1" style="display: none" accept="image/*"ccept="image/*">
-                                                    <img id="imagePreview1" src="" alt="Image Preview"
-                                                        style="display: none; max-width: 100%; height: auto;">
+                                                    <img id="imagePreview1" src="" alt="Image Preview" style="display: none; max-width: 100%; max-height: 150px;">
                                                 </div>
 
                                             </div>
@@ -529,7 +528,7 @@
                                                 <div class="mt-2 ml-3 image-container">
                                                     <input type="file" id="picture2" style="display: none" accept="image/*">
                                                     <img id="imagePreview2" src="" alt="Image Preview"
-                                                        style="display: none; max-width: 200px; height: auto";>
+                                                        style="display: none; max-width: 100%; max-height: 150px";>
                                                 </div>
                                             </div>
                                         </div>
@@ -551,7 +550,7 @@
                                                 <div class="mt-2 ml-3 image-container">
                                                     <input type="file" id="picture3" style="display: none" accept="image/*">
                                                     <img id="imagePreview3" src="" alt="Image Preview"
-                                                        style="display: none; max-width: 200px; height: auto";>
+                                                        style="display: none; max-width: 100%; max-height: 150px";>
                                                 </div>
                                             </div>
                                         </div>
@@ -573,7 +572,7 @@
                                                 <div class="mt-2 ml-3 image-container">
                                                     <input type="file" id="picture4" style="display: none" accept="image/*">
                                                     <img id="imagePreview4" src="" alt="Image Preview"
-                                                        style="display: none; max-width: 200px; height: auto";>
+                                                        style="display: none; max-width: 100%; max-height: 150px";>
                                                 </div>
                                             </div>
                                         </div>

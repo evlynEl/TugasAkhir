@@ -1182,8 +1182,8 @@ let inputStates = {};
 // Function to disable inputs
 function disableInputs() {
     inputs.forEach(masuk => {
-        inputStates[masuk.id] = masuk.disabled; // Track initial disabled state
-        masuk.disabled = true; // Disable the input
+        inputStates[masuk.id] = masuk.disabled;
+        masuk.disabled = true;
     });
 }
 
