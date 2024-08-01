@@ -78,8 +78,6 @@ class ACCQCSpvController extends Controller
             }
 
             return response()->json($data);
-
-            // return datatables($data_detail)->make(true);
         }
     }
 

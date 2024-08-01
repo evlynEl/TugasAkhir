@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var refNo = document.getElementById('refNo');
     var customer = document.getElementById('customer');
     var btn_info = document.getElementById('btn_info');
+    var btn_detail = document.getElementById('btn_detail');
 
     var beforeTest = document.getElementById('beforeTest');
     var afterCyclic = document.getElementById('afterCyclic');
@@ -72,19 +73,44 @@ document.addEventListener("DOMContentLoaded", function () {
     var visibleDamageDropCheckbox = document.getElementById('visibleDamageDrop');
     var visibleDamageDropInput = document.getElementById('visibleDamageDropInput');
 
+    var liftingBeltType = document.getElementById('liftingBeltType');
+    var sewingThreadType = document.getElementById('sewingThreadType');
+
+    var topKg1 = document.getElementById('topKg1');
+    var topPersen1 = document.getElementById('topPersen1');
+    var bottomKg1 = document.getElementById('bottomKg1');
+    var bottomPersen1 = document.getElementById('bottomPersen1');
+
+    var topKg2 = document.getElementById('topKg2');
+    var topPersen2 = document.getElementById('topPersen2');
+    var bottomKg2 = document.getElementById('bottomKg2');
+    var bottomPersen2 = document.getElementById('bottomPersen2');
+
+    var topKg3 = document.getElementById('topKg3');
+    var topPersen3 = document.getElementById('topPersen3');
+    var bottomKg3 = document.getElementById('bottomKg3');
+    var bottomPersen3 = document.getElementById('bottomPersen3');
+
+    var topKg4 = document.getElementById('topKg4');
+    var topPersen4 = document.getElementById('topPersen4');
+    var bottomKg4 = document.getElementById('bottomKg4');
+    var bottomPersen4 = document.getElementById('bottomPersen4');
+
+    var topKg5 = document.getElementById('topKg5');
+    var topPersen5 = document.getElementById('topPersen5');
+    var bottomKg5 = document.getElementById('bottomKg5');
+    var bottomPersen5 = document.getElementById('bottomPersen5');
+
+
+    var printPdf = document.getElementById('printPdf');
+
+    printPdf.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.print();
+    });
+
     function formatNumber(value) {
         return parseFloat(value).toFixed(2);
-    }
-
-    function setImageSrc(imgElement, imageData) {
-        if (imageData) {
-            var imageUrl = 'data:image/jpeg;base64,' + imageData;
-            imgElement.src = imageUrl;
-            imgElement.style.display = 'block'; // Ensure the image is visible
-        } else {
-            imgElement.src = ''; // Clear the src if no image data
-            imgElement.style.display = 'none'; // Hide the image element
-        }
     }
 
     btn_info.addEventListener("click", function (e) {
@@ -307,7 +333,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
                             // breakage loc
                             const breakageInfo = result[0].Breakage_Location.trim();
-                            console.log(breakageInfo);
                             if (breakageInfo === ('Body fabric')) {
                                 bodyFabricCheckbox.checked = true;
                             }
@@ -354,23 +379,111 @@ document.addEventListener("DOMContentLoaded", function () {
                             // images
                             var imageData1 = result[0].Pict_1;
                             var imageUrl1 = 'data:image/jpeg;base64,' + imageData1;
-                            setImageSrc(beforeTest, imageUrl1);
+                            beforeTest.src = imageUrl1;
 
                             var imageData2 = result[0].Pict_2;
                             var imageUrl2 = 'data:image/jpeg;base64,' + imageData2;
-                            setImageSrc(afterCyclic, imageUrl2);
+                            afterCyclic.src = imageUrl2
 
                             var imageData3 = result[0].Pict_3;
                             var imageUrl3 = 'data:image/jpeg;base64,' + imageData3;
-                            setImageSrc(afterTop, imageUrl3);
+                            afterTop.src = imageUrl3;
 
                             var imageData4 = result[0].Pict_4;
                             if (imageData4) {
                                 var imageUrl4 = 'data:image/jpeg;base64,' + imageData4;
-                                setImageSrc(testResult, imageUrl4);
+                                testResult.src = imageUrl4;
                             }
 
-                            
+
+                            // chart
+                            const dataValues = [];
+                            for (let i = 1; i <= 30; i++) {
+                                dataValues.push(result[0][`Data_${i}`]);
+                            }
+                            dataValues.push(result[0].Top_Result); //untuk 31
+
+                            const ctx = document.getElementById('dataChart').getContext('2d');
+                            const dataChart = new Chart(ctx, {
+                                type: 'line',
+                                data: {
+                                    labels: Array.from({ length: 30 }, (_, i) => (i + 1)).concat([31]),
+                                    datasets: [{
+                                        data: dataValues,
+                                        borderColor: 'rgba(75, 192, 192, 1)',
+                                        borderWidth: 2,
+                                        fill: false,
+                                        lineTension: 0.1
+                                    }]
+                                },
+                                options: {
+                                    plugins: {
+                                        title: {
+                                            display: true,
+                                            text: 'FIBC - Cyclic Top Lift Test',
+                                            font: {
+                                                size: 12
+                                            },
+                                        },
+                                        legend: {
+                                            display: false
+                                        }
+                                    },
+                                    scales: {
+
+                                        y: {
+                                            title: {
+                                                display: true,
+                                                text: 'kg'
+                                            },
+                                            beginAtZero: true,
+                                            min: 0,
+                                            max: 12000,
+                                            ticks: {
+                                                stepSize: 2000
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+
+                            $('.preview').show();
+                            printPdf.disabled = false;
+
+                            btn_detail.addEventListener("click", function (e) {
+                                $('.previewBiasa').hide();
+                                $('.previewDetail').show();
+
+                                liftingBeltType.textContent = ': ' + result[0].LiftingBelt_Type;
+                                sewingThreadType.textContent = ': ' + result[0].SewingThread_Type;
+
+                                topKg1.textContent = formatNumber(result[0].Top_KG_1) + ' kg';
+                                topPersen1.textContent = formatNumber(result[0].Top_Persen_1) + ' %';
+                                bottomKg1.textContent = formatNumber(result[0].Bottom_KG_1) + ' kg';
+                                bottomPersen1.textContent = formatNumber(result[0].Bottom_Persen_1) + ' %';
+
+                                topKg2.textContent = formatNumber(result[0].Top_KG_2) + ' kg';
+                                topPersen2.textContent = formatNumber(result[0].Top_Persen_2) + ' %';
+                                bottomKg2.textContent = formatNumber(result[0].Bottom_KG_2) + ' kg';
+                                bottomPersen2.textContent = formatNumber(result[0].Bottom_Persen_2) + ' %';
+
+                                topKg3.textContent = formatNumber(result[0].Top_KG_3) + ' kg';
+                                topPersen3.textContent = formatNumber(result[0].Top_Persen_3) + ' %';
+                                bottomKg3.textContent = formatNumber(result[0].Bottom_KG_3) + ' kg';
+                                bottomPersen3.textContent = formatNumber(result[0].Bottom_Persen_3) + ' %';
+
+                                topKg4.textContent = formatNumber(result[0].Top_KG_4) + ' kg';
+                                topPersen4.textContent = formatNumber(result[0].Top_Persen_4) + ' %';
+                                bottomKg4.textContent = formatNumber(result[0].Bottom_KG_4) + ' kg';
+                                bottomPersen4.textContent = formatNumber(result[0].Bottom_Persen_4) + ' %';
+
+                                topKg5.textContent = formatNumber(result[0].Top_KG_5) + ' kg';
+                                topPersen5.textContent = formatNumber(result[0].Top_Persen_5) + ' %';
+                                bottomKg5.textContent = formatNumber(result[0].Bottom_KG_5) + ' kg';
+                                bottomPersen5.textContent = formatNumber(result[0].Bottom_Persen_5) + ' %';
+
+                            });
+
 
                         }
                     });

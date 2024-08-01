@@ -30,13 +30,19 @@
                             </div>
                             <div class="form-group col-4 d-flex align-items-center justify-content-center">
                                 <div class="text-center">
-                                    <button type="button" id="btn-detail" class="btn btn-outline-secondary"
+                                    <button type="button" id="btn_detail" class="btn btn-outline-secondary"
                                         style="width: 150px;">Detail</button>
-                                    <button type="button" id="btn-acc" class="btn btn-outline-secondary"
+                                    <button type="button" id="btn_acc" class="btn btn-outline-secondary"
                                         style="width: 150px;">ACC</button>
                                 </div>
                             </div>
 
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-sm-2">
+                                <button id="printPdf" class="btn btn-primary" disabled>Print</button>
+                            </div>
                         </div>
 
                         {{-- preview --}}
@@ -44,10 +50,11 @@
                             <div class="row">
                                 <div class="col-sm-6 d-flex align-items-center justify-content-center bordered">
                                     <div>
-                                        <h3><strong>PT. KERTA RAJASA RAYA</strong></h3>
-                                        Woven Bag - Jumbo Bag Industrial
-                                        <br>
-                                        FM-8.2-04-QC-01-11
+                                        <h3 style="margin: 0" class="text-center"><strong>PT. KERTA RAJASA RAYA</strong>
+                                        </h3>
+                                        <div class="text-center"> Woven Bag - Jumbo Bag Industrial<br>
+                                            FM-8.2-04-QC-01-11</div>
+
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
@@ -84,17 +91,17 @@
 
                             <div class="row">
                                 <div class="col-sm-6 d-flex align-items-center justify-content-center bordered">
-                                    <h4><strong>FIBC TESTREPORT</strong></h4>
+                                    <h4 style="margin: 0"><strong>FIBC TESTREPORT</strong></h4>
                                 </div>
                                 <div class="col-sm-6 d-flex align-items-center justify-content-center bordered">
-                                    <h4><strong>FORMAT</strong></h4>
+                                    <h4 style="margin: 0"><strong>FORMAT</strong></h4>
                                 </div>
                             </div>
 
                             <div class="row mt-1 bordered">
                                 <div class="col-sm-12 d-flex align-items-center justify-content-center bordered"
                                     style="background-color: lightgoldenrodyellow">
-                                    <h5><strong>FIBC DETAIL</strong></h5>
+                                    <h5 style="margin: 0"><strong>FIBC DETAIL</strong></h5>
                                 </div>
                             </div>
 
@@ -180,449 +187,764 @@
                                 </div>
                             </div>
 
+                            {{--  --}}
+                            {{--  --}}
+                            {{--  --}}
+                            {{-- preview biasa --}}
+                            <div class="previewBiasa">
+                                <div class="row mt-1 bordered">
+                                    <div class="col-sm-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="sample" disabled>
+                                            <label class="form-check-label" for="sample">Sample</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="production" disabled>
+                                            <label class="form-check-label" for="production">Production</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="trial" disabled>
+                                            <label class="form-check-label" for="trial">Trial</label>
+                                        </div>
+                                    </div>
+                                    <!-- Second row of checkboxes -->
+                                    <div class="col-sm-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="preProduction" disabled>
+                                            <label class="form-check-label" for="preProduction">Pre-production</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="specModification"
+                                                disabled>
+                                            <label class="form-check-label" for="specModification">Spec.
+                                                Modification</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="sampleFromCustomer"
+                                                disabled>
+                                            <label class="form-check-label" for="sampleFromCustomer">Sample dari
+                                                Customer</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-1 bordered">
+                                    <div class="col-sm-12 d-flex align-items-center justify-content-center bordered"
+                                        style="background-color: lightgoldenrodyellow">
+                                        <h5 style="margin: 0"><strong>TEST RESULT</strong></h5>
+                                    </div>
+                                </div>
+
+                                <div class=" row bordered">
+                                    <div class="col-md-12">
 
 
-                            <div class="row mt-1 bordered">
-                                <div class="col-sm-4">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="sample" disabled>
-                                        <label class="form-check-label" for="sample">Sample</label>
+                                        {{-- CYCLIC TEST --}}
+                                        <div class="row m-0 mt-1">
+                                            <!-- First row of checkboxes -->
+                                            <div class="col-sm-2 p-0">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="cyclicTestCyclic"
+                                                        disabled>
+                                                    <label class="form-check-label" for="cyclicTest"><strong>Cyclic
+                                                            Test</strong></label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1 p-0">
+                                                <div class="form-check p-0">
+                                                    <label class="form-check-label">Lift At:</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2 p-0">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        id="singleLoopsCyclic" disabled>
+                                                    <label class="form-check-label" for="singleLoopsCyclic">Single
+                                                        Loops</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2 p-0">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="fourLoopsCyclic"
+                                                        disabled>
+                                                    <label class="form-check-label" for="fourLoopsCyclic">Four
+                                                        Loops</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2 p-0">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="twoLoopsCyclic"
+                                                        disabled>
+                                                    <label class="form-check-label" for="twoLoopsCyclic">Two Loops</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2 p-0">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="stevedoreCyclic"
+                                                        disabled>
+                                                    <label class="form-check-label"
+                                                        for="stevedoreCyclic">Stevedore</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1 p-0">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="auxiliaryCyclic"
+                                                        disabled>
+                                                    <label class="form-check-label"
+                                                        for="auxiliaryCyclic">Auxiliary</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row m-0">
+                                            <!-- Second row -->
+                                            <div class="col-sm-1 p-0">
+                                                <div class="form-check">
+                                                    <label class="form-check-label">Result</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1 p-0">
+                                                <div class="form-check d-flex align-items-center justify-content-center">
+                                                    <label class="form-check-label">:</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4 p-0">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        id="noVisibleDamageCyclic" disabled>
+                                                    <label class="form-check-label" for="noVisibleDamageCyclic">No visible
+                                                        damage
+                                                        occurred</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row m-0">
+                                            <!-- Third row -->
+                                            <div class="col-sm-3 offset-sm-2 p-0">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        id="visibleDamagesCyclic" disabled>
+                                                    <label class="form-check-label" for="visibleDamagesCyclic">Visible
+                                                        damages
+                                                        found
+                                                        at</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6 p-0">
+                                                <input type="text" class="form-control" disabled
+                                                    id="visibleDamageCyclicInput">
+                                            </div>
+                                        </div>
+
+
+                                        {{-- TOP LIFT --}}
+                                        <div class="row m-0 mt-1">
+                                            <!-- First row of checkboxes -->
+                                            <div class="col-sm-2 p-0">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="topLiftTest"
+                                                        disabled>
+                                                    <label class="form-check-label" for="topLiftTest"><strong>Top Lift
+                                                            Test</strong></label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1 p-0">
+                                                <div class="form-check p-0">
+                                                    <label class="form-check-label">Lift At:</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2 p-0">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="singleLoopsTop"
+                                                        disabled>
+                                                    <label class="form-check-label" for="singleLoopsTop">Single
+                                                        Loops</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2 p-0">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="fourLoopsTop"
+                                                        disabled>
+                                                    <label class="form-check-label" for="fourLoopsTop">Four Loops</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2 p-0">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="twoLoopsTop"
+                                                        disabled>
+                                                    <label class="form-check-label" for="twoLoopsTop">Two Loops</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2 p-0">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="stevedoreTop"
+                                                        disabled>
+                                                    <label class="form-check-label" for="stevedoreTop">Stevedore</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1 p-0">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="auxiliaryTop"
+                                                        disabled>
+                                                    <label class="form-check-label" for="auxiliaryTop">Auxiliary</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row m-0">
+                                            <!-- Second row -->
+                                            <div class="col-sm-1 p-0">
+                                                <div class="form-check">
+                                                    <label class="form-check-label">Result</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1 p-0">
+                                                <div class="form-check d-flex align-items-center justify-content-center">
+                                                    <label class="form-check-label">:</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1 p-0">
+                                                <div class="form-check p-0">
+                                                    <span id="angkaBerat"><strong>berat value</strong></span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row m-0">
+                                            <!-- Third row -->
+                                            <div class="col-sm-2 p-0">
+                                                <div class="form-check">
+                                                    <label class="form-check-label">Breakage
+                                                        Location&nbsp;&nbsp;&nbsp;:</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3 p-0">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="bodyFabric"
+                                                        disabled>
+                                                    <label class="form-check-label" for="bodyFabric">Body Fabric</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3 p-0">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="petal"
+                                                        disabled>
+                                                    <label class="form-check-label" for="petal">Petal</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3 p-0">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="sideBodyThread"
+                                                        disabled>
+                                                    <label class="form-check-label" for="sideBodyThread">Side body's
+                                                        thread</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row m-0">
+                                            <!-- Fourth row -->
+                                            <div class="col-sm-3 p-0 offset-sm-2">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="bottomFabric"
+                                                        disabled>
+                                                    <label class="form-check-label" for="bottomFabric">Bottom
+                                                        Fabric</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3 p-0">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="liftingBelt"
+                                                        disabled>
+                                                    <label class="form-check-label" for="liftingBelt">Lifting Belt</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3 p-0">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="bottomBodyThread"
+                                                        disabled>
+                                                    <label class="form-check-label" for="bottomBodyThread">Bottom body's
+                                                        thread</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row m-0">
+                                            <!-- Fifth row -->
+                                            <div class="col-sm-3 p-0 offset-sm-2">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        id="starcutBottomSprout" disabled>
+                                                    <label class="form-check-label" for="starcutBottomSprout">Starcut of
+                                                        bottom
+                                                        sprout</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3 p-0">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        id="liftingBeltThread" disabled>
+                                                    <label class="form-check-label" for="liftingBeltThread">Lifting belt's
+                                                        thread</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1 p-0">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="others"
+                                                        disabled>
+                                                    <label class="form-check-label" for="others">Others:</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2 p-0">
+                                                <input type="text" class="form-control" disabled id="topLiftOthers">
+                                            </div>
+                                        </div>
+
+
+                                        {{-- CHART --}}
+                                        <div class="row">
+                                            <div class="col-sm-10 offset-sm-1">
+                                                <br>
+                                                <canvas class='bordered align-items-center justify-content-center'
+                                                    id="dataChart"></canvas>
+                                            </div>
+                                        </div>
+
+                                        {{-- DROP TEST 80CM --}}
+                                        <div class="row m-0 mt-1">
+                                            <!-- First row of checkboxes -->
+                                            <div class="col-sm-2 p-0">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="dropTest"
+                                                        disabled>
+                                                    <label class="form-check-label" for="dropTest"><strong>Drop Test
+                                                            (80 cm)</strong></label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1 p-0">
+                                                <div class="form-check p-0">
+                                                    <label class="form-check-label">Result</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4 p-0">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        id="noVisibleDamageDrop" disabled>
+                                                    <label class="form-check-label" for="noVisibleDamageDrop">No visible
+                                                        damage
+                                                        occurred</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row m-0">
+                                            <!-- Second row -->
+                                            <div class="col-sm-3 offset-sm-3 p-0">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        id="visibleDamageDrop" disabled>
+                                                    <label class="form-check-label" for="visibleDamageDrop">Visible
+                                                        damages
+                                                        found at</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-5 p-0">
+                                                <input type="text" class="form-control" disabled
+                                                    id="visibleDamageDropInput">
+                                            </div>
+                                        </div>
+
+
                                     </div>
                                 </div>
-                                <div class="col-sm-4">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="production" disabled>
-                                        <label class="form-check-label" for="production">Production</label>
+
+                                <div class="row bordered">
+                                    <div class="col-md-12">
+
+                                        <div class="row mt-2 bordered">
+                                            <div class="col-sm-12 d-flex align-items-center justify-content-center bordered"
+                                                style="background-color: lightgoldenrodyellow">
+                                                <h5 style="margin: 0"><strong>PICTURE OF BREAKAGE</strong></h5>
+                                            </div>
+                                        </div>
+
+                                        <div class="row bordered">
+                                            <div
+                                                class="col-sm-3 d-flex align-items-center justify-content-center bordered">
+                                                <h6 style="margin: 0"><strong>Before Test</strong></h6>
+                                            </div>
+                                            <div
+                                                class="col-sm-3 d-flex align-items-center justify-content-center bordered">
+                                                <h6 style="margin: 0"><strong>After Cyclic Test</strong></h6>
+                                            </div>
+                                            <div
+                                                class="col-sm-3 d-flex align-items-center justify-content-center bordered">
+                                                <h6 style="margin: 0"><strong>After Top Lift Test</strong></h6>
+                                            </div>
+                                            <div
+                                                class="col-sm-3 d-flex align-items-center justify-content-center bordered">
+                                                <h6 style="margin: 0"><strong>Test Result Display</strong></h6>
+                                            </div>
+                                        </div>
+
+                                        <div class="row bordered">
+                                            <div class="col-sm-3 d-flex align-items-center justify-content-center bordered"
+                                                style="width: 225px; height: 175px;">
+                                                <img id="beforeTest" alt="Test Result 1"
+                                                    style="max-width: 100%; max-height: 100%;">
+                                            </div>
+                                            <div class="col-sm-3 d-flex align-items-center justify-content-center bordered"
+                                                style="width: 225px; height: 175px;">
+                                                <img id="afterCyclic" alt="Test Result 2"
+                                                    style="max-width: 100%; max-height: 100%;">
+                                            </div>
+                                            <div class="col-sm-3 d-flex align-items-center justify-content-center bordered"
+                                                style="width: 225px; height: 175px;">
+                                                <img id="afterTop" alt="Test Result 3"
+                                                    style="max-width: 100%; max-height: 100%;">
+                                            </div>
+                                            <div class="col-sm-3 d-flex align-items-center justify-content-center bordered"
+                                                style="width: 225px; height: 175px;">
+                                                <img id="testResult" alt="Test Result 4"
+                                                    style="max-width: 100%; max-height: 100%;">
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
-                                <div class="col-sm-4">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="trial" disabled>
-                                        <label class="form-check-label" for="trial">Trial</label>
+
+                                <div class="row mt-2">
+                                    <div class="col-sm-12 d-flex align-items-center justify-content-center bordered"
+                                        style="background-color: lightgoldenrodyellow">
+                                        <h5 style="margin: 0"><strong>TEST RESULT</strong></h5>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="row bordered">
+                                            <div class="col-sm-5 d-flex align-items-center justify-content-center "
+                                                style="height: 100px;">
+                                                <span id="comments" class="circle-border h3"><strong>Pass</strong></span>
+
+                                            </div>
+                                            <div class="col-sm-1 d-flex align-items-center justify-content-center "
+                                                style="height: 100px;">
+                                                <span id="comments" class="h3"><strong>/</strong></span>
+                                            </div>
+                                            <div class="col-sm-5 d-flex align-items-center justify-content-center"
+                                                style="height: 100px;">
+                                                <span id="comments" class="h3"><strong>Fail</strong></span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <!-- Second row of checkboxes -->
-                                <div class="col-sm-4">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="preProduction" disabled>
-                                        <label class="form-check-label" for="preProduction">Pre-production</label>
+
+                            </div>
+                            {{-- close preview biasa --}}
+                            {{--  --}}
+                            {{--  --}}
+                            {{--  --}}
+
+                            {{-- ------------------------------------------------------------------------------------ --}}
+
+                            {{--  --}}
+                            {{--  --}}
+                            {{--  --}}
+                            {{-- preview detail --}}
+
+                            <div class="previewDetail">
+                                <div class="row mt-1">
+                                    <div class="col-sm-12 d-flex align-items-center justify-content-center bordered"
+                                        style="background-color: lightgoldenrodyellow">
+                                        <h5 style="margin: 0"><strong>Bag Detail</strong></h5>
                                     </div>
                                 </div>
-                                <div class="col-sm-4">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="specModification" disabled>
-                                        <label class="form-check-label" for="specModification">Spec. Modification</label>
+
+                                <div class="row">
+                                    <div class="col-sm-1">
+                                        <div class="form-check">
+                                            <label class="form-check-label"><strong>A.</strong></label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2 p-0">
+                                        <div class="form-check p-0">
+                                            <label class="form-check-label"><strong>Lifting Belt</strong></label>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-4">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="sampleFromCustomer" disabled>
-                                        <label class="form-check-label" for="sampleFromCustomer">Sample dari
-                                            Customer</label>
+
+                                <div class="row">
+                                    <div class="col-sm-2 offset-sm-1 p-0">
+                                        <div class="form-check p-0">
+                                            <label class="form-check-label">Type</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-5 p-0">
+                                        <div class="form-check p-0">
+                                            <span id='liftingBeltType'class="form-check-label"></span>
+                                        </div>
                                     </div>
                                 </div>
+
+                                <div class="row mt-2">
+                                    <div class="col-sm-1">
+                                        <div class="form-check">
+                                            <label class="form-check-label"><strong>B.</strong></label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2 p-0">
+                                        <div class="form-check p-0">
+                                            <label class="form-check-label"><strong>Sewing Thread</strong></label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-2 offset-sm-1 p-0">
+                                        <div class="form-check p-0">
+                                            <label class="form-check-label">Type</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-5 p-0">
+                                        <div class="form-check p-0">
+                                            <span id='sewingThreadType'class="form-check-label"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-2">
+                                    <div class="col-sm-2 offset-sm-1 p-0">
+                                        <div class="form-check p-0">
+                                            <label class="form-check-label">Strength / Elo</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-1 p-0">
+                                        <div class="form-check p-0">
+                                            <label class="form-check-label">: Top</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-1 p-0">
+                                        <div class="form-check p-0">
+                                            <span id='topKg1' class="form-check-label">--</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-1 p-0">
+                                        <div class="form-check p-0">
+                                            <label class="form-check-label">/</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-1 p-0">
+                                        <div class="form-check p-0">
+                                            <span id='topPersen1' class="form-check-label">--</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-1">
+                                        <div class="form-check">
+                                            <label class="form-check-label">Bottom</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-1 p-0 offset-sm-1">
+                                        <div class="form-check p-0">
+                                            <span id='bottomKg1' class="form-check-label">--</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-1 p-0">
+                                        <div class="form-check p-0">
+                                            <label class="form-check-label">/</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-1 p-0">
+                                        <div class="form-check p-0">
+                                            <span id='bottomPersen1' class="form-check-label">--</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-1 p-0 offset-sm-4">
+                                        <div class="form-check p-0">
+                                            <span id="topKg2" class="form-check-label">--</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-1 p-0">
+                                        <div class="form-check p-0">
+                                            <label class="form-check-label">/</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-1 p-0">
+                                        <div class="form-check p-0">
+                                            <span id="topPersen2" class="form-check-label">--</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-1 p-0 offset-sm-2">
+                                        <div class="form-check p-0">
+                                            <span id="bottomKg2" class="form-check-label">--</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-1 p-0">
+                                        <div class="form-check p-0">
+                                            <label class="form-check-label">/</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-1 p-0">
+                                        <div class="form-check p-0">
+                                            <span id="bottomPersen2" class="form-check-label">--</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-1 p-0 offset-sm-4">
+                                        <div class="form-check p-0">
+                                            <span id="topKg3" class="form-check-label">--</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-1 p-0">
+                                        <div class="form-check p-0">
+                                            <label class="form-check-label">/</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-1 p-0">
+                                        <div class="form-check p-0">
+                                            <span id="topPersen3" class="form-check-label">--</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-1 p-0 offset-sm-2">
+                                        <div class="form-check p-0">
+                                            <span id="bottomKg3" class="form-check-label">--</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-1 p-0">
+                                        <div class="form-check p-0">
+                                            <label class="form-check-label">/</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-1 p-0">
+                                        <div class="form-check p-0">
+                                            <span id="bottomPersen3" class="form-check-label">--</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-1 p-0 offset-sm-4">
+                                        <div class="form-check p-0">
+                                            <span id="topKg4" class="form-check-label">--</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-1 p-0">
+                                        <div class="form-check p-0">
+                                            <label class="form-check-label">/</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-1 p-0">
+                                        <div class="form-check p-0">
+                                            <span id="topPersen4" class="form-check-label">--</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-1 p-0 offset-sm-2">
+                                        <div class="form-check p-0">
+                                            <span id="bottomKg4" class="form-check-label">--</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-1 p-0">
+                                        <div class="form-check p-0">
+                                            <label class="form-check-label">/</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-1 p-0">
+                                        <div class="form-check p-0">
+                                            <span id="bottomPersen4" class="form-check-label">--</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-1 p-0 offset-sm-4">
+                                        <div class="form-check p-0">
+                                            <span id="topKg5" class="form-check-label">--</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-1 p-0">
+                                        <div class="form-check p-0">
+                                            <label class="form-check-label">/</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-1 p-0">
+                                        <div class="form-check p-0">
+                                            <span id="topPersen5" class="form-check-label">--</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-1 p-0 offset-sm-2">
+                                        <div class="form-check p-0">
+                                            <span id="bottomKg5" class="form-check-label">--</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-1 p-0">
+                                        <div class="form-check p-0">
+                                            <label class="form-check-label">/</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-1 p-0">
+                                        <div class="form-check p-0">
+                                            <span id="bottomPersen5" class="form-check-label">--</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-3">
+                                    <div class="col-sm-1">
+                                        <div class="form-check">
+                                            <label class="form-check-label"><strong>C.</strong></label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2 p-0">
+                                        <div class="form-check p-0">
+                                            <label class="form-check-label"><strong>Sewing Method</strong></label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-1">
+                                        <div class="form-check">
+                                            <label class="form-check-label"><strong>C.</strong></label>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+
                             </div>
 
-                            <div class="row mt-1 bordered">
-                                <div class="col-sm-12 d-flex align-items-center justify-content-center bordered"
-                                    style="background-color: lightgoldenrodyellow">
-                                    <h5><strong>TEST RESULT</strong></h5>
-                                </div>
-                            </div>
+                            {{-- close preview detail --}}
+                            {{--  --}}
+                            {{--  --}}
+                            {{--  --}}
 
-                            <div class=" row bordered">
-                                <div class="col-md-12">
-
-
-                                    {{-- CYCLIC TEST --}}
-                                    <div class="row m-0 mt-1">
-                                        <!-- First row of checkboxes -->
-                                        <div class="col-sm-2 p-0">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="cyclicTestCyclic"
-                                                    disabled>
-                                                <label class="form-check-label" for="cyclicTest"><strong>Cyclic
-                                                        Test</strong></label>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-1 p-0">
-                                            <div class="form-check p-0">
-                                                <label class="form-check-label">Lift At:</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-2 p-0">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="singleLoopsCyclic"
-                                                    disabled>
-                                                <label class="form-check-label" for="singleLoopsCyclic">Single
-                                                    Loops</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-2 p-0">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="fourLoopsCyclic"
-                                                    disabled>
-                                                <label class="form-check-label" for="fourLoopsCyclic">Four Loops</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-2 p-0">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="twoLoopsCyclic"
-                                                    disabled>
-                                                <label class="form-check-label" for="twoLoopsCyclic">Two Loops</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-2 p-0">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="stevedoreCyclic"
-                                                    disabled>
-                                                <label class="form-check-label" for="stevedoreCyclic">Stevedore</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-1 p-0">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="auxiliaryCyclic"
-                                                    disabled>
-                                                <label class="form-check-label" for="auxiliaryCyclic">Auxiliary</label>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row m-0">
-                                        <!-- Second row -->
-                                        <div class="col-sm-1 p-0">
-                                            <div class="form-check">
-                                                <label class="form-check-label">Result</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-1 p-0">
-                                            <div class="form-check d-flex align-items-center justify-content-center">
-                                                <label class="form-check-label">:</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-4 p-0">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox"
-                                                    id="noVisibleDamageCyclic" disabled>
-                                                <label class="form-check-label" for="noVisibleDamageCyclic">No visible
-                                                    damage
-                                                    occurred</label>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row m-0">
-                                        <!-- Third row -->
-                                        <div class="col-sm-3 offset-sm-2 p-0">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="visibleDamagesCyclic"
-                                                    disabled>
-                                                <label class="form-check-label" for="visibleDamagesCyclic">Visible damages
-                                                    found
-                                                    at</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6 p-0">
-                                            <input type="text" class="form-control" disabled
-                                                id="visibleDamageCyclicInput">
-                                        </div>
-                                    </div>
-
-
-                                    {{-- TOP LIFT --}}
-                                    <div class="row m-0 mt-1">
-                                        <!-- First row of checkboxes -->
-                                        <div class="col-sm-2 p-0">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="topLiftTest"
-                                                    disabled>
-                                                <label class="form-check-label" for="topLiftTest"><strong>Top Lift
-                                                        Test</strong></label>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-1 p-0">
-                                            <div class="form-check p-0">
-                                                <label class="form-check-label">Lift At:</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-2 p-0">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="singleLoopsTop"
-                                                    disabled>
-                                                <label class="form-check-label" for="singleLoopsTop">Single Loops</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-2 p-0">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="fourLoopsTop"
-                                                    disabled>
-                                                <label class="form-check-label" for="fourLoopsTop">Four Loops</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-2 p-0">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="twoLoopsTop"
-                                                    disabled>
-                                                <label class="form-check-label" for="twoLoopsTop">Two Loops</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-2 p-0">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="stevedoreTop"
-                                                    disabled>
-                                                <label class="form-check-label" for="stevedoreTop">Stevedore</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-1 p-0">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="auxiliaryTop"
-                                                    disabled>
-                                                <label class="form-check-label" for="auxiliaryTop">Auxiliary</label>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row m-0">
-                                        <!-- Second row -->
-                                        <div class="col-sm-1 p-0">
-                                            <div class="form-check">
-                                                <label class="form-check-label">Result</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-1 p-0">
-                                            <div class="form-check d-flex align-items-center justify-content-center">
-                                                <label class="form-check-label">:</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-1 p-0">
-                                            <div class="form-check p-0">
-                                                <span id="angkaBerat"><strong>berat value</strong></span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row m-0">
-                                        <!-- Third row -->
-                                        <div class="col-sm-2 p-0">
-                                            <div class="form-check">
-                                                <label class="form-check-label">Breakage
-                                                    Location&nbsp;&nbsp;&nbsp;:</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-3 p-0">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="bodyFabric" disabled>
-                                                <label class="form-check-label" for="bodyFabric">Body Fabric</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-3 p-0">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="petal" disabled>
-                                                <label class="form-check-label" for="petal">Petal</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-3 p-0">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="sideBodyThread"
-                                                    disabled>
-                                                <label class="form-check-label" for="sideBodyThread">Side body's
-                                                    thread</label>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row m-0">
-                                        <!-- Fourth row -->
-                                        <div class="col-sm-3 p-0 offset-sm-2">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="bottomFabric"
-                                                    disabled>
-                                                <label class="form-check-label" for="bottomFabric">Bottom Fabric</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-3 p-0">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="liftingBelt"
-                                                    disabled>
-                                                <label class="form-check-label" for="liftingBelt">Lifting Belt</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-3 p-0">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="bottomBodyThread"
-                                                    disabled>
-                                                <label class="form-check-label" for="bottomBodyThread">Bottom body's
-                                                    thread</label>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row m-0">
-                                        <!-- Fifth row -->
-                                        <div class="col-sm-3 p-0 offset-sm-2">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="starcutBottomSprout"
-                                                    disabled>
-                                                <label class="form-check-label" for="starcutBottomSprout">Starcut of
-                                                    bottom
-                                                    sprout</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-3 p-0">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="liftingBeltThread"
-                                                    disabled>
-                                                <label class="form-check-label" for="liftingBeltThread">Lifting belt's
-                                                    thread</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-1 p-0">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="others" disabled>
-                                                <label class="form-check-label" for="others">Others:</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-2 p-0">
-                                            <input type="text" class="form-control" disabled id="topLiftOthers">
-                                        </div>
-                                    </div>
-
-
-                                    {{-- CHART --}}
-                                    <div class="row m-0 mt-1 mb-1 isiChart">cnart</div>
-
-                                    {{-- DROP TEST 80CM --}}
-                                    <div class="row m-0 mt-1">
-                                        <!-- First row of checkboxes -->
-                                        <div class="col-sm-2 p-0">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="dropTest" disabled>
-                                                <label class="form-check-label" for="dropTest"><strong>Drop Test
-                                                        (80 cm)</strong></label>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-1 p-0">
-                                            <div class="form-check p-0">
-                                                <label class="form-check-label">Result</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-4 p-0">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="noVisibleDamageDrop"
-                                                    disabled>
-                                                <label class="form-check-label" for="noVisibleDamageDrop">No visible
-                                                    damage
-                                                    occurred</label>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row m-0">
-                                        <!-- Second row -->
-                                        <div class="col-sm-2 offset-sm-3 p-0">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="visibleDamageDrop"
-                                                    disabled>
-                                                <label class="form-check-label" for="visibleDamageDrop">Visible damages
-                                                    found at</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6 p-0">
-                                            <input type="text" class="form-control" disabled
-                                                id="visibleDamageDropInput">
-                                        </div>
-                                    </div>
-
-
-                                </div>
-                            </div>
-
-                            <div class="row bordered">
-                                <div class="col-md-12">
-
-                                    <div class="row mt-3 bordered">
-                                        <div class="col-sm-12 d-flex align-items-center justify-content-center bordered"
-                                            style="background-color: lightgoldenrodyellow">
-                                            <h5><strong>PICTURE OF BREAKAGE</strong></h5>
-                                        </div>
-                                    </div>
-
-                                    <div class="row bordered">
-                                        <div class="col-sm-3 d-flex align-items-center justify-content-center bordered">
-                                            <h6><strong>Before Test</strong></h6>
-                                        </div>
-                                        <div class="col-sm-3 d-flex align-items-center justify-content-center bordered">
-                                            <h6><strong>After Cyclic Test</strong></h6>
-                                        </div>
-                                        <div class="col-sm-3 d-flex align-items-center justify-content-center bordered">
-                                            <h6><strong>After Top Lift Test</strong></h6>
-                                        </div>
-                                        <div class="col-sm-3 d-flex align-items-center justify-content-center bordered">
-                                            <h6><strong>Test Result Display</strong></h6>
-                                        </div>
-                                    </div>
-
-                                    <div class="row bordered">
-                                        <div class="col-sm-3 d-flex align-items-center justify-content-center bordered"
-                                            style="width: 225px; height: 175px;">
-                                            <img id="beforeTest"
-                                                style="max-width: 100%; max-height: 100%;">
-                                        </div>
-                                        <div class="col-sm-3 d-flex align-items-center justify-content-center bordered"
-                                            style="width: 225px; height: 175px;">
-                                            <img id="afterCyclic"
-                                                style="max-width: 100%; max-height: 100%;">
-                                        </div>
-                                        <div class="col-sm-3 d-flex align-items-center justify-content-center bordered"
-                                            style="width: 225px; height: 175px;">
-                                            <img id="afterTop" 
-                                                style="max-width: 100%; max-height: 100%;">
-                                        </div>
-                                        <div class="col-sm-3 d-flex align-items-center justify-content-center bordered"
-                                            style="width: 225px; height: 175px;">
-                                            <img id="testResult"
-                                                style="max-width: 100%; max-height: 100%;">
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-
-                            <div class="row mt-3">
-                                <div class="col-sm-12 d-flex align-items-center justify-content-center bordered"
-                                    style="background-color: lightgoldenrodyellow">
-                                    <h5><strong>TEST RESULT</strong></h5>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="row bordered">
-                                        <div class="col-sm-5 d-flex align-items-center justify-content-center "
-                                            style="height: 100px;">
-                                            <span id="comments" class="circle-border h3"><strong>Pass</strong></span>
-
-                                        </div>
-                                        <div class="col-sm-1 d-flex align-items-center justify-content-center "
-                                            style="height: 100px;">
-                                            <span id="comments" class="h3"><strong>/</strong></span>
-                                        </div>
-                                        <div class="col-sm-5 d-flex align-items-center justify-content-center"
-                                            style="height: 100px;">
-                                            <span id="comments" class="h3"><strong>Fail</strong></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row mt-3">
+                            <div class="row mt-2">
                                 <div class="col-md-12">
                                     <div class="row bordered">
                                         <div class="col-sm-8 d-flex align-items-center justify-content-center bordered">
-                                            <h6><strong>Comments</strong></h6>
+                                            <h6 style="margin: 0"><strong>Comments</strong></h6>
                                         </div>
                                         <div class="col-sm-2 d-flex align-items-center justify-content-center bordered">
-                                            <h6><strong>Prepared By</strong></h6>
+                                            <h6 style="margin: 0"><strong>Prepared By</strong></h6>
                                         </div>
                                         <div class="col-sm-2 d-flex align-items-center justify-content-center bordered">
-                                            <h6><strong>Approved By</strong></h6>
+                                            <h6 style="margin: 0"><strong>Approved By</strong></h6>
                                         </div>
                                     </div>
                                 </div>
@@ -650,11 +972,11 @@
                                         </div>
                                         <div
                                             class="col-sm-2 d-flex flex-column align-items-center justify-content-center bordered">
-                                            <h6><strong>Supervisor</strong></h6>
+                                            <h6 style="margin: 0"><strong>Supervisor</strong></h6>
                                         </div>
                                         <div
                                             class="col-sm-2 d-flex flex-column align-items-center justify-content-center bordered">
-                                            <h6><strong>QC Manager</strong></h6>
+                                            <h6 style="margin: 0"><strong>QC Manager</strong></h6>
                                         </div>
                                     </div>
                                 </div>
@@ -673,4 +995,5 @@
     <link rel="stylesheet" href="{{ asset('css/COA/ACC/ACCQCSpv.css') }}">
     <link rel="stylesheet" href="{{ asset('css/sweetalert2.min.css') }}">
     <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 @endsection

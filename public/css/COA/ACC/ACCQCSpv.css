@@ -6,6 +6,11 @@
     display: none;
 } */
 
+#dataChart {
+    max-width: 100%; /* Set max-width for the chart */
+    max-height: 250px; /* Set max-height for the chart */
+}
+
 img{
     padding: 2px;
 }
