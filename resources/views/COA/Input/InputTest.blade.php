@@ -431,7 +431,7 @@
 
                                 {{-- Drop Test --}}
                                 <div class="form-group">
-                                    <div class="form-row" style="display: flex;">
+                                    <div class="form-row" id="dropbesar" style="display: flex;">
                                         <div class="col-md-2 ml-3">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" id="Drop_Result"
@@ -488,7 +488,7 @@
 
                                 <!-- Input Section -->
                                 <div class="col-md-9 mt-3">
-                                    <div class="row">
+                                    <div class="row" id="gambarbox">
                                         <!-- First Set -->
                                         <div class="col-md-3">
                                             <div class="form-group">

@@ -1015,7 +1015,7 @@ btn_hapus.addEventListener("click", function (e) {
 
     btn_RefNo.disabled = false;
     btn_hapus.disabled = true;
-    btn_RefNo.focus()
+    btn_RefNo.focus();
 });
 
 // atribut parse

@@ -25,6 +25,7 @@ class InputTestController extends Controller
 
     public function store(Request $request)
     {
+        $a = (int)$request->input('a');
 
         $referenceNo = $request->input('RefNo');
         $heightApprox = $request->input('Height_Approx');
@@ -40,42 +41,48 @@ class InputTestController extends Controller
         $testResult = $request->input('TestResult');
         $dropResult = $request->input('Drop_Result');
         $dropTest = $request->input('Drop_Test');
-        $jumlah = $request->input('Jumlah');
+        $jumlah = (int)$request->input('Jumlah');
         $UserInput = Auth::user()->NomorUser;
+
+        // $dataValues = [];
+        // for ($i = 1; $i <= 30; $i++) {
+        //     $value = $request->input("Data_$i");
+        //     $dataValues["Data_$i"] = number_format((float)$value, 2, '.', '');
+        // }
         $dataValues = [];
         for ($i = 1; $i <= 30; $i++) {
-            $dataValues["Data_$i"] = $request->input("Data_$i");
-        }
-        $cyclicDataValues = array_values($dataValues);
-
-        $request->validate([
-            'picture1' => 'nullable|file|mimes:jpeg,png',
-            'picture2' => 'nullable|file|mimes:jpeg,png',
-            'picture3' => 'nullable|file|mimes:jpeg,png',
-        ]);
-
-        $imageBinary1 = null;
-        if ($request->hasFile('picture1')) {
-            $fileName1 = 'picture1_' . time() . '.' . $request->file('picture1')->getClientOriginalExtension();
-            $filePath1 = $request->file('picture1')->storeAs('images', $fileName1, 'public');
-            $imageBinary1 = file_get_contents(Storage::disk('public')->path($filePath1));
+            $value = $request->input("Data_$i");
+            $dataValues[] = number_format((float)$value, 2, '.', '');
         }
 
-        // Handle picture2 upload
-        $imageBinary2 = null;
-        if ($request->hasFile('picture2')) {
-            $fileName2 = 'picture2_' . time() . '.' . $request->file('picture2')->getClientOriginalExtension();
-            $filePath2 = $request->file('picture2')->storeAs('images', $fileName2, 'public');
-            $imageBinary2 = file_get_contents(Storage::disk('public')->path($filePath2));
-        }
+        // $request->validate([
+        //     'picture1' => 'nullable|file|mimes:jpeg,png',
+        //     'picture2' => 'nullable|file|mimes:jpeg,png',
+        //     'picture3' => 'nullable|file|mimes:jpeg,png',
+        // ]);
 
-        // Handle picture3 upload
-        $imageBinary3 = null;
-        if ($request->hasFile('picture3')) {
-            $fileName3 = 'picture3_' . time() . '.' . $request->file('picture3')->getClientOriginalExtension();
-            $filePath3 = $request->file('picture3')->storeAs('images', $fileName3, 'public');
-            $imageBinary3 = file_get_contents(Storage::disk('public')->path($filePath3));
-        }
+        // $imageBinary1 = null;
+        // if ($request->hasFile('picture1')) {
+        //     $fileName1 = 'picture1_' . time() . '.' . $request->file('picture1')->getClientOriginalExtension();
+        //     $filePath1 = $request->file('picture1')->storeAs('images', $fileName1, 'public');
+        //     $imageBinary1 = file_get_contents(Storage::disk('public')->path($filePath1));
+        // }
+
+        // // Handle picture2 upload
+        // $imageBinary2 = null;
+        // if ($request->hasFile('picture2')) {
+        //     $fileName2 = 'picture2_' . time() . '.' . $request->file('picture2')->getClientOriginalExtension();
+        //     $filePath2 = $request->file('picture2')->storeAs('images', $fileName2, 'public');
+        //     $imageBinary2 = file_get_contents(Storage::disk('public')->path($filePath2));
+        // }
+
+        // // Handle picture3 upload
+        // $imageBinary3 = null;
+        // if ($request->hasFile('picture3')) {
+        //     $fileName3 = 'picture3_' . time() . '.' . $request->file('picture3')->getClientOriginalExtension();
+        //     $filePath3 = $request->file('picture3')->storeAs('images', $fileName3, 'public');
+        //     $imageBinary3 = file_get_contents(Storage::disk('public')->path($filePath3));
+        // }
 
 
         // $picture1 = $request->file('picture1');
@@ -103,91 +110,121 @@ class InputTestController extends Controller
         // }
 
         try {
-            if ($jumlah === '3') {
-                // dd('MASUK JUMLAH 3:', );
-                DB::connection('ConnTestQC')->statement(
-                    'exec SP_1273_QTC_MAINT_RESULT_FIBC
-                    @Kode = 1,
-                    @RefNo = ?, @Height = ?, @Dia = ?, @Square = ?,
-                    @CyclicTest = ?, @Speed = ?, @DropTest = ?, @CyclicLift = ?,
-                    @CyclicResult = ?, @TopLift = ?, @TopResult = ?, @Breakage = ?,
-                    @DropResult = ?, @TestResult = ?, @UserInput = ?, @CyclicData1 = ?, @CyclicData2 = ?,
-                    @CyclicData3 = ?, @CyclicData4 = ?, @CyclicData5 = ?,
-                    @CyclicData6 = ?, @CyclicData7 = ?, @CyclicData8 = ?,
-                    @CyclicData9 = ?, @CyclicData10 = ?, @CyclicData11 = ?,
-                    @CyclicData12 = ?, @CyclicData13 = ?, @CyclicData14 = ?,
-                    @CyclicData15 = ?, @CyclicData16 = ?, @CyclicData17 = ?,
-                    @CyclicData18 = ?, @CyclicData19 = ?, @CyclicData20 = ?,
-                    @CyclicData21 = ?, @CyclicData22 = ?, @CyclicData23 = ?,
-                    @CyclicData24 = ?, @CyclicData25 = ?, @CyclicData26 = ?, @CyclicData27 = ?,
-                    @CyclicData28 = ?, @CyclicData29 = ?, @CyclicData30 = ?',
-                    array_merge(
-                        [
+            if ($a === 1) { // ISI
+                if ($jumlah === 3) {
+                    DB::connection('ConnTestQC')->statement(
+                        'exec SP_1273_QTC_MAINT_RESULT_FIBC
+                        @Kode = 1,
+                        @RefNo = ?, @Height = ?, @Dia = ?, @Square = ?,
+                        @CyclicTest = ?, @Speed = ?, @DropTest = ?, @CyclicLift = ?,
+                        @CyclicResult = ?, @TopLift = ?, @TopResult = ?, @Breakage = ?,
+                        @DropResult = ?, @TestResult = ?, @UserInput = ?, @CyclicData1 = ?, @CyclicData2 = ?,
+                        @CyclicData3 = ?, @CyclicData4 = ?, @CyclicData5 = ?, @CyclicData6 = ?, @CyclicData7 = ?,
+                        @CyclicData8 = ?, @CyclicData9 = ?, @CyclicData10 = ?, @CyclicData11 = ?, @CyclicData12 = ?,
+                        @CyclicData13 = ?, @CyclicData14 = ?, @CyclicData15 = ?, @CyclicData16 = ?, @CyclicData17 = ?,
+                        @CyclicData18 = ?, @CyclicData19 = ?, @CyclicData20 = ?, @CyclicData21 = ?, @CyclicData22 = ?,
+                        @CyclicData23 = ?, @CyclicData24 = ?, @CyclicData25 = ?, @CyclicData26 = ?, @CyclicData27 = ?,
+                        @CyclicData28 = ?, @CyclicData29 = ?, @CyclicData30 = ?, @JumlahPict = ?',
+                        array_merge([
                             $referenceNo, $heightApprox, $diaVal, $squareVal,
                             $cyclicTest, $loadSpeed, $dropTest, $cyclicLift,
                             $cyclicResult, $topLift, $topResult, $breakageLocation,
                             $dropResult, $testResult, $UserInput
-                        ],
-                        $cyclicDataValues,
-                    )
-                );
+                        ], $dataValues, [$jumlah])
+                    );
 
-                DB::connection('ConnTestQC')->table('Picture_FIBC')->insert([
-                    'Reference_No' => $referenceNo,
-                    'Jumlah' => $jumlah,
-                    'Pict_1' => $imageBinary1,
-                    'Pict_2' => $imageBinary2,
-                    'Pict_3' => $imageBinary3,
-                ]);
+                    DB::connection('ConnTestQC')->table('Picture_FIBC')->insert([
+                        'Reference_No' => $referenceNo
+                        // 'Jumlah' => $jumlah
+                        // 'Pict_1' => $imageBinary1,
+                        // 'Pict_2' => $imageBinary2,
+                        // 'Pict_3' => $imageBinary3
+                    ]);
 
-                // Optionally, you can use dd() to debug the binary data
-                dd('MASUK JUMLAH 3:', 'Pict_1', $imageBinary1, 'Pict_2', $imageBinary2, 'Pict_3', $imageBinary3);
-            } else if ($jumlah === '4') {
-                dd('masuk 4');
-                // gambar 4
-                // $picture4 = $request->file('picture4');
-                // $imageBinary4 = null;
-                // if ($picture4) {
-                //     $binaryReader4 = fopen($picture4, 'rb');
-                //     $image4 = fread($binaryReader4, $picture4->getSize());
-                //     fclose($binaryReader4);
-                // }
-                $fileName4 = 'picture4_' . time() . '.' . $request->file('picture4')->getClientOriginalExtension();
-                $filePath4 = $request->file('picture4')->storeAs('images', $fileName4, 'public');
+                    // dd('MASUK JUMLAH 3:', 'Pict_1', $imageBinary1, 'Pict_2', $imageBinary2, 'Pict_3', $imageBinary3);
+                } else if ($jumlah === 4) {
+                    // dd('masuk 4');
+                    // gambar 4
+                    // $picture4 = $request->file('picture4');
+                    // $imageBinary4 = null;
+                    // if ($picture4) {
+                    //     $binaryReader4 = fopen($picture4, 'rb');
+                    //     $image4 = fread($binaryReader4, $picture4->getSize());
+                    //     fclose($binaryReader4);
+                    // }
+                    // $fileName4 = 'picture4_' . time() . '.' . $request->file('picture4')->getClientOriginalExtension();
+                    // $filePath4 = $request->file('picture4')->storeAs('images', $fileName4, 'public');
 
+                    // $imageBinary4 = null;
+                    // if ($request->hasFile('picture4')) {
+                    //     $fileName4 = 'picture4_' . time() . '.' . $request->file('picture4')->getClientOriginalExtension();
+                    //     $filePath4 = $request->file('picture4')->storeAs('images', $fileName4, 'public');
+                    //     $imageBinary4 = file_get_contents(Storage::disk('public')->path($filePath4));
+                    // }
+
+                    DB::connection('ConnTestQC')->statement(
+                        'exec SP_1273_QTC_MAINT_RESULT_FIBC
+                        @Kode = 1,
+                        @RefNo = ?, @Height = ?, @Dia = ?, @Square = ?,
+                        @CyclicTest = ?, @Speed = ?, @DropTest = ?, @CyclicLift = ?,
+                        @CyclicResult = ?, @TopLift = ?, @TopResult = ?, @Breakage = ?,
+                        @DropResult = ?, @TestResult = ?, @UserInput = ?, @CyclicData1 = ?, @CyclicData2 = ?,
+                        @CyclicData3 = ?, @CyclicData4 = ?, @CyclicData5 = ?,
+                        @CyclicData6 = ?, @CyclicData7 = ?, @CyclicData8 = ?,
+                        @CyclicData9 = ?, @CyclicData10 = ?, @CyclicData11 = ?,
+                        @CyclicData12 = ?, @CyclicData13 = ?, @CyclicData14 = ?,
+                        @CyclicData15 = ?, @CyclicData16 = ?, @CyclicData17 = ?,
+                        @CyclicData18 = ?, @CyclicData19 = ?, @CyclicData20 = ?,
+                        @CyclicData21 = ?, @CyclicData22 = ?, @CyclicData23 = ?,
+                        @CyclicData24 = ?, @CyclicData25 = ?, @CyclicData26 = ?, @CyclicData27 = ?,
+                        @CyclicData28 = ?, @CyclicData29 = ?, @CyclicData30 = ?, @JumlahPict = ?',
+                        array_merge(
+                            [
+                                $referenceNo, $heightApprox, $diaVal, $squareVal,
+                                $cyclicTest, $loadSpeed, $dropTest, $cyclicLift,
+                                $cyclicResult, $topLift, $topResult, $breakageLocation,
+                                $dropResult, $testResult, $UserInput,
+                            ],
+                            $dataValues, [$jumlah]
+                        )
+                    );
+
+                    DB::connection('ConnTestQC')->table('Picture_FIBC')->insert([
+                        'Reference_No' => $referenceNo,
+                        // 'Pict_1' => $imageBinary1,
+                        // 'Pict_2' => $imageBinary2,
+                        // 'Pict_3' => $imageBinary3,
+                        // 'Pict_4' => $imageBinary4
+                    ]);
+
+                }
+            } else if ($a === 2) { // KOREKSI
                 DB::connection('ConnTestQC')->statement(
                     'exec SP_1273_QTC_MAINT_RESULT_FIBC
-                    @Kode = 1,
+                    @Kode = 5,
                     @RefNo = ?, @Height = ?, @Dia = ?, @Square = ?,
                     @CyclicTest = ?, @Speed = ?, @DropTest = ?, @CyclicLift = ?,
                     @CyclicResult = ?, @TopLift = ?, @TopResult = ?, @Breakage = ?,
                     @DropResult = ?, @TestResult = ?, @UserInput = ?, @CyclicData1 = ?, @CyclicData2 = ?,
-                    @CyclicData3 = ?, @CyclicData4 = ?, @CyclicData5 = ?,
-                    @CyclicData6 = ?, @CyclicData7 = ?, @CyclicData8 = ?,
-                    @CyclicData9 = ?, @CyclicData10 = ?, @CyclicData11 = ?,
-                    @CyclicData12 = ?, @CyclicData13 = ?, @CyclicData14 = ?,
-                    @CyclicData15 = ?, @CyclicData16 = ?, @CyclicData17 = ?,
-                    @CyclicData18 = ?, @CyclicData19 = ?, @CyclicData20 = ?,
-                    @CyclicData21 = ?, @CyclicData22 = ?, @CyclicData23 = ?,
-                    @CyclicData24 = ?, @CyclicData25 = ?, @CyclicData26 = ?, @CyclicData27 = ?,
+                    @CyclicData3 = ?, @CyclicData4 = ?, @CyclicData5 = ?, @CyclicData6 = ?, @CyclicData7 = ?,
+                    @CyclicData8 = ?, @CyclicData9 = ?, @CyclicData10 = ?, @CyclicData11 = ?, @CyclicData12 = ?,
+                    @CyclicData13 = ?, @CyclicData14 = ?, @CyclicData15 = ?, @CyclicData16 = ?, @CyclicData17 = ?,
+                    @CyclicData18 = ?, @CyclicData19 = ?, @CyclicData20 = ?, @CyclicData21 = ?, @CyclicData22 = ?,
+                    @CyclicData23 = ?, @CyclicData24 = ?, @CyclicData25 = ?, @CyclicData26 = ?, @CyclicData27 = ?,
                     @CyclicData28 = ?, @CyclicData29 = ?, @CyclicData30 = ?',
-                    array_merge(
-                        [
-                            $referenceNo, $heightApprox, $diaVal, $squareVal,
-                            $cyclicTest, $loadSpeed, $dropTest, $cyclicLift,
-                            $cyclicResult, $topLift, $topResult, $breakageLocation,
-                            $dropResult, $testResult, $UserInput
-                        ],
-                        $cyclicDataValues,
-                    )
+                    array_merge([
+                        $referenceNo, $heightApprox, $diaVal, $squareVal,
+                        $cyclicTest, $loadSpeed, $dropTest, $cyclicLift,
+                        $cyclicResult, $topLift, $topResult, $breakageLocation,
+                        $dropResult, $testResult, $UserInput
+                    ], $dataValues)
                 );
-                DB::connection('ConnTestQC')->table('Picture_FIBC')->insert([
-                    'Reference_No' => $referenceNo,
-                    'Jumlah' => $jumlah,
-                    'Pict_1' => $filePath1 ? Storage::disk('public')->get($filePath1) : null,
-                    'Pict_2' => $filePath2 ? Storage::disk('public')->get($filePath2) : null,
-                    'Pict_3' => $filePath3 ? Storage::disk('public')->get($filePath3) : null,
-                    'Pict_4' => $filePath4 ? Storage::disk('public')->get($filePath4) : null
+
+                DB::connection('ConnTestQC')->table('Picture_FIBC')->where('Reference_No', $referenceNo)->update([
+                    'Jumlah' => $jumlah
+                    // 'Pict_1' => $imageBinary1,
+                    // 'Pict_2' => $imageBinary2,
+                    // 'Pict_3' => $imageBinary3
                 ]);
             }
 
@@ -202,7 +239,7 @@ class InputTestController extends Controller
         if ($id == 'getRef') {
             if ($request->input('a') == 1) {
                 $refNo = DB::connection('ConnTestQC')->select('exec [SP_1273_QTC_MAINT_FIBC] @Kode = ?', [9]);
-            } else if ($request->input('a') == 2) {
+            } else if ($request->input('a') == 2 || $request->input('a') == 3) {
                 $refNo = DB::connection('ConnTestQC')->select('exec [SP_1273_QTC_MAINT_RESULT_FIBC] @Kode = ?', [3]);
             }
 
@@ -283,24 +320,42 @@ class InputTestController extends Controller
 
                     return response()->json($data_full);
                 }
-            } else if ($request->input('a') == 2) { // koreksi
+            } else if ($request->input('a') == 2 || $request->input('a') == 3) { // koreksi
                 $selectKoreksi = DB::connection('ConnTestQC')->select('exec [SP_1273_QTC_MAINT_RESULT_FIBC] @kode = ?, @RefNo = ?', [4, $request->input('no_ref')]);
 
                 $data_getKoreksi = [];
                 foreach ($selectKoreksi as $data_detailKor) {
+                    $cyclicResultParts = explode('Visible damages found at', $data_detailKor->Cyclic_Result);
+                    $dropResultParts = explode('Visible damages found at', $data_detailKor->Drop_Result);
+
+                    $cyclicResultRemaining = count($cyclicResultParts) > 1 ? trim($cyclicResultParts[1]) : '';
+                    $dropResultRemaining = count($dropResultParts) > 1 ? trim($dropResultParts[1]) : '';
+
+                    $breakageLocationParts = explode('Others :', $data_detailKor->Breakage_Location);
+                    $breakageLocationRemaining = count($breakageLocationParts) > 1 ? trim($breakageLocationParts[1]) : '';
+
+                    $cyclicResult = count($cyclicResultParts) > 1 ? 'Visible damages found at' : $data_detailKor->Cyclic_Result;
+                    $dropResult = count($dropResultParts) > 1 ? 'Visible damages found at' : $data_detailKor->Drop_Result;
+                    $breakageLocation = count($breakageLocationParts) > 1 ? 'Others :' : $data_detailKor->Breakage_Location;
+
                     $data_getKoreksi[] = [
-                        'Height_Approx' => $data_detailKor->Height_Approx,
-                        'dia_val' => $data_detailKor->Dia,
+                        'Height_Approx' => number_format($data_detailKor->Height_Approx, 2, '.', ''),
+                        'dia_val' => number_format($data_detailKor->Dia, 2, '.', ''),
                         'square_val' => $data_detailKor->Square,
-                        'Cyclic_Test' => $data_detailKor->Cyclic_Test,
-                        'Load_Speed' => $data_detailKor->Load_Speed,
+                        'Cyclic_Test' => number_format($data_detailKor->Cyclic_Test, 2, '.', ''),
+                        'Load_Speed' => number_format($data_detailKor->Load_Speed, 2, '.', ''),
                         'Drop_Test' => $data_detailKor->Drop_Test,
                         'Cyclic_Lift' => $data_detailKor->Cyclic_Lift,
-                        'Cyclic_Result' => $data_detailKor->Cyclic_Result,
+                        'Cyclic_Result' => $cyclicResult,
+                        'Cyclic_Result_Remaining' => $cyclicResultRemaining,
                         'Top_Lift' => $data_detailKor->Top_Lift,
-                        'Top_Result' => $data_detailKor->Top_Result,
-                        'Breakage_Location' => $data_detailKor->Breakage_Location,
-                        'Drop_Result' => $data_detailKor->Drop_Result,
+                        'Top_Result' => number_format($data_detailKor->Top_Result, 2, '.', ''),
+                        'Breakage_Location' => $breakageLocation,
+                        'Breakage_Location_Remaining' => $breakageLocationRemaining,
+                        'Drop_Result' => $dropResult,
+                        'Drop_Result_Remaining' => $dropResultRemaining,
+                        'data_attribute' => 'cyclic',
+                        'data_attribute' => 'drop',
                         'Data_1' => $data_detailKor->Data_1,
                         'Data_2' => $data_detailKor->Data_2,
                         'Data_3' => $data_detailKor->Data_3,
@@ -331,7 +386,7 @@ class InputTestController extends Controller
                         'Data_28' => $data_detailKor->Data_28,
                         'Data_29' => $data_detailKor->Data_29,
                         'Data_30' => $data_detailKor->Data_30,
-                        'Jumlah' => $data_detailKor->Jumlah,
+                        'Jumlah' => $data_detailKor->Jumlah
                         // 'Pict_1' => $data_detailKor->Pict_1,
                         // 'Pict_2' => $data_detailKor->Pict_2,
                         // 'Pict_3' => $data_detailKor->Pict_3,
@@ -340,23 +395,12 @@ class InputTestController extends Controller
                 }
                 $data_full = [
                     'cyclicTestValue' => $cyclicTestValue,
-                    'additionalData' => $data_getKoreksi
+                    'koreksiData' => $data_getKoreksi
                 ];
+
 
                 return response()->json($data_full);
             }
-            // If @Kode = 4
-            // Begin
-            // SELECT        Result_FIBC.*, Picture_FIBC.Jumlah, Picture_FIBC.Pict_1, Picture_FIBC.Pict_2, Picture_FIBC.Pict_3, Picture_FIBC.Pict_4, Cyclic_FIBC.Data_1, Cyclic_FIBC.Data_2, Cyclic_FIBC.Data_3, Cyclic_FIBC.Data_4, Cyclic_FIBC.Data_5,
-            //                          Cyclic_FIBC.Data_6, Cyclic_FIBC.Data_7, Cyclic_FIBC.Data_8, Cyclic_FIBC.Data_9, Cyclic_FIBC.Data_10, Cyclic_FIBC.Data_11, Cyclic_FIBC.Data_12, Cyclic_FIBC.Data_13, Cyclic_FIBC.Data_14, Cyclic_FIBC.Data_15,
-            //                          Cyclic_FIBC.Data_16, Cyclic_FIBC.Data_17, Cyclic_FIBC.Data_18, Cyclic_FIBC.Data_19, Cyclic_FIBC.Data_20, Cyclic_FIBC.Data_21, Cyclic_FIBC.Data_22, Cyclic_FIBC.Data_23, Cyclic_FIBC.Data_24, Cyclic_FIBC.Data_25,
-            //                          Cyclic_FIBC.Data_26, Cyclic_FIBC.Data_27, Cyclic_FIBC.Data_28, Cyclic_FIBC.Data_29, Cyclic_FIBC.Data_30
-            // FROM            Result_FIBC INNER JOIN
-            //                          Cyclic_FIBC ON Result_FIBC.Reference_No = Cyclic_FIBC.Reference_No INNER JOIN
-            //                          Picture_FIBC ON Result_FIBC.Reference_No = Picture_FIBC.Reference_No
-            // WHERE Result_FIBC.Reference_No = @RefNo
-            // End
-        } else if ($id === '') {
         }
     }
 
@@ -367,11 +411,71 @@ class InputTestController extends Controller
 
     public function update(Request $request, $id)
     {
-        //
+        // if ($id == 'koreksiTestFIBC') {
+        //     dd('masuk', $request->input('Height_Approx'));
+        //     $referenceNo = $request->input('RefNo');
+        //     $heightApprox = $request->input('Height_Approx');
+        //     $diaVal = $request->input('dia_val');
+        //     $squareVal = $request->input('square_val');
+        //     $cyclicTest = $request->input('Cyclic_Test');
+        //     $loadSpeed = $request->input('Load_Speed');
+        //     $cyclicLift = $request->input('Cyclic_Lift');
+        //     $cyclicResult = $request->input('Cyclic_Result');
+        //     $topLift = $request->input('Top_Lift');
+        //     $topResult = $request->input('Top_Result');
+        //     $breakageLocation = $request->input('Breakage_Location');
+        //     $testResult = $request->input('TestResult');
+        //     $dropResult = $request->input('Drop_Result');
+        //     $dropTest = $request->input('Drop_Test');
+        //     $jumlah = (int)$request->input('Jumlah');
+        //     $UserInput = Auth::user()->NomorUser;
+
+        //     $dataValues = [];
+        //     for ($i = 1; $i <= 30; $i++) {
+        //         $value = $request->input("Data_$i");
+        //         $dataValues[] = number_format((float)$value, 2, '.', '');
+        //     }
+
+        //     dd($request->all());
+
+        //     try {
+        //         DB::connection('ConnTestQC')->statement(
+        //             'exec SP_1273_QTC_MAINT_RESULT_FIBC
+        //             @Kode = 5,
+        //             @RefNo = ?, @Height = ?, @Dia = ?, @Square = ?,
+        //             @CyclicTest = ?, @Speed = ?, @DropTest = ?, @CyclicLift = ?,
+        //             @CyclicResult = ?, @TopLift = ?, @TopResult = ?, @Breakage = ?,
+        //             @DropResult = ?, @TestResult = ?, @UserInput = ?, @CyclicData1 = ?, @CyclicData2 = ?,
+        //             @CyclicData3 = ?, @CyclicData4 = ?, @CyclicData5 = ?, @CyclicData6 = ?, @CyclicData7 = ?,
+        //             @CyclicData8 = ?, @CyclicData9 = ?, @CyclicData10 = ?, @CyclicData11 = ?, @CyclicData12 = ?,
+        //             @CyclicData13 = ?, @CyclicData14 = ?, @CyclicData15 = ?, @CyclicData16 = ?, @CyclicData17 = ?,
+        //             @CyclicData18 = ?, @CyclicData19 = ?, @CyclicData20 = ?, @CyclicData21 = ?, @CyclicData22 = ?,
+        //             @CyclicData23 = ?, @CyclicData24 = ?, @CyclicData25 = ?, @CyclicData26 = ?, @CyclicData27 = ?,
+        //             @CyclicData28 = ?, @CyclicData29 = ?, @CyclicData30 = ?',
+        //             array_merge([
+        //                 $referenceNo, $heightApprox, $diaVal, $squareVal,
+        //                 $cyclicTest, $loadSpeed, $dropTest, $cyclicLift,
+        //                 $cyclicResult, $topLift, $topResult, $breakageLocation,
+        //                 $dropResult, $testResult, $UserInput
+        //             ], $dataValues)
+        //         );
+
+        //         DB::connection('ConnTestQC')->table('Picture_FIBC')->where('Reference_No', $referenceNo)->update([
+        //             'Jumlah' => $jumlah
+        //             // 'Pict_1' => $imageBinary1,
+        //             // 'Pict_2' => $imageBinary2,
+        //             // 'Pict_3' => $imageBinary3
+        //         ]);
+
+        //         return response()->json(['success' => 'Data updated successfully'], 200);
+        //     } catch (\Exception $e) {
+        //         return response()->json(['error' => 'Failed to update data: ' . $e->getMessage()], 500);
+        //     }
+        // }
     }
 
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         if ($id == 'hapusTest') {
             $Reference_No = $request->input('no_ref');

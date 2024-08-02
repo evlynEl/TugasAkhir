@@ -23,6 +23,7 @@ var topbesar = document.getElementById('topbesar');
 var Top_Lift = document.getElementById('Top_Lift');
 var Top_Result = document.getElementById('Top_Result');
 var othersTextInput = document.getElementById('othersText');
+var dropbesar = document.getElementById('dropbesar');
 var Drop_Result = document.getElementById('Drop_Result');
 var damageFoundDescDropInput = document.getElementById('damageFoundDescDrop');
 
@@ -106,6 +107,9 @@ inputs.forEach((masuk, index) => {
                 if (masuk.id === 'Height_Approx') {
                     Load_Speed.disabled = false;
                     Load_Speed.focus();
+                } else if (masuk.id === 'dia_val') {
+                    Load_Speed.disabled = false;
+                    Load_Speed.focus();
                 } else if (masuk.id === 'Load_Speed') {
                     Data_1.disabled = false;
                     Data_1.focus();
@@ -115,6 +119,8 @@ inputs.forEach((masuk, index) => {
                     Cyclic_Lift.disabled = false;
                     Top_Lift.disabled = false;
                     Drop_Result.disabled = false;
+                    threePictures.disabled = false;
+                    fourPictures.disabled = false;
                 } else if (index + 1 < inputs.length) {
                     inputs[index + 1].focus();
                 }
@@ -234,17 +240,15 @@ function handleData(masuk) {
     }
 }
 
-
 // fungsi cek apakah input pd div tertentu disabled
 function areAllInputsDisabled(inputs) {
     return Array.from(inputs).every(input => input.disabled);
 }
 
 // fungsi unk membuka input pd div tertentu jika checkbox tertentu di centang
-function toggleInputs(checkboxId, divId, descId) {
+function toggleInputs(checkboxId, divId) {
     const checkbox = document.getElementById(checkboxId);
     const div = document.getElementById(divId);
-    const descInput = document.getElementById(descId);
 
     checkbox.addEventListener("change", function () {
         const inputs = div.querySelectorAll('input');
@@ -255,13 +259,11 @@ function toggleInputs(checkboxId, divId, descId) {
             });
 
             if (checkboxId === 'Cyclic_Lift') {
-                console.log('tes');
                 document.querySelector('#cyclicResult input[name="Visible damages found at"]').addEventListener('change', function () {
                     damageFoundDescCyInput.focus();
                 });
             } else if (checkboxId === 'Top_Lift') {
                 document.querySelector('#Breakage_Location input[name="Others :"]').addEventListener('change', function () {
-                    console.log('tes 2');
                     othersTextInput.focus();
                 });
             } else if (checkboxId === 'Drop_Result') {
@@ -282,9 +284,9 @@ function toggleInputs(checkboxId, divId, descId) {
 // memanggil fungsi membuka div centang
 toggleInputs("Dia", "inputDia", null);
 toggleInputs("Square", "inputSq", null);
-toggleInputs("Cyclic_Lift", "cyclicbesar", "damageFoundDescCy");
-toggleInputs("Top_Lift", "topbesar", "othersText");
-toggleInputs("Drop_Result", "dropResult", "damageFoundDescDrop");
+toggleInputs("Cyclic_Lift", "cyclicbesar");
+toggleInputs("Top_Lift", "topbesar");
+toggleInputs("Drop_Result", "dropResult");
 
 
 // fungsi swal select pake arrow
@@ -410,6 +412,8 @@ btn_info.addEventListener("click", function (e) {
                 const selectedRow = result.value;
                 const splitRefNo = selectedRow.Reference_No.trim();
 
+                clearPreviousData();
+
                 refNo.value = splitRefNo;
                 customer.value = selectedRow.Customer.trim();
 
@@ -431,16 +435,14 @@ btn_info.addEventListener("click", function (e) {
                             if (response.refCopy === '') { // tidak ada copy ref no
 
                                 setTimeout(() => {
-                                    Drop_Test.disabled = false;
-                                    Drop_Test.focus();
+                                    // Drop_Test.disabled = false;
+                                    // Drop_Test.focus();
 
-                                    // Height_Approx.disabled = false;
+                                    Height_Approx.disabled = false;
                                     diaCheckbox.disabled = false;
                                     squareCheckbox.disabled = false;
-                                    // Height_Approx.focus();
+                                    Height_Approx.focus();
                                 }, 70);
-
-
 
                             } else { // ada copy ref no
                                 setTimeout(() => {
@@ -482,55 +484,18 @@ btn_info.addEventListener("click", function (e) {
                                     retrieveCheck('dropResult', dResult, data);
                                 }
                             }
-                        } else { // fill dari no ref koreksi
-                            if (response.additionalData && response.additionalData.length > 0) {
+                        } else { // fill dari no ref koreksi & hapus
+                            if (response.koreksiData && response.koreksiData.length > 0) {
+                                const data = response.koreksiData[0];
+                                // console.log("Data from response:", data);
 
-                                // membuka disabled
-                                Height_Approx.disabled = false;
-                                if (dia_val !== '0.00') {
-                                    dia_val.disabled = false;
-                                } else if (square_val !== '') {
-                                    square_val.disabled = false;
-                                }
-                                Load_Speed.disabled = false;
-                                Drop_Test.disabled = false;
-
-
-                                btn_pict1.disabled = false;
-                                btn_pict2.disabled = false;
-                                btn_pict3.disabled = false;
-                                if (jumlah === '4') {
-                                    fourPictures.checked = true;
-                                    btn_pict4.disabled = false;
-                                } else {
-                                    threePictures.checked = true;
-                                }
-
-                                const data = response.additionalData[0];
-
-                                Height_Approx.value = formatInput(data.Height_Approx);
-                                dia_val.value = formatInput(data.dia_val);
-                                square_val.value = formatInput(data.square_val);
-                                Cyclic_Test.value = formatInput(data.Cyclic_Test);
-                                Load_Speed.value = formatInput(data.Load_Speed);
-                                Top_Result.value = formatInput(data.Top_Result);
+                                Height_Approx.value = data.Height_Approx;
+                                dia_val.value = data.dia_val;
+                                square_val.value = data.square_val;
+                                Cyclic_Test.value = data.Cyclic_Test;
+                                Load_Speed.value = data.Load_Speed;
+                                Top_Result.value = data.Top_Result;
                                 Drop_Test.value = data.Drop_Test;
-
-                                // mengisi nilai data_1 sampai data_30 dan membuka disabled pada data_1 - data_15
-                                for (let i = 1; i <= 30; i++) {
-                                    const dataKey = `Data_${i}`;
-                                    const elementId = `Data_${i}`;
-                                    const element = document.querySelector(`#${elementId}`);
-
-                                    if (element) {
-                                        if (data[dataKey] !== undefined) {
-                                            element.value = formatInput(data[dataKey]);
-                                        }
-                                        if (i <= 15) {
-                                            element.disabled = false;
-                                        }
-                                    }
-                                }
 
                                 pressure = data.pressure;
                                 cLift = data.Cyclic_Lift;
@@ -546,8 +511,7 @@ btn_info.addEventListener("click", function (e) {
                                 retrieveCheck('Breakage_Location', breakage, data);
                                 retrieveCheck('dropResult', dResult, data);
 
-                                console.log(Cyclic_Lift.checked);
-
+                                // membuka disabled div centang" x
                                 if (Cyclic_Lift.checked) {
                                     cyclicbesar.classList.remove('disabled');
                                     cyclicbesar.querySelectorAll('input').forEach(input => {
@@ -572,6 +536,75 @@ btn_info.addEventListener("click", function (e) {
                                     });
                                 }
 
+                                if (Drop_Result.checked) {
+                                    dropbesar.classList.remove('disabled');
+                                    dropbesar.querySelectorAll('input').forEach(input => {
+                                        input.disabled = false;
+                                    });
+                                } else {
+                                    dropbesar.classList.add('disabled');
+                                    dropbesar.querySelectorAll('input').forEach(input => {
+                                        input.disabled = true;
+                                    });
+                                }
+
+                                // membuka disabled input lain
+                                Height_Approx.disabled = false;
+                                diaCheckbox.disabled = false;
+                                if (parseInt(dia_val.value) !== 0.00) {
+                                    diaCheckbox.checked = true;
+                                    dia_val.disabled = false;
+                                }
+                                squareCheckbox.disabled = false;
+                                if (square_val.value !== '') {
+                                    squareCheckbox.checked = true;
+                                    square_val.disabled = false;
+                                }
+                                Load_Speed.disabled = false;
+                                Drop_Test.disabled = false;
+
+                                // membuka disabled button pict4 & centang
+                                btn_pict1.disabled = false;
+                                btn_pict2.disabled = false;
+                                btn_pict3.disabled = false;
+                                threePictures.disabled = false;
+                                fourPictures.disabled = false;
+
+                                if (parseInt(data.Jumlah, 10) === 4) {
+                                    btn_pict4.disabled = false;
+                                    fourPictures.checked = true;
+                                    threePictures.checked = false;
+                                } else {
+                                    btn_pict4.disabled = true;
+                                    fourPictures.checked = false;
+                                    threePictures.checked = true;
+                                }
+
+                                // mengisi nilai data_1 sampai data_30 dan membuka disabled pada data_1 - data_15
+                                for (let i = 1; i <= 30; i++) {
+                                    const dataKey = `Data_${i}`;
+                                    const elementId = `Data_${i}`;
+                                    const element = document.querySelector(`#${elementId}`);
+
+                                    if (element) {
+                                        if (data[dataKey] !== undefined) {
+                                            element.value = formatInput(data[dataKey]);
+                                        }
+                                        if (i <= 15) {
+                                            element.disabled = false;
+                                        }
+                                    }
+                                }
+
+                                // imagePreview.src = data.koreksiData[0].Pict_1 || '';
+                                // imagePreview2.src = data.koreksiData[0].Pict_2 || '';
+                                // imagePreview3.src = data.koreksiData[0].Pict_3 || '';
+                                // imagePreview4.src = data.koreksiData[0].Pict_4 || '';
+
+                                // imagePreview.style.display = data.koreksiData[0].Pict_1 ? 'block' : 'none';
+                                // imagePreview2.style.display = data.koreksiData[0].Pict_2 ? 'block' : 'none';
+                                // imagePreview3.style.display = data.koreksiData[0].Pict_3 ? 'block' : 'none';
+                                // imagePreview4.style.display = data.koreksiData[0].Pict_4 ? 'block' : 'none';
                             }
                         }
                     },
@@ -587,16 +620,30 @@ btn_info.addEventListener("click", function (e) {
     }
 });
 
+// fokus ke input tiap kali dia & square tercentang
+diaCheckbox.addEventListener('change', function () {
+    if (diaCheckbox.checked) {
+        dia_val.focus();
+    }
+});
 
+squareCheckbox.addEventListener('change', function () {
+    if (squareCheckbox.checked) {
+        square_val.focus();
+    }
+});
+
+// fungsi clearkan semua input jika tidak memiliki isi di database
+function clearPreviousData() {
+    Ketik.forEach(function (input) {
+        input.value = '';
+        input.disabled = true;
+    });
+}
 
 // fungsi memunculkan centang sesuai isi database
 function retrieveCheck(sectionId, value, data) {
     var section = sections.find(s => s.id === sectionId);
-
-    if (!section) {
-        console.error(`Section with id ${sectionId} not found.`);
-        return;
-    }
 
     let isAnyChecked = false;
 
@@ -605,6 +652,7 @@ function retrieveCheck(sectionId, value, data) {
         checkboxes.forEach(function (checkbox) {
             if (checkbox) {
                 var dataType = checkbox.getAttribute('data-type');
+
                 let isChecked = Array.isArray(value) ? value.includes(checkboxName) : value === checkboxName;
 
                 checkbox.checked = isChecked;
@@ -651,6 +699,7 @@ function retrieveCheck(sectionId, value, data) {
                         if (dataType === 'drop') {
                             if (isChecked) {
                                 dResult = [checkboxName];
+                                console.log('drop: ', dResult, data.Drop_Result_Remaining);
                                 isAnyChecked = true;
                                 if (dResult.length > 0) {
                                     Drop_Result.checked = true;
@@ -669,6 +718,8 @@ function retrieveCheck(sectionId, value, data) {
                         if (dataType === 'cyclic') {
                             if (isChecked) {
                                 cResult = [checkboxName];
+                                console.log('cyclic: ', cResult, data.Cyclic_Result_Remaining);
+
                                 isAnyChecked = true;
                                 var damageFoundDescCyInput = document.querySelector('#cyclicResult input[name="damageFoundDescCy"]');
                                 if (checkboxName === 'Visible damages found at') {
@@ -734,10 +785,6 @@ function retrieveCheck(sectionId, value, data) {
     }
 }
 
-
-
-
-// cek checkbox
 // fungsi track aktifitas checkbox
 function setupCheckboxListeners() {
     sections.forEach(function (section) {
@@ -814,7 +861,7 @@ function handleCheckboxChange(sectionId) {
 // panggil fungsi cek checkbox
 setupCheckboxListeners();
 
-// fungsi mengambil gambar
+// fungsi memilih gambar & append ke formdata
 function setupImageUpload(btnId, inputId, textId, previewId, nextBtnId, formData, imageKey) {
     const btn = document.querySelector(btnId);
     const fileInput = document.querySelector(inputId);
@@ -826,20 +873,19 @@ function setupImageUpload(btnId, inputId, textId, previewId, nextBtnId, formData
         fileInput.click();
     });
 
-    fileInput.addEventListener('change', function () {
+    fileInput.removeEventListener('change', fileInputChangeHandler);
+
+    function fileInputChangeHandler() {
         const file = fileInput.files[0];
         if (file) {
             textInput.value = file.name;
 
             const reader = new FileReader();
             reader.onload = function (e) {
-                const arrayBuffer = e.target.result;
-
-                imagePreview.src = arrayBuffer;
+                imagePreview.src = e.target.result;
                 imagePreview.style.display = 'block';
 
-                // Store the binary data in the FormData object
-                // formData.append(imageKey, blob);
+                formData.append(imageKey, file);
             };
             reader.readAsDataURL(file);
 
@@ -851,15 +897,17 @@ function setupImageUpload(btnId, inputId, textId, previewId, nextBtnId, formData
             imagePreview.src = '';
             imagePreview.style.display = 'none';
         }
-    });
+    }
+
+    fileInput.addEventListener('change', fileInputChangeHandler);
 }
 
 
 // fungsi unk fokus button pict & setup gambar sesuai jumlah yg tercentang
 function updateFocus() {
     const formData = new FormData();
-    var threePicturesChecked = threePictures.checked;
-    var fourPicturesChecked = fourPictures.checked;
+    const threePicturesChecked = threePictures.checked;
+    const fourPicturesChecked = fourPictures.checked;
 
     if (threePicturesChecked) {
         jumlah = '3';
@@ -897,18 +945,6 @@ fourPictures.addEventListener('change', updateFocus);
 // fungsi utama memeriksa semua input
 async function checkAllInputs() {
     for (const input of inputTestMethod) {
-        if (input.id === 'Top_Result' && (input.value.trim() === '' || input.value.trim() === '0' || input.value.trim() === '0.00')) {
-            await Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Inputkan Top Lift Test Result Terlebih Dahulu!',
-                returnFocus: false
-            });
-
-            input.focus();
-            return false;
-        }
-
         if (input.id === 'dia_val' && input.value.trim() === '') {
             const result = await Swal.fire({
                 icon: 'question',
@@ -920,7 +956,8 @@ async function checkAllInputs() {
             });
 
             if (result.isConfirmed) {
-                input.focus();
+                dia_val.disabled = false;
+                dia_val.focus();
             }
             return false;
         } else if (input.id === 'square_val' && input.value.trim() === '') {
@@ -934,14 +971,14 @@ async function checkAllInputs() {
             });
 
             if (result.isConfirmed) {
-                input.focus();
+                square_val.disabled = false;
+                square_val.focus();
             }
             return false;
         }
     }
     return true;
 }
-
 
 var Ketik = document.querySelectorAll('input');
 
@@ -1015,22 +1052,28 @@ btn_simpan.addEventListener('click', async function (e) {
     if (a === 1) { // ISI
         const allInputsValid = await checkAllInputs();
         if (!allInputsValid) {
-            console.log('checkAllInputs');
             return;
         }
-        console.log('keluar checkAllInputs');
+
+        if (Top_Result.value.trim() === '' || Top_Result.value.trim() === '0' || Top_Result.value.trim() === '0.00') {
+            const result = await Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Inputkan Top Lift Test Result Terlebih Dahulu!',
+                returnFocus: false
+            });
+
+            if (result.isConfirmed) {
+                Top_Result.focus();
+            }
+            return;
+        }
 
         let cLiftTxt = cLift && cLift.length > 0 ? cLift.join(', ') : null;
         let tLiftTxt = tLift && tLift.length > 0 ? tLift.join(', ') : null;
-        let cyclicResultTxt = cResult && cResult.length > 0 ?
-            (cResult.includes('Visible damages found at') ? cResult.join(', ') + ' ' + damageFoundDescCyInput.value.trim() : cResult.join(', '))
-            : null;
-        let breakageTxt = breakage && breakage.length > 0 ?
-            (breakage.includes('Others :') ? breakage.join(', ') + ' ' + othersTextInput.value.trim() : breakage.join(', '))
-            : null;
-        let dropResultTxt = dResult && dResult.length > 0 ?
-            (dResult.includes('Visible damages found at') ? dResult.join(', ') + ' ' + damageFoundDescDropInput.value.trim() : dResult.join(', '))
-            : null;
+        let cyclicResultTxt = cResult && cResult.length > 0 ? (cResult.includes('Visible damages found at') ? cResult.join(', ') + ' ' + damageFoundDescCyInput.value.trim() : cResult.join(', ')) : null;
+        let breakageTxt = breakage && breakage.length > 0 ? (breakage.includes('Others :') ? breakage.join(', ') + ' ' + othersTextInput.value.trim() : breakage.join(', ')) : null;
+        let dropResultTxt = dResult && dResult.length > 0 ? (dResult.includes('Visible damages found at') ? dResult.join(', ') + ' ' + damageFoundDescDropInput.value.trim() : dResult.join(', ')) : null;
 
         let text = ['Cyclic Test', 'Cyclic Test Result', 'Top Lift Test', 'Breakage Location', 'Drop Test'];
         let tidakTercentang = [];
@@ -1068,11 +1111,17 @@ btn_simpan.addEventListener('click', async function (e) {
             }
         }
 
-
-        // If all inputs are filled, submit the form
         submitForm(cLiftTxt, tLiftTxt, cyclicResultTxt, breakageTxt, dropResultTxt);
-        console.log("BERHASIL SIMPAN");
+
     } else if (a === 2) { // KOREKSI
+        let cLiftTxt = cLift && cLift.length > 0 ? cLift.join(', ') : null;
+        let tLiftTxt = tLift && tLift.length > 0 ? tLift.join(', ') : null;
+        let cyclicResultTxt = cResult && cResult.length > 0 ? (cResult.includes('Visible damages found at') ? cResult.join(', ') + ' ' + damageFoundDescCyInput.value.trim() : cResult.join(', ')) : null;
+        let breakageTxt = breakage && breakage.length > 0 ? (breakage.includes('Others :') ? breakage.join(', ') + ' ' + othersTextInput.value.trim() : breakage.join(', ')) : null;
+        let dropResultTxt = dResult && dResult.length > 0 ? (dResult.includes('Visible damages found at') ? dResult.join(', ') + ' ' + damageFoundDescDropInput.value.trim() : dResult.join(', ')) : null;
+
+        koreksiTest(cLiftTxt, tLiftTxt, cyclicResultTxt, breakageTxt, dropResultTxt)
+
     } else if (a === 3) { //HAPUS
         $.ajax({
             url: "FrmInputTest/hapusTest",
@@ -1129,9 +1178,18 @@ btn_koreksi.addEventListener('click', function () {
 
 btn_hapus.addEventListener('click', function () {
     a = 3;
+    btn_isi.style.display = 'none';
+    btn_simpan.style.display = 'inline-block';
+
+    btn_koreksi.style.display = 'none';
+    btn_batal.style.display = 'inline-block';
+
+    btn_info.disabled = false;
+    btn_hapus.disabled = true;
+    btn_info.focus();
 });
 
-
+// fungsi untuk simpan dari isi
 function submitForm(cLiftTxt, tLiftTxt, cyclicResultTxt, breakageTxt, dropResultTxt) {
     const hasil = TestResult < Top_Result.value ? 'PASS' : 'FAIL';
     const formData = new FormData();
@@ -1171,15 +1229,14 @@ function submitForm(cLiftTxt, tLiftTxt, cyclicResultTxt, breakageTxt, dropResult
     formData.append('picture3', picture3);
 
     if (jumlah === '4') {
-        picture4 = picture4.files[0];
         formData.append('picture4', picture4);
     }
 
-    console.log("CEK DATA bfr post");
-    console.log("FormData contents:");
-    for (let [key, value] of formData.entries()) {
-        console.log(`${key}: ${value}`);
-    }
+    // console.log("CEK DATA bfr post");
+    // console.log("FormData contents:");
+    // for (let [key, value] of formData.entries()) {
+    //     console.log(`${key}: ${value}`);
+    // }
 
     $.ajax({
         type: 'POST',
@@ -1213,20 +1270,65 @@ function submitForm(cLiftTxt, tLiftTxt, cyclicResultTxt, breakageTxt, dropResult
     });
 }
 
+// fungsi untuk simpan dari koreksi
+async function koreksiTest(cLiftTxt, tLiftTxt, cyclicResultTxt, breakageTxt, dropResultTxt) {
+    const hasil = TestResult < Top_Result.value ? 'PASS' : 'FAIL';
+    const formData = new FormData();
+
+    formData.append('RefNo', (refNo.value || '').trim());
+    formData.append('Height_Approx', formatInput(Height_Approx.value));
+    formData.append('dia_val', formatInput(dia_val.value));
+    formData.append('square_val', (square_val.value || '').trim());
+    formData.append('Cyclic_Test', formatInput(Cyclic_Test.value));
+    formData.append('Load_Speed', formatInput(Load_Speed.value));
+    formData.append('Drop_Test', (Drop_Test.value || '').trim());
+    formData.append('Cyclic_Lift', (cLiftTxt || '').trim());
+    formData.append('Top_Lift', (tLiftTxt || '').trim());
+    formData.append('Top_Result', (Top_Result.value || '').trim());
+    formData.append('Cyclic_Result', (cyclicResultTxt || '').trim());
+    formData.append('Breakage_Location', (breakageTxt || '').trim());
+    formData.append('Drop_Result', (dropResultTxt || '').trim());
+    formData.append('TestResult', hasil);
+    formData.append('Jumlah', jumlah);
+    formData.append('a', a);
 
 
+    for (let i = 1; i <= 30; i++) {
+        const dataElement = document.getElementById('Data_' + i);
+        if (dataElement) {
+            formData.append('Data_' + i, formatInput(dataElement.value));
+        }
+    }
+
+    console.log("CEK DATA bfr pu");
+    console.log("FormData contents:");
+    for (let [key, value] of formData.entries()) {
+        console.log(`${key}: ${value}`);
+    }
+
+    // Ambil file gambar
+    var picture1 = document.getElementById('picture1').files[0];
+    var picture2 = document.getElementById('picture2').files[0];
+    var picture3 = document.getElementById('picture3').files[0];
+    var picture4 = document.getElementById('picture4').files[0];
 
 
-async function koreksiTest(cLiftTxt, cResultTxt, tLiftTxt, breakageTxt, dResultTxt) {
-    function formatInput(input) {
-        return input !== undefined && !isNaN(input) ? parseFloat(input).toFixed(2) : '0.00';
+    formData.append('picture1', picture1);
+    formData.append('picture2', picture2);
+    formData.append('picture3', picture3);
+
+    if (jumlah === '4') {
+        formData.append('picture4', picture4);
     }
 
     $.ajax({
-        type: 'PUT',
-        url: 'FrmInputTest/koreksiTestFIBC',
-        data: {
-            _token: csrfToken,
+        type: 'POST',
+        url: 'FrmInputTest',
+        data: formData,
+        processData: false,
+        contentType: false,
+        headers: {
+            'X-CSRF-TOKEN': csrfToken
         },
         timeout: 30000,
         success: function (response) {
@@ -1234,7 +1336,7 @@ async function koreksiTest(cLiftTxt, cResultTxt, tLiftTxt, breakageTxt, dResultT
                 Swal.fire({
                     icon: 'success',
                     title: 'Success',
-                    text: 'Data Telah Tersimpan',
+                    text: 'Data Telah Terkoreksi',
                 }).then(() => {
                     disableKetik();
                 });
