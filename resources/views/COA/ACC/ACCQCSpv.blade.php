@@ -30,10 +30,10 @@
                             </div>
                             <div class="form-group col-4 d-flex align-items-center justify-content-center">
                                 <div class="text-center">
-                                    <button type="button" id="btn_detail" class="btn btn-outline-secondary"
-                                        style="width: 150px;">Detail</button>
-                                    <button type="button" id="btn_acc" class="btn btn-outline-secondary"
-                                        style="width: 150px;">ACC</button>
+                                    <button type="button" id="btn_detail" class="btn btn-primary" style="width: 150px;"
+                                        disabled>Detail</button>
+                                    <button type="button" id="btn_acc" class="btn btn-primary" style="width: 150px;"
+                                        disabled>ACC</button>
                                 </div>
                             </div>
 
@@ -577,7 +577,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="row bordered">
+                                        <div class="row bordered empatGambar">
                                             <div
                                                 class="col-sm-3 d-flex align-items-center justify-content-center bordered">
                                                 <h6 style="margin: 0"><strong>Before Test</strong></h6>
@@ -595,8 +595,7 @@
                                                 <h6 style="margin: 0"><strong>Test Result Display</strong></h6>
                                             </div>
                                         </div>
-
-                                        <div class="row bordered">
+                                        <div class="row bordered empatGambar">
                                             <div class="col-sm-3 d-flex align-items-center justify-content-center bordered"
                                                 style="width: 225px; height: 175px;">
                                                 <img id="beforeTest" alt="Test Result 1"
@@ -619,10 +618,42 @@
                                             </div>
                                         </div>
 
+                                        <div class="row bordered tigaGambar">
+                                            <div
+                                                class="col-sm-4 d-flex align-items-center justify-content-center bordered">
+                                                <h6 style="margin: 0"><strong>Before Test</strong></h6>
+                                            </div>
+                                            <div
+                                                class="col-sm-4 d-flex align-items-center justify-content-center bordered">
+                                                <h6 style="margin: 0"><strong>After Top Lift Test</strong></h6>
+                                            </div>
+                                            <div
+                                                class="col-sm-4 d-flex align-items-center justify-content-center bordered">
+                                                <h6 style="margin: 0"><strong>Test Result Display</strong></h6>
+                                            </div>
+                                        </div>
+                                        <div class="row bordered tigaGambar">
+                                            <div class="col-sm-4 d-flex align-items-center justify-content-center bordered"
+                                                style="width: 225px; height: 175px;">
+                                                <img id="beforeTest" alt="Test Result 1"
+                                                    style="max-width: 100%; max-height: 100%;">
+                                            </div>
+                                            <div class="col-sm-4 d-flex align-items-center justify-content-center bordered"
+                                                style="width: 225px; height: 175px;">
+                                                <img id="afterTop" alt="Test Result 3"
+                                                    style="max-width: 100%; max-height: 100%;">
+                                            </div>
+                                            <div class="col-sm-4 d-flex align-items-center justify-content-center bordered"
+                                                style="width: 225px; height: 175px;">
+                                                <img id="testResult" alt="Test Result 4"
+                                                    style="max-width: 100%; max-height: 100%;">
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
 
-                                <div class="row mt-2">
+                                <div class="row mt-2 passed">
                                     <div class="col-sm-12 d-flex align-items-center justify-content-center bordered"
                                         style="background-color: lightgoldenrodyellow">
                                         <h5 style="margin: 0"><strong>TEST RESULT</strong></h5>
@@ -641,6 +672,30 @@
                                             <div class="col-sm-5 d-flex align-items-center justify-content-center"
                                                 style="height: 100px;">
                                                 <span id="comments" class="h3"><strong>Fail</strong></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-2 failed">
+                                    <div class="col-sm-12 d-flex align-items-center justify-content-center bordered"
+                                        style="background-color: lightgoldenrodyellow">
+                                        <h5 style="margin: 0"><strong>TEST RESULT</strong></h5>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="row bordered">
+                                            <div class="col-sm-5 d-flex align-items-center justify-content-center "
+                                                style="height: 100px;">
+                                                <span id="comments" class="h3"><strong>Pass</strong></span>
+
+                                            </div>
+                                            <div class="col-sm-1 d-flex align-items-center justify-content-center "
+                                                style="height: 100px;">
+                                                <span id="comments" class="h3"><strong>/</strong></span>
+                                            </div>
+                                            <div class="col-sm-5 d-flex align-items-center justify-content-center"
+                                                style="height: 100px;">
+                                                <span id="comments" class="circle-border h3"><strong>Fail</strong></span>
                                             </div>
                                         </div>
                                     </div>
@@ -667,264 +722,485 @@
                                     </div>
                                 </div>
 
-                                <div class="row">
-                                    <div class="col-sm-1">
-                                        <div class="form-check">
-                                            <label class="form-check-label"><strong>A.</strong></label>
+                                <div class="row bordered">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-sm-2">
+                                                <div class="form-check p-0">
+                                                    <label class="form-check-label"><strong>A. Lifting
+                                                            Belt</strong></label>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-sm-2 p-0">
-                                        <div class="form-check p-0">
-                                            <label class="form-check-label"><strong>Lifting Belt</strong></label>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <div class="row">
-                                    <div class="col-sm-2 offset-sm-1 p-0">
-                                        <div class="form-check p-0">
-                                            <label class="form-check-label">Type</label>
+                                        <div class="row">
+                                            <div class="col-sm-2 offset-sm-1 p-0">
+                                                <div class="form-check p-0">
+                                                    <label class="form-check-label">Type</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-5 p-0">
+                                                <div class="form-check p-0">
+                                                    <span id='liftingBeltType'class="form-check-label"></span>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-sm-5 p-0">
-                                        <div class="form-check p-0">
-                                            <span id='liftingBeltType'class="form-check-label"></span>
+
+                                        <div class="row mt-2">
+                                            <div class="col-sm-2">
+                                                <div class="form-check p-0">
+                                                    <label class="form-check-label"><strong>B. Sewing
+                                                            Thread</strong></label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-sm-2 offset-sm-1 p-0">
+                                                <div class="form-check p-0">
+                                                    <label class="form-check-label">Type</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-5 p-0">
+                                                <div class="form-check p-0">
+                                                    <span id='sewingThreadType'class="form-check-label"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mt-2">
+                                            <div class="col-sm-2 offset-sm-1 p-0">
+                                                <div class="form-check p-0">
+                                                    <label class="form-check-label">Strength / Elo</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-1 p-0">
+                                                <div class="form-check p-0">
+                                                    <label class="form-check-label">: Top</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1 p-0">
+                                                <div class="form-check p-0">
+                                                    <span id='topKg1' class="form-check-label">--</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1 p-0">
+                                                <div class="form-check p-0">
+                                                    <label class="form-check-label">/</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1 p-0">
+                                                <div class="form-check p-0">
+                                                    <span id='topPersen1' class="form-check-label">--</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-1">
+                                                <div class="form-check">
+                                                    <label class="form-check-label">Bottom</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1 p-0 offset-sm-1">
+                                                <div class="form-check p-0">
+                                                    <span id='bottomKg1' class="form-check-label">--</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1 p-0">
+                                                <div class="form-check p-0">
+                                                    <label class="form-check-label">/</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1 p-0">
+                                                <div class="form-check p-0">
+                                                    <span id='bottomPersen1' class="form-check-label">--</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-sm-1 p-0 offset-sm-4">
+                                                <div class="form-check p-0">
+                                                    <span id="topKg2" class="form-check-label">--</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1 p-0">
+                                                <div class="form-check p-0">
+                                                    <label class="form-check-label">/</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1 p-0">
+                                                <div class="form-check p-0">
+                                                    <span id="topPersen2" class="form-check-label">--</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-1 p-0 offset-sm-2">
+                                                <div class="form-check p-0">
+                                                    <span id="bottomKg2" class="form-check-label">--</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1 p-0">
+                                                <div class="form-check p-0">
+                                                    <label class="form-check-label">/</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1 p-0">
+                                                <div class="form-check p-0">
+                                                    <span id="bottomPersen2" class="form-check-label">--</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-sm-1 p-0 offset-sm-4">
+                                                <div class="form-check p-0">
+                                                    <span id="topKg3" class="form-check-label">--</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1 p-0">
+                                                <div class="form-check p-0">
+                                                    <label class="form-check-label">/</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1 p-0">
+                                                <div class="form-check p-0">
+                                                    <span id="topPersen3" class="form-check-label">--</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-1 p-0 offset-sm-2">
+                                                <div class="form-check p-0">
+                                                    <span id="bottomKg3" class="form-check-label">--</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1 p-0">
+                                                <div class="form-check p-0">
+                                                    <label class="form-check-label">/</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1 p-0">
+                                                <div class="form-check p-0">
+                                                    <span id="bottomPersen3" class="form-check-label">--</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-sm-1 p-0 offset-sm-4">
+                                                <div class="form-check p-0">
+                                                    <span id="topKg4" class="form-check-label">--</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1 p-0">
+                                                <div class="form-check p-0">
+                                                    <label class="form-check-label">/</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1 p-0">
+                                                <div class="form-check p-0">
+                                                    <span id="topPersen4" class="form-check-label">--</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-1 p-0 offset-sm-2">
+                                                <div class="form-check p-0">
+                                                    <span id="bottomKg4" class="form-check-label">--</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1 p-0">
+                                                <div class="form-check p-0">
+                                                    <label class="form-check-label">/</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1 p-0">
+                                                <div class="form-check p-0">
+                                                    <span id="bottomPersen4" class="form-check-label">--</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-sm-1 p-0 offset-sm-4">
+                                                <div class="form-check p-0">
+                                                    <span id="topKg5" class="form-check-label">--</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1 p-0">
+                                                <div class="form-check p-0">
+                                                    <label class="form-check-label">/</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1 p-0">
+                                                <div class="form-check p-0">
+                                                    <span id="topPersen5" class="form-check-label">--</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-1 p-0 offset-sm-2">
+                                                <div class="form-check p-0">
+                                                    <span id="bottomKg5" class="form-check-label">--</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1 p-0">
+                                                <div class="form-check p-0">
+                                                    <label class="form-check-label">/</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1 p-0">
+                                                <div class="form-check p-0">
+                                                    <span id="bottomPersen5" class="form-check-label">--</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mt-3">
+                                            <div class="col-sm-2">
+                                                <div class="form-check p-0">
+                                                    <label class="form-check-label"><strong>C. Sewing
+                                                            Method</strong></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-2 offset-sm-1">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="mitsumaki"
+                                                        disabled>
+                                                    <label class="form-check-label" for="mitsumaki">Mitsumaki</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="ogami"
+                                                        disabled>
+                                                    <label class="form-check-label" for="ogami">Ogami</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-2 offset-sm-1">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="halfMitsumaki"
+                                                        disabled>
+                                                    <label class="form-check-label" for="halfMitsumaki">Half
+                                                        Mitsumaki</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        id="otherSewingMethod" disabled>
+                                                    <label class="form-check-label" for="otherSewingMethod">Other</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row mt-3">
+                                            <div class="col-sm-2">
+                                                <div class="form-check p-0">
+                                                    <label class="form-check-label"><strong>D. Stitch
+                                                            Approx.</strong></label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="bottomApprox"
+                                                        disabled>
+                                                    <label class="form-check-label" for="bottomApprox">Bottom</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-2"> </div>
+                                            <div class="col-sm-2">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="sideBodyApprox"
+                                                        disabled>
+                                                    <label class="form-check-label" for="sideBodyApprox">Side Body</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-2"> </div>
+                                            <div class="col-sm-2">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        id="liftingBeltApprox" disabled>
+                                                    <label class="form-check-label" for="liftingBeltApprox">Lifting
+                                                        Belt</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mt-3">
+                                            <div class="col-sm-3">
+                                                <div class="form-check p-0">
+                                                    <label class="form-check-label"><strong>E. Fit to drawing
+                                                            Spec.?</strong></label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="fitDrawYes"
+                                                        disabled>
+                                                    <label class="form-check-label" for="fitDrawYes">Yes</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-2 offset-sm-3">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="fitDrawNo"
+                                                        disabled>
+                                                    <label class="form-check-label" for="fitDrawNo">No</label>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="row mt-2">
-                                    <div class="col-sm-1">
-                                        <div class="form-check">
-                                            <label class="form-check-label"><strong>B.</strong></label>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-2 p-0">
-                                        <div class="form-check p-0">
-                                            <label class="form-check-label"><strong>Sewing Thread</strong></label>
-                                        </div>
+                                    <div class="col-sm-12 d-flex align-items-center justify-content-center bordered"
+                                        style="background-color: lightgoldenrodyellow">
+                                        <h5 style="margin: 0"><strong>Test Method Detail</strong></h5>
                                     </div>
                                 </div>
 
-                                <div class="row">
-                                    <div class="col-sm-2 offset-sm-1 p-0">
-                                        <div class="form-check p-0">
-                                            <label class="form-check-label">Type</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-5 p-0">
-                                        <div class="form-check p-0">
-                                            <span id='sewingThreadType'class="form-check-label"></span>
-                                        </div>
-                                    </div>
-                                </div>
+                                <div class="row bordered">
+                                    <div class="col-md-12">
 
-                                <div class="row mt-2">
-                                    <div class="col-sm-2 offset-sm-1 p-0">
-                                        <div class="form-check p-0">
-                                            <label class="form-check-label">Strength / Elo</label>
+                                        <div class="row mt-2">
+                                            <div class="col-sm-2">
+                                                <div class="form-check p-0">
+                                                    <label class="form-check-label"><strong>A. Test
+                                                            Condition</strong></label>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
+                                        <div class="row">
+                                            <div class="col-sm-4 p-0 offset-sm-1">
+                                                <div class="form-check p-0">
+                                                    <label class="form-check-label">Filling with plastic granule at
+                                                        height approx.</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2 p-0">
+                                                <div class="form-check p-0">
+                                                    <span id="heightApprox" class="form-check-label">.....Cm</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-2 p-0 offset-sm-1">
+                                                <div class="form-check p-0">
+                                                    <label class="form-check-label">Pressure plate
+                                                        dimension: </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="diaPressure"
+                                                        disabled>
+                                                    <label class="form-check-label" for="diaPressure">Dia = </label>
 
-                                    <div class="col-sm-1 p-0">
-                                        <div class="form-check p-0">
-                                            <label class="form-check-label">: Top</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2 p-0 offset-sm-1">
+                                                <span class="form-check-label" id="testDia">0.00 cm</span>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="squarePressure"
+                                                        disabled>
+                                                    <label class="form-check-label" for="squarePressure">Square:</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2 p-0">
+                                                <span class="form-check-label" id="testSquare">0.00 cm</span>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-sm-1 p-0">
-                                        <div class="form-check p-0">
-                                            <span id='topKg1' class="form-check-label">--</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-1 p-0">
-                                        <div class="form-check p-0">
-                                            <label class="form-check-label">/</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-1 p-0">
-                                        <div class="form-check p-0">
-                                            <span id='topPersen1' class="form-check-label">--</span>
-                                        </div>
-                                    </div>
 
-                                    <div class="col-sm-1">
-                                        <div class="form-check">
-                                            <label class="form-check-label">Bottom</label>
+                                        <div class="row mt-1">
+                                            <div class="col-sm-2">
+                                                <div class="form-check p-0">
+                                                    <label class="form-check-label"><strong>B. Cyclic Test</strong></label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class="form-check">
+                                                    <label class="form-check-label">: <strong>30X</strong> cycles of load
+                                                        application to approx.</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6 p-0">
+                                                <div class="form-check">
+                                                    <span id="cycleLoadApprox" class="form-check-label">.....kg (2 x
+                                                        SWL)</span>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-sm-1 p-0 offset-sm-1">
-                                        <div class="form-check p-0">
-                                            <span id='bottomKg1' class="form-check-label">--</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-1 p-0">
-                                        <div class="form-check p-0">
-                                            <label class="form-check-label">/</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-1 p-0">
-                                        <div class="form-check p-0">
-                                            <span id='bottomPersen1' class="form-check-label">--</span>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <div class="row">
-                                    <div class="col-sm-1 p-0 offset-sm-4">
-                                        <div class="form-check p-0">
-                                            <span id="topKg2" class="form-check-label">--</span>
+                                        <div class="row mt-1">
+                                            <div class="col-sm-2">
+                                                <div class="form-check p-0">
+                                                    <label class="form-check-label"><strong>C. Top Lift
+                                                            Test</strong></label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <div class="form-check">
+                                                    <label class="form-check-label">: Load speed: </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4 p-0">
+                                                <div class="form-check">
+                                                    <span id="loadSpeed" class="form-check-label">.....cm / mnt (Bag
+                                                        dalam keadaan kosong)</span>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-sm-1 p-0">
-                                        <div class="form-check p-0">
-                                            <label class="form-check-label">/</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-1 p-0">
-                                        <div class="form-check p-0">
-                                            <span id="topPersen2" class="form-check-label">--</span>
-                                        </div>
-                                    </div>
 
-                                    <div class="col-sm-1 p-0 offset-sm-2">
-                                        <div class="form-check p-0">
-                                            <span id="bottomKg2" class="form-check-label">--</span>
+                                        <div class="row mt-1">
+                                            <div class="col-sm-2">
+                                                <div class="form-check p-0">
+                                                    <label class="form-check-label"><strong>D. Cyclic Top Lift
+                                                            Data</strong></label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <div class="form-check">
+                                                    <label class="form-check-label">: </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div id="tableContainer"></div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-sm-1 p-0">
-                                        <div class="form-check p-0">
-                                            <label class="form-check-label">/</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-1 p-0">
-                                        <div class="form-check p-0">
-                                            <span id="bottomPersen2" class="form-check-label">--</span>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <div class="row">
-                                    <div class="col-sm-1 p-0 offset-sm-4">
-                                        <div class="form-check p-0">
-                                            <span id="topKg3" class="form-check-label">--</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-1 p-0">
-                                        <div class="form-check p-0">
-                                            <label class="form-check-label">/</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-1 p-0">
-                                        <div class="form-check p-0">
-                                            <span id="topPersen3" class="form-check-label">--</span>
-                                        </div>
-                                    </div>
+                                        <div class="row mt-1">
+                                            <div class="col-sm-2">
+                                                <div class="form-check p-0">
+                                                    <label class="form-check-label"><strong>E. Drop Test (80
+                                                            cm)</strong></label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <div class="form-check">
+                                                    <label class="form-check-label">: </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <div class="form-check">
+                                                    <span id="dropTestDetail"
+                                                        class="form-check-label">..................................................................................................................................................</label>
+                                                </div>
+                                            </div>
 
-                                    <div class="col-sm-1 p-0 offset-sm-2">
-                                        <div class="form-check p-0">
-                                            <span id="bottomKg3" class="form-check-label">--</span>
                                         </div>
-                                    </div>
-                                    <div class="col-sm-1 p-0">
-                                        <div class="form-check p-0">
-                                            <label class="form-check-label">/</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-1 p-0">
-                                        <div class="form-check p-0">
-                                            <span id="bottomPersen3" class="form-check-label">--</span>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <div class="row">
-                                    <div class="col-sm-1 p-0 offset-sm-4">
-                                        <div class="form-check p-0">
-                                            <span id="topKg4" class="form-check-label">--</span>
-                                        </div>
                                     </div>
-                                    <div class="col-sm-1 p-0">
-                                        <div class="form-check p-0">
-                                            <label class="form-check-label">/</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-1 p-0">
-                                        <div class="form-check p-0">
-                                            <span id="topPersen4" class="form-check-label">--</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-sm-1 p-0 offset-sm-2">
-                                        <div class="form-check p-0">
-                                            <span id="bottomKg4" class="form-check-label">--</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-1 p-0">
-                                        <div class="form-check p-0">
-                                            <label class="form-check-label">/</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-1 p-0">
-                                        <div class="form-check p-0">
-                                            <span id="bottomPersen4" class="form-check-label">--</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-sm-1 p-0 offset-sm-4">
-                                        <div class="form-check p-0">
-                                            <span id="topKg5" class="form-check-label">--</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-1 p-0">
-                                        <div class="form-check p-0">
-                                            <label class="form-check-label">/</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-1 p-0">
-                                        <div class="form-check p-0">
-                                            <span id="topPersen5" class="form-check-label">--</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-sm-1 p-0 offset-sm-2">
-                                        <div class="form-check p-0">
-                                            <span id="bottomKg5" class="form-check-label">--</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-1 p-0">
-                                        <div class="form-check p-0">
-                                            <label class="form-check-label">/</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-1 p-0">
-                                        <div class="form-check p-0">
-                                            <span id="bottomPersen5" class="form-check-label">--</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row mt-3">
-                                    <div class="col-sm-1">
-                                        <div class="form-check">
-                                            <label class="form-check-label"><strong>C.</strong></label>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-2 p-0">
-                                        <div class="form-check p-0">
-                                            <label class="form-check-label"><strong>Sewing Method</strong></label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-sm-1">
-                                        <div class="form-check">
-                                            <label class="form-check-label"><strong>C.</strong></label>
-                                        </div>
-                                    </div>
-                                    
                                 </div>
 
                             </div>
@@ -988,7 +1264,6 @@
                 </div>
             </div>
         </div>
-    </div>
     </div>
 
     <script src="{{ asset('js/COA/ACC/ACCQCSpv.js') }}"></script>

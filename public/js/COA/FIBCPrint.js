@@ -5,7 +5,8 @@ document.addEventListener("DOMContentLoaded", function () {
     var customer = document.getElementById('customer');
     var btn_info = document.getElementById('btn_info');
     var btn_detail = document.getElementById('btn_detail');
-    var btn_acc = document.getElementById('btn_acc');
+    var btn_tahun = document.getElementById('btn_tahun');
+    var tahun = document.getElementById('tahun');
 
     var beforeTest = document.getElementById('beforeTest');
     var afterCyclic = document.getElementById('afterCyclic');
@@ -128,9 +129,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     var dropTestDetail = document.getElementById('dropTestDetail');
 
+    var idSpv = document.getElementById('idSpv');
+    var idMng = document.getElementById('idMng');
+
     var printPdf = document.getElementById('printPdf');
 
-    btn_info.focus();
+    btn_tahun.focus();
 
     printPdf.addEventListener('click', (e) => {
         e.preventDefault();
@@ -193,65 +197,73 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // acc button
-    btn_acc.addEventListener("click", function (e) {
-        // Display SweetAlert confirmation dialog
-        Swal.fire({
-            title: 'Konfirmasi',
-            text: "Apakah Anda Yakin Untuk ACC Laporan FIBC Ini?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Ya',
-            cancelButtonText: 'Tidak'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Proceed with the AJAX request if confirmed
-                $.ajax({
-                    url: 'FrmACCFIBC/accSpv',
-                    type: 'PUT',
-                    data: {
-                        _token: csrfToken,
-                        RefNo: refNo.value
-                    },
-                    dataType: 'json',
-                    success: function (response) {
-                        if (response.success) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Success',
-                                text: response.success,
-                            });
-                            $('.preview').hide();
-                            refNo.value = "";
-                            customer.value = "";
-                            btn_acc.disabled = true;
-                            btn_detail.disabled = true;
-                            printPdf.disabled = true;
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: response.error || 'An error occurred.',
-                            });
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.error(error);
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'An error occurred while processing the request.',
-                        });
-                    },
-                });
-            } else {
-                console.log('Operation cancelled by user.');
-            }
-        });
-    });
+    // tahun button
+    btn_tahun.addEventListener("click", function (e) {
+        try {
+            let result = Swal.fire({
+                title: "Pilih Tahun",
+                html: `<table id="table_tahun" class="display" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Tahun</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>`,
+                showCancelButton: true,
+                confirmButtonText: 'Pilih',
+                cancelButtonText: 'Close',
+                returnFocus: false,
+                preConfirm: () => {
+                    const selectedData = $("#table_tahun")
+                        .DataTable()
+                        .row(".selected")
+                        .data();
+                    if (!selectedData) {
+                        Swal.showValidationMessage("Please select a row");
+                        return false;
+                    }
+                    return selectedData;
+                },
+                didClose:() =>{
+                    btn_info.focus();
+                },
+                didOpen: () => {
+                    const table = $("#table_tahun").DataTable({
+                        responsive: true,
+                        processing: true,
+                        serverSide: true,
+                        order: [[0, "asc"]], // Corrected to reference the first column (index 0)
+                        ajax: {
+                            url: "FrmPrintFIBC/getTahun",
+                            dataType: "json",
+                            type: "GET",
+                        },
+                        columns: [
+                            {
+                                data: "Tahun",
+                            },
+                        ],
+                    });
 
+                    $("#table_tahun tbody").on("click", "tr", function () {
+                        table.$("tr.selected").removeClass("selected");
+                        $(this).addClass("selected");
+                    });
+
+                    currentIndex = null;
+                    Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_tahun'));
+                },
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const selectedRow = result.value;
+                    tahun.value = selectedRow.Tahun.trim(); // Corrected to reference the "Tahun" field
+                }
+            });
+        } catch (error) {
+            console.error("An error occurred:", error);
+        }
+    });
 
     // saat pilih no ref
     btn_info.addEventListener("click", function (e) {
@@ -291,11 +303,12 @@ document.addEventListener("DOMContentLoaded", function () {
                         serverSide: true,
                         order: [[0, "asc"]],
                         ajax: {
-                            url: "FrmACCFIBC/getRef",
+                            url: "FrmPrintFIBC/getRef",
                             dataType: "json",
                             type: "GET",
                             data: {
-                                _token: csrfToken
+                                _token: csrfToken,
+                                tahun: tahun.value
                             }
                         },
                         columns: [
@@ -322,7 +335,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     customer.value = result.value.Customer;
 
                     printPdf.disabled = false;
-                    btn_acc.disabled = false;
                     btn_detail.disabled = false;
 
                     $('.preview').show();
@@ -330,7 +342,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     $('.previewDetail').hide();
 
                     $.ajax({
-                        url: "FrmACCFIBC/getDetail",
+                        url: "FrmPrintFIBC/getDetail",
                         type: "GET",
                         data: {
                             _token: csrfToken,
@@ -622,6 +634,9 @@ document.addEventListener("DOMContentLoaded", function () {
                                 }
                             });
 
+                            idSpv.innerHTML = `<h5><em>QC - ${result[0].UserACC}</em></h5>`;
+                            idMng.innerHTML = `<h5><em>QC - ${result[0].ManagerACC}</em></h5>`;
+
 
                             btn_detail.addEventListener("click", function (e) {
                                 $('.previewBiasa').hide();
@@ -706,7 +721,6 @@ document.addEventListener("DOMContentLoaded", function () {
                                     testDia.textContent = formatDecimal(result[0].Dia) + ' cm';
                                 } else {
                                     diaPressureCheckbox.checked = false;
-                                    testDia.textContent = '0.00 cm';
                                 }
 
                                 if (result[0].Square) {
@@ -714,7 +728,6 @@ document.addEventListener("DOMContentLoaded", function () {
                                     testSquare.textContent = formatDecimal(result[0].Square) + ' cm';
                                 } else {
                                     squarePressureCheckbox.checked = false;
-                                    testSquare.textContent = '0.00 cm';
                                 }
 
                                 // B. Cyclic Test
