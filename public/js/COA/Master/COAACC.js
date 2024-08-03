@@ -6,6 +6,21 @@ var btn_type = document.getElementById('btn_type');
 var btn_noCOA = document.getElementById('btn_noCOA');
 var btn_acc = document.getElementById('btn_acc');
 
+var customer_id = document.getElementById('customer-id');
+var kodeBarang = document.getElementById('type-id');
+var NoCOA = document.getElementById('NoCOA');
+
+var nomorCoaHead = document.getElementById('nomorCoaHead');
+
+var dateData = document.getElementById('dateData');
+var customerData = document.getElementById('customerData');
+var poNoData = document.getElementById('poNoData');
+var spNoData = document.getElementById('spNoData');
+var commodityData = document.getElementById('commodityData');
+var typeData = document.getElementById('typeData');
+var capacityData = document.getElementById('capacityData');
+var dimensionData = document.getElementById('dimensionData');
+
 
 btn_cust.addEventListener("click", function (e) {
     try {
@@ -65,7 +80,7 @@ btn_cust.addEventListener("click", function (e) {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                selectCust(result.value.idcust, result.value.nama);
+                selectCust(result.value.IdCust, result.value.NamaCust);
             }
         });
     } catch (error) {
@@ -74,8 +89,8 @@ btn_cust.addEventListener("click", function (e) {
 });
 
 function selectCust(idcust, nama) {
-    document.getElementById("customer-id").value = IdCust;
-    document.getElementById("nama-cust").value = NamaCust;
+    document.getElementById("customer-id").value = idcust;
+    document.getElementById("nama-cust").value = nama;
     Swal.close();
 }
 
@@ -120,7 +135,8 @@ btn_type.addEventListener("click", function (e) {
                             dataType: "json",
                             type: "GET",
                             data: {
-                                _token: csrfToken
+                                _token: csrfToken,
+                                idCust: customer_id.value,
                             }
                         },
                         columns: [
@@ -137,7 +153,7 @@ btn_type.addEventListener("click", function (e) {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                selectType(result.value.kode, result.value.nama);
+                selectType(result.value.KodeBarang, result.value.NAMA_BRG);
             }
         });
     } catch (error) {
@@ -146,8 +162,8 @@ btn_type.addEventListener("click", function (e) {
 });
 
 function selectType(kode, nama) {
-    document.getElementById("type-id").value = KodeBarang;
-    document.getElementById("nama-type").value = NAMA_BRG;
+    document.getElementById("type-id").value = kode;
+    document.getElementById("nama-type").value = nama;
     Swal.close();
 }
 
@@ -192,7 +208,9 @@ btn_noCOA.addEventListener("click", function (e) {
                             dataType: "json",
                             type: "GET",
                             data: {
-                                _token: csrfToken
+                                _token: csrfToken,
+                                idCust: customer_id.value,
+                                kodeBarang: kodeBarang.value,
                             }
                         },
                         columns: [
@@ -209,7 +227,81 @@ btn_noCOA.addEventListener("click", function (e) {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                selectNoAcc(result.value.noCOA);
+                selectNoAcc(result.value.Id);
+                nomorCoaHead.innerHTML = '<strong>No: ' + result.value.Id + '</strong>';
+
+                $.ajax({
+                    url: "FrmACCResult/getDetail",
+                    type: "GET",
+                    data: {
+                        _token: csrfToken,
+                        noCoa: NoCOA.value
+                    },
+                    timeout: 30000,
+                    success: function (result) {
+                        console.log(result);
+
+                        dateData.textContent = result[0].Tanggal;
+                        customerData.textContent = result[0].NamaCust;
+                        poNoData.textContent = result[0].NoPO;
+                        spNoData.textContent = result[0].NoSP;
+                        commodityData.textContent = result[0].Commodity;
+                        typeData.textContent = result[0].NAMA_BRG;
+                        capacityData.textContent = result[0].Capacity;
+                        dimensionData.textContent = result[0].Dimension;
+
+                        function generateTable() {
+                            const tableContainer = document.getElementById('tableContainer');
+
+                            if (tableContainer.querySelector('table')) {
+                                console.log('Table has already been generated.');
+                                return; 
+                            }
+
+                            const data = result;
+                            const table = document.createElement('table');
+                            table.className = 'table table-bordered';
+
+                            const thead = document.createElement('thead');
+                            const headerRow = document.createElement('tr');
+                            const headers = ['Part Section', 'Material', 'Item', 'Standard', 'Result'];
+
+                            headers.forEach(headerText => {
+                                const th = document.createElement('th');
+                                th.textContent = headerText;
+                                headerRow.appendChild(th);
+                            });
+
+                            thead.appendChild(headerRow);
+                            table.appendChild(thead);
+
+                            const tbody = document.createElement('tbody');
+
+                            const uniquePartSections = [...new Set(data.map(item => item.PartSection))];
+
+                            uniquePartSections.forEach(partSection => {
+                                const row = document.createElement('tr');
+
+                                const partSectionCell = document.createElement('td');
+                                partSectionCell.textContent = partSection;
+                                row.appendChild(partSectionCell);
+
+                                for (let i = 0; i < 4; i++) {
+                                    const emptyCell = document.createElement('td');
+                                    row.appendChild(emptyCell);
+                                }
+
+                                tbody.appendChild(row);
+                            });
+
+                            table.appendChild(tbody);
+                            tableContainer.appendChild(table);
+                        }
+
+                        generateTable();
+
+                    }
+                });
             }
         });
     } catch (error) {
@@ -218,51 +310,7 @@ btn_noCOA.addEventListener("click", function (e) {
 });
 
 function selectNoAcc(noCOA) {
-    document.getElementById("type-id").value = NoCOA;
+    document.getElementById("NoCOA").value = noCOA;
     Swal.close();
 }
 
-btn_acc.addEventListener("click", function (e) {
-    try {
-        var material = document.getElementById("material").value.trim();
-        var id = document.getElementById("id").value.trim();
-
-        if (id !== '' && material !== '') {
-            var btnProses = document.getElementById("btn_proses");
-            btnProses.disabled = true;
-            btnProses.classList.add('btn-disabled');
-        } else if (material === '') {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Data is not complete',
-                text: 'Please fill Material Section or choose Material Section.',
-            });
-        } else {
-            $.ajax({
-                type: 'POST',
-                url: 'FrmMasterMaterial',
-                data: {
-                    _token: csrfToken,
-                    material: material
-                },
-                timeout: 30000,
-                success: function (response) {
-                    if (response.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success',
-                            text: response.success,
-                        });
-
-                        document.getElementById("material").value = '';
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error(error);
-                }
-            });
-        }
-    } catch (error) {
-        console.error(error);
-    }
-});

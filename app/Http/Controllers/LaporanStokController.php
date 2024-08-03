@@ -29,6 +29,7 @@ class LaporanStokController extends Controller
 
     public function show($id, Request $request)
     {
+        set_time_limit(300);
         // divisi
         if ($id === 'getDivisi') {
             $divisiConn = DB::connection('ConnInventory')
