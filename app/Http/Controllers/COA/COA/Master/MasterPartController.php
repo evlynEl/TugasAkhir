@@ -42,14 +42,14 @@ class MasterPartController extends Controller
     {
         $parts = DB::connection('ConnTestQC')->select('exec [SP_1273_LIST_COA] @kode = ?', [1]);
 
-        $data_list = [];
-        foreach ($parts as $part) {
-            $data_list[] = [
-                'Id' => $part->Id,
-                'PartSection' => $part->PartSection,
-            ];
-        }
-        return datatables($data_list)->make(true);
+            $data_list = [];
+            foreach ($parts as $part) {
+                $data_list[] = [
+                    'Id' => $part->Id,
+                    'PartSection' => $part->PartSection,
+                ];
+            }
+            return datatables($data_list)->make(true);
     }
 
     public function edit($id)

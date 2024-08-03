@@ -104,22 +104,22 @@ Route::group(['middleware' => ['auth']], function () {
 
 
     //tidak dipake
-    Route::get('COA', 'App\Http\Controllers\HomeController@COA');
+    // Route::get('COA', 'App\Http\Controllers\HomeController@COA');
     Route::resource('FrmMasterPart', MasterPartController::class);
 
-    Route::get('COA', 'App\Http\Controllers\HomeController@COA');
+    // Route::get('COA', 'App\Http\Controllers\HomeController@COA');
     Route::resource('FrmMasterMaterial', MasterMaterialController::class);
 
-    Route::get('FrmMasterType', 'App\Http\Controllers\COA\COA\Master\MasterTypeController@index');
-    // Route::resource('FrmMasterType', MasterTypeController::class);
+    // Route::get('FrmMasterType', 'App\Http\Controllers\COA\COA\Master\MasterTypeController@index');
+    Route::resource('FrmMasterType', MasterTypeController::class);
 
-    Route::get('FrmResult', 'App\Http\Controllers\COA\COA\ResultController@index');
-    // Route::resource('FrmResult', ResultController::class);
+    // Route::get('FrmResult', 'App\Http\Controllers\COA\COA\ResultController@index');
+    Route::resource('FrmResult', ResultController::class);
 
-    Route::get('FrmPrintResult', 'App\Http\Controllers\COA\COA\PrintController@index');
-    // Route::resource('FrmPrintResult', PrintController::class);
+    // Route::get('FrmPrintResult', 'App\Http\Controllers\COA\COA\PrintController@index');
+    Route::resource('FrmPrintResult', PrintController::class);
 
-    Route::get('FrmACCResult', 'App\Http\Controllers\COA\COA\ACCController@index');
+    // Route::get('FrmACCResult', 'App\Http\Controllers\COA\COA\ACCController@index');
     Route::resource('FrmACCResult', ACCController::class);
 
 

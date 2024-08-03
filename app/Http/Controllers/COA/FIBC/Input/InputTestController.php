@@ -55,6 +55,9 @@ class InputTestController extends Controller
             $dataValues[] = number_format((float)$value, 2, '.', '');
         }
 
+        dd($request->all());
+
+
         // $request->validate([
         //     'picture1' => 'nullable|file|mimes:jpeg,png',
         //     'picture2' => 'nullable|file|mimes:jpeg,png',
@@ -112,6 +115,7 @@ class InputTestController extends Controller
         try {
             if ($a === 1) { // ISI
                 if ($jumlah === 3) {
+
                     DB::connection('ConnTestQC')->statement(
                         'exec SP_1273_QTC_MAINT_RESULT_FIBC
                         @Kode = 1,
@@ -185,7 +189,8 @@ class InputTestController extends Controller
                                 $cyclicResult, $topLift, $topResult, $breakageLocation,
                                 $dropResult, $testResult, $UserInput,
                             ],
-                            $dataValues, [$jumlah]
+                            $dataValues,
+                            [$jumlah]
                         )
                     );
 
@@ -196,7 +201,6 @@ class InputTestController extends Controller
                         // 'Pict_3' => $imageBinary3,
                         // 'Pict_4' => $imageBinary4
                     ]);
-
                 }
             } else if ($a === 2) { // KOREKSI
                 DB::connection('ConnTestQC')->statement(
@@ -411,67 +415,7 @@ class InputTestController extends Controller
 
     public function update(Request $request, $id)
     {
-        // if ($id == 'koreksiTestFIBC') {
-        //     dd('masuk', $request->input('Height_Approx'));
-        //     $referenceNo = $request->input('RefNo');
-        //     $heightApprox = $request->input('Height_Approx');
-        //     $diaVal = $request->input('dia_val');
-        //     $squareVal = $request->input('square_val');
-        //     $cyclicTest = $request->input('Cyclic_Test');
-        //     $loadSpeed = $request->input('Load_Speed');
-        //     $cyclicLift = $request->input('Cyclic_Lift');
-        //     $cyclicResult = $request->input('Cyclic_Result');
-        //     $topLift = $request->input('Top_Lift');
-        //     $topResult = $request->input('Top_Result');
-        //     $breakageLocation = $request->input('Breakage_Location');
-        //     $testResult = $request->input('TestResult');
-        //     $dropResult = $request->input('Drop_Result');
-        //     $dropTest = $request->input('Drop_Test');
-        //     $jumlah = (int)$request->input('Jumlah');
-        //     $UserInput = Auth::user()->NomorUser;
-
-        //     $dataValues = [];
-        //     for ($i = 1; $i <= 30; $i++) {
-        //         $value = $request->input("Data_$i");
-        //         $dataValues[] = number_format((float)$value, 2, '.', '');
-        //     }
-
-        //     dd($request->all());
-
-        //     try {
-        //         DB::connection('ConnTestQC')->statement(
-        //             'exec SP_1273_QTC_MAINT_RESULT_FIBC
-        //             @Kode = 5,
-        //             @RefNo = ?, @Height = ?, @Dia = ?, @Square = ?,
-        //             @CyclicTest = ?, @Speed = ?, @DropTest = ?, @CyclicLift = ?,
-        //             @CyclicResult = ?, @TopLift = ?, @TopResult = ?, @Breakage = ?,
-        //             @DropResult = ?, @TestResult = ?, @UserInput = ?, @CyclicData1 = ?, @CyclicData2 = ?,
-        //             @CyclicData3 = ?, @CyclicData4 = ?, @CyclicData5 = ?, @CyclicData6 = ?, @CyclicData7 = ?,
-        //             @CyclicData8 = ?, @CyclicData9 = ?, @CyclicData10 = ?, @CyclicData11 = ?, @CyclicData12 = ?,
-        //             @CyclicData13 = ?, @CyclicData14 = ?, @CyclicData15 = ?, @CyclicData16 = ?, @CyclicData17 = ?,
-        //             @CyclicData18 = ?, @CyclicData19 = ?, @CyclicData20 = ?, @CyclicData21 = ?, @CyclicData22 = ?,
-        //             @CyclicData23 = ?, @CyclicData24 = ?, @CyclicData25 = ?, @CyclicData26 = ?, @CyclicData27 = ?,
-        //             @CyclicData28 = ?, @CyclicData29 = ?, @CyclicData30 = ?',
-        //             array_merge([
-        //                 $referenceNo, $heightApprox, $diaVal, $squareVal,
-        //                 $cyclicTest, $loadSpeed, $dropTest, $cyclicLift,
-        //                 $cyclicResult, $topLift, $topResult, $breakageLocation,
-        //                 $dropResult, $testResult, $UserInput
-        //             ], $dataValues)
-        //         );
-
-        //         DB::connection('ConnTestQC')->table('Picture_FIBC')->where('Reference_No', $referenceNo)->update([
-        //             'Jumlah' => $jumlah
-        //             // 'Pict_1' => $imageBinary1,
-        //             // 'Pict_2' => $imageBinary2,
-        //             // 'Pict_3' => $imageBinary3
-        //         ]);
-
-        //         return response()->json(['success' => 'Data updated successfully'], 200);
-        //     } catch (\Exception $e) {
-        //         return response()->json(['error' => 'Failed to update data: ' . $e->getMessage()], 500);
-        //     }
-        // }
+        //
     }
 
 

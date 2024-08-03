@@ -372,8 +372,9 @@ class InputDetailController extends Controller
     public function update(Request $request, $id)
     {
         if ($id == 'koreksiDetailFIBC') {
-            $Reference_No = $request->input('no_ref');
-            // dd($Reference_No);
+            // dd($request->all());
+
+            $Reference_No = $request->input('RefNo');
             $Customer = $request->input('customer');
             $Bag_Code = $request->input('bagCode');
             $Bag_Type = $request->input('bagType');

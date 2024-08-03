@@ -259,7 +259,6 @@ btn_RefNo.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
-            timeout: 30000,
             width: '40%',
             showCloseButton: true,
             showConfirmButton: true,
@@ -291,6 +290,9 @@ btn_RefNo.addEventListener("click", function (e) {
 
                 currentIndex = null;
                 Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
+                setTimeout(() => {
+                    Swal.close();
+                }, 30000);
             }
         }).then((result) => {
             if (result.isConfirmed) {
@@ -394,19 +396,6 @@ btn_RefNo.addEventListener("click", function (e) {
                         retrieveCheck('sewingMethod', sewing.value);
                         retrieveCheck('stitchApprox', stitch.value);
                         retrieveCheck('fitDraw', draw.value);
-
-                        // fungsi memunculkan centang sesuai isi database
-                        function retrieveCheck(sectionId, value) {
-                            var section = sections.find(s => s.id === sectionId);
-                            if (section) {
-                                section.checkboxes.forEach(function (checkboxName) {
-                                    var checkbox = document.querySelector(`#${sectionId} input[name="${checkboxName}"]`);
-                                    if (checkbox) {
-                                        checkbox.checked = (checkboxName === value);
-                                    }
-                                });
-                            }
-                        }
 
                         liftBeltType.value = result[0].LiftingBelt_Type ? result[0].LiftingBelt_Type.trim() : '';
                         sewingThreadType.value = result[0].SewingThread_Type ? result[0].SewingThread_Type.trim() : '';
@@ -643,6 +632,42 @@ btn_BagCode.addEventListener("click", function (e) {
         console.error("Exception occurred:", error);
     }
 });
+
+// fungsi memunculkan centang sesuai isi database
+function retrieveCheck(sectionId, value) {
+    var section = sections.find(s => s.id === sectionId);
+    if (section) {
+        var currentArray;
+        switch (sectionId) {
+            case 'jenis':
+                currentArray = jenis;
+                break;
+            case 'sewingMethod':
+                currentArray = sewing;
+                break;
+            case 'stitchApprox':
+                currentArray = stitch;
+                break;
+            case 'fitDraw':
+                currentArray = draw;
+                break;
+        }
+
+        section.checkboxes.forEach(function (checkboxName) {
+            var checkbox = document.querySelector(`#${sectionId} input[name="${checkboxName}"]`);
+            if (checkbox) {
+                if (checkboxName === value) {
+                    checkbox.checked = true;
+                    if (!currentArray.includes(value)) {
+                        currentArray.push(value);
+                    }
+                } else {
+                    checkbox.checked = false;
+                }
+            }
+        });
+    }
+}
 
 // fungsi swal select pake arrow
 function handleTableKeydown(e, tableId) {
@@ -1302,72 +1327,80 @@ async function koreksiFIBC(jenisString, sewingString, stitchString, drawString) 
     let parsedInputs1 = inputs1.map(input => parseFloat(input.value) || 0);
     let parsedInputs2 = inputs2.map(input => parseFloat(input.value) || 0);
 
+    // Prepare data to be sent
+    let dataToSend = {
+        _token: csrfToken,
+        tanggal: tanggal.value,
+        RefNo: splitRefNo.trim(),
+        customer: customer.value.trim(),
+        bagCode: bagCode.value.trim(),
+        bagType: bagType.value.trim(),
+        poNo: poNo.value.trim(),
+        prodDate: prodDate.value,
+        testingDate: testingDate.value,
+        size: size.value.trim(),
+        reinforced: reinforced.value.trim(),
+        colour: colour.value.trim(),
+
+        panjang1: formatInput(parsedInputs1[0]),
+        lebar1: formatInput(parsedInputs1[1]),
+        waft1: formatInput(parsedInputs1[2]),
+        denierWaft1: formatInput(parsedInputs1[3]),
+        weft1: formatInput(parsedInputs1[4]),
+        denierWeft1: formatInput(parsedInputs1[5]),
+        weight1: weight1.value ? weight1.value.trim() : '0.00',
+
+        swl: swl.value.trim(),
+        sf: sf.value.trim(),
+        jenis: jenisString.trim(),
+        liftBeltType: liftBeltType.value.trim(),
+        sewingThreadType: sewingThreadType.value.trim(),
+        sewing: sewingString.trim(),
+        stitch: stitchString.trim(),
+        draw: drawString.trim(),
+
+        panjang2: formatInput(parsedInputs2[0]),
+        lebar2: formatInput(parsedInputs2[1]),
+        waft2: formatInput(parsedInputs2[2]),
+        denierWaft2: formatInput(parsedInputs2[3]),
+        weft2: formatInput(parsedInputs2[4]),
+        denierWeft2: formatInput(parsedInputs2[5]),
+        weight2: weight2.value ? weight2.value.trim() : '0.00',
+
+        topS1: topS1.value.trim(),
+        topS2: topS2.value.trim(),
+        topS3: topS3.value.trim(),
+        topS4: topS4.value.trim(),
+        topS5: topS5.value.trim(),
+        topE1: topE1.value.trim(),
+        topE2: topE2.value.trim(),
+        topE3: topE3.value.trim(),
+        topE4: topE4.value.trim(),
+        topE5: topE5.value.trim(),
+        bottomS1: bottomS1.value.trim(),
+        bottomS2: bottomS2.value.trim(),
+        bottomS3: bottomS3.value.trim(),
+        bottomS4: bottomS4.value.trim(),
+        bottomS5: bottomS5.value.trim(),
+        bottomE1: bottomE1.value.trim(),
+        bottomE2: bottomE2.value.trim(),
+        bottomE3: bottomE3.value.trim(),
+        bottomE4: bottomE4.value.trim(),
+        bottomE5: bottomE5.value.trim()
+    };
+
+    // Log data to be sent
+    // console.log('Data to be sent:', dataToSend);
+
     $.ajax({
         url: "FrmInputFIBC/koreksiDetailFIBC",
         type: "PUT",
-        data: {
-            _token: csrfToken,
-            tanggal: tanggal.value,
-            fixRefNo: fixRefNo.trim(),
-            customer: customer.value.trim(),
-            bagCode: bagCode.value.trim(),
-            bagType: bagType.value.trim(),
-            poNo: poNo.value.trim(),
-            prodDate: prodDate.value,
-            testingDate: testingDate.value,
-            size: size.value.trim(),
-            reinforced: reinforced.value.trim(),
-            colour: colour.value.trim(),
-
-            panjang1: formatInput(parsedInputs1[0]),
-            lebar1: formatInput(parsedInputs1[1]),
-            waft1: formatInput(parsedInputs1[2]),
-            denierWaft1: formatInput(parsedInputs1[3]),
-            weft1: formatInput(parsedInputs1[4]),
-            denierWeft1: formatInput(parsedInputs1[5]),
-            weight1: weight1.value ? weight1.value.trim() : '0.00',
-
-            swl: swl.value.trim(),
-            sf: sf.value.trim(),
-            jenis: jenisString.trim(),
-            liftBeltType: liftBeltType.value.trim(),
-            sewingThreadType: sewingThreadType.value.trim(),
-            sewing: sewingString.trim(),
-            stitch: stitchString.trim(),
-            draw: drawString.trim(),
-
-            panjang2: formatInput(parsedInputs2[0]),
-            lebar2: formatInput(parsedInputs2[1]),
-            waft2: formatInput(parsedInputs2[2]),
-            denierWaft2: formatInput(parsedInputs2[3]),
-            weft2: formatInput(parsedInputs2[4]),
-            denierWeft2: formatInput(parsedInputs2[5]),
-            weight2: weight2.value ? weight2.value.trim() : '0.00',
-
-            topS1: topS1.value.trim(),
-            topS2: topS2.value.trim(),
-            topS3: topS3.value.trim(),
-            topS4: topS4.value.trim(),
-            topS5: topS5.value.trim(),
-            topE1: topE1.value.trim(),
-            topE2: topE2.value.trim(),
-            topE3: topE3.value.trim(),
-            topE4: topE4.value.trim(),
-            topE5: topE5.value.trim(),
-            bottomS1: bottomS1.value.trim(),
-            bottomS2: bottomS2.value.trim(),
-            bottomS3: bottomS3.value.trim(),
-            bottomS4: bottomS4.value.trim(),
-            bottomS5: bottomS5.value.trim(),
-            bottomE1: bottomE1.value.trim(),
-            bottomE2: bottomE2.value.trim(),
-            bottomE3: bottomE3.value.trim(),
-            bottomE4: bottomE4.value.trim(),
-            bottomE5: bottomE5.value.trim(),
-            Copy_RefNo: Copy_RefNo.trim(),
-        },
+        data: dataToSend,
         timeout: 30000,
         success: function (response) {
+            // Log the response
+            console.log('AJAX Success Response:', response);
+
             if (response.success) {
                 Swal.fire({
                     icon: 'success',
@@ -1379,8 +1412,9 @@ async function koreksiFIBC(jenisString, sewingString, stitchString, drawString) 
             }
         },
         error: function (xhr, status, error) {
+            // Log error details
             console.error('AJAX Error:', error);
-            console.log('Response Status:', status);
+
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
@@ -1388,7 +1422,7 @@ async function koreksiFIBC(jenisString, sewingString, stitchString, drawString) 
             });
         }
     });
-
 }
+
 
 

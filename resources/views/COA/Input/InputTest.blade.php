@@ -592,5 +592,5 @@
         </div>
     </div>
     <script src="{{ asset('js/COA/Input/InputTest.js') }}"></script>
-    <link rel="stylesheet" href="{{ asset('css/COA/Input/InputTest.css') }}">
+<link rel="stylesheet" href="{{ asset('css/COA/Input/InputTest.css') }}">
 @endsection

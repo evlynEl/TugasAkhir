@@ -37,7 +37,7 @@
     </div>
 </div>
 
-<script src="{{ asset('js/COA//MasterPart.js') }}"></script>
+<script src="{{ asset('js/COA/Master//MasterPart.js') }}"></script>
 <style>
     .btn-disabled {
         cursor: not-allowed;
