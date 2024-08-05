@@ -1,5 +1,17 @@
 @extends('layouts.appCOA')
 @section('content')
+<style>
+    .image-container {
+        position: relative;
+        width: 100%;
+        height: auto;
+    }
+    .image-container img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+</style>
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-md-10 RDZMobilePaddingLR0">
@@ -494,18 +506,14 @@
                                             <div class="form-group">
                                                 <div class="d-flex align-items-center">
                                                     <label for="Pict_1" class="mr-2">1.</label>
-                                                    <div class="input-group">
-                                                        <input type="text" class="form-control" id="Pict_1"
-                                                            name="Pict_1" readonly>
-                                                        <div class="input-group-append">
-                                                            <button type="button" id="btn_pict1"
-                                                                class="btn btn-info">...</button>
-                                                        </div>
+                                                    <div class="custom-file">
+                                                        <input type="file" accept="image/*" class="custom-file-input" id="Pict_1">
+
+                                                        <label class="custom-file-label" for="Pict_1">Choose file</label>
                                                     </div>
                                                 </div>
                                                 <div class="mt-2 ml-3 image-container">
-                                                    <input type="file" id="picture1" style="display: none" accept="image/*"ccept="image/*">
-                                                    <img id="imagePreview1" src="" alt="Image Preview" style="display: none; max-width: 100%; max-height: 150px;">
+                                                    <img id="imagePreview1" src="" alt="Image Preview" style="display:none; max-width: 100%; max-height: auto;">
                                                 </div>
 
                                             </div>
@@ -516,19 +524,82 @@
                                             <div class="form-group">
                                                 <div class="d-flex align-items-center">
                                                     <label for="Pict_2" class="mr-2">2.</label>
-                                                    <div class="input-group">
-                                                        <input type="text" class="form-control" id="Pict_2"
-                                                            name="Pict_2" readonly>
-                                                        <div class="input-group-append">
-                                                            <button type="button" id="btn_pict2"
-                                                                class="btn btn-info">...</button>
-                                                        </div>
+                                                    <div class="custom-file">
+                                                        <input type="file" accept="image/*" class="custom-file-input" id="Pict_2">
+                                                        <label class="custom-file-label" for="Pict_2">Choose file</label>
                                                     </div>
                                                 </div>
                                                 <div class="mt-2 ml-3 image-container">
-                                                    <input type="file" id="picture2" style="display: none" accept="image/*">
-                                                    <img id="imagePreview2" src="" alt="Image Preview"
-                                                        style="display: none; max-width: 100%; max-height: 150px";>
+                                                    <img id="imagePreview2" src="" alt="Image Preview" style="display: none; max-width: 100%; max-height: auto";>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Third Set -->
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <div class="d-flex align-items-center">
+                                                    <label for="Pict_3" class="mr-2">3.</label>
+                                                    <div class="custom-file">
+                                                        <input type="file" accept="image/*" class="custom-file-input" id="Pict_3">
+                                                        <label class="custom-file-label" for="Pict_3">Choose file</label>
+                                                    </div>
+                                                </div>
+                                                <div class="mt-2 ml-3 image-container">
+                                                    <img id="imagePreview3" src="" alt="Image Preview" style="display: none; max-width: 100%; max-height: auto";>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Fourth Set -->
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <div class="d-flex align-items-center">
+                                                    <label for="Pict_4" class="mr-2">4.</label>
+                                                    <div class="custom-file">
+                                                        <input type="file"  accept="image/*" class="custom-file-input" id="Pict_4">
+                                                        <label class="custom-file-label" for="Pict_4">Choose file</label>
+                                                    </div>
+                                                </div>
+                                                <div class="mt-2 ml-3 image-container">
+                                                    <img id="imagePreview4" src="" alt="Image Preview" style="display: none; max-width: 100%; max-height: auto";>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {{-- <div class="col-md-9 mt-3">
+                                    <div class="row" id="gambarbox">
+                                        <!-- First Set -->
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <div class="d-flex align-items-center">
+                                                    <label for="Pict_1" class="mr-2">1.</label>
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" id="Pict_1" name="Pict_1" readonly>
+                                                        <input type="file" id="picture1" style="display: none" accept="image/*">
+                                                        <button type="button" onclick="triggerFileInput('picture1')">Upload Image 1</button>
+                                                    </div>
+                                                </div>
+                                                <div class="mt-2 ml-3 image-container">
+                                                    <img id="imagePreview1" src="" alt="Image Preview" style="display: none;">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Second Set -->
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <div class="d-flex align-items-center">
+                                                    <label for="Pict_2" class="mr-2">2.</label>
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" id="Pict_2" name="Pict_2" readonly>
+                                                        <input type="file" id="picture2" style="display: none" accept="image/*">
+                                                        <button type="button" onclick="triggerFileInput('picture2')">Upload Image 2</button>
+                                                    </div>
+                                                </div>
+                                                <div class="mt-2 ml-3 image-container">
+                                                    <img id="imagePreview2" src="" alt="Image Preview" style="display: none;">
                                                 </div>
                                             </div>
                                         </div>
@@ -539,18 +610,13 @@
                                                 <div class="d-flex align-items-center">
                                                     <label for="Pict_3" class="mr-2">3.</label>
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control" id="Pict_3"
-                                                            name="Pict_3" readonly>
-                                                        <div class="input-group-append">
-                                                            <button type="button" id="btn_pict3"
-                                                                class="btn btn-info">...</button>
-                                                        </div>
+                                                        <input type="text" class="form-control" id="Pict_3" name="Pict_3" readonly>
+                                                        <input type="file" id="picture3" style="display: none" accept="image/*">
+                                                        <button type="button" onclick="triggerFileInput('picture3')">Upload Image 3</button>
                                                     </div>
                                                 </div>
                                                 <div class="mt-2 ml-3 image-container">
-                                                    <input type="file" id="picture3" style="display: none" accept="image/*">
-                                                    <img id="imagePreview3" src="" alt="Image Preview"
-                                                        style="display: none; max-width: 100%; max-height: 150px";>
+                                                    <img id="imagePreview3" src="" alt="Image Preview" style="display: none;">
                                                 </div>
                                             </div>
                                         </div>
@@ -561,23 +627,18 @@
                                                 <div class="d-flex align-items-center">
                                                     <label for="Pict_4" class="mr-2">4.</label>
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control" id="Pict_4"
-                                                            name="Pict_4" readonly>
-                                                        <div class="input-group-append">
-                                                            <button type="button" id="btn_pict4"
-                                                                class="btn btn-info">...</button>
-                                                        </div>
+                                                        <input type="text" class="form-control" id="Pict_4" name="Pict_4" readonly>
+                                                        <input type="file" id="picture4" style="display: none" accept="image/*">
+                                                        <button type="button" onclick="triggerFileInput('picture4')">Upload Image 4</button>
                                                     </div>
                                                 </div>
                                                 <div class="mt-2 ml-3 image-container">
-                                                    <input type="file" id="picture4" style="display: none" accept="image/*">
-                                                    <img id="imagePreview4" src="" alt="Image Preview"
-                                                        style="display: none; max-width: 100%; max-height: 150px";>
+                                                    <img id="imagePreview4" src="" alt="Image Preview" style="display: none;">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
 

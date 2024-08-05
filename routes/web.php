@@ -86,7 +86,7 @@ Route::group(['middleware' => ['auth']], function () {
 
 
     // COA
-    // Route::get('COA', 'App\Http\Controllers\HomeController@COA');
+    Route::get('COA', 'App\Http\Controllers\HomeController@COA');
     Route::resource('FrmInputFIBC', InputDetailController::class);
 
     // Route::get('COA', 'App\Http\Controllers\HomeController@COA');

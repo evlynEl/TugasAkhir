@@ -92,8 +92,8 @@ class ACCQCManController extends Controller
 
             try {
                 DB::connection('ConnTestQC')
-                    ->statement('exec [SP_1273_QTC_ACC_MANAGER_FIBC] 
-                @Kode = ?, 
+                    ->statement('exec [SP_1273_QTC_ACC_MANAGER_FIBC]
+                @Kode = ?,
                 @RefNo = ?,
                 @UserACC = ?
                 ', [
