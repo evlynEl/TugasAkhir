@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Laporan;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -13,7 +13,8 @@ class LaporanStokController extends Controller
 
     public function index()
     {
-        $access = (new HakAksesController)->HakAksesFiturMaster('LaporanStok');
+        $access = (new HakAksesController)->HakAksesFiturMaster('LaporanStok'); //tidak perlu menu di navbar
+        // dd($access);
         return view('Laporan.LaporanStok', compact('access'));
     }
 
@@ -498,7 +499,7 @@ class LaporanStokController extends Controller
                             'PengeluaranSekunder' => $KeluarSekunder,
                             'PengeluaranTritier' => $KeluarTritier,
                         ];
-                        
+
                         DB::connection('ConnInventory')->table('Laporan1')->insert($data);
                     }
                 }

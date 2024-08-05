@@ -4,14 +4,15 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\QC\QCController;
 use App\Http\Controllers\COA\COA\ACCController;
-use App\Http\Controllers\LaporanStokController;
 use App\Http\Controllers\COA\COA\PrintController;
 use App\Http\Controllers\Contoh\ContohController;
 use App\Http\Controllers\COA\COA\ResultController;
 use App\Http\Controllers\COA\FIBC\FIBCPrintController;
+use App\Http\Controllers\Laporan\LaporanStokController;
+use App\Http\Controllers\Laporan\LaporanSaldoController;
 use App\Http\Controllers\COA\FIBC\ACC\ACCQCManController;
-use App\Http\Controllers\COA\FIBC\ACC\ACCQCSpvController;
 
+use App\Http\Controllers\COA\FIBC\ACC\ACCQCSpvController;
 use function PHPUnit\Framework\assertDirectoryIsReadable;
 use App\Http\Controllers\QC\Afalan\QCInputAfalanController;
 use App\Http\Controllers\QC\Extruder\QCExtruderBController;
@@ -22,9 +23,9 @@ use App\Http\Controllers\COA\COA\Master\MasterTypeController;
 use App\Http\Controllers\QC\Afalan\QCKoreksiAfalanController;
 use App\Http\Controllers\COA\FIBC\Input\InputDetailController;
 use App\Http\Controllers\COA\COA\Master\MasterMaterialController;
+
+
 use App\Http\Controllers\QC\Circular\QCCircularTropodoController;
-
-
 use App\Http\Controllers\QC\Extruder\QCExtruderTropodoController;
 use App\Http\Controllers\QC\Circular\QCCircularMojosariController;
 
@@ -59,6 +60,9 @@ Route::group(['middleware' => ['auth']], function () {
     // Laporan Stok
     Route::resource('LaporanStok', LaporanStokController::class);
 
+    // Laporan Saldo
+    Route::resource('LaporanSaldo', LaporanSaldoController::class);
+
     // QC
     Route::get('QC', 'App\Http\Controllers\HomeController@QC');
     Route::resource('QCFitur', QCController::class);
@@ -66,8 +70,8 @@ Route::group(['middleware' => ['auth']], function () {
     // Route::get('InputAfalanQC', 'App\Http\Controllers\QC\Afalan\QCInputAfalanController@index');
     Route::resource('InputAfalanQC', QCInputAfalanController::class);
 
-    Route::get('KoreksiAfalan', 'App\Http\Controllers\QC\Afalan\QCKoreksiAfalanController@index');
-    // Route::resource('KoreksiAfalan', QCKoreksiAfalanController::class);
+    // Route::get('KoreksiAfalan', 'App\Http\Controllers\QC\Afalan\QCKoreksiAfalanController@index');
+    Route::resource('KoreksiAfalan', QCKoreksiAfalanController::class);
 
     // Route::get('CircularTropodo', 'App\Http\Controllers\QC\Circular\QCCircularTropodoController@index');
     Route::resource('CircularTropodo', QCCircularTropodoController::class);

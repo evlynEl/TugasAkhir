@@ -1,4 +1,4 @@
-@extends('layouts.appLaporanStok')
+@extends('layouts.appLaporanSaldo')
 @section('content')
     <div class="container-fluid">
         <div class="row justify-content-center">
@@ -15,16 +15,6 @@
                 <div class="card">
                     <div class="card-body RDZOverflow RDZMobilePaddingLR0">
                         <label><strong>Laporan Stok per Periode</strong></label>
-
-                        <div class="row" style="margin-top: 0%">
-                            <label class="col-sm-2 col-form-label">Tanggal</label>
-                            <div class="col-sm-2">
-                                <input type="date" class="form-control" id="tanggalAwal">
-                            </div>
-                            <div class="col-sm-2">
-                                <input type="date" class="form-control" id="tanggalAkhir">
-                            </div>
-                        </div>
                         <div class="row">
                             <label class="col-sm-2 col-form-label">Divisi</label>
                             <div class="col-sm-1">
@@ -55,24 +45,23 @@
                                 <input type="text" class="form-control d-none" id="idType" readonly>
                             </div>
                         </div>
-                        <div class="row">
-                            <label class="col-sm-2 col-form-label">Kel. Utama</label>
-                            <div class="col-sm-1">
-                                <input type="text" class="form-control" id="kelUtama" readonly>
+                        <div class="row" style="margin-top: 0%">
+                            <label class="col-sm-2">Tanggal</label>
+                            <div class="col-sm-2">
+                                <input type="date" class="form-control" id="tanggalAwal">
                             </div>
-                            <div class="col-sm-3">
-                                <input type="text" class="form-control" id="namaKelUtama" readonly>
-                            </div>
-                            <div class="col-sm-1">
-                                <button type="button" class="btn btn-primary" id="buttonKelUtama">...</button>
+                            <div class="col-sm-2">
+                                <input type="date" class="form-control" id="tanggalAkhir">
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-1 offset-sm-2">
-                                <button type="button" class="btn btn-success" id="prosesButton" style="width: 100%">Proses</button>
+                                <button type="button" class="btn btn-success" id="prosesButton"
+                                    style="width: 100%">Proses</button>
                             </div>
                             <div class="col-sm-1">
-                                <button type="button" class="btn btn-danger" id="cancelButton" style="width: 100%">Cancel</button>
+                                <button type="button" class="btn btn-danger" id="cancelButton"
+                                    style="width: 100%">Cancel</button>
                             </div>
                         </div>
 
@@ -91,7 +80,8 @@
 
                         <div class="row" style="margin-top: 0.5%">
                             <div class="col-sm-1">
-                                <button type="button" class="btn btn-primary" id="excelButton" style="width: 100%">Tampil Excel</button>
+                                <button type="button" class="btn btn-primary" id="excelButton" style="width: 100%">Tampil
+                                    Excel</button>
                             </div>
                         </div>
 
@@ -101,10 +91,10 @@
         </div>
     </div>
 
-    <script type="text/javascript" src="{{ asset('js/Laporan/LaporanStok.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/Laporan/LaporanSaldo.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/exceljs@4.3.0/dist/exceljs.min.js"></script>
     <link rel="stylesheet" href="{{ asset('css/sweetalert2.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/Laporan/LaporanStok.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/Laporan/LaporanSaldo.css') }}">
     <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>
 @endsection
