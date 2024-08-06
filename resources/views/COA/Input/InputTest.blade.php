@@ -1,17 +1,18 @@
 @extends('layouts.appCOA')
 @section('content')
-<style>
-    .image-container {
-        position: relative;
-        width: 100%;
-        height: auto;
-    }
-    .image-container img {
-        width: 100%;
-        height: auto;
-        display: block;
-    }
-</style>
+    <style>
+        .image-container {
+            position: relative;
+            width: 100%;
+            height: auto;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+    </style>
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-md-10 RDZMobilePaddingLR0">
@@ -110,8 +111,7 @@
                                         <span style="margin-right: 4.2%"></span>
                                         Load speed:
                                         <div class="input-group" id="topliftbox" style="flex: 1; margin-left: 1%;">
-                                            <input type="text" class="form-control" id="Load_Speed"
-                                                name="Load_Speed">
+                                            <input type="text" class="form-control" id="Load_Speed" name="Load_Speed">
                                             <div class="input-group-append">
                                                 <span class="input-group-text">cm / mnt (Bag dalam keadaan kosong)</span>
                                             </div>
@@ -254,8 +254,10 @@
                                     <div style="display: flex;">
                                         <div class="col-md-2">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="Cyclic_Lift" name="Cyclic_Lift">
-                                                <label class="form-check-label" for="Cyclic_Lift"><strong>Cyclic Test</strong></label>
+                                                <input class="form-check-input" type="checkbox" id="Cyclic_Lift"
+                                                    name="Cyclic_Lift">
+                                                <label class="form-check-label" for="Cyclic_Lift"><strong>Cyclic
+                                                        Test</strong></label>
                                             </div>
                                         </div>
 
@@ -263,23 +265,29 @@
 
                                         <div id="cyclicCheck" style="display: flex; align-items: center;">
                                             <div class="form-check mb-1 ml-4 mr-3">
-                                                <input class="form-check-input" type="checkbox" id="cyclic-Single-Loops" name="Single Loops" data-type="cyclic">
-                                                <label class="form-check-label" for="cyclic-Single-Loops">Single Loops</label>
+                                                <input class="form-check-input" type="checkbox" id="cyclic-Single-Loops"
+                                                    name="Single Loops" data-type="cyclic">
+                                                <label class="form-check-label" for="cyclic-Single-Loops">Single
+                                                    Loops</label>
                                             </div>
                                             <div class="form-check mb-1 ml-4 mr-3">
-                                                <input class="form-check-input" type="checkbox" id="cyclic-Four-Loops" name="Four Loops" data-type="cyclic">
+                                                <input class="form-check-input" type="checkbox" id="cyclic-Four-Loops"
+                                                    name="Four Loops" data-type="cyclic">
                                                 <label class="form-check-label" for="cyclic-Four-Loops">Four Loops</label>
                                             </div>
                                             <div class="form-check mb-1 ml-4 mr-3">
-                                                <input class="form-check-input" type="checkbox" id="cyclic-Two-Loops" name="Two Loops" data-type="cyclic">
+                                                <input class="form-check-input" type="checkbox" id="cyclic-Two-Loops"
+                                                    name="Two Loops" data-type="cyclic">
                                                 <label class="form-check-label" for="cyclic-Two-Loops">Two Loops</label>
                                             </div>
                                             <div class="form-check mb-1 ml-4 mr-3">
-                                                <input class="form-check-input" type="checkbox" id="cyclic-Stevedore" name="Stevedore" data-type="cyclic">
+                                                <input class="form-check-input" type="checkbox" id="cyclic-Stevedore"
+                                                    name="Stevedore" data-type="cyclic">
                                                 <label class="form-check-label" for="cyclic-Stevedore">Stevedore</label>
                                             </div>
                                             <div class="form-check mb-1 ml-4 mr-3">
-                                                <input class="form-check-input" type="checkbox" id="cyclic-Auxiliary" name="Auxiliary" data-type="cyclic">
+                                                <input class="form-check-input" type="checkbox" id="cyclic-Auxiliary"
+                                                    name="Auxiliary" data-type="cyclic">
                                                 <label class="form-check-label" for="cyclic-Auxiliary">Auxiliary</label>
                                             </div>
                                         </div>
@@ -329,23 +337,29 @@
 
                                         <div id="topLiftCheck" style="display: flex; align-items: center;">
                                             <div class="form-check mb-1 ml-4 mr-3">
-                                                <input class="form-check-input" type="checkbox" id="top-Single-Loops" name="Single Loops" data-type="top">
-                                                <label class="form-check-label" for="top-Single-Loops">Single Loops</label>
+                                                <input class="form-check-input" type="checkbox" id="top-Single-Loops"
+                                                    name="Single Loops" data-type="top">
+                                                <label class="form-check-label" for="top-Single-Loops">Single
+                                                    Loops</label>
                                             </div>
                                             <div class="form-check mb-1 ml-4 mr-3">
-                                                <input class="form-check-input" type="checkbox" id="top-Four-Loops" name="Four Loops" data-type="top">
+                                                <input class="form-check-input" type="checkbox" id="top-Four-Loops"
+                                                    name="Four Loops" data-type="top">
                                                 <label class="form-check-label" for="top-Four-Loops">Four Loops</label>
                                             </div>
                                             <div class="form-check mb-1 ml-4 mr-3">
-                                                <input class="form-check-input" type="checkbox" id="top-Two-Loops" name="Two Loops" data-type="top">
+                                                <input class="form-check-input" type="checkbox" id="top-Two-Loops"
+                                                    name="Two Loops" data-type="top">
                                                 <label class="form-check-label" for="top-Two-Loops">Two Loops</label>
                                             </div>
                                             <div class="form-check mb-1 ml-4 mr-3">
-                                                <input class="form-check-input" type="checkbox" id="top-Stevedore" name="Stevedore" data-type="top">
+                                                <input class="form-check-input" type="checkbox" id="top-Stevedore"
+                                                    name="Stevedore" data-type="top">
                                                 <label class="form-check-label" for="top-Stevedore">Stevedore</label>
                                             </div>
                                             <div class="form-check mb-1 ml-4 mr-3">
-                                                <input class="form-check-input" type="checkbox" id="top-Auxiliary" name="Auxiliary" data-type="top">
+                                                <input class="form-check-input" type="checkbox" id="top-Auxiliary"
+                                                    name="Auxiliary" data-type="top">
                                                 <label class="form-check-label" for="top-Auxiliary">Auxiliary</label>
                                             </div>
                                         </div>
@@ -507,13 +521,15 @@
                                                 <div class="d-flex align-items-center">
                                                     <label class="mr-2">1.</label>
                                                     <div class="custom-file">
-                                                        <input type="file" accept="image/*" class="custom-file-input" id="Pict_1">
+                                                        <input type="file" accept="image/*" class="custom-file-input"
+                                                            id="gambar1">
 
-                                                        <label class="custom-file-label" for="Pict_1"></label>
+                                                        <label class="custom-file-label" id="labelpict1" for="gambar1"></label>
                                                     </div>
                                                 </div>
                                                 <div class="mt-2 ml-3 image-container">
-                                                    <img id="imagePreview1" src="" alt="Image Preview" style="display:none; max-width: 100%; max-height: auto;">
+                                                    <img id="imagePreview1" src=""
+                                                        style="display:none; max-width: 100%; max-height: auto;">
                                                 </div>
 
                                             </div>
@@ -525,12 +541,14 @@
                                                 <div class="d-flex align-items-center">
                                                     <label class="mr-2">2.</label>
                                                     <div class="custom-file">
-                                                        <input type="file" accept="image/*" class="custom-file-input" id="Pict_2">
-                                                        <label class="custom-file-label" for="Pict_2"></label>
+                                                        <input type="file" accept="image/*" class="custom-file-input"
+                                                            id="gambar2">
+                                                        <label class="custom-file-label" id="labelpict2" for="gambar2"></label>
                                                     </div>
                                                 </div>
                                                 <div class="mt-2 ml-3 image-container">
-                                                    <img id="imagePreview2" src="" alt="Image Preview" style="display: none; max-width: 100%; max-height: auto";>
+                                                    <img id="imagePreview2" src=""
+                                                        style="display: none; max-width: 100%; max-height: auto";>
                                                 </div>
                                             </div>
                                         </div>
@@ -541,12 +559,14 @@
                                                 <div class="d-flex align-items-center">
                                                     <label class="mr-2">3.</label>
                                                     <div class="custom-file">
-                                                        <input type="file" accept="image/*" class="custom-file-input" id="Pict_3">
-                                                        <label class="custom-file-label" for="Pict_3"></label>
+                                                        <input type="file" accept="image/*" class="custom-file-input"
+                                                            id="gambar3">
+                                                        <label class="custom-file-label" id="labelpict3" for="gambar3"></label>
                                                     </div>
                                                 </div>
                                                 <div class="mt-2 ml-3 image-container">
-                                                    <img id="imagePreview3" src="" alt="Image Preview" style="display: none; max-width: 100%; max-height: auto";>
+                                                    <img id="imagePreview3" src=""
+                                                        style="display: none; max-width: 100%; max-height: auto";>
                                                 </div>
                                             </div>
                                         </div>
@@ -557,12 +577,14 @@
                                                 <div class="d-flex align-items-center">
                                                     <label class="mr-2">4.</label>
                                                     <div class="custom-file">
-                                                        <input type="file"  accept="image/*" class="custom-file-input" id="Pict_4">
-                                                        <label class="custom-file-label" for="Pict_4"></label>
+                                                        <input type="file" accept="image/*" class="custom-file-input"
+                                                            id="gambar4">
+                                                        <label class="custom-file-label" id="labelpict4" for="gambar4"></label>
                                                     </div>
                                                 </div>
                                                 <div class="mt-2 ml-3 image-container">
-                                                    <img id="imagePreview4" src="" alt="Image Preview" style="display: none; max-width: 100%; max-height: auto";>
+                                                    <img id="imagePreview4" src=""
+                                                        style="display: none; max-width: 100%; max-height: auto";>
                                                 </div>
                                             </div>
                                         </div>
@@ -574,15 +596,15 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <div class="d-flex align-items-center">
-                                                    <label for="Pict_1" class="mr-2">1.</label>
+                                                    <label for="gambar1" class="mr-2">1.</label>
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control" id="Pict_1" name="Pict_1" readonly>
+                                                        <input type="text" class="form-control" id="gambar1" name="gambar1" readonly>
                                                         <input type="file" id="picture1" style="display: none" accept="image/*">
                                                         <button type="button" onclick="triggerFileInput('picture1')">Upload Image 1</button>
                                                     </div>
                                                 </div>
                                                 <div class="mt-2 ml-3 image-container">
-                                                    <img id="imagePreview1" src="" alt="Image Preview" style="display: none;">
+                                                    <img id="imagePreview1" src=""  style="display: none;">
                                                 </div>
                                             </div>
                                         </div>
@@ -599,7 +621,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="mt-2 ml-3 image-container">
-                                                    <img id="imagePreview2" src="" alt="Image Preview" style="display: none;">
+                                                    <img id="imagePreview2" src=""  style="display: none;">
                                                 </div>
                                             </div>
                                         </div>
@@ -616,7 +638,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="mt-2 ml-3 image-container">
-                                                    <img id="imagePreview3" src="" alt="Image Preview" style="display: none;">
+                                                    <img id="imagePreview3" src=""  style="display: none;">
                                                 </div>
                                             </div>
                                         </div>
@@ -633,7 +655,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="mt-2 ml-3 image-container">
-                                                    <img id="imagePreview4" src="" alt="Image Preview" style="display: none;">
+                                                    <img id="imagePreview4" src=""  style="display: none;">
                                                 </div>
                                             </div>
                                         </div>
@@ -653,5 +675,5 @@
         </div>
     </div>
     <script src="{{ asset('js/COA/Input/InputTest.js') }}"></script>
-<link rel="stylesheet" href="{{ asset('css/COA/Input/InputTest.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/COA/Input/InputTest.css') }}">
 @endsection

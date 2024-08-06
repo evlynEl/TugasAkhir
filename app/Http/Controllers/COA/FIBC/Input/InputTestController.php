@@ -27,6 +27,8 @@ class InputTestController extends Controller
     {
         $a = (int)$request->input('a');
 
+        $formData = $request->all();
+
         $referenceNo = $request->input('RefNo');
         $heightApprox = $request->input('Height_Approx');
         $diaVal = $request->input('dia_val');
@@ -44,11 +46,47 @@ class InputTestController extends Controller
         $jumlah = (int)$request->input('Jumlah');
         $UserInput = Auth::user()->NomorUser;
 
+        $image = $request->file('gambar1data');
+        $imageBinary = null;
+        if ($image) {
+            $binaryReader = fopen($image, 'rb');
+            $imageBinary = fread($binaryReader, $image->getSize());
+            fclose($binaryReader);
+        }
+
+        // gambar 2
+        $image2 = $request->file('gambar2data');
+        $imageBinary2 = null;
+        if ($image2) {
+            $binaryReader2 = fopen($image2, 'rb');
+            $imageBinary2 = fread($binaryReader2, $image2->getSize());
+            fclose($binaryReader2);
+        }
+
+        $image3 = $request->file('gambar3data');
+        $imageBinary3 = null;
+        if ($image3) {
+            $binaryReader3 = fopen($image3, 'rb');
+            $imageBinary3 = fread($binaryReader3, $image3->getSize());
+            fclose($binaryReader3);
+        }
+
+        // gambar 2
+        $image4 = $request->file('gambar4data');
+        $imageBinary4 = null;
+        if ($image4) {
+            $binaryReader4 = fopen($image4, 'rb');
+            $imageBinary4 = fread($binaryReader4, $image4->getSize());
+            fclose($binaryReader4);
+        }
+
         $dataValues = [];
         for ($i = 1; $i <= 30; $i++) {
             $value = $request->input("Data_$i");
-            $dataValues[] = number_format((float)$value, 2, '.', '');
+            $dataValues["Data_$i"] = number_format((float)$value, 2, '.', '');
         }
+
+        // dd($dataValues);
 
         $imageBinaryData = [];
 
@@ -67,70 +105,70 @@ class InputTestController extends Controller
         try {
             if ($a === 1) { // ISI
                 if ($jumlah === 3) {
-                    DB::connection('ConnTestQC')->statement(
-                        'exec SP_1273_QTC_MAINT_RESULT_FIBC
-                        @Kode = 1,
-                        @RefNo = ?, @Height = ?, @Dia = ?, @Square = ?,
-                        @CyclicTest = ?, @Speed = ?, @DropTest = ?, @CyclicLift = ?,
-                        @CyclicResult = ?, @TopLift = ?, @TopResult = ?, @Breakage = ?,
-                        @DropResult = ?, @TestResult = ?, @UserInput = ?, @CyclicData1 = ?, @CyclicData2 = ?,
-                        @CyclicData3 = ?, @CyclicData4 = ?, @CyclicData5 = ?, @CyclicData6 = ?, @CyclicData7 = ?,
-                        @CyclicData8 = ?, @CyclicData9 = ?, @CyclicData10 = ?, @CyclicData11 = ?, @CyclicData12 = ?,
-                        @CyclicData13 = ?, @CyclicData14 = ?, @CyclicData15 = ?, @CyclicData16 = ?, @CyclicData17 = ?,
-                        @CyclicData18 = ?, @CyclicData19 = ?, @CyclicData20 = ?, @CyclicData21 = ?, @CyclicData22 = ?,
-                        @CyclicData23 = ?, @CyclicData24 = ?, @CyclicData25 = ?, @CyclicData26 = ?, @CyclicData27 = ?,
-                        @CyclicData28 = ?, @CyclicData29 = ?, @CyclicData30 = ?, @JumlahPict = ?',
-                        array_merge([
-                            $referenceNo, $heightApprox, $diaVal, $squareVal,
-                            $cyclicTest, $loadSpeed, $dropTest, $cyclicLift,
-                            $cyclicResult, $topLift, $topResult, $breakageLocation,
-                            $dropResult, $testResult, $UserInput
-                        ], $dataValues, [$jumlah])
-                    );
 
-                    DB::connection('ConnTestQC')->table('Picture_FIBC')->insert([
+                    DB::connection('ConnTestQC')->table('Result_FIBC')->insert([
                         'Reference_No' => $referenceNo,
-                        'Pict_1' => $imageBinaryData['Pict_1'] ?? null,
-                        'Pict_2' => $imageBinaryData['Pict_2'] ?? null,
-                        'Pict_3' => $imageBinaryData['Pict_3'] ?? null
+                        'Height_Approx' => $heightApprox,
+                        'Dia' => $diaVal,
+                        'Square' => $squareVal,
+                        'Cyclic_Test' => $cyclicTest,
+                        'Load_Speed' => $loadSpeed,
+                        'Cyclic_Lift' => $cyclicLift,
+                        'Cyclic_Result' => $cyclicResult,
+                        'Top_Lift' => $topLift,
+                        'Top_Result' => $topResult,
+                        'Breakage_Location' => $breakageLocation,
+                        'Drop_Result' => $dropResult,
+                        'Test_Result' => $testResult,
+                        'UserInput' => $request->input('UserInput'),
+                        'TimeInput' => now(), // or use getdate() equivalent in Laravel
+                        'Drop_Test' => $dropTest, // Ensure that this field is also included
                     ]);
 
-                } else if ($jumlah === 4) {
-                    DB::connection('ConnTestQC')->statement(
-                        'exec SP_1273_QTC_MAINT_RESULT_FIBC
-                        @Kode = 1,
-                        @RefNo = ?, @Height = ?, @Dia = ?, @Square = ?,
-                        @CyclicTest = ?, @Speed = ?, @DropTest = ?, @CyclicLift = ?,
-                        @CyclicResult = ?, @TopLift = ?, @TopResult = ?, @Breakage = ?,
-                        @DropResult = ?, @TestResult = ?, @UserInput = ?, @CyclicData1 = ?, @CyclicData2 = ?,
-                        @CyclicData3 = ?, @CyclicData4 = ?, @CyclicData5 = ?,
-                        @CyclicData6 = ?, @CyclicData7 = ?, @CyclicData8 = ?,
-                        @CyclicData9 = ?, @CyclicData10 = ?, @CyclicData11 = ?,
-                        @CyclicData12 = ?, @CyclicData13 = ?, @CyclicData14 = ?,
-                        @CyclicData15 = ?, @CyclicData16 = ?, @CyclicData17 = ?,
-                        @CyclicData18 = ?, @CyclicData19 = ?, @CyclicData20 = ?,
-                        @CyclicData21 = ?, @CyclicData22 = ?, @CyclicData23 = ?,
-                        @CyclicData24 = ?, @CyclicData25 = ?, @CyclicData26 = ?, @CyclicData27 = ?,
-                        @CyclicData28 = ?, @CyclicData29 = ?, @CyclicData30 = ?, @JumlahPict = ?',
-                        array_merge(
-                            [
-                                $referenceNo, $heightApprox, $diaVal, $squareVal,
-                                $cyclicTest, $loadSpeed, $dropTest, $cyclicLift,
-                                $cyclicResult, $topLift, $topResult, $breakageLocation,
-                                $dropResult, $testResult, $UserInput,
-                            ],
-                            $dataValues,
-                            [$jumlah]
-                        )
-                    );
+                    DB::connection('ConnTestQC')->table('Cyclic_FIBC')->insert(array_merge([
+                        'Reference_No' => $referenceNo
+                    ], $dataValues));
 
-
+                    // Insert into the database
                     DB::connection('ConnTestQC')->table('Picture_FIBC')->insert([
                         'Reference_No' => $referenceNo,
-                        'Pict_1' => $imageBinaryData['Pict_1'] ?? null,
-                        'Pict_2' => $imageBinaryData['Pict_2'] ?? null,
-                        'Pict_3' => $imageBinaryData['Pict_3'] ?? null,
-                        'Pict_4' => $imageBinaryData['Pict_4'] ?? null
+                        'Jumlah' => $jumlah,
+                        'Pict_1' => $imageBinary ? DB::raw('0x' . bin2hex($imageBinary)) : null,
+                        'Pict_2' => $imageBinary2 ? DB::raw('0x' . bin2hex($imageBinary2)) : null,
+                        'Pict_3' => $imageBinary3 ? DB::raw('0x' . bin2hex($imageBinary3)) : null
+                    ]);
+                } else if ($jumlah === 4) {
+                    DB::connection('ConnTestQC')->table('Result_FIBC')->insert([
+                        'Reference_No' => $referenceNo,
+                        'Height_Approx' => $heightApprox,
+                        'Dia' => $diaVal,
+                        'Square' => $squareVal,
+                        'Cyclic_Test' => $cyclicTest,
+                        'Load_Speed' => $loadSpeed,
+                        'Cyclic_Lift' => $cyclicLift,
+                        'Cyclic_Result' => $cyclicResult,
+                        'Top_Lift' => $topLift,
+                        'Top_Result' => $topResult,
+                        'Breakage_Location' => $breakageLocation,
+                        'Drop_Result' => $dropResult,
+                        'Test_Result' => $testResult,
+                        'UserInput' => $request->input('UserInput'),
+                        'TimeInput' => now(), // or use getdate() equivalent in Laravel
+                        'Drop_Test' => $dropTest, // Ensure that this field is also included
+                    ]);
+
+                    DB::connection('ConnTestQC')->table('Cyclic_FIBC')->insert(array_merge([
+                        'Reference_No' => $referenceNo
+                    ], $dataValues));
+
+                    // Insert into the database
+                    DB::connection('ConnTestQC')->table('Picture_FIBC')->insert([
+                        'Reference_No' => $referenceNo,
+                        'Jumlah' => $jumlah,
+                        'Pict_1' => $imageBinary ? DB::raw('0x' . bin2hex($imageBinary)) : null,
+                        'Pict_2' => $imageBinary2 ? DB::raw('0x' . bin2hex($imageBinary2)) : null,
+                        'Pict_3' => $imageBinary3 ? DB::raw('0x' . bin2hex($imageBinary3)) : null,
+                        'Pict_4' => $imageBinary4 ? DB::raw('0x' . bin2hex($imageBinary4)) : null
                     ]);
                 }
             } else if ($a === 2) { // KOREKSI

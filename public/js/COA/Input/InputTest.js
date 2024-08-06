@@ -44,15 +44,21 @@ var cyclic30Detail = document.querySelectorAll('#cyclic30box input');
 
 // button
 var btn_info = document.getElementById('btn_info');
-var Pict_1 = document.getElementById('Pict_1');
-var Pict_2 = document.getElementById('Pict_2');
-var Pict_3 = document.getElementById('Pict_3');
-var Pict_4 = document.getElementById('Pict_4');
+var gambar1 = document.getElementById('gambar1');
+var gambar2 = document.getElementById('gambar2');
+var gambar3 = document.getElementById('gambar3');
+var gambar4 = document.getElementById('gambar4');
+
 var btn_isi = document.getElementById('btn_isi');
 var btn_simpan = document.getElementById('btn_simpan');
 var btn_batal = document.getElementById('btn_batal');
 var btn_koreksi = document.getElementById('btn_koreksi');
 var btn_hapus = document.getElementById('btn_hapus');
+
+var labelpict1 = document.getElementById('labelpict1');
+var labelpict2 = document.getElementById('labelpict2');
+var labelpict3 = document.getElementById('labelpict3');
+var labelpict4 = document.getElementById('labelpict4');
 
 let a; // isi = 1, koreksi = 2, hapus = 3
 var refCopy;
@@ -216,10 +222,10 @@ function handleImagePreview(inputId, imageId, labelId) {
     });
 }
 
-handleImagePreview('Pict_1', 'imagePreview1');
-handleImagePreview('Pict_2', 'imagePreview2');
-handleImagePreview('Pict_3', 'imagePreview3');
-handleImagePreview('Pict_4', 'imagePreview4');
+handleImagePreview('gambar1', 'imagePreview1');
+handleImagePreview('gambar2', 'imagePreview2');
+handleImagePreview('gambar3', 'imagePreview3');
+handleImagePreview('gambar4', 'imagePreview4');
 
 
 // fokus ke input tiap kali dia & square tercentang
@@ -629,17 +635,17 @@ btn_info.addEventListener("click", function (e) {
                                 threePictures.disabled = false;
                                 fourPictures.disabled = false;
 
-                                if (data.jumlah === 3) {
+                                if (data.Jumlah === '3') {
                                     threePictures.checked = true;
-                                    Pict_1.disabled = false;
-                                    Pict_2.disabled = false;
-                                    Pict_3.disabled = false;
+                                    gambar1.disabled = false;
+                                    gambar2.disabled = false;
+                                    gambar3.disabled = false;
                                 } else {
                                     fourPictures.checked = true;
-                                    Pict_1.disabled = false;
-                                    Pict_2.disabled = false;
-                                    Pict_3.disabled = false;
-                                    Pict_4.disabled = false;
+                                    gambar1.disabled = false;
+                                    gambar2.disabled = false;
+                                    gambar3.disabled = false;
+                                    gambar4.disabled = false;
                                 }
 
                                 // mengisi nilai data_1 sampai data_30 dan membuka disabled pada data_1 - data_15
@@ -988,9 +994,9 @@ setupCheckboxListeners();
 //             'picture3': null
 //         };
 //         btn_pict1.focus();
-//         setupImageUpload('#btn_pict1', '#picture1', '#Pict_1', '#imagePreview1', '#btn_pict2', formData, 'Pict1');
-//         setupImageUpload('#btn_pict2', '#picture2', '#Pict_2', '#imagePreview2', '#btn_pict3', formData, 'Pict2');
-//         setupImageUpload('#btn_pict3', '#picture3', '#Pict_3', '#imagePreview3', '#btn_simpan', formData, 'Pict3');
+//         setupImageUpload('#btn_pict1', '#picture1', '#gambar1', '#imagePreview1', '#btn_pict2', formData, 'Pict1');
+//         setupImageUpload('#btn_pict2', '#picture2', '#gambar2', '#imagePreview2', '#btn_pict3', formData, 'Pict2');
+//         setupImageUpload('#btn_pict3', '#picture3', '#gambar3', '#imagePreview3', '#btn_simpan', formData, 'Pict3');
 //     } else if (fourPicturesChecked) {
 //         console.log(jumlah);
 
@@ -1003,10 +1009,10 @@ setupCheckboxListeners();
 //             'picture4': null
 //         };
 //         btn_pict1.focus();
-//         setupImageUpload('#btn_pict1', '#picture1', '#Pict_1', '#imagePreview1', '#btn_pict2', formData, 'Pict1');
-//         setupImageUpload('#btn_pict2', '#picture2', '#Pict_2', '#imagePreview2', '#btn_pict3', formData, 'Pict2');
-//         setupImageUpload('#btn_pict3', '#picture3', '#Pict_3', '#imagePreview3', '#btn_pict4', formData, 'Pict3');
-//         setupImageUpload('#btn_pict4', '#picture4', '#Pict_4', '#imagePreview4', '#btn_simpan', formData, 'Pict4');
+//         setupImageUpload('#btn_pict1', '#picture1', '#gambar1', '#imagePreview1', '#btn_pict2', formData, 'Pict1');
+//         setupImageUpload('#btn_pict2', '#picture2', '#gambar2', '#imagePreview2', '#btn_pict3', formData, 'Pict2');
+//         setupImageUpload('#btn_pict3', '#picture3', '#gambar3', '#imagePreview3', '#btn_pict4', formData, 'Pict3');
+//         setupImageUpload('#btn_pict4', '#picture4', '#gambar4', '#imagePreview4', '#btn_simpan', formData, 'Pict4');
 //     }
 // }
 
@@ -1054,10 +1060,10 @@ function setupImageUpload(btnId, inputId, textId, previewId, nextBtnId, formData
 // // Setup image upload for three pictures
 function updateFocus() {
     console.log('masuk update focus');
-    Pict_1.disabled = false;
-    Pict_2.disabled = false;
-    Pict_3.disabled = false;
-    Pict_4.disabled = false;
+    gambar1.disabled = false;
+    gambar2.disabled = false;
+    gambar3.disabled = false;
+    gambar4.disabled = false;
 
     const formData = new FormData();
     const threePicturesChecked = threePictures.checked;
@@ -1072,10 +1078,10 @@ function updateFocus() {
             'picture2': null,
             'picture3': null
         };
-        btn_pict1.focus();
-        setupImageUpload('#btn_pict1', '#picture1', '#Pict_1', '#imagePreview1', '#btn_pict2', formData, 'Pict1');
-        setupImageUpload('#btn_pict2', '#picture2', '#Pict_2', '#imagePreview2', '#btn_pict3', formData, 'Pict2');
-        setupImageUpload('#btn_pict3', '#picture3', '#Pict_3', '#imagePreview3', '#btn_simpan', formData, 'Pict3');
+        // btn_pict1.focus();
+        // setupImageUpload('#btn_pict1', '#picture1', '#gambar1', '#imagePreview1', '#btn_pict2', formData, 'Pict1');
+        // setupImageUpload('#btn_pict2', '#picture2', '#gambar2', '#imagePreview2', '#btn_pict3', formData, 'Pict2');
+        // setupImageUpload('#btn_pict3', '#picture3', '#gambar3', '#imagePreview3', '#btn_simpan', formData, 'Pict3');
     } else if (fourPicturesChecked) {
         console.log(jumlah);
 
@@ -1088,10 +1094,10 @@ function updateFocus() {
             'picture4': null
         };
         // btn_pict1.focus();
-        setupImageUpload('#btn_pict1', '#picture1', '#Pict_1', '#imagePreview1', '#btn_pict2', formData, 'Pict1');
-        setupImageUpload('#btn_pict2', '#picture2', '#Pict_2', '#imagePreview2', '#btn_pict3', formData, 'Pict2');
-        setupImageUpload('#btn_pict3', '#picture3', '#Pict_3', '#imagePreview3', '#btn_pict4', formData, 'Pict3');
-        setupImageUpload('#btn_pict4', '#picture4', '#Pict_4', '#imagePreview4', '#btn_simpan', formData, 'Pict4');
+        // setupImageUpload('#btn_pict1', '#picture1', '#gambar1', '#imagePreview1', '#btn_pict2', formData, 'Pict1');
+        // setupImageUpload('#btn_pict2', '#picture2', '#gambar2', '#imagePreview2', '#btn_pict3', formData, 'Pict2');
+        // setupImageUpload('#btn_pict3', '#picture3', '#gambar3', '#imagePreview3', '#btn_pict4', formData, 'Pict3');
+        // setupImageUpload('#btn_pict4', '#picture4', '#gambar4', '#imagePreview4', '#btn_simpan', formData, 'Pict4');
     }
 }
 
@@ -1140,10 +1146,10 @@ fourPictures.addEventListener('change', updateFocus);
 // }
 
 // // Setup event handlers
-// handleImageUpload('picture1', 'imagePreview1', 'Pict_1', 'picture2');
-// handleImageUpload('picture2', 'imagePreview2', 'Pict_2', 'picture3');
-// handleImageUpload('picture3', 'imagePreview3', 'Pict_3', 'picture4');
-// handleImageUpload('picture4', 'imagePreview4', 'Pict_4', 'btn_simpan');
+// handleImageUpload('picture1', 'imagePreview1', 'gambar1', 'picture2');
+// handleImageUpload('picture2', 'imagePreview2', 'gambar2', 'picture3');
+// handleImageUpload('picture3', 'imagePreview3', 'gambar3', 'picture4');
+// handleImageUpload('picture4', 'imagePreview4', 'gambar4', 'btn_simpan');
 
 
 
@@ -1231,6 +1237,12 @@ function disableKetik() {
     imagePreview2.src = ''
     imagePreview3.src = ''
     imagePreview4.src = ''
+
+    labelpict1.textContent = '';
+    labelpict2.textContent = '';
+    labelpict3.textContent = '';
+    labelpict4.textContent = '';
+
     // btn_pict1.disabled = true;
     // btn_pict2.disabled = true;
     // btn_pict3.disabled = true;
@@ -1428,23 +1440,20 @@ function submitForm(cLiftTxt, tLiftTxt, cyclicResultTxt, breakageTxt, dropResult
         }
     }
 
-    // Append image files
-    const fileInputs = ['picture1', 'picture2', 'picture3', 'picture4'];
-    fileInputs.forEach((id, index) => {
-        const fileInput = document.getElementById(id);
-        if (fileInput && fileInput.files.length > 0) {
-            const file = fileInput.files[0];
-            formData.append(`file${index + 1}`, file); // e.g., 'file1', 'file2'
-        }
-    });
+    var gambar1data = document.getElementById("gambar1").files[0];
+    var gambar2data = document.getElementById("gambar2").files[0];
+    var gambar3data = document.getElementById("gambar3").files[0];
+    var gambar4data = document.getElementById("gambar4").files[0];
 
-    // Convert and append images from data URLs
-    const imageURLs = [imageUrl1, imageUrl2, imageUrl3, imageUrl4];
-    imageURLs.forEach((dataURL, index) => {
-        if (dataURL) {
-            formData.append(`Pict_${index + 1}`, dataURLToBlob(dataURL), `image${index + 1}.jpg`);
-        }
-    });
+    formData.append("gambar1data", gambar1data);
+    formData.append("gambar2data", gambar2data);
+    formData.append("gambar3data", gambar3data);
+    formData.append("gambar4data", gambar4data);
+
+    for (var pair of formData.entries()) {
+        console.log(pair[0] + ': ' + pair[1]);
+    }
+
 
     // Perform AJAX request
     $.ajax({
@@ -1479,18 +1488,15 @@ function submitForm(cLiftTxt, tLiftTxt, cyclicResultTxt, breakageTxt, dropResult
     });
 }
 
-function dataURLToBlob(dataURL) {
-    const [header, base64Data] = dataURL.split(',');
-    const mime = header.match(/:(.*?);/)[1];
-    const binaryString = atob(base64Data);
-    const len = binaryString.length;
-    const bytes = new Uint8Array(len);
-
-    for (let i = 0; i < len; i++) {
-        bytes[i] = binaryString.charCodeAt(i);
+function dataURItoBlob(dataURI) {
+    var byteString = atob(dataURI.split(',')[1]);
+    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+    var ab = new ArrayBuffer(byteString.length);
+    var ia = new Uint8Array(ab);
+    for (var i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
     }
-
-    return new Blob([bytes], { type: mime });
+    return new Blob([ab], { type: mimeString });
 }
 
 
@@ -1535,19 +1541,19 @@ async function koreksiTest(cLiftTxt, tLiftTxt, cyclicResultTxt, breakageTxt, dro
     }
 
     // Ambil file gambar
-    var picture1 = document.getElementById('picture1').files[0];
-    var picture2 = document.getElementById('picture2').files[0];
-    var picture3 = document.getElementById('picture3').files[0];
-    var picture4 = document.getElementById('picture4').files[0];
+    // var picture1 = document.getElementById('picture1').files[0];
+    // var picture2 = document.getElementById('picture2').files[0];
+    // var picture3 = document.getElementById('picture3').files[0];
+    // var picture4 = document.getElementById('picture4').files[0];
 
 
-    formData.append('picture1', picture1);
-    formData.append('picture2', picture2);
-    formData.append('picture3', picture3);
+    // formData.append('picture1', picture1);
+    // formData.append('picture2', picture2);
+    // formData.append('picture3', picture3);
 
-    if (jumlah === '4') {
-        formData.append('picture4', picture4);
-    }
+    // if (jumlah === '4') {
+    //     formData.append('picture4', picture4);
+    // }
 
     $.ajax({
         type: 'POST',
