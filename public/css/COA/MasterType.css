@@ -1,3 +1,13 @@
+input[type="text"] {
+    height: 30px;
+    font-size: 14px;
+}
+
+button.btn-info {
+    font-size: 14px;
+    padding: 0 10px; 
+}
+
 #jenisBarang, #jenisJual {
     outline: solid 1px #ddd;
     text-align: center;
@@ -27,8 +37,7 @@
 .detilCOA {
     outline: solid 1px #ddd;
     padding: 1%;
-
-
+    margin-bottom: 1%;
 }
 
 

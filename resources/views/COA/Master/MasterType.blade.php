@@ -16,6 +16,7 @@
                     <div class="card-header">Master Type Section</div>
                     <div class="card-body RDZOverflow RDZMobilePaddingLR0">
 
+                        {{-- checkbox --}}
                         <div class="form-group d-flex align-items-center" id="jenisBarang">
                             <label style="margin-right: 10px; margin-bottom: 0px;">Jenis Barang: </label><br>
                             <div class="form-check form-check-inline">
@@ -59,14 +60,17 @@
                             </div>
                         </div>
 
+                        {{-- form --}}
                         <div class="form-row">
-                            <div class="form-group col-md-2">
+                            <div class="form-group col-md-1">
                                 <label for="customer-id">Customer :</label>
+                            </div>
+                            <div class="form-group col-md-2">
                                 <input type="text" id="customer-id" name="customer-id" class="form-control" readonly>
                             </div>
-                            <div class="form-group col-md-10" style=" margin-top: 31px;">
+                            <div class="form-group col-md-9">
                                 <div class="input-group">
-                                    <input type="text" id="nama-cust" name="nama-cust" class="form-control">
+                                    <input type="text" class="form-control" id="nama-cust" name="nama-cust" required>
                                     <div class="input-group-append">
                                         <button type="button" id="btn_cust" class="btn btn-info">...</button>
                                     </div>
@@ -75,13 +79,15 @@
                         </div>
 
                         <div class="form-row">
-                            <div class="form-group col-md-2">
+                            <div class="form-group col-md-1">
                                 <label for="type-id">Type :</label>
+                            </div>
+                            <div class="form-group col-md-2">
                                 <input type="text" id="type-id" name="type-id" class="form-control" readonly>
                             </div>
-                            <div class="form-group col-md-10" style=" margin-top: 31px;">
+                            <div class="form-group col-md-9">
                                 <div class="input-group">
-                                    <input type="text" id="nama-type" name="nama-type" class="form-control">
+                                    <input type="text" class="form-control" id="nama-type" name="nama-type" class="form-control">
                                     <div class="input-group-append">
                                         <button type="button" id="btn_type" class="btn btn-info">...</button>
                                     </div>
@@ -89,55 +95,118 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="capacity">Capacity (kg):</label><br>
-                            <input type="number" id="capacity" name="capacity" class="form-control">
+
+                        <div class="form-row">
+                            <div class="form-group col-md-1">
+                                <label for="capacity">Capacity (kg):</label>
+                            </div>
+                            <div class="form-group col-md-11">
+                                <input type="text" id="capacity" name="capacity" class="form-control">
+                            </div>
                         </div>
 
-                        <div class="form-group d-flex align-items-center">
-                            <label for="dimension" class="mr-3 mb-0">Dimension:</label>
-                            <input type="text" id="dimension" name="dimension" class="form-control">
+                        <div class="form-row">
+                            <div class="form-group col-md-1">
+                                <label for="dimension" class="mb-0">Dimension:</label>
+                            </div>
+                            <div class="form-group col-md-11">
+                                <input type="text" id="dimension" name="dimension" class="form-control">
+                            </div>
                         </div>
 
-                        <div class="form-group d-flex align-items-center">
-                            <label for="comodity">Comodity:</label><br>
-                            <input type="number" id="sf1" name="sf1" class="form-control mr-1">
+                        <div class="form-row">
+                            <div class="form-group col-md-1">
+                                <label for="comodity">Comodity:</label>
+                            </div>
+                            <div class="form-group col-md-11">
+                                <input type="text" id="sf1" name="sf1" class="form-control">
+                            </div>
                         </div>
-
 
                         {{-- Detail COA --}}
-                        <label style="margin-top: 20px">Detail COA</label>
+                        <label>Detail COA</label>
                         <div class="detilCOA">
-                            <div class="form-group">
-                                <label for="part">Part Section: </label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="part" name="part" required>
-                                    <div class="input-group-append">
-                                        <button type="button" id="btn_lihat" class="btn btn-info">...</button>
+                            <div class="form-row">
+                                <div class="form-group col-md-2">
+                                    <label for="part">Part Section: </label>
+                                </div>
+                                <div class="form-group col-md-10">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="part" name="part"
+                                            required>
+                                        <div class="input-group-append">
+                                            <button type="button" id="btn_part" class="btn btn-info">...</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <label for="material">Material Section: </label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="material" name="material" required>
-                                    <div class="input-group-append">
-                                        <button type="button" id="btn_lihat" class="btn btn-info">...</button>
+                            <div class="form-row">
+                                <div class="form-group col-md-2">
+                                    <label for="material">Material Section: </label>
+                                </div>
+                                <div class="form-group col-md-10">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="material" name="material"
+                                            required>
+                                        <div class="input-group-append">
+                                            <button type="button" id="btn_material" class="btn btn-info">...</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <label for="item">Item:</label>
-                                <input type="text" id="item" name="item" class="form-control">
+                            <div class="form-row">
+                                <div class="form-group col-md-2">
+                                    <label for="item">Item:</label>
+                                </div>
+                                <div class="form-group col-md-10">
+                                    <input type="text" id="item" name="item" class="form-control">
+                                </div>
                             </div>
 
-                            <div class="form-group">
-                                <label for="standard">Standard:</label>
-                                <input type="text" id="standard" name="standard" class="form-control">
+                            <div class="form-row">
+                                <div class="form-group col-md-2">
+                                    <label for="standard">Standard:</label>
+                                </div>
+
+                                <div class="form-group col-md-8">
+                                    <div class="input-group">
+                                        <input type="text" id="standard" name="standard" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <div class="input-group">
+                                        <button type="button" id="btn_tambah" class="btn btn-outline-secondary"
+                                            style="width: 45%">Tambah</button>
+                                        <button type="button" id="btn_hapus" class="btn btn-outline-secondary"
+                                            style="width: 45%">Hapus</button>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="card">
+                                <div class="table-responsive fixed-height">
+                                    <table id="tableDataByDate" class="display table-height"
+                                        style="width:100%; text-align:center;">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Part Section</th>
+                                                <th scope="col">Material</th>
+                                                <th scope="col">Item</th>
+                                                <th scope="col">Standard</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+
+                                </div>
                             </div>
                         </div>
+
+                        <button type="button" id="btn_proses" class="btn btn-outline-secondary"
+                            style="width: 10%">Proses</button>
 
 
                     </div>
