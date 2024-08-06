@@ -44,10 +44,10 @@ var cyclic30Detail = document.querySelectorAll('#cyclic30box input');
 
 // button
 var btn_info = document.getElementById('btn_info');
-var btn_pict1 = document.getElementById('btn_pict1');
-var btn_pict2 = document.getElementById('btn_pict2');
-var btn_pict3 = document.getElementById('btn_pict3');
-var btn_pict4 = document.getElementById('btn_pict4');
+var Pict_1 = document.getElementById('Pict_1');
+var Pict_2 = document.getElementById('Pict_2');
+var Pict_3 = document.getElementById('Pict_3');
+var Pict_4 = document.getElementById('Pict_4');
 var btn_isi = document.getElementById('btn_isi');
 var btn_simpan = document.getElementById('btn_simpan');
 var btn_batal = document.getElementById('btn_batal');
@@ -196,6 +196,31 @@ inputs.forEach((masuk, index) => {
         }
     });
 });
+
+function handleImagePreview(inputId, imageId, labelId) {
+    document.getElementById(inputId).addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const imagePreview = document.getElementById(imageId);
+                const label = document.querySelector(`label[for='${inputId}']`);
+
+                imagePreview.src = e.target.result;
+                imagePreview.style.display = 'block';
+
+                label.textContent = file.name;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+}
+
+handleImagePreview('Pict_1', 'imagePreview1');
+handleImagePreview('Pict_2', 'imagePreview2');
+handleImagePreview('Pict_3', 'imagePreview3');
+handleImagePreview('Pict_4', 'imagePreview4');
+
 
 // fokus ke input tiap kali dia & square tercentang
 diaCheckbox.addEventListener('change', function () {
@@ -455,17 +480,12 @@ btn_info.addEventListener("click", function (e) {
 
                         if (a === 1) { // fill dari no ref isi
                             if (response.refCopy === '') { // tidak ada copy ref no
-                                // Drop_Test.disabled = false;
-                                // Drop_Test.focus();
+
                                 Height_Approx.disabled = false;
                                 diaCheckbox.disabled = false;
                                 squareCheckbox.disabled = false;
                                 Height_Approx.focus();
 
-                                // btn_pict1.disabled = true;
-                                // btn_pict2.disabled = true;
-                                // btn_pict3.disabled = true;
-                                // btn_pict4.disabled = true;
                                 threePictures.disabled = false;
                                 fourPictures.disabled = false;
 
@@ -606,21 +626,21 @@ btn_info.addEventListener("click", function (e) {
                                 Drop_Test.disabled = false;
 
                                 // membuka disabled button pict & centangnya
-                                // btn_pict1.disabled = false;
-                                // btn_pict2.disabled = false;
-                                // btn_pict3.disabled = false;
                                 threePictures.disabled = false;
                                 fourPictures.disabled = false;
 
-                                // if (parseInt(data.Jumlah, 10) === 4) {
-                                //     btn_pict4.disabled = false;
-                                //     fourPictures.checked = true;
-                                //     threePictures.checked = false;
-                                // } else {
-                                //     btn_pict4.disabled = true;
-                                //     fourPictures.checked = false;
-                                //     threePictures.checked = true;
-                                // }
+                                if (data.jumlah === 3) {
+                                    threePictures.checked = true;
+                                    Pict_1.disabled = false;
+                                    Pict_2.disabled = false;
+                                    Pict_3.disabled = false;
+                                } else {
+                                    fourPictures.checked = true;
+                                    Pict_1.disabled = false;
+                                    Pict_2.disabled = false;
+                                    Pict_3.disabled = false;
+                                    Pict_4.disabled = false;
+                                }
 
                                 // mengisi nilai data_1 sampai data_30 dan membuka disabled pada data_1 - data_15
                                 for (let i = 1; i <= 30; i++) {
@@ -1059,7 +1079,7 @@ function updateFocus() {
     } else if (fourPicturesChecked) {
         console.log(jumlah);
 
-        btn_pict4.disabled = false;
+        // btn_pict4.disabled = false;
         jumlah = '4';
         imageFiles = {
             'picture1': null,
@@ -1067,7 +1087,7 @@ function updateFocus() {
             'picture3': null,
             'picture4': null
         };
-        btn_pict1.focus();
+        // btn_pict1.focus();
         setupImageUpload('#btn_pict1', '#picture1', '#Pict_1', '#imagePreview1', '#btn_pict2', formData, 'Pict1');
         setupImageUpload('#btn_pict2', '#picture2', '#Pict_2', '#imagePreview2', '#btn_pict3', formData, 'Pict2');
         setupImageUpload('#btn_pict3', '#picture3', '#Pict_3', '#imagePreview3', '#btn_pict4', formData, 'Pict3');

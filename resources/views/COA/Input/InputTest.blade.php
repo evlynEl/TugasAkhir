@@ -505,11 +505,11 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <div class="d-flex align-items-center">
-                                                    <label for="Pict_1" class="mr-2">1.</label>
+                                                    <label class="mr-2">1.</label>
                                                     <div class="custom-file">
                                                         <input type="file" accept="image/*" class="custom-file-input" id="Pict_1">
 
-                                                        <label class="custom-file-label" for="Pict_1">Choose file</label>
+                                                        <label class="custom-file-label" for="Pict_1"></label>
                                                     </div>
                                                 </div>
                                                 <div class="mt-2 ml-3 image-container">
@@ -523,10 +523,10 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <div class="d-flex align-items-center">
-                                                    <label for="Pict_2" class="mr-2">2.</label>
+                                                    <label class="mr-2">2.</label>
                                                     <div class="custom-file">
                                                         <input type="file" accept="image/*" class="custom-file-input" id="Pict_2">
-                                                        <label class="custom-file-label" for="Pict_2">Choose file</label>
+                                                        <label class="custom-file-label" for="Pict_2"></label>
                                                     </div>
                                                 </div>
                                                 <div class="mt-2 ml-3 image-container">
@@ -539,10 +539,10 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <div class="d-flex align-items-center">
-                                                    <label for="Pict_3" class="mr-2">3.</label>
+                                                    <label class="mr-2">3.</label>
                                                     <div class="custom-file">
                                                         <input type="file" accept="image/*" class="custom-file-input" id="Pict_3">
-                                                        <label class="custom-file-label" for="Pict_3">Choose file</label>
+                                                        <label class="custom-file-label" for="Pict_3"></label>
                                                     </div>
                                                 </div>
                                                 <div class="mt-2 ml-3 image-container">
@@ -555,10 +555,10 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <div class="d-flex align-items-center">
-                                                    <label for="Pict_4" class="mr-2">4.</label>
+                                                    <label class="mr-2">4.</label>
                                                     <div class="custom-file">
                                                         <input type="file"  accept="image/*" class="custom-file-input" id="Pict_4">
-                                                        <label class="custom-file-label" for="Pict_4">Choose file</label>
+                                                        <label class="custom-file-label" for="Pict_4"></label>
                                                     </div>
                                                 </div>
                                                 <div class="mt-2 ml-3 image-container">
