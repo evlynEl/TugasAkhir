@@ -577,6 +577,9 @@ btn_info.addEventListener("click", function (e) {
                                 retrieveCheck('Breakage_Location', breakage, data);
                                 retrieveCheck('dropResult', dResult, data);
 
+                                console.log(data.Jumlah);
+
+
                                 // membuka disabled div cyclic
                                 if (Cyclic_Lift.checked) {
                                     cyclicbesar.classList.remove('disabled');
@@ -640,12 +643,14 @@ btn_info.addEventListener("click", function (e) {
                                     gambar1.disabled = false;
                                     gambar2.disabled = false;
                                     gambar3.disabled = false;
+                                    jumlah = data.Jumlah;
                                 } else {
                                     fourPictures.checked = true;
                                     gambar1.disabled = false;
                                     gambar2.disabled = false;
                                     gambar3.disabled = false;
                                     gambar4.disabled = false;
+                                    jumlah = data.Jumlah;
                                 }
 
                                 // mengisi nilai data_1 sampai data_30 dan membuka disabled pada data_1 - data_15
@@ -1295,6 +1300,20 @@ btn_simpan.addEventListener('click', async function (e) {
             return;
         }
 
+        if (Drop_Test.value.trim() === '' || Drop_Test.value.trim() === '0' || Drop_Test.value.trim() === '0.00') {
+            const result = await Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Inputkan Drop Test Terlebih Dahulu!',
+                returnFocus: false
+            });
+
+            if (result.isConfirmed) {
+                Drop_Test.focus();
+            }
+            return;
+        }
+
         let cLiftTxt = cLift && cLift.length > 0 ? cLift.join(', ') : null;
         let tLiftTxt = tLift && tLift.length > 0 ? tLift.join(', ') : null;
         let cyclicResultTxt = cResult && cResult.length > 0 ? (cResult.includes('Visible damages found at') ? cResult.join(', ') + ' ' + damageFoundDescCyInput.value.trim() : cResult.join(', ')) : null;
@@ -1488,20 +1507,6 @@ function submitForm(cLiftTxt, tLiftTxt, cyclicResultTxt, breakageTxt, dropResult
     });
 }
 
-function dataURItoBlob(dataURI) {
-    var byteString = atob(dataURI.split(',')[1]);
-    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-    var ab = new ArrayBuffer(byteString.length);
-    var ia = new Uint8Array(ab);
-    for (var i = 0; i < byteString.length; i++) {
-        ia[i] = byteString.charCodeAt(i);
-    }
-    return new Blob([ab], { type: mimeString });
-}
-
-
-// fungsi untuk simpan dari isi
-
 
 // fungsi untuk simpan dari koreksi
 async function koreksiTest(cLiftTxt, tLiftTxt, cyclicResultTxt, breakageTxt, dropResultTxt) {
@@ -1526,6 +1531,9 @@ async function koreksiTest(cLiftTxt, tLiftTxt, cyclicResultTxt, breakageTxt, dro
     formData.append('Jumlah', jumlah);
     formData.append('a', a);
 
+    console.log(jumlah);
+
+
 
     for (let i = 1; i <= 30; i++) {
         const dataElement = document.getElementById('Data_' + i);
@@ -1534,26 +1542,18 @@ async function koreksiTest(cLiftTxt, tLiftTxt, cyclicResultTxt, breakageTxt, dro
         }
     }
 
+    var gambar1data = document.getElementById("gambar1").files[0];
+    var gambar2data = document.getElementById("gambar2").files[0];
+    var gambar3data = document.getElementById("gambar3").files[0];
+    var gambar4data = document.getElementById("gambar4").files[0];
+
+    formData.append("gambar1data", gambar1data);
+    formData.append("gambar2data", gambar2data);
+    formData.append("gambar3data", gambar3data);
+    formData.append("gambar4data", gambar4data);
+
     console.log("CEK DATA bfr pu");
     console.log("FormData contents:");
-    for (let [key, value] of formData.entries()) {
-        console.log(`${key}: ${value}`);
-    }
-
-    // Ambil file gambar
-    // var picture1 = document.getElementById('picture1').files[0];
-    // var picture2 = document.getElementById('picture2').files[0];
-    // var picture3 = document.getElementById('picture3').files[0];
-    // var picture4 = document.getElementById('picture4').files[0];
-
-
-    // formData.append('picture1', picture1);
-    // formData.append('picture2', picture2);
-    // formData.append('picture3', picture3);
-
-    // if (jumlah === '4') {
-    //     formData.append('picture4', picture4);
-    // }
 
     $.ajax({
         type: 'POST',

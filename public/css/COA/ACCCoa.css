@@ -1,0 +1,30 @@
+.item-column {
+    width: 40%; /* Adjust the width as needed */
+    word-wrap: break-word; /* Ensure text wraps within the column */
+    overflow-wrap: break-word; /* Ensure long words break to fit */
+}
+
+.bordered {
+    border: 1px solid black;
+}
+
+@media print {
+    /* Hide everything by default */
+    body * {
+        visibility: hidden;
+    }
+
+    /* Show only elements with the class 'preview' */
+    .preview, .preview * {
+        visibility: visible;
+    }
+
+    /* Ensure that the element with the class 'preview' is visible and properly formatted */
+    .preview {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        border: 1px black solid;
+    }
+}

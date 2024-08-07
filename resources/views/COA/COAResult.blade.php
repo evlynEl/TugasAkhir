@@ -13,16 +13,161 @@
                     </div>
                 @endif
                 <div class="card">
-                    <div class="card-header">COA Result</div>
+                    <div class="card-header">Test Result</div>
                     <div class="card-body RDZOverflow RDZMobilePaddingLR0">
-                        <div class="acs-div-container">
-                            <div class="acs-div-container1">
-                                {{-- <img src="{{ asset('/images/Contoh1.png') }}" alt=""> --}}
+
+                        <div class="row">
+                            <div class="col-sm-1">
+                                <label for="customer">Customer:</label>
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="text" class="form-control" id="customerId">
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="customerName">
+                            </div>
+                            <div class="col-sm-1">
+                                <button type="button" class="btn btn-primary" id="buttonCustomer">...</button>
                             </div>
                         </div>
+
+                        <div class="row">
+                            <div class="col-sm-1">
+                                <label for="customer">Type:</label>
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="text" class="form-control" id="typeId">
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="typeName">
+                            </div>
+                            <div class="col-sm-1">
+                                <button type="button" class="btn btn-primary" id="buttonType">...</button>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-1">
+                                <label for="capacity">Capacity:</label>
+                            </div>
+                            <div class="col-sm-5">
+                                <input type="text" class="form-control" id="capacity" readonly>
+                            </div>
+                            <div class="col-sm-1">
+                                <input type="text" class="form-control" id="idMaster" readonly>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-1">
+                                <label for="dimension">Dimension:</label>
+                            </div>
+                            <div class="col-sm-5">
+                                <input type="text" class="form-control" id="dimension" readonly>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-1">
+                                <label for="commodity">Commodity:</label>
+                            </div>
+                            <div class="col-sm-5">
+                                <input type="text" class="form-control" id="commodity" readonly>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-1">
+                                <label for="tanggal">Tanggal:</label>
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="date" class="form-control" id="tanggal">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-1">
+                                <label for="no_coa">No. COA:</label>
+                            </div>
+                            <div class="col-sm-5">
+                                <input type="text" class="form-control" id="no_coa">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-1">
+                                <label for="no_po">No. PO:</label>
+                            </div>
+                            <div class="col-sm-5">
+                                <input type="text" class="form-control" id="no_po">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-1">
+                                <label for="no_sp">No. SP:</label>
+                            </div>
+                            <div class="col-sm-5">
+                                <input type="text" class="form-control" id="no_sp">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-2 ml-3">
+                                <br>
+                                <label>Detail COA</label>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <label for="part_section">Part Section:</label>
+                            </div>
+                            <div class="col-sm-5">
+                                <input type="text" class="form-control" id="part_section">
+                            </div>
+                            <div class="col-sm-1">
+                                <button type="button" class="btn btn-primary" id="buttonPartSection">...</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <label for="material">Material:</label>
+                            </div>
+                            <div class="col-sm-5">
+                                <input type="text" class="form-control" id="material">
+                            </div>
+                            <div class="col-sm-1">
+                                <button type="button" class="btn btn-primary" id="buttonMaterial">...</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <label for="item">Item:</label>
+                            </div>
+                            <div class="col-sm-5">
+                                <input type="text" class="form-control" id="item">
+                            </div>
+                            <div class="col-sm-1">
+                                <button type="button" class="btn btn-primary" id="buttonItem">...</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <label for="test_result">Test Result:</label>
+                            </div>
+                            <div class="col-sm-5">
+                                <input type="text" class="form-control" id="test_result">
+                            </div>
+                            <div class="col-sm-1">
+                                <button type="button" class="btn btn-primary" id="buttonTambah">Tambah</button>
+                            </div>
+                        </div>
+
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <script src="{{ asset('/js/COA/COAResult.js') }}"></script>
+    {{-- <link rel="stylesheet" href="{{ asset('css/COA/ACCCoa.css') }}"> --}}
+    <link rel="stylesheet" href="{{ asset('css/sweetalert2.min.css') }}">
+    <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>
+
 @endsection

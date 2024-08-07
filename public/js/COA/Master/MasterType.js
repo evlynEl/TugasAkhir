@@ -1,6 +1,6 @@
 var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-
+// variabel
 var customerId= document.getElementById('customer-id');
 var customerName = document.getElementById('nama-cust');
 
@@ -80,7 +80,7 @@ btn_cust.addEventListener("click", function (e) {
     }
 });
 
-
+// fungsi unk pilih modal pake key arrow
 function handleTableKeydown(e, tableId) {
     const table = $(`#${tableId}`).DataTable();
     const rows = $(`#${tableId} tbody tr`);
@@ -132,3 +132,5 @@ function handleTableKeydown(e, tableId) {
         }
     }
 }
+
+

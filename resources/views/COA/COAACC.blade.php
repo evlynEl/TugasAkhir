@@ -57,129 +57,152 @@
 
                         <button type="button" id="btn_acc" class="btn btn-outline-success">ACC</button>
 
-                        <div class="row mt-1">
-                            <div class="col-sm-12 d-flex align-items-center justify-content-center bordered">
-                                <h4 style="margin: 0;text-decoration: underline;"><strong>CERTIFICATE OF
-                                        ANALYSIS</strong></h4>
+                        <div class="row">
+                            <div class="col-md-12 preview bordered" style="display: none;">
+                                <div class="row mt-1">
+                                    <div class="col-sm-12 d-flex align-items-center justify-content-center">
+                                        <h4 style="margin: 0;text-decoration: underline;"><strong>CERTIFICATE OF
+                                                ANALYSIS</strong></h4>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-1">
+                                    <div class="col-sm-12 d-flex align-items-center justify-content-center">
+                                        <h4 id="nomorCoaHead" style="margin: 0;">
+                                            <strong>No: </strong>
+                                        </h4>
+                                    </div>
+                                </div>
+
+
+                                <!-- Date -->
+                                <div class="row mt-4">
+                                    <div class="col-sm-3">
+                                        <label>Date</label>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <label>:</label>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <span id="dateData">date default</span>
+                                    </div>
+                                </div>
+                                <!-- Customer -->
+                                <div class="row ">
+                                    <div class="col-sm-3">
+                                        <label>Customer</label>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <label>:</label>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <span id="customerData">customer default</span>
+                                    </div>
+                                </div>
+                                <!-- Po. No. -->
+                                <div class="row ">
+                                    <div class="col-sm-3">
+                                        <label>Po. No.</label>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <label>:</label>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <span id="poNoData">po no default</span>
+                                    </div>
+                                </div>
+                                <!-- SP. No. -->
+                                <div class="row ">
+                                    <div class="col-sm-3">
+                                        <label>SP. No.</label>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <label>:</label>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <span id="spNoData">sp no default</span>
+                                    </div>
+                                </div>
+                                <!-- Commodity -->
+                                <div class="row ">
+                                    <div class="col-sm-3">
+                                        <label>Commodity</label>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <label>:</label>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <span id="commodityData">commodity default</span>
+                                    </div>
+                                </div>
+                                <!-- Type -->
+                                <div class="row ">
+                                    <div class="col-sm-3">
+                                        <label>Type</label>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <label>:</label>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <span id="typeData">type default</span>
+                                    </div>
+                                </div>
+                                <!-- Capacity -->
+                                <div class="row ">
+                                    <div class="col-sm-3">
+                                        <label>Capacity</label>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <label>:</label>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <span id="capacityData">capacity default</span>
+                                    </div>
+                                </div>
+                                <!-- Dimension -->
+                                <div class="row ">
+                                    <div class="col-sm-3">
+                                        <label>Dimension</label>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <label>:</label>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <span id="dimensionData">dimension default</span>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12">
+                                    <div id="tableContainer"></div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-2 offset-sm-8">
+                                        <h6>Issued By Manufacture</h6>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-sm-2 offset-sm-8">
+                                        <br>
+                                        <h6>Quality Control Dept</h6>
+                                    </div>
+                                </div>
+
+
                             </div>
+
                         </div>
 
-                        <div class="row mt-1">
-                            <div class="col-sm-12 d-flex align-items-center justify-content-center bordered">
-                                <h4 id="nomorCoaHead" style="margin: 0;">
-                                    <strong>No: </strong>
-                                </h4>
-                            </div>
-                        </div>
-
-                        <!-- Date -->
-                        <div class="row mt-4">
-                            <div class="col-sm-3">
-                                <label>Date</label>
-                            </div>
-                            <div class="col-sm-1">
-                                <label>:</label>
-                            </div>
-                            <div class="col-sm-8">
-                                <span id="dateData">date default</span>
-                            </div>
-                        </div>
-                        <!-- Customer -->
-                        <div class="row ">
-                            <div class="col-sm-3">
-                                <label>Customer</label>
-                            </div>
-                            <div class="col-sm-1">
-                                <label>:</label>
-                            </div>
-                            <div class="col-sm-8">
-                                <span id="customerData">customer default</span>
-                            </div>
-                        </div>
-                        <!-- Po. No. -->
-                        <div class="row ">
-                            <div class="col-sm-3">
-                                <label>Po. No.</label>
-                            </div>
-                            <div class="col-sm-1">
-                                <label>:</label>
-                            </div>
-                            <div class="col-sm-8">
-                                <span id="poNoData">po no default</span>
-                            </div>
-                        </div>
-                        <!-- SP. No. -->
-                        <div class="row ">
-                            <div class="col-sm-3">
-                                <label>SP. No.</label>
-                            </div>
-                            <div class="col-sm-1">
-                                <label>:</label>
-                            </div>
-                            <div class="col-sm-8">
-                                <span id="spNoData">sp no default</span>
-                            </div>
-                        </div>
-                        <!-- Commodity -->
-                        <div class="row ">
-                            <div class="col-sm-3">
-                                <label>Commodity</label>
-                            </div>
-                            <div class="col-sm-1">
-                                <label>:</label>
-                            </div>
-                            <div class="col-sm-8">
-                                <span id="commodityData">commodity default</span>
-                            </div>
-                        </div>
-                        <!-- Type -->
-                        <div class="row ">
-                            <div class="col-sm-3">
-                                <label>Type</label>
-                            </div>
-                            <div class="col-sm-1">
-                                <label>:</label>
-                            </div>
-                            <div class="col-sm-8">
-                                <span id="typeData">type default</span>
-                            </div>
-                        </div>
-                        <!-- Capacity -->
-                        <div class="row ">
-                            <div class="col-sm-3">
-                                <label>Capacity</label>
-                            </div>
-                            <div class="col-sm-1">
-                                <label>:</label>
-                            </div>
-                            <div class="col-sm-8">
-                                <span id="capacityData">capacity default</span>
-                            </div>
-                        </div>
-                        <!-- Dimension -->
-                        <div class="row ">
-                            <div class="col-sm-3">
-                                <label>Dimension</label>
-                            </div>
-                            <div class="col-sm-1">
-                                <label>:</label>
-                            </div>
-                            <div class="col-sm-8">
-                                <span id="dimensionData">dimension default</span>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6">
-                            <div id="tableContainer"></div>
-                        </div>
-                        
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="{{ asset('/js/COA/Master/COAACC.js') }}"></script>
+    <script src="{{ asset('/js/COA/COAACC.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('css/COA/ACCCoa.css') }}">
+
     {{-- <link rel="stylesheet" href="{{ asset('css/COA/FIBCPrint.css') }}"> --}}
     <link rel="stylesheet" href="{{ asset('css/sweetalert2.min.css') }}">
     <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>

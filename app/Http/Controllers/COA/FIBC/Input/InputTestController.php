@@ -86,22 +86,6 @@ class InputTestController extends Controller
             $dataValues["Data_$i"] = number_format((float)$value, 2, '.', '');
         }
 
-        // dd($dataValues);
-
-        $imageBinaryData = [];
-
-        for ($i = 1; $i <= 4; $i++) {
-            $fileInputName = 'Pict_' . $i;
-            if ($request->hasFile($fileInputName) && $request->file($fileInputName)->isValid()) {
-                $file = $request->file($fileInputName);
-                $imageBinaryData[$fileInputName] = file_get_contents($file->getRealPath());
-            } else {
-                $imageBinaryData[$fileInputName] = null;
-            }
-        }
-
-        // dd($request->all());
-
         try {
             if ($a === 1) { // ISI
                 if ($jumlah === 3) {
@@ -137,6 +121,25 @@ class InputTestController extends Controller
                         'Pict_2' => $imageBinary2 ? DB::raw('0x' . bin2hex($imageBinary2)) : null,
                         'Pict_3' => $imageBinary3 ? DB::raw('0x' . bin2hex($imageBinary3)) : null
                     ]);
+
+                    // Insert data into Cyclic_Data_FIBC for all CyclicData fields
+                    for ($i = 1; $i <= 30; $i++) {
+                        $cyclicDataValue = $dataValues["Data_$i"];
+                        DB::connection('ConnTestQC')->statement(
+                            'INSERT INTO Cyclic_Data_FIBC (Reference_No, No, Data)
+                                VALUES (?, ?, ?)',
+                            [$referenceNo, $i, $cyclicDataValue]
+                        );
+                    }
+
+                    // Insert TopResult into Cyclic_Data_FIBC
+                    DB::connection('ConnTestQC')->statement(
+                        'INSERT INTO Cyclic_Data_FIBC (Reference_No, No, Data)
+                            VALUES (?, ?, ?)',
+                        [$referenceNo, 31, $topResult]
+                    );
+
+                    // kalau 4
                 } else if ($jumlah === 4) {
                     DB::connection('ConnTestQC')->table('Result_FIBC')->insert([
                         'Reference_No' => $referenceNo,
@@ -170,36 +173,98 @@ class InputTestController extends Controller
                         'Pict_3' => $imageBinary3 ? DB::raw('0x' . bin2hex($imageBinary3)) : null,
                         'Pict_4' => $imageBinary4 ? DB::raw('0x' . bin2hex($imageBinary4)) : null
                     ]);
+
+                    // Insert data into Cyclic_Data_FIBC for all CyclicData fields
+                    for ($i = 1; $i <= 30; $i++) {
+                        $cyclicDataValue = $dataValues["Data_$i"];
+                        DB::connection('ConnTestQC')->statement(
+                            'INSERT INTO Cyclic_Data_FIBC (Reference_No, No, Data)
+                                VALUES (?, ?, ?)',
+                            [$referenceNo, $i, $cyclicDataValue]
+                        );
+                    }
+
+                    // Insert TopResult into Cyclic_Data_FIBC
+                    DB::connection('ConnTestQC')->statement(
+                        'INSERT INTO Cyclic_Data_FIBC (Reference_No, No, Data)
+                            VALUES (?, ?, ?)',
+                        [$referenceNo, 31, $topResult]
+                    );
                 }
+
+                // KOREKSI
             } else if ($a === 2) { // KOREKSI
                 DB::connection('ConnTestQC')->statement(
-                    'exec SP_1273_QTC_MAINT_RESULT_FIBC
-                    @Kode = 5,
-                    @RefNo = ?, @Height = ?, @Dia = ?, @Square = ?,
-                    @CyclicTest = ?, @Speed = ?, @DropTest = ?, @CyclicLift = ?,
-                    @CyclicResult = ?, @TopLift = ?, @TopResult = ?, @Breakage = ?,
-                    @DropResult = ?, @TestResult = ?, @UserInput = ?, @CyclicData1 = ?, @CyclicData2 = ?,
-                    @CyclicData3 = ?, @CyclicData4 = ?, @CyclicData5 = ?, @CyclicData6 = ?, @CyclicData7 = ?,
-                    @CyclicData8 = ?, @CyclicData9 = ?, @CyclicData10 = ?, @CyclicData11 = ?, @CyclicData12 = ?,
-                    @CyclicData13 = ?, @CyclicData14 = ?, @CyclicData15 = ?, @CyclicData16 = ?, @CyclicData17 = ?,
-                    @CyclicData18 = ?, @CyclicData19 = ?, @CyclicData20 = ?, @CyclicData21 = ?, @CyclicData22 = ?,
-                    @CyclicData23 = ?, @CyclicData24 = ?, @CyclicData25 = ?, @CyclicData26 = ?, @CyclicData27 = ?,
-                    @CyclicData28 = ?, @CyclicData29 = ?, @CyclicData30 = ?',
-                    array_merge([
-                        $referenceNo, $heightApprox, $diaVal, $squareVal,
-                        $cyclicTest, $loadSpeed, $dropTest, $cyclicLift,
-                        $cyclicResult, $topLift, $topResult, $breakageLocation,
-                        $dropResult, $testResult, $UserInput
-                    ], $dataValues)
+                    'UPDATE Result_FIBC
+                     SET Height_Approx = ?, Dia = ?, Square = ?, Cyclic_Test = ?, Load_Speed = ?, Drop_Test = ?,
+                         Cyclic_Lift = ?, Cyclic_Result = ?, Top_Lift = ?, Top_Result = ?, Breakage_Location = ?,
+                         Drop_Result = ?, Test_Result = ?, UserKoreksi = ?, TimeKoreksi = getdate()
+                     WHERE Reference_No = ?',
+                    [
+                        $heightApprox, $diaVal, $squareVal, $cyclicTest, $loadSpeed, $dropTest,
+                        $cyclicLift, $cyclicResult, $topLift, $topResult, $breakageLocation,
+                        $dropResult, $testResult, $UserInput, $referenceNo
+                    ]
                 );
 
-                DB::connection('ConnTestQC')->table('Picture_FIBC')->insert([
-                    'Reference_No' => $referenceNo,
-                    'Pict_1' => $imageBinaryData['Pict_1'] ?? null,
-                    'Pict_2' => $imageBinaryData['Pict_2'] ?? null,
-                    'Pict_3' => $imageBinaryData['Pict_3'] ?? null,
-                    'Pict_4' => $imageBinaryData['Pict_4'] ?? null
-                ]);
+                DB::connection('ConnTestQC')->table('Cyclic_FIBC')
+                    ->where('Reference_No', $referenceNo)
+                    ->update($dataValues);
+
+                // Define the updateData array
+                $updateData = [
+                    'Jumlah' => $jumlah
+                ];
+
+                // Prepare the binary image data for each picture
+                if ($imageBinary) {
+                    $updateData['Pict_1'] = DB::raw('0x' . bin2hex($imageBinary));
+                }
+                if ($imageBinary2) {
+                    $updateData['Pict_2'] = DB::raw('0x' . bin2hex($imageBinary2));
+                }
+                if ($imageBinary3) {
+                    $updateData['Pict_3'] = DB::raw('0x' . bin2hex($imageBinary3));
+                }
+                if ($imageBinary4) {
+                    $updateData['Pict_4'] = DB::raw('0x' . bin2hex($imageBinary4));
+                }
+
+                // Update the Picture_FIBC table
+                DB::connection('ConnTestQC')->table('Picture_FIBC')
+                    ->where('Reference_No', $referenceNo)
+                    ->update($updateData);
+
+                // If fewer than 4 images are provided, clear the remaining picture fields
+                if ($jumlah < 4) {
+                    $clearFields = [
+                        'Pict_4' => ($jumlah < 4) ? null : DB::raw('0x' . bin2hex($imageBinary4))
+                    ];
+
+                    DB::connection('ConnTestQC')->table('Picture_FIBC')
+                        ->where('Reference_No', $referenceNo)
+                        ->update($clearFields);
+                }
+
+
+                // Update Cyclic_Data_FIBC for all CyclicData fields
+                for ($i = 1; $i <= 30; $i++) {
+                    $cyclicDataValue = $dataValues["Data_$i"];
+                    DB::connection('ConnTestQC')->statement(
+                        'UPDATE Cyclic_Data_FIBC
+                            SET Data = ?
+                            WHERE Reference_No = ? AND No = ?',
+                        [$cyclicDataValue, $referenceNo, $i]
+                    );
+                }
+
+                // Update Cyclic_Data_FIBC for TopResult
+                DB::connection('ConnTestQC')->statement(
+                    'UPDATE Cyclic_Data_FIBC
+                        SET Data = ?
+                        WHERE Reference_No = ? AND No = ?',
+                    [$topResult, $referenceNo, '31']
+                );
             }
             return response()->json(['success' => 'Data inserted successfully'], 200);
         } catch (\Exception $e) {
