@@ -98,7 +98,7 @@
 
                         <div class="form-row">
                             <div class="form-group col-md-1">
-                                <label for="capacity">Capacity (kg):</label>
+                                <label for="capacity">Capacity:</label>
                             </div>
                             <div class="form-group col-md-11">
                                 <input type="text" id="capacity" name="capacity" class="form-control">
@@ -119,7 +119,7 @@
                                 <label for="comodity">Comodity:</label>
                             </div>
                             <div class="form-group col-md-11">
-                                <input type="text" id="sf1" name="sf1" class="form-control">
+                                <input type="text" id="comodity" name="comodity" class="form-control">
                             </div>
                         </div>
 
@@ -188,14 +188,14 @@
 
                             <div class="card">
                                 <div class="table-responsive fixed-height">
-                                    <table id="tableDataByDate" class="display table-height"
+                                    <table id="tableData" class="display table-height"
                                         style="width:100%; text-align:center;">
                                         <thead>
                                             <tr>
-                                                <th scope="col">Part Section</th>
-                                                <th scope="col">Material</th>
-                                                <th scope="col">Item</th>
-                                                <th scope="col">Standard</th>
+                                                <th scope="col" class="partInput">Part Section</th>
+                                                <th scope="col" class="materialInput">Material</th>
+                                                <th scope="col" class="itemInput">Item</th>
+                                                <th scope="col" class="standardInput">Standard</th>
                                             </tr>
                                         </thead>
                                         <tbody></tbody>
@@ -205,8 +205,7 @@
                             </div>
                         </div>
 
-                        <button type="button" id="btn_proses" class="btn btn-outline-secondary"
-                            style="width: 10%">Proses</button>
+                        <button type="button" id="btn_proses" class="btn btn-outline-secondary" style="width: 10%">Proses</button>
 
 
                     </div>

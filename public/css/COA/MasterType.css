@@ -40,5 +40,18 @@ button.btn-info {
     margin-bottom: 1%;
 }
 
+.selected {
+    background-color: lightgray;
+}
+
+.fixed-height {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.table-height {
+    table-layout: auto;
+}
+
 
 
