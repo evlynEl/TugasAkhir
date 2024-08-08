@@ -27,10 +27,13 @@ var material = document.getElementById('material');
 var buttonMaterial = document.getElementById('buttonMaterial');
 
 var item = document.getElementById('item');
+var idItem = document.getElementById('idItem');
 var buttonItem = document.getElementById('buttonItem');
 
 var testResult = document.getElementById('test_result');
 var buttonTambah = document.getElementById('buttonTambah');
+
+var buttonProses = document.getElementById('buttonProses');
 
 function decodeHtmlEntities(str) {
     let textarea = document.createElement('textarea');
@@ -54,23 +57,57 @@ $('#tanggal').on('keydown', function (e) {
 $('#no_coa').on('keydown', function (e) {
     if (e.key === 'Enter') {
         e.preventDefault();
-        no_po.focus();
+        if ($(this).val().trim() === '') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Isi No. COA terlebih dahulu',
+                returnFocus: false
+            }).then(() => {
+                $(this).focus();
+            });
+        } else {
+            no_po.focus();
+        }
     }
 });
 
 $('#no_po').on('keydown', function (e) {
     if (e.key === 'Enter') {
         e.preventDefault();
-        no_sp.focus();
+        if ($(this).val().trim() === '') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Isi No. PO terlebih dahulu',
+                returnFocus: false
+            }).then(() => {
+                $(this).focus();
+            });
+        } else {
+            no_sp.focus();
+        }
     }
 });
 
 $('#no_sp').on('keydown', function (e) {
     if (e.key === 'Enter') {
         e.preventDefault();
-        buttonPartSection.focus();
+        if ($(this).val().trim() === '') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Isi No. SP terlebih dahulu',
+                returnFocus: false
+            }).then(() => {
+                $(this).focus();
+            });
+        } else {
+            buttonPartSection.focus();
+        }
     }
 });
+
 
 $('#test_result').on('keydown', function (e) {
     if (e.key === 'Enter') {
@@ -500,10 +537,197 @@ buttonItem.addEventListener("click", function (e) {
         }).then((result) => {
             if (result.isConfirmed) {
                 item.value = decodeHtmlEntities(result.value.Item);
+                idItem.value = decodeHtmlEntities(result.value.Id);
             }
             testResult.focus();
         });
     } catch (error) {
         console.error(error);
     }
+});
+
+const tableDetail = $('#tableDetail').DataTable({
+    paging: false,
+    searching: false,
+    info: false,
+    ordering: false,
+    columns: [
+        { title: 'Part Section' },
+        { title: 'Material' },
+        { title: 'Item' },
+        { title: 'Test Result' },
+    ]
+});
+
+var arrDetail = [];
+
+buttonTambah.addEventListener("click", function (e) {
+    const partSection = document.getElementById('part_section').value.trim();
+    const material = document.getElementById('material').value.trim();
+    const item = document.getElementById('item').value.trim();
+    const idItem = document.getElementById('idItem').value.trim();
+    const test_result = document.getElementById('test_result').value.trim();
+
+    if (!partSection) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Isi Part Section terlebih dahulu',
+            returnFocus: false
+        }).then(() => {
+            buttonPartSection.focus();
+        });
+        return;
+    }
+    if (!material) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Isi Material terlebih dahulu',
+            returnFocus: false
+        }).then(() => {
+            buttonMaterial.focus();
+        });
+        return;
+    }
+    if (!item) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Isi Item terlebih dahulu',
+            returnFocus: false
+        }).then(() => {
+            buttonItem.focus();
+        });
+        return;
+    }
+
+    arrDetail.push({ partSection, material, item, test_result, idItem });
+    console.log(arrDetail);
+
+    const table = $('#tableDetail').DataTable();
+    table.row.add([partSection, material, item, test_result]).draw();
+
+});
+
+buttonProses.addEventListener("click", function (e) {
+    if (!idMaster.value) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Isi ID Master terlebih dahulu',
+            returnFocus: false
+        }).then(() => {
+            buttonType.focus();
+        });
+        return;
+    }
+    if (!tanggal.value) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Isi Tanggal terlebih dahulu',
+            returnFocus: false
+        }).then(() => {
+            tanggal.focus();
+        });
+        return;
+    }
+    if (!no_coa.value) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Isi No. COA terlebih dahulu',
+            returnFocus: false
+        }).then(() => {
+            no_coa.focus();
+        });
+        return;
+    }
+    if (!no_po.value) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Isi No. PO terlebih dahulu',
+            returnFocus: false
+        }).then(() => {
+            no_po.focus();
+        });
+        return;
+    }
+    if (!no_sp.value) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Isi No. SP terlebih dahulu',
+            returnFocus: false
+        }).then(() => {
+            no_sp.focus();
+        });
+        return;
+    }
+    console.log(tanggal.value);
+
+    $.ajax({
+        url: "FrmResult/prosesResult",
+        type: "PUT",
+        data: {
+            _token: csrfToken,
+            IdMaster: idMaster.value,
+            Tanggal: tanggal.value,
+            NoCOA: no_coa.value,
+            NoPO: no_po.value,
+            NoSP: no_sp.value,
+            arrayData: arrDetail
+        },
+        success: function (response) {
+            if (response.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: response.success,
+                    returnFocus: false
+                }).then(() => {
+                    customerId.value = '';
+                    customerName.value = '';
+                    typeId.value = '';
+                    typeName.value = '';
+                    capacity.value = '';
+                    idMaster.value = '';
+                    dimension.value = '';
+                    commodity.value = '';
+                    const today = new Date().toISOString().split('T')[0];
+                    tanggal.value = today;
+                    no_coa.value = '';
+                    no_po.value = '';
+                    no_sp.value = '';
+
+                    partSection.value = '';
+                    material.value = '';
+                    item.value = '';
+                    testResult.value = '';
+                    idItem.value = '';
+
+                    arrDetail = [];
+
+                    tableDetail.clear().draw();
+
+                    buttonCustomer.focus();
+                });
+            }
+            else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: result.error || 'Data gagal disimpan'
+                });
+            }
+        }, error: function (xhr, status, error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Hubungi EDP!',
+                text: xhr.responseJSON.error ?? 'Data gagal disimpan'
+            });
+        },
+    });
 });

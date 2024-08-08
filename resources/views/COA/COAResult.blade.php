@@ -145,6 +145,9 @@
                             <div class="col-sm-1">
                                 <button type="button" class="btn btn-primary" id="buttonItem">...</button>
                             </div>
+                            <div class="col-sm-1">
+                                <input type="text" class="form-control" id="idItem" readonly>
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-2">
@@ -158,6 +161,26 @@
                             </div>
                         </div>
 
+                        <div class="row mt-2">
+                            <div class="col-sm-12">
+                                <div class="table-responsive fixed-height">
+                                    <table id="tableDetail">
+                                        <thead>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="row mt-1">
+                            <div class="col-sm-1">
+                                <button type="button" class="btn btn-primary" id="buttonProses">Proses</button>
+                            </div>
+                        </div>
+
 
                     </div>
                 </div>
@@ -166,8 +189,7 @@
     </div>
 
     <script src="{{ asset('/js/COA/COAResult.js') }}"></script>
-    {{-- <link rel="stylesheet" href="{{ asset('css/COA/ACCCoa.css') }}"> --}}
+    <link rel="stylesheet" href="{{ asset('/css/COA/COAResult.css') }}">
     <link rel="stylesheet" href="{{ asset('css/sweetalert2.min.css') }}">
     <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>
-
 @endsection

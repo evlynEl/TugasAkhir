@@ -5,6 +5,7 @@ namespace App\Http\Controllers\COA\COA;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\HakAksesController;
 
 class ResultController extends Controller
@@ -95,8 +96,10 @@ class ResultController extends Controller
             $idMaster = $request->input('idMaster');
             $partSection = $request->input('partSection');
 
-            $type = DB::connection('ConnTestQC')->select('exec [SP_1273_LIST_COA] @kode = ?, @IdMaster = ?, @PartSection = ?'
-                , [7, $idMaster, $partSection]);
+            $type = DB::connection('ConnTestQC')->select(
+                'exec [SP_1273_LIST_COA] @kode = ?, @IdMaster = ?, @PartSection = ?',
+                [7, $idMaster, $partSection]
+            );
             $data_list = [];
             foreach ($type as $types) {
                 $data_list[] = [
@@ -112,8 +115,10 @@ class ResultController extends Controller
             $partSection = $request->input('partSection');
             $material = $request->input('material');
 
-            $type = DB::connection('ConnTestQC')->select('exec [SP_1273_LIST_COA] @kode = ?, @IdMaster = ?, @PartSection = ?, @Material = ?'
-                , [8, $idMaster, $partSection, $material]);
+            $type = DB::connection('ConnTestQC')->select(
+                'exec [SP_1273_LIST_COA] @kode = ?, @IdMaster = ?, @PartSection = ?, @Material = ?',
+                [8, $idMaster, $partSection, $material]
+            );
             $data_list = [];
             foreach ($type as $types) {
                 $data_list[] = [
@@ -132,7 +137,45 @@ class ResultController extends Controller
 
     public function update(Request $request, $id)
     {
-        //
+        if ($id === 'prosesResult') {
+
+            $IdMaster = $request->input('IdMaster');
+            $Tanggal = $request->input('Tanggal');
+            $NoCOA = $request->input('NoCOA');
+            $NoPO = $request->input('NoPO');
+            $NoSP = $request->input('NoSP');
+
+            $arrDetail = $request->input('arrayData');
+
+            $UserInput = Auth::user()->NomorUser;
+            $UserInput = trim($UserInput);
+
+            DB::connection('ConnTestQC')->beginTransaction();
+
+            try {
+                DB::connection('ConnTestQC')->statement(
+                    'exec [SP_1273_PROSES_RESULT_COA]
+                    @kode = ?, @IdMaster = ?, @Tanggal = ?, @NoCOA = ?, @NoPO = ?, @NoSP = ?, @UserInput = ?',
+                    [1, $IdMaster, $Tanggal, $NoCOA, $NoPO, $NoSP, $UserInput]
+                );
+
+                foreach ($arrDetail as $detail) {
+                    $IdDetail = $detail['idItem'] ?? null;
+                    $Result = $detail['test_result'] ?? null;
+                    DB::connection('ConnTestQC')->statement(
+                        'exec [SP_1273_PROSES_RESULT_COA]
+                    @kode = ?, @IdDetail = ?, @Result = ?',
+                        [2, $IdDetail, $Result]
+                    );
+                }
+
+                DB::connection('ConnTestQC')->commit();
+                return response()->json(['success' => 'Data berhasil disimpan'], 200);
+            } catch (\Exception $e) {
+                DB::connection('ConnTestQC')->rollBack();
+                return response()->json(['error' => 'Data gagal disimpan: ' . $e->getMessage()], 500);
+            }
+        }
     }
 
     public function destroy($id)

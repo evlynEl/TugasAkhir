@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\QC\Circular;
 
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -23,7 +23,7 @@ class QCCircularTropodoController extends Controller
 
     public function store(Request $request)
     {
-        // 
+        //
     }
 
     public function show($id, Request $request)
@@ -107,7 +107,7 @@ class QCCircularTropodoController extends Controller
             }
             return datatables($QcData)->make(true);
         }
-        
+
         // ambil data yang kurang dari table qc
         else if ($id == 'getWaftWeft') {
             $IdLog = $request->input('IdLog');
@@ -180,26 +180,26 @@ class QCCircularTropodoController extends Controller
 
             try {
                 DB::connection('ConnCircular')
-                    ->statement('exec [SP_1273_QC_MAINT_QC] 
-                @Kode = ?, 
-                @IdLog = ?, 
-                @Tanggal = ?, 
-                @Ukuran = ?, 
+                    ->statement('exec [SP_1273_QC_MAINT_QC]
+                @Kode = ?,
+                @IdLog = ?,
+                @Tanggal = ?,
+                @Ukuran = ?,
                 @UkuranSTD = ?,
                 @Potongan = ?,
-                @BeratSTD = ?, 
-                @Berat = ?, 
-                @UserInput = ?, 
-                @StWarp = ?, 
-                @ElgWarp = ?, 
-                @StWeft = ?, 
-                @ElgWeft = ?, 
-                @StReinforced = ?, 
-                @ElgReinforced = ?, 
-                @BeratReinforced = ?, 
-                @StandartWA = ?, 
-                @StandartWE = ?, 
-                @StandartElgWA = ?, 
+                @BeratSTD = ?,
+                @Berat = ?,
+                @UserInput = ?,
+                @StWarp = ?,
+                @ElgWarp = ?,
+                @StWeft = ?,
+                @ElgWeft = ?,
+                @StReinforced = ?,
+                @ElgReinforced = ?,
+                @BeratReinforced = ?,
+                @StandartWA = ?,
+                @StandartWE = ?,
+                @StandartElgWA = ?,
                 @StandartElgWE = ?', [
                         1,
                         $IdLog,
@@ -254,23 +254,23 @@ class QCCircularTropodoController extends Controller
 
             try {
                 DB::connection('ConnCircular')
-                    ->statement('exec [SP_1273_QC_MAINT_QC] 
-                @Kode = ?, 
-                @Ukuran = ?, 
+                    ->statement('exec [SP_1273_QC_MAINT_QC]
+                @Kode = ?,
+                @Ukuran = ?,
                 @Potongan = ?,
-                @BeratSTD = ?, 
-                @Berat = ?, 
-                @UserInput = ?,  
-                @StWarp = ?, 
-                @ElgWarp = ?, 
-                @StWeft = ?, 
-                @ElgWeft = ?, 
-                @StReinforced = ?, 
-                @ElgReinforced = ?, 
-                @BeratReinforced = ?, 
-                @StandartWA = ?, 
-                @StandartWE = ?, 
-                @StandartElgWA = ?, 
+                @BeratSTD = ?,
+                @Berat = ?,
+                @UserInput = ?,
+                @StWarp = ?,
+                @ElgWarp = ?,
+                @StWeft = ?,
+                @ElgWeft = ?,
+                @StReinforced = ?,
+                @ElgReinforced = ?,
+                @BeratReinforced = ?,
+                @StandartWA = ?,
+                @StandartWE = ?,
+                @StandartElgWA = ?,
                 @StandartElgWE = ?,
                 @IdQC = ?', [
                         2,
@@ -307,8 +307,8 @@ class QCCircularTropodoController extends Controller
 
             try {
                 DB::connection('ConnCircular')
-                    ->statement('exec [SP_1273_QC_MAINT_QC] 
-                        @Kode = ?, 
+                    ->statement('exec [SP_1273_QC_MAINT_QC]
+                        @Kode = ?,
                         @IdQC = ?', [
                         3,
                         $Id_QC,

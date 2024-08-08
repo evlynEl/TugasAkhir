@@ -399,7 +399,7 @@ class QCExtruderBController extends Controller
         }
 
 
-        // list DetailData additional 
+        // list DetailData additional
         else if ($id == 'getListDetailData') {
             $noTr = $request->input('noTr');
 
@@ -457,18 +457,18 @@ class QCExtruderBController extends Controller
 
             try {
                 DB::connection('ConnExtruder')
-                    ->statement('exec [SP_5298_QC_INSERT_MASTERQC] 
-        @Kode = ?, 
-        @jam = ?, 
-        @tgl = ?, 
-        @shift = ?, 
-        @mesin = ?, 
-        @awal = ?, 
-        @akhir = ?, 
-        @benang = ?, 
-        @denierrata = ?, 
-        @user = ?, 
-        @ket = ?, 
+                    ->statement('exec [SP_5298_QC_INSERT_MASTERQC]
+        @Kode = ?,
+        @jam = ?,
+        @tgl = ?,
+        @shift = ?,
+        @mesin = ?,
+        @awal = ?,
+        @akhir = ?,
+        @benang = ?,
+        @denierrata = ?,
+        @user = ?,
+        @ket = ?,
         @idKonv = ?',
                         [
                             0,
@@ -509,8 +509,8 @@ class QCExtruderBController extends Controller
                             $spString = 'SP_5298_QC_INSERT_BB';
                             DB::connection('ConnExtruder')
                                 ->statement(
-                                    "exec [$spString] 
-                                    @noTr = ?, 
+                                    "exec [$spString]
+                                    @noTr = ?,
                                     @idBahan = ?",
                                     [
                                         $noTr,
@@ -555,9 +555,9 @@ class QCExtruderBController extends Controller
                     if ($spString !== 'SP_5298_QC_INSERT_BB' && $spId && $spName) {
                         DB::connection('ConnExtruder')
                             ->statement(
-                                "exec [$spString] 
-                                @noTr = ?, 
-                                $spId = ?, 
+                                "exec [$spString]
+                                @noTr = ?,
+                                $spId = ?,
                                 $spName = ?",
                                 [
                                     $noTr,
@@ -588,10 +588,10 @@ class QCExtruderBController extends Controller
                     $ketS = $data[4];
 
                     DB::connection('ConnExtruder')
-                        ->statement('exec [SP_5298_QC_INSERT_DETAILQC] 
-                    @noTr = ?, 
-                    @lebar = ?, 
-                    @denier = ?, 
+                        ->statement('exec [SP_5298_QC_INSERT_DETAILQC]
+                    @noTr = ?,
+                    @lebar = ?,
+                    @denier = ?,
                     @strength = ?,
                     @elgn = ?,
                     @ketS = ?',
@@ -618,8 +618,8 @@ class QCExtruderBController extends Controller
 
             try {
                 DB::connection('ConnExtruder')
-                    ->statement('exec [SP_5298_QC_UPDATE_MASTERQC] 
-                        @kode = ?, 
+                    ->statement('exec [SP_5298_QC_UPDATE_MASTERQC]
+                        @kode = ?,
                         @noTr = ?',
                         [
                             2,
@@ -657,17 +657,17 @@ class QCExtruderBController extends Controller
 
             try {
                 DB::connection('ConnExtruder')
-                    ->statement('exec [SP_5298_QC_UPDATE_MASTERQC] 
-        @kode = ?, 
-        @noTr = ?, 
-        @denierrata = ?, 
-        @ket = ?, 
-        @shift = ?, 
-        @mesin = ?, 
-        @awal = ?, 
-        @akhir = ?, 
-        @bng = ?, 
-        @jam = ?, 
+                    ->statement('exec [SP_5298_QC_UPDATE_MASTERQC]
+        @kode = ?,
+        @noTr = ?,
+        @denierrata = ?,
+        @ket = ?,
+        @shift = ?,
+        @mesin = ?,
+        @awal = ?,
+        @akhir = ?,
+        @bng = ?,
+        @jam = ?,
         @idKonv = ?',
                         [
                             1,

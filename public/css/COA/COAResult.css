@@ -1,0 +1,32 @@
+.table-responsive.fixed-height {
+    height: 300px;
+    overflow-y: auto;
+    position: relative;
+    border-radius: 8px;
+    border: 2px solid black;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.table-responsive.fixed-height thead th {
+    position: sticky;
+    top: 0;
+    background: lightgoldenrodyellow;
+    z-index: 1;
+    white-space: nowrap;
+}
+
+.table-responsive.fixed-height tbody {
+    overflow-y: auto;
+    width: 100%;
+    background-color: white;
+}
+
+.table-responsive.fixed-height thead,
+.table-responsive.fixed-height tbody tr {
+    width: 100%;
+}
+
+.table-responsive.fixed-height tbody td {
+    white-space: nowrap;
+}
