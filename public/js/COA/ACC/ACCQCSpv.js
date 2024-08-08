@@ -130,6 +130,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     var printPdf = document.getElementById('printPdf');
 
+    var showPreview = document.querySelector('.preview');
+    let dataChart = null;
+
+
     btn_info.focus();
 
     printPdf.addEventListener('click', (e) => {
@@ -325,6 +329,19 @@ document.addEventListener("DOMContentLoaded", function () {
                     btn_acc.disabled = false;
                     btn_detail.disabled = false;
 
+                    var clear = showPreview.querySelectorAll('input');
+
+                    // mengkosongkan checkbox & input
+                    dataValues = [];
+                    clear.forEach(function (input) {
+                        if (input.type === 'checkbox') {
+                            input.checked = false;
+                            input.disabled = true;
+                        } else {
+                            input.value = '';
+                        }
+                    });
+
                     $('.preview').show();
                     $('.previewBiasa').show();
                     $('.previewDetail').hide();
@@ -419,58 +436,80 @@ document.addEventListener("DOMContentLoaded", function () {
                             if (jenisFIBCInfo) {
                                 if (jenisFIBCInfo === ('Sample')) {
                                     sampleCheckbox.checked = true;
+                                    sampleCheckbox.disabled = false;
                                 }
                                 if (jenisFIBCInfo === ('Production')) {
                                     productionCheckbox.checked = true;
+                                    productionCheckbox.disabled = false;
                                 }
                                 if (jenisFIBCInfo === ('Trial')) {
                                     trialCheckbox.checked = true;
+                                    trialCheckbox.disabled = false;
                                 }
                                 if (jenisFIBCInfo === ('Pre-production')) {
                                     preProductionCheckbox.checked = true;
+                                    preProductionCheckbox.disabled = false;
                                 }
                                 if (jenisFIBCInfo === ('Spec. Modification')) {
                                     specModificationCheckbox.checked = true;
+                                    specModificationCheckbox.disabled = false;
                                 }
                                 if (jenisFIBCInfo === ('Sample dari Customer')) {
                                     sampleFromCustomerCheckbox.checked = true;
+                                    sampleFromCustomerCheckbox.disabled = false;
                                 }
                             }
 
 
                             // cyclic checkbox
                             const cyclicLiftInfo = result[0].Cyclic_Lift;
-                            if (cyclicLiftInfo === ('Single Loops')) {
-                                singleLoopsCheckbox.checked = true;
-                                cyclicTestCheckbox.checked = true;
-                            }
-                            if (cyclicLiftInfo === ('Four Loops')) {
-                                cyclicTestCheckbox.checked = true;
-                                fourLoopsCheckbox.checked = true;
-                            }
-                            if (cyclicLiftInfo === ('Two Loops')) {
-                                cyclicTestCheckbox.checked = true;
-                                twoLoopsCheckbox.checked = true;
-                            }
-                            if (cyclicLiftInfo === ('Stevedore')) {
-                                cyclicTestCheckbox.checked = true;
-                                stevedoreCheckbox.checked = true;
-                            }
-                            if (cyclicLiftInfo === ('Auxiliary')) {
-                                cyclicTestCheckbox.checked = true;
-                                auxiliaryCheckbox.checked = true;
+                            if (cyclicLiftInfo) {
+                                if (cyclicLiftInfo === ('Single Loops')) {
+                                    singleLoopsCheckbox.checked = true;
+                                    singleLoopsCheckbox.disabled = false;
+                                    cyclicTestCheckbox.checked = true;
+                                    cyclicTestCheckbox.disabled = false;
+                                }
+                                if (cyclicLiftInfo === ('Four Loops')) {
+                                    cyclicTestCheckbox.checked = true;
+                                    fourLoopsCheckbox.checked = true;
+                                    fourLoopsCheckbox.disabled = false;
+                                    cyclicTestCheckbox.disabled = false;
+                                }
+                                if (cyclicLiftInfo === ('Two Loops')) {
+                                    cyclicTestCheckbox.checked = true;
+                                    twoLoopsCheckbox.checked = true;
+                                    twoLoopsCheckbox.disabled = false;
+                                    cyclicTestCheckbox.disabled = false;
+                                }
+                                if (cyclicLiftInfo === ('Stevedore')) {
+                                    cyclicTestCheckbox.checked = true;
+                                    stevedoreCheckbox.checked = true;
+                                    stevedoreCheckbox.disabled = false;
+                                    cyclicTestCheckbox.disabled = false;
+                                }
+                                if (cyclicLiftInfo === ('Auxiliary')) {
+                                    cyclicTestCheckbox.checked = true;
+                                    auxiliaryCheckbox.checked = true;
+                                    auxiliaryCheckbox.disabled = false;
+                                    cyclicTestCheckbox.disabled = false;
+                                }
                             }
 
 
                             // result cyclic
                             const resultCylicInfo = result[0].Cyclic_Result;
-                            if (resultCylicInfo === ('No visible damages occurred')) {
-                                noVisibleDamageCheckbox.checked = true;
-                            }
-                            if (resultCylicInfo.startsWith('Visible damages found at')) {
-                                visibleDamagesCheckbox.checked = true;
-                                var location = resultCylicInfo.substring('Visible damages found at '.length).trim();
-                                visibleDamageInput.value = location;
+                            if (resultCylicInfo) {
+                                if (resultCylicInfo === ('No visible damages occurred')) {
+                                    noVisibleDamageCheckbox.checked = true;
+                                    noVisibleDamageCheckbox.disabled = false;
+                                }
+                                if (resultCylicInfo.startsWith('Visible damages found at')) {
+                                    visibleDamagesCheckbox.checked = true;
+                                    visibleDamagesCheckbox.disabled = false;
+                                    var location = resultCylicInfo.substring('Visible damages found at '.length).trim();
+                                    visibleDamageInput.value = location;
+                                }
                             }
 
 
@@ -478,23 +517,33 @@ document.addEventListener("DOMContentLoaded", function () {
                             const topLiftInfo = result[0].Top_Lift;
                             if (topLiftInfo === ('Single Loops')) {
                                 topLiftTestCheckbox.checked = true;
+                                topLiftTestCheckbox.disabled = false;
                                 singleLoopsTopCheckbox.checked = true;
+                                singleLoopsTopCheckbox.disabled = false;
                             }
                             if (topLiftInfo === ('Four Loops')) {
+                                topLiftTestCheckbox.disabled = false;
                                 topLiftTestCheckbox.checked = true;
                                 fourLoopsTopCheckbox.checked = true;
+                                fourLoopsTopCheckbox.disabled = false;
                             }
                             if (topLiftInfo === ('Two Loops')) {
+                                topLiftTestCheckbox.disabled = false;
                                 topLiftTestCheckbox.checked = true;
                                 twoLoopsTopCheckbox.checked = true;
+                                twoLoopsTopCheckbox.disabled = false;
                             }
                             if (topLiftInfo === ('Stevedore')) {
+                                topLiftTestCheckbox.disabled = false;
                                 topLiftTestCheckbox.checked = true;
                                 stevedoreTopCheckbox.checked = true;
+                                stevedoreTopCheckbox.disabled = false;
                             }
                             if (topLiftInfo === ('Auxiliary')) {
+                                topLiftTestCheckbox.disabled = false;
                                 topLiftTestCheckbox.checked = true;
                                 auxiliaryTopCheckbox.checked = true;
+                                auxiliaryTopCheckbox.disabled = false;
                             }
 
                             // berat
@@ -508,47 +557,64 @@ document.addEventListener("DOMContentLoaded", function () {
 
                             // breakage loc
                             const breakageInfo = result[0].Breakage_Location.trim();
-                            if (breakageInfo === ('Body fabric')) {
-                                bodyFabricCheckbox.checked = true;
-                            }
-                            if (breakageInfo === ('Petal')) {
-                                petalCheckbox.checked = true;
-                            }
-                            if (breakageInfo === ('Side body\'s thread')) {
-                                sideBodyThreadCheckbox.checked = true;
-                            }
-                            if (breakageInfo === ('Bottom fabric')) {
-                                bottomFabricCheckbox.checked = true;
-                            }
-                            if (breakageInfo === ('Lifting belt')) {
-                                liftingBeltCheckbox.checked = true;
-                            }
-                            if (breakageInfo === ('Bottom body\'s thread')) {
-                                bottomBodyThreadCheckbox.checked = true;
-                            }
-                            if (breakageInfo === ('Starcut of bottom sprout')) {
-                                starcutBottomSproutCheckbox.checked = true;
-                            }
-                            if (breakageInfo === ('Lifting belt\'s thread')) {
-                                liftingBeltThreadCheckbox.checked = true;
-                            }
-                            if (breakageInfo.startsWith('Others :')) {
-                                othersCheckbox.checked = true;
-                                const othersValue = breakageInfo.substring('Others : '.length).trim();
-                                topLiftOthersInput.value = othersValue;
+                            if (breakageInfo) {
+                                if (breakageInfo === ('Body fabric')) {
+                                    bodyFabricCheckbox.checked = true;
+                                    bodyFabricCheckbox.disabled = false;
+                                }
+                                if (breakageInfo === ('Petal')) {
+                                    petalCheckbox.checked = true;
+                                    petalCheckbox.disabled = false;
+                                }
+                                if (breakageInfo === ('Side body\'s thread')) {
+                                    sideBodyThreadCheckbox.checked = true;
+                                    sideBodyThreadCheckbox.disabled = false;
+                                }
+                                if (breakageInfo === ('Bottom fabric')) {
+                                    bottomFabricCheckbox.checked = true;
+                                    bottomFabricCheckbox.disabled = false;
+                                }
+                                if (breakageInfo === ('Lifting belt')) {
+                                    liftingBeltCheckbox.checked = true;
+                                    liftingBeltCheckbox.disabled = false;
+                                }
+                                if (breakageInfo === ('Bottom body\'s thread')) {
+                                    bottomBodyThreadCheckbox.checked = true;
+                                    bottomBodyThreadCheckbox.disabled = false;
+                                }
+                                if (breakageInfo === ('Starcut of bottom sprout')) {
+                                    starcutBottomSproutCheckbox.checked = true;
+                                    starcutBottomSproutCheckbox.disabled = false;
+                                }
+                                if (breakageInfo === ('Lifting belt\'s thread')) {
+                                    liftingBeltThreadCheckbox.checked = true;
+                                    liftingBeltThreadCheckbox.disabled = false;
+                                }
+                                if (breakageInfo.startsWith('Others :')) {
+                                    othersCheckbox.checked = true;
+                                    othersCheckbox.disabled = false;
+                                    const othersValue = breakageInfo.substring('Others : '.length).trim();
+                                    topLiftOthersInput.value = othersValue;
+                                }
                             }
 
                             // drop test 80 cm
                             const dropTestInfo = result[0].Drop_Result;
-                            if (dropTestInfo === ('No visible damages occurred')) {
-                                noVisibleDamageDropCheckbox.checked = true;
-                                dropTestCheckbox.checked = true;
-                            }
-                            if (dropTestInfo.startsWith('Visible damages found at')) {
-                                visibleDamageDropCheckbox.checked = true;
-                                dropTestCheckbox.checked = true;
-                                var location = dropTestInfo.substring('Visible damages found at '.length).trim();
-                                visibleDamageDropInput.value = location;
+                            if (dropTestInfo) {
+                                if (dropTestInfo === ('No visible damages occurred')) {
+                                    noVisibleDamageDropCheckbox.checked = true;
+                                    noVisibleDamageDropCheckbox.disabled = false;
+                                    dropTestCheckbox.checked = true;
+                                    dropTestCheckbox.disabled = false;
+                                }
+                                if (dropTestInfo.startsWith('Visible damages found at')) {
+                                    visibleDamageDropCheckbox.checked = true;
+                                    visibleDamageDropCheckbox.disabled = false;
+                                    dropTestCheckbox.checked = true;
+                                    dropTestCheckbox.disabled = false;
+                                    var location = dropTestInfo.substring('Visible damages found at '.length).trim();
+                                    visibleDamageDropInput.value = location;
+                                }
                             }
 
                             // images
@@ -571,56 +637,69 @@ document.addEventListener("DOMContentLoaded", function () {
                             }
 
 
-                            // chart
+                            // Function to update or create the chart
+                            function updateChart(dataValues) {
+                                const canvas = document.getElementById('dataChart');
+                                const ctx = canvas.getContext('2d');
+
+                                // If dataChart already exists, destroy it to avoid the "Canvas is already in use" error
+                                if (dataChart != null) {
+                                    dataChart.destroy();
+                                }
+
+                                // Create a new chart instance
+                                dataChart = new Chart(ctx, {
+                                    type: 'line',
+                                    data: {
+                                        labels: Array.from({ length: 30 }, (_, i) => (i + 1)).concat([31]),
+                                        datasets: [{
+                                            data: dataValues,
+                                            borderColor: 'rgba(75, 192, 192, 1)',
+                                            borderWidth: 2,
+                                            fill: false,
+                                            lineTension: 0.1
+                                        }]
+                                    },
+                                    options: {
+                                        plugins: {
+                                            title: {
+                                                display: true,
+                                                text: 'FIBC - Cyclic Top Lift Test',
+                                                font: {
+                                                    size: 12
+                                                },
+                                            },
+                                            legend: {
+                                                display: false
+                                            }
+                                        },
+                                        scales: {
+                                            y: {
+                                                title: {
+                                                    display: true,
+                                                    text: 'kg'
+                                                },
+                                                beginAtZero: true,
+                                                min: 0,
+                                                max: 12000,
+                                                ticks: {
+                                                    stepSize: 2000
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+
+                            // Example usage of the function
                             const dataValues = [];
                             for (let i = 1; i <= 30; i++) {
                                 dataValues.push(result[0][`Data_${i}`]);
                             }
-                            dataValues.push(result[0].Top_Result); //untuk 31
+                            dataValues.push(result[0].Top_Result); // For the 31st value
 
-                            const ctx = document.getElementById('dataChart').getContext('2d');
-                            const dataChart = new Chart(ctx, {
-                                type: 'line',
-                                data: {
-                                    labels: Array.from({ length: 30 }, (_, i) => (i + 1)).concat([31]),
-                                    datasets: [{
-                                        data: dataValues,
-                                        borderColor: 'rgba(75, 192, 192, 1)',
-                                        borderWidth: 2,
-                                        fill: false,
-                                        lineTension: 0.1
-                                    }]
-                                },
-                                options: {
-                                    plugins: {
-                                        title: {
-                                            display: true,
-                                            text: 'FIBC - Cyclic Top Lift Test',
-                                            font: {
-                                                size: 12
-                                            },
-                                        },
-                                        legend: {
-                                            display: false
-                                        }
-                                    },
-                                    scales: {
-
-                                        y: {
-                                            title: {
-                                                display: true,
-                                                text: 'kg'
-                                            },
-                                            beginAtZero: true,
-                                            min: 0,
-                                            max: 12000,
-                                            ticks: {
-                                                stepSize: 2000
-                                            }
-                                        }
-                                    }
-                                }
-                            });
+                            // Update the chart with the new data
+                            updateChart(dataValues);
 
 
                             btn_detail.addEventListener("click", function (e) {
@@ -662,15 +741,19 @@ document.addEventListener("DOMContentLoaded", function () {
                                 const sewingMethodInfo = result[0].Sewing_Method;
                                 if (sewingMethodInfo === 'Mitsumaki') {
                                     mitsumakiCheckbox.checked = true;
+                                    mitsumakiCheckbox.disabled = false;
                                 }
                                 if (sewingMethodInfo === 'Ogami') {
                                     ogamiCheckbox.checked = true;
+                                    ogamiCheckbox.disabled = false;
                                 }
                                 if (sewingMethodInfo === 'Half Mitsumaki') {
                                     halfMitsumakiCheckbox.checked = true;
+                                    halfMitsumakiCheckbox.disabled = false;
                                 }
                                 if (sewingMethodInfo === 'Other') {
                                     otherSewingMethodCheckbox.checked = true;
+                                    otherSewingMethodCheckbox.disabled = false;
                                 }
 
 
@@ -678,20 +761,25 @@ document.addEventListener("DOMContentLoaded", function () {
                                 const stitchApproxInfo = result[0].Stitch_Approx;
                                 if (stitchApproxInfo === ('Bottom')) {
                                     bottomApproxCheckbox.checked = true;
+                                    bottomApproxCheckbox.disabled = false;
                                 }
                                 if (stitchApproxInfo === ('Side Body')) {
                                     sideBodyApproxCheckbox.checked = true;
+                                    sideBodyApproxCheckbox.disabled = false;
                                 }
                                 if (stitchApproxInfo === ('Lifting Belt')) {
                                     liftingBeltApproxCheckbox.checked = true;
+                                    liftingBeltApproxCheckbox.disabled = false;
                                 }
 
                                 // E. Fit to drawing Spec.?
                                 const fitDrawInfo = result[0].Fit_to_Draw;
                                 if (fitDrawInfo === 'Yes') {
                                     fitDrawYesCheckbox.checked = true;
+                                    fitDrawYesCheckbox.disabled = false;
                                 } else if (fitDrawInfo === 'No') {
                                     fitDrawNoCheckbox.checked = true;
+                                    fitDrawNoCheckbox.disabled = false;
                                 }
 
                                 // A. Test Condition
@@ -703,6 +791,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                 if (result[0].Dia > 0) {
                                     diaPressureCheckbox.checked = true;
+                                    diaPressureCheckbox.disabled = false;
                                     testDia.textContent = formatDecimal(result[0].Dia) + ' cm';
                                 } else {
                                     diaPressureCheckbox.checked = false;
@@ -711,6 +800,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                 if (result[0].Square) {
                                     squarePressureCheckbox.checked = true;
+                                    squarePressureCheckbox.disabled = false;
                                     testSquare.textContent = formatDecimal(result[0].Square) + ' cm';
                                 } else {
                                     squarePressureCheckbox.checked = false;

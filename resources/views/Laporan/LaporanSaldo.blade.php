@@ -92,8 +92,10 @@
     </div>
 
     <script type="text/javascript" src="{{ asset('js/Laporan/LaporanSaldo.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/exceljs@4.3.0/dist/exceljs.min.js"></script>
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script> --}}
+    <script src="{{ asset('js/ajaxExcel.js') }}"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/exceljs@4.3.0/dist/exceljs.min.js"></script> --}}
+    <script src="{{ asset('js/ExcelJs.js') }}"></script>
     <link rel="stylesheet" href="{{ asset('css/sweetalert2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/Laporan/LaporanSaldo.css') }}">
     <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>

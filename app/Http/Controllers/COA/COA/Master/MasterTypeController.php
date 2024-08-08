@@ -34,7 +34,6 @@ class MasterTypeController extends Controller
         $comodity = $request->input('comodity');
         $UserInput = Auth::user()->NomorUser;
         $tableData = json_decode($request->input('tableData'), true);
-        // $tableData = $request->input('tableData');
         // dd($tableData);
 
         try {
@@ -61,23 +60,20 @@ class MasterTypeController extends Controller
                 $item = $row[2];
                 $standard = $row[3];
 
-                try {
-                    DB::connection('ConnTestQC')->statement(
-                        'exec SP_1273_PROSES_COA
-                        @Kode = ?,  @IdMaster = ?,  @PartSection = ?, @Material = ?,  @Item = ?,  @Standart = ?',
-                        [
-                            2,
-                            $id,
-                            $part,
-                            $material,
-                            $item,
-                            $standard
-                        ]
-                    );
-                } catch (\Exception $e) {
-                    return response()->json(['error' => 'Failed to insert data: ' . $e->getMessage()], 500);
-                }
+                DB::connection('ConnTestQC')->statement(
+                    'exec SP_1273_PROSES_COA
+                    @Kode = ?,  @IdMaster = ?,  @PartSection = ?, @Material = ?,  @Item = ?,  @Standart = ?',
+                    [
+                        2,
+                        $id,
+                        $part,
+                        $material,
+                        $item,
+                        $standard
+                    ]
+                );
             }
+
             return response()->json(['success' => 'Data inserted successfully'], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to insert data: ' . $e->getMessage()], 500);

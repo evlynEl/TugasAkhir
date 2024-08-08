@@ -29,7 +29,7 @@
                             </div>
                         </div>
                     </div>
-                    <button type="button" id="btn_proses" class="btn btn-outline-success">Proses</button>
+                    <button type="button" id="btn_proses" class="btn btn-outline-secondary">Proses</button>
                 </div>
             </div>
         </div>

@@ -1,5 +1,8 @@
 var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
+var id = document.getElementById("id");
+var material =  document.getElementById("material");
+
 // Button Elements
 var btn_lihat = document.getElementById('btn_lihat');
 var btn_proses = document.getElementById('btn_proses');
@@ -65,7 +68,10 @@ btn_lihat.addEventListener("click", function (e) {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                selectPart(result.value.Id, result.value.Material);
+                const materialSection = decodeHtmlEntities(result.value.Material.trim());
+                id.value = result.value.Id; 
+                material.value = materialSection;
+                btn_proses.disabled = true;
             }
         });
     } catch (error) {
@@ -73,6 +79,7 @@ btn_lihat.addEventListener("click", function (e) {
     }
 });
 
+// fungsi swal select pake arrow
 function handleTableKeydown(e, tableId) {
     const table = $(`#${tableId}`).DataTable();
     const rows = $(`#${tableId} tbody tr`);
@@ -125,12 +132,14 @@ function handleTableKeydown(e, tableId) {
     }
 }
 
-function selectPart(Id, Material) {
-    document.getElementById("id").value = Id;
-    document.getElementById("material").value = Material;
-    Swal.close();
+// fungsi unk menampilkan '&' 
+function decodeHtmlEntities(str) {
+    var textArea = document.createElement('textarea');
+    textArea.innerHTML = str;
+    return textArea.value;
 }
 
+// button proses
 btn_proses.addEventListener("click", function (e) {
     try {
         var material = document.getElementById("material").value.trim();

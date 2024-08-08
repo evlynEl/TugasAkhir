@@ -1,9 +1,14 @@
 var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
+var id = document.getElementById("id");
+var part =  document.getElementById("part");
+
 //button
 var btn_lihat = document.getElementById('btn_lihat');
 var btn_proses = document.getElementById('btn_proses');
 
+
+// button ...
 btn_lihat.addEventListener("click", function (e) {
     try {
         Swal.fire({
@@ -65,7 +70,11 @@ btn_lihat.addEventListener("click", function (e) {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                selectPart(result.value.Id, result.value.PartSection);
+                const partSection = decodeHtmlEntities(result.value.PartSection.trim());
+                id.value = result.value.Id; 
+                part.value = partSection;
+                btn_proses.disabled = true;
+
             }
         });
     } catch (error) {
@@ -73,6 +82,7 @@ btn_lihat.addEventListener("click", function (e) {
     }
 });
 
+// fungsi swal select pake arrow
 function handleTableKeydown(e, tableId) {
     const table = $(`#${tableId}`).DataTable();
     const rows = $(`#${tableId} tbody tr`);
@@ -125,23 +135,20 @@ function handleTableKeydown(e, tableId) {
     }
 }
 
-function selectPart(Id, PartSection) {
-    document.getElementById("id").value = Id;
-    document.getElementById("part").value = PartSection;
-    Swal.close();
+// fungsi unk menampilkan '&' 
+function decodeHtmlEntities(str) {
+    var textArea = document.createElement('textarea');
+    textArea.innerHTML = str;
+    return textArea.value;
 }
 
-
+// button proses
 btn_proses.addEventListener("click", function (e) {
     try {
         var part = document.getElementById("part").value.trim();
         var id = document.getElementById("id").value.trim();
 
-        if (id !== '' && part !== '') {
-            var btnProses = document.getElementById("btn_proses");
-            btnProses.disabled = true;
-            btnProses.classList.add('btn-disabled');
-        } else if (part === '') {
+        if (part === '') {
             Swal.fire({
                 icon: 'warning',
                 title: 'Data is not complete',

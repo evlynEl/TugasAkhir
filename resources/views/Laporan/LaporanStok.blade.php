@@ -69,10 +69,12 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-1 offset-sm-2">
-                                <button type="button" class="btn btn-success" id="prosesButton" style="width: 100%">Proses</button>
+                                <button type="button" class="btn btn-success" id="prosesButton"
+                                    style="width: 100%">Proses</button>
                             </div>
                             <div class="col-sm-1">
-                                <button type="button" class="btn btn-danger" id="cancelButton" style="width: 100%">Cancel</button>
+                                <button type="button" class="btn btn-danger" id="cancelButton"
+                                    style="width: 100%">Cancel</button>
                             </div>
                         </div>
 
@@ -91,7 +93,8 @@
 
                         <div class="row" style="margin-top: 0.5%">
                             <div class="col-sm-1">
-                                <button type="button" class="btn btn-primary" id="excelButton" style="width: 100%">Tampil Excel</button>
+                                <button type="button" class="btn btn-primary" id="excelButton" style="width: 100%">Tampil
+                                    Excel</button>
                             </div>
                         </div>
 
@@ -102,8 +105,10 @@
     </div>
 
     <script type="text/javascript" src="{{ asset('js/Laporan/LaporanStok.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/exceljs@4.3.0/dist/exceljs.min.js"></script>
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script> --}}
+    <script src="{{ asset('js/ajaxExcel.js') }}"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/exceljs@4.3.0/dist/exceljs.min.js"></script> --}}
+    <script src="{{ asset('js/ExcelJs.js') }}"></script>
     <link rel="stylesheet" href="{{ asset('css/sweetalert2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/Laporan/LaporanStok.css') }}">
     <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>

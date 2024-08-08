@@ -14,7 +14,6 @@ var Load_Speed = document.getElementById('Load_Speed');
 var Drop_Test = document.getElementById('Drop_Test');
 
 // Test Result Section
-
 var cyclicbesar = document.getElementById('cyclicbesar');
 var Cyclic_Lift = document.getElementById('Cyclic_Lift');
 var Cyclic_Result = document.getElementById('cyclicResult');
@@ -203,6 +202,7 @@ inputs.forEach((masuk, index) => {
     });
 });
 
+// fungsi unk preview gambar
 function handleImagePreview(inputId, imageId, labelId) {
     document.getElementById(inputId).addEventListener('change', function (event) {
         const file = event.target.files[0];
@@ -234,7 +234,6 @@ diaCheckbox.addEventListener('change', function () {
         dia_val.focus();
     }
 });
-
 squareCheckbox.addEventListener('change', function () {
     if (squareCheckbox.checked) {
         square_val.focus();

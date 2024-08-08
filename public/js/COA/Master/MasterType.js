@@ -637,6 +637,11 @@ btn_proses.addEventListener("click", function (e) {
                     icon: 'success',
                     title: 'Success',
                     text: 'Data Tersimpan',
+                }).then(() => {
+                    // Clear the tbody
+                    tbody.innerHTML = '';
+                    // Clear the tableData array
+                    tableData = [];
                 });
             } else {
                 Swal.fire({
@@ -656,3 +661,4 @@ btn_proses.addEventListener("click", function (e) {
         }
     });
 });
+console.log(tableData);

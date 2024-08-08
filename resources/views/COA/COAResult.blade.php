@@ -113,71 +113,73 @@
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-sm-2">
-                                <label for="part_section">Part Section:</label>
-                            </div>
-                            <div class="col-sm-5">
-                                <input type="text" class="form-control" id="part_section">
-                            </div>
-                            <div class="col-sm-1">
-                                <button type="button" class="btn btn-primary" id="buttonPartSection">...</button>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-2">
-                                <label for="material">Material:</label>
-                            </div>
-                            <div class="col-sm-5">
-                                <input type="text" class="form-control" id="material">
-                            </div>
-                            <div class="col-sm-1">
-                                <button type="button" class="btn btn-primary" id="buttonMaterial">...</button>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-2">
-                                <label for="item">Item:</label>
-                            </div>
-                            <div class="col-sm-5">
-                                <input type="text" class="form-control" id="item">
-                            </div>
-                            <div class="col-sm-1">
-                                <button type="button" class="btn btn-primary" id="buttonItem">...</button>
-                            </div>
-                            <div class="col-sm-1">
-                                <input type="text" class="form-control" id="idItem" readonly>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-2">
-                                <label for="test_result">Test Result:</label>
-                            </div>
-                            <div class="col-sm-5">
-                                <input type="text" class="form-control" id="test_result">
-                            </div>
-                            <div class="col-sm-1">
-                                <button type="button" class="btn btn-primary" id="buttonTambah">Tambah</button>
-                            </div>
-                        </div>
-
-                        <div class="row mt-2">
-                            <div class="col-sm-12">
-                                <div class="table-responsive fixed-height">
-                                    <table id="tableDetail">
-                                        <thead>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
+                        <div style="outline: solid 1px #ddd; padding: 10px;">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <label for="part_section">Part Section:</label>
                                 </div>
-
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="part_section">
+                                </div>
+                                <div class="col-sm-1">
+                                    <button type="button" class="btn btn-primary" id="buttonPartSection">...</button>
+                                </div>
                             </div>
-                        </div>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <label for="material">Material:</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="material">
+                                </div>
+                                <div class="col-sm-1">
+                                    <button type="button" class="btn btn-primary" id="buttonMaterial">...</button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <label for="item">Item:</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="item">
+                                </div>
+                                <div class="col-sm-1">
+                                    <button type="button" class="btn btn-primary" id="buttonItem">...</button>
+                                </div>
+                                <div class="col-sm-1">
+                                    <input type="text" class="form-control" id="idItem" readonly>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <label for="test_result">Test Result:</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id="test_result">
+                                </div>
+                                <div class="col-sm-1">
+                                    <button type="button" class="btn btn-primary" id="buttonTambah">Tambah</button>
+                                </div>
+                            </div>
 
-                        <div class="row mt-1">
-                            <div class="col-sm-1">
-                                <button type="button" class="btn btn-primary" id="buttonProses">Proses</button>
+                            <div class="row mt-2">
+                                <div class="col-sm-12">
+                                    <div class="table-responsive fixed-height">
+                                        <table id="tableDetail">
+                                            <thead>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="row mt-1">
+                                <div class="col-sm-1">
+                                    <button type="button" class="btn btn-primary" id="buttonProses">Proses</button>
+                                </div>
                             </div>
                         </div>
 

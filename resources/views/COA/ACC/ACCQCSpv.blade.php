@@ -1270,5 +1270,6 @@
     <link rel="stylesheet" href="{{ asset('css/COA/ACC/ACCQCSpv.css') }}">
     <link rel="stylesheet" href="{{ asset('css/sweetalert2.min.css') }}">
     <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> --}}
+    <script src="{{ asset('js/chart.js') }}"></script>
 @endsection

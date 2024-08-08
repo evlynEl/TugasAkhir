@@ -56,7 +56,7 @@
                         </div>
 
                         {{-- <button type="button" id="btn_acc" class="btn btn-outline-success">ACC</button> --}}
-                        <button type="button" id="btn_print" class="btn btn-outline-success">Print</button>
+                        <button type="button" id="btn_print" class="btn btn-outline-secondary mb-3">Print</button>
 
                         <div class="row">
                             <div class="col-md-12 preview bordered" style="display: none;">
