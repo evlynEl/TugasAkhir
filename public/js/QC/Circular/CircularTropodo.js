@@ -416,6 +416,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 input.value = '';
             }
         });
+        standartElgWarp = '25-30';
+        standartElgWeft = '25-30';
+
     }
 
     // button untuk refresh table qc

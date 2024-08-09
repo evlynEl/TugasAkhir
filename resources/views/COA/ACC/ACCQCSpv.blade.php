@@ -640,12 +640,12 @@
                                             </div>
                                             <div class="col-sm-4 d-flex align-items-center justify-content-center bordered"
                                                 style="width: 225px; height: 175px;">
-                                                <img id="afterTop" alt="Test Result 3"
+                                                <img id="afterCyclic" alt="Test Result 3"
                                                     style="max-width: 100%; max-height: 100%;">
                                             </div>
                                             <div class="col-sm-4 d-flex align-items-center justify-content-center bordered"
                                                 style="width: 225px; height: 175px;">
-                                                <img id="testResult" alt="Test Result 4"
+                                                <img id="afterTop" alt="Test Result 4"
                                                     style="max-width: 100%; max-height: 100%;">
                                             </div>
                                         </div>
