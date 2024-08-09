@@ -27,8 +27,6 @@ class InputTestController extends Controller
     {
         $a = (int)$request->input('a');
 
-        $formData = $request->all();
-
         $referenceNo = $request->input('RefNo');
         $heightApprox = $request->input('Height_Approx');
         $diaVal = $request->input('dia_val');
@@ -46,6 +44,7 @@ class InputTestController extends Controller
         $jumlah = (int)$request->input('Jumlah');
         $UserInput = Auth::user()->NomorUser;
 
+        // gambar 1
         $image = $request->file('gambar1data');
         $imageBinary = null;
         if ($image) {
@@ -53,7 +52,6 @@ class InputTestController extends Controller
             $imageBinary = fread($binaryReader, $image->getSize());
             fclose($binaryReader);
         }
-
         // gambar 2
         $image2 = $request->file('gambar2data');
         $imageBinary2 = null;
@@ -62,7 +60,7 @@ class InputTestController extends Controller
             $imageBinary2 = fread($binaryReader2, $image2->getSize());
             fclose($binaryReader2);
         }
-
+        // gambar 3
         $image3 = $request->file('gambar3data');
         $imageBinary3 = null;
         if ($image3) {
@@ -70,8 +68,7 @@ class InputTestController extends Controller
             $imageBinary3 = fread($binaryReader3, $image3->getSize());
             fclose($binaryReader3);
         }
-
-        // gambar 2
+        // gambar 4
         $image4 = $request->file('gambar4data');
         $imageBinary4 = null;
         if ($image4) {
@@ -91,7 +88,6 @@ class InputTestController extends Controller
         try {
             if ($a === 1) { // ISI
                 if ($jumlah === 3) {
-
                     DB::connection('ConnTestQC')->table('Result_FIBC')->insert([
                         'Reference_No' => $referenceNo,
                         'Height_Approx' => $heightApprox,
@@ -103,7 +99,7 @@ class InputTestController extends Controller
                         'Cyclic_Result' => $cyclicResult,
                         'Top_Lift' => $topLift,
                         'Top_Result' => $topResult,
-                        'Breakage_Location' => $breakageLocation,
+                        'Breakage_Location' => $breakageLocation, // breakage location bisa di centang > 1, data type varchar nya kurang besar
                         'Drop_Result' => $dropResult,
                         'Test_Result' => $testResult,
                         'UserInput' => $request->input('UserInput'),
@@ -154,7 +150,7 @@ class InputTestController extends Controller
                         'Cyclic_Result' => $cyclicResult,
                         'Top_Lift' => $topLift,
                         'Top_Result' => $topResult,
-                        'Breakage_Location' => $breakageLocation,
+                        'Breakage_Location' => $breakageLocation, // breakage location bisa di centang > 1, data type varchar nya kurang besar
                         'Drop_Result' => $dropResult,
                         'Test_Result' => $testResult,
                         'UserInput' => $request->input('UserInput'),
@@ -196,6 +192,7 @@ class InputTestController extends Controller
 
                 // KOREKSI
             } else if ($a === 2) { // KOREKSI
+                // breakage location bisa di centang > 1, data type varchar nya kurang besar
                 DB::connection('ConnTestQC')->statement(
                     'UPDATE Result_FIBC
                      SET Height_Approx = ?, Dia = ?, Square = ?, Cyclic_Test = ?, Load_Speed = ?, Drop_Test = ?,

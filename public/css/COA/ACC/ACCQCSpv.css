@@ -42,3 +42,8 @@ img{
         width: 100%;
     }
 }
+
+input[type="text"] {
+    height: 30px;
+    font-size: 14px;
+}

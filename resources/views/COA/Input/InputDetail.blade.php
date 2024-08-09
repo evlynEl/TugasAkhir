@@ -15,28 +15,30 @@
                 <div class="card">
                     <div class="card-header">Input FIBC Detail</div>
                     <div class="card-body RDZOverflow RDZMobilePaddingLR0">
-                        <div class="form-group">
-                            <label>Tanggal :</label>
-                            <div class="input-group">
-                                <input type="date" class="form-control" id="tanggal">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Tahun :</label>
-                            <input type="text" id="year" name="year" class="form-control">
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group col-md-2">
-                                <label>Ref No :</label>
-                                <input type="text" id="No." name="No." class="form-control">
-                            </div>
-                            <div class="form-group col-md-10" style="margin-top: 31px;">
+                        <div class="top">
+                            <div class="form-group">
+                                <label>Tanggal :</label>
                                 <div class="input-group">
-                                    <input type="text" id="refNo" name="refNo" class="form-control">
-                                    <div class="input-group-append">
-                                        <button type="button" id="btn_RefNo" class="btn btn-info" >...</button>
+                                    <input type="date" class="form-control" id="tanggal">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Tahun :</label>
+                                <input type="text" id="year" name="year" class="form-control">
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-2">
+                                    <label>Ref No :</label>
+                                    <input type="text" id="No." name="No." class="form-control">
+                                </div>
+                                <div class="form-group col-md-10" style="margin-top: 24px;">
+                                    <div class="input-group">
+                                        <input type="text" id="refNo" name="refNo" class="form-control">
+                                        <div class="input-group-append">
+                                            <button type="button" id="btn_RefNo" class="btn btn-info" >...</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -45,8 +47,8 @@
 
                         {{-- FIBC Detail --}}
                         <label>FIBC Detail</label>
-                        <div class="form-row" id="fibc_detail" style="border: 1px solid #ddd">
-                            <div class="col-md-4 mt-1">
+                        <div class="form-row" id="fibc_detail">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="customer">Customer</label>
                                     <label style="display: none">Nama Customer</label>
@@ -80,7 +82,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-4 mt-1">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="size">Size</label>
                                     <div class="input-group">
@@ -272,7 +274,7 @@
                         </div>
 
                         {{-- jenis FIBC --}}
-                        <div class="form-row mt-1 text-center" id="jenis"
+                        <div class="form-row mt-1 mb-2 text-center" id="jenis"
                             style="border: 1px solid #ddd; padding: 10px 10px;">
                             <div class="col-md-2">
                                 <div class="form-check">
@@ -320,8 +322,8 @@
 
                         {{-- Bag Detail --}}
                         <label>Bag Detail</label>
-                        <div class="form-row" id="bag_detail" style="border: 1px solid #ddd">
-                            <div class="col-md-12 mt-1">
+                        <div class="form-row" id="bag_detail">
+                            <div class="col-md-12">
                                 <label for="liftBeltType"><strong>A. Lifting Belt</strong></label>
                                 <div class="form-group">
                                     <label>Type :</label>
@@ -572,6 +574,6 @@
     </div>
 
 
-
     <script src="{{ asset('js/COA/Input/InputDetail.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('css/COA/Input/InputDetail.css') }}">
 @endsection

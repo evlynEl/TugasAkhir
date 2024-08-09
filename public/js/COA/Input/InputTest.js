@@ -1152,11 +1152,11 @@ btn_simpan.addEventListener('click', async function (e) {
         let breakageTxt = breakage && breakage.length > 0 ? (breakage.includes('Others :') ? breakage.join(', ') + ' ' + othersTextInput.value.trim() : breakage.join(', ')) : null;
         let dropResultTxt = dResult && dResult.length > 0 ? (dResult.includes('Visible damages found at') ? dResult.join(', ') + ' ' + damageFoundDescDropInput.value.trim() : dResult.join(', ')) : null;
 
-        // console.log('cyclic lift: ', cLift);
-        // console.log('top lift: ', tLift);
-        // console.log('cyclic result: ', cResult);
-        // console.log('breakage loc: ', breakage);
-        // console.log('drop result: ', dResult);
+        console.log('cyclic lift: ', cLift);
+        console.log('top lift: ', tLift);
+        console.log('cyclic result: ', cResult);
+        console.log('breakage loc: ', breakage);
+        console.log('drop result: ', dResult);
 
         let text = ['Cyclic Test', 'Cyclic Test Result', 'Top Lift Test', 'Breakage Location', 'Drop Test'];
         let tidakTercentang = [];

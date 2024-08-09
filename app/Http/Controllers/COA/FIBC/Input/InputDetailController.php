@@ -81,6 +81,8 @@ class InputDetailController extends Controller
         $Bottom_Persen_5 = $request->input('bottomE5');
         $Copy_RefNo = $request->input('Copy_RefNo');
 
+        // dd('size : ', $Size, 'sf : ', $sf);
+
         try {
             $process = DB::connection('ConnTestQC')->statement(
                 'exec SP_1273_QTC_MAINT_FIBC

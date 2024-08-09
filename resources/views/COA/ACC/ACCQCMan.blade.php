@@ -91,7 +91,7 @@
 
                             <div class="row">
                                 <div class="col-sm-6 d-flex align-items-center justify-content-center bordered">
-                                    <h4 style="margin: 0"><strong>FIBC TESTREPORT</strong></h4>
+                                    <h4 style="margin: 0"><strong>FIBC TEST REPORT</strong></h4>
                                 </div>
                                 <div class="col-sm-6 d-flex align-items-center justify-content-center bordered">
                                     <h4 style="margin: 0"><strong>FORMAT</strong></h4>
@@ -557,7 +557,7 @@
                                                         found at</label>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-5 p-0">
+                                            <div class="col-sm-5 p-0 mb-2">
                                                 <input type="text" class="form-control" disabled
                                                     id="visibleDamageDropInput">
                                             </div>

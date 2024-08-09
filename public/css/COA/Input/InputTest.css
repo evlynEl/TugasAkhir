@@ -64,21 +64,10 @@ textarea {
     height: 100px;
 }
 
-/* /* .image-container {
-    background-color: #eee;
-    width: 200px;
-    height: 100px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    border: 1px solid #ccc;
-    margin-top: 10px;
-} */
-/* 
-.image-container img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: none;
-} */
+#btn_isi,
+#btn_simpan,
+#btn_batal,
+#btn_koreksi,
+#btn_hapus {
+    width: 8%;
+}
