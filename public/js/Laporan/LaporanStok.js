@@ -59,9 +59,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return month + '/' + day + '/' + year;
     }
 
-    var formattedTanggalAwal = formatDateToMMDDYYYY(tanggalAwal.value);
-    var formattedTanggalAkhir = formatDateToMMDDYYYY(tanggalAkhir.value);
-
     $('#tanggalAwal').on('keydown', function (e) {
         if (e.key === 'Enter') {
             e.preventDefault();
@@ -441,6 +438,8 @@ document.addEventListener('DOMContentLoaded', function () {
     var laporanArray = [];
 
     prosesButton.addEventListener("click", function (e) {
+        var table = $('#tableLaporan').DataTable();
+        table.clear().draw();
         $.ajax({
             type: 'GET',
             url: 'LaporanStok/getLaporan1',
@@ -623,6 +622,9 @@ document.addEventListener('DOMContentLoaded', function () {
                                             right: { style: "thin" }
                                         };
 
+                                        var formattedTanggalAwal = formatDateToMMDDYYYY(tanggalAwal.value);
+                                        var formattedTanggalAkhir = formatDateToMMDDYYYY(tanggalAkhir.value);
+
                                         // Adding header rows
                                         worksheet.addRow(["Tanggal: " + formattedTanggalAwal + " s/d " + formattedTanggalAkhir]);
                                         worksheet.addRow([]);
@@ -702,6 +704,9 @@ document.addEventListener('DOMContentLoaded', function () {
                                             });
                                             return colWidths.map(length => length + 2); // Add some padding
                                         }
+
+                                        var formattedTanggalAwal = formatDateToMMDDYYYY(tanggalAwal.value);
+                                        var formattedTanggalAkhir = formatDateToMMDDYYYY(tanggalAkhir.value);
 
                                         var columnWidths = calculateColumnWidths([
                                             ["Tanggal: " + formattedTanggalAwal + " s/d " + formattedTanggalAkhir],
@@ -917,6 +922,9 @@ document.addEventListener('DOMContentLoaded', function () {
         var tableLaporanExcel = $('#tableLaporan').DataTable();
         var workbook = new ExcelJS.Workbook();
         var worksheet = workbook.addWorksheet('Laporan Data');
+
+        var formattedTanggalAwal = formatDateToMMDDYYYY(tanggalAwal.value);
+        var formattedTanggalAkhir = formatDateToMMDDYYYY(tanggalAkhir.value);
 
         // Header data for Excel
         var headerData = [

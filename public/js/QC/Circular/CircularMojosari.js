@@ -197,6 +197,10 @@ document.addEventListener('DOMContentLoaded', function () {
         order: [[0, 'asc']]
     });
 
+    function numberFormat(value) {
+        return parseFloat(value).toFixed(2);
+    }
+
     // Select Qc Data
     $("#tableQcData tbody").on("click", "tr", async function () {
         var data = tableQcData.row(this).data();
@@ -215,24 +219,24 @@ document.addEventListener('DOMContentLoaded', function () {
         if (data) {
             mesin.value = data.Nama_Mesin;
             idLog.value = data.Id_Log;
-            ukuran.value = data.R_Ukuran;
-            ukuranLebar.value = data.R_Ukuran;
-            panjangPotongan.value = data.R_Potongan;
-            beratBarang.value = data.R_Berat;
-            beratReinforced.value = data.Berat_Reinforced;
-            beratStandart.value = data.R_BeratSTD;
+            ukuran.value = numberFormat(data.R_Ukuran);
+            ukuranLebar.value = numberFormat(data.R_Ukuran);
+            panjangPotongan.value = numberFormat(data.R_Potongan);
+            beratBarang.value = numberFormat(data.R_Berat);
+            beratReinforced.value = numberFormat(data.Berat_Reinforced);
+            beratStandart.value = numberFormat(data.R_BeratSTD);
 
-            actualStWarp.value = data.St_Warp;
-            actualElgWarp.value = data.Elg_Warp;
-            actualStWeft.value = data.St_Weft;
-            actualElgWeft.value = data.Elg_Weft;
-            actualStReinf.value = data.St_Reinforced;
-            actualElgReinf.value = data.Elg_Reinforced;
+            actualStWarp.value = numberFormat(data.St_Warp);
+            actualElgWarp.value = numberFormat(data.Elg_Warp);
+            actualStWeft.value = numberFormat(data.St_Weft);
+            actualElgWeft.value = numberFormat(data.Elg_Weft);
+            actualStReinf.value = numberFormat(data.St_Reinforced);
+            actualElgReinf.value = numberFormat(data.Elg_Reinforced);
 
-            standartStWarp.value = data.Standart_WA;
-            standartStWeft.value = data.Standart_WE;
-            standartElgWarp.value = data.Standart_ElgWA;
-            standartElgWeft.value = data.Standart_ElgWE;
+            standartStWarp.value = numberFormat(data.Standart_WA);
+            standartStWeft.value = numberFormat(data.Standart_WE);
+            standartElgWarp.value = data.Standart_ElgWA ?? '0';
+            standartElgWeft.value = data.Standart_ElgWE ?? '0';
             Id_QC = data.Id_QC;
             Ket = data.Keterangan;
         }

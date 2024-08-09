@@ -107,7 +107,7 @@
                                 <div class="col-sm-1">
                                     <button type="button" class="btn btn-primary" id="buttonSpekBenang">...</button>
                                 </div>
-                                <div class="col-sm-1 d-flex justify-content-end align-items-center">
+                                <div class="col-sm-2 d-flex justify-content-end align-items-center">
                                     <label for="idKonversi" class="d-none">Id Konversi</label>
                                 </div>
                                 <div class="col-sm-2">
@@ -133,7 +133,7 @@
                                         <label>Bahan Baku</label>
                                     </div>
                                     <div class="col-sm-2">
-                                        <input type="text" id="bahan" name="bahan" class="form-control mb-1"
+                                        <input type="text" style="width: 120%" id="bahan" name="bahan" class="form-control mb-1"
                                             readonly>
                                     </div>
                                     <div class="col-sm-4">
@@ -155,7 +155,7 @@
                                         <label>CACO3</label>
                                     </div>
                                     <div class="col-sm-2">
-                                        <input type="text" id="calpetCaco3" name="calpetCaco3"
+                                        <input style="width: 120%" type="text" id="calpetCaco3" name="calpetCaco3"
                                             class="form-control mb-1" readonly>
                                     </div>
                                     <div class="col-sm-4">
@@ -182,7 +182,7 @@
                                         <label>MasterBath</label>
                                     </div>
                                     <div class="col-sm-2">
-                                        <input type="text" id="masterBath" name="masterBath"
+                                        <input style="width: 120%" type="text" id="masterBath" name="masterBath"
                                             class="form-control mb-1" readonly>
                                     </div>
                                     <div class="col-sm-4">
@@ -208,7 +208,7 @@
                                         <label>U V</label>
                                     </div>
                                     <div class="col-sm-2">
-                                        <input type="text" id="uv" name="uv" class="form-control mb-1"
+                                        <input style="width: 120%" type="text" id="uv" name="uv" class="form-control mb-1"
                                             readonly>
                                     </div>
                                     <div class="col-sm-4">
@@ -234,7 +234,7 @@
                                         <label>LDPE</label>
                                     </div>
                                     <div class="col-sm-2">
-                                        <input type="text" id="ldpe" name="ldpe" class="form-control mb-1"
+                                        <input style="width: 120%" type="text" id="ldpe" name="ldpe" class="form-control mb-1"
                                             readonly>
                                     </div>
                                     <div class="col-sm-4">
@@ -260,7 +260,7 @@
                                         <label>Anti Static</label>
                                     </div>
                                     <div class="col-sm-2">
-                                        <input type="text" id="antiStatic" name="antiStatic"
+                                        <input style="width: 120%" type="text" id="antiStatic" name="antiStatic"
                                             class="form-control mb-1" readonly>
                                     </div>
                                     <div class="col-sm-4">
@@ -286,7 +286,7 @@
                                         <label>Peletan</label>
                                     </div>
                                     <div class="col-sm-2">
-                                        <input type="text" id="peletan" name="peletan" class="form-control mb-1"
+                                        <input style="width: 120%" type="text" id="peletan" name="peletan" class="form-control mb-1"
                                             readonly>
                                     </div>
                                     <div class="col-sm-4">
@@ -312,7 +312,7 @@
                                         <label>Additif</label>
                                     </div>
                                     <div class="col-sm-2">
-                                        <input type="text" id="additif" name="additif" class="form-control mb-1"
+                                        <input style="width: 120%" type="text" id="additif" name="additif" class="form-control mb-1"
                                             readonly>
                                     </div>
                                     <div class="col-sm-4">
@@ -338,7 +338,7 @@
                                 <div class="col-sm-2">
                                     <label for="keterangan">Keterangan</label>
                                 </div>
-                                <div class="col-sm-4">
+                                <div class="col-sm-6">
                                     <input type="text" class="form-control" id="keterangan">
                                 </div>
                             </div>
