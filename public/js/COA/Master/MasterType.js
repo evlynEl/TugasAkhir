@@ -33,7 +33,6 @@ let sf1;
 let sf2;
 let kode_barang;
 let selectedRow = null;
-let tableData = [];
 
 const inputs = Array.from(document.querySelectorAll('.card-body input[type="text"]:not([readonly]), .card-body input[type="date"]:not([readonly])'));
 
@@ -374,7 +373,7 @@ function processTypeBrg(typeBrg) {
     kode_barang = "O-" + lebarString;
 }
 
-// fungsi unk menampilkan '&' 
+// fungsi unk menampilkan '&'
 function decodeHtmlEntities(str) {
     var textArea = document.createElement('textarea');
     textArea.innerHTML = str;
@@ -534,11 +533,12 @@ btn_material.addEventListener("click", function (e) {
 
 // ambil row
 var tbody = document.querySelector('#tableData tbody');
+let tableData = [];
 
 // button tambah
 btn_tambah.addEventListener("click", function (e) {
     console.log('tambah');
-    
+
     var partInput = part.value.trim();
     var materialInput = material.value.trim();
     var itemInput = item.value.trim();
@@ -597,7 +597,6 @@ btn_hapus.addEventListener("click", function (e) {
             returnFocus: false
         });
     }
-    console.log('removed: ', tableData);
 });
 
 // button proses
@@ -615,8 +614,6 @@ btn_proses.addEventListener("click", function (e) {
         return;
     }
 
-    console.log('oioo');
-    
 
     $.ajax({
         type: 'POST',
@@ -661,4 +658,3 @@ btn_proses.addEventListener("click", function (e) {
         }
     });
 });
-console.log(tableData);

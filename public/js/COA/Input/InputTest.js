@@ -12,6 +12,8 @@ var square_val = document.getElementById('square_val');
 var Cyclic_Test = document.getElementById('Cyclic_Test');
 var Load_Speed = document.getElementById('Load_Speed');
 var Drop_Test = document.getElementById('Drop_Test');
+var Data_1 = document.getElementById('Data_1');
+
 
 // Test Result Section
 var cyclicbesar = document.getElementById('cyclicbesar');
@@ -89,6 +91,8 @@ const indexMapping = {
     11: 28, 12: 19, 13: 25, 14: 20, 15: 29
 };
 
+btn_isi.focus();
+
 // fungsi berhubungan dengan ENTER
 inputs.forEach((masuk, index) => {
     masuk.addEventListener('keypress', function (event) {
@@ -129,6 +133,10 @@ inputs.forEach((masuk, index) => {
                     if (result.isConfirmed) {
                         Height_Approx.focus();
                         Height_Approx.select();
+                    } else {
+                        Height_Approx.value = '';
+                        Load_Speed.disabled = false;
+                        Load_Speed.focus();
                     }
                 });
             } else if (masuk.id === 'dia_val') {
@@ -143,6 +151,8 @@ inputs.forEach((masuk, index) => {
                     if (result.isConfirmed) {
                         dia_val.focus();
                         dia_val.select();
+                    } else {
+                        dia_val.value = '';
                     }
                 });
             } else if (masuk.id === 'square_val') {
@@ -157,6 +167,8 @@ inputs.forEach((masuk, index) => {
                     if (result.isConfirmed) {
                         square_val.focus();
                         square_val.select();
+                    } else {
+                        square_val.value = '';
                     }
                 });
             } else if (masuk.id === 'Load_Speed') {
@@ -171,6 +183,10 @@ inputs.forEach((masuk, index) => {
                     if (result.isConfirmed) {
                         Load_Speed.focus();
                         Load_Speed.select();
+                    } else {
+                        Load_Speed.value = '';
+                        Data_1.disabled = false;
+                        Data_1.focus();
                     }
                 });
             } else if (masuk.id === 'Drop_Test') {
@@ -185,6 +201,11 @@ inputs.forEach((masuk, index) => {
                     if (result.isConfirmed) {
                         Drop_Test.focus();
                         Drop_Test.select();
+                    } else {
+                        Drop_Test.value = '';
+                        Cyclic_Lift.disabled = false;
+                        Top_Lift.disabled = false;
+                        Drop_Result.disabled = false;
                     }
                 });
             } else if (/^Data_[1-9]$|^Data_1[0-5]$/.test(masuk.id)) {
@@ -929,100 +950,7 @@ function handleCheckboxChange(sectionId) {
 setupCheckboxListeners();
 
 // IMAGEEE
-
 // fungsi memilih gambar & append ke formdata
-// function setupImageUpload(btnId, inputId, textId, previewId, nextBtnId, formData, imageKey) {
-//     console.log('setupImageUpload is clicked');
-
-//     const btn = document.querySelector(btnId);
-//     const fileInput = document.querySelector(inputId);
-//     const textInput = document.querySelector(textId);
-//     const imagePreview = document.querySelector(previewId);
-//     const nextBtn = nextBtnId ? document.querySelector(nextBtnId) : null;
-
-//     // Function to handle file input changes
-//     function fileInputChangeHandler() {
-//         const file = fileInput.files[0];
-//         console.log('File input changed');
-//         console.log(file);
-//         if (file) {
-//             textInput.value = file.name;
-//             const objectURL = URL.createObjectURL(file);
-//             imagePreview.src = objectURL;
-//             imagePreview.style.display = 'block';
-
-//             formData.append(imageKey, file);
-//             console.log('FormData appended:', formData.get(imageKey));
-
-//             if (nextBtn) {
-//                 nextBtn.focus();
-//             }
-//         } else {
-//             textInput.value = '';
-//             imagePreview.src = '';
-//             imagePreview.style.display = 'none';
-//         }
-//     }
-
-
-//     // Attach event listener
-//     // fileInput.removeEventListener('change', fileInputChangeHandler);
-//     fileInput.addEventListener('change', fileInputChangeHandler);
-
-//     // Trigger file input click when button is clicked
-//     btn.addEventListener('click', function () {
-//         fileInput.click();
-//     });
-// }
-
-
-
-// // fungsi unk fokus button pict & setup gambar sesuai jumlah yg tercentang
-// function updateFocus() {
-//     console.log('masuk update focus');
-//     btn_pict1.disabled = false;
-//     btn_pict2.disabled = false;
-//     btn_pict3.disabled = false;
-
-//     const formData = new FormData();
-//     const threePicturesChecked = threePictures.checked;
-//     const fourPicturesChecked = fourPictures.checked;
-
-//     if (threePicturesChecked) {
-//         jumlah = '3';
-//         console.log(jumlah);
-
-//         imageFiles = {
-//             'picture1': null,
-//             'picture2': null,
-//             'picture3': null
-//         };
-//         btn_pict1.focus();
-//         setupImageUpload('#btn_pict1', '#picture1', '#gambar1', '#imagePreview1', '#btn_pict2', formData, 'Pict1');
-//         setupImageUpload('#btn_pict2', '#picture2', '#gambar2', '#imagePreview2', '#btn_pict3', formData, 'Pict2');
-//         setupImageUpload('#btn_pict3', '#picture3', '#gambar3', '#imagePreview3', '#btn_simpan', formData, 'Pict3');
-//     } else if (fourPicturesChecked) {
-//         console.log(jumlah);
-
-//         btn_pict4.disabled = false;
-//         jumlah = '4';
-//         imageFiles = {
-//             'picture1': null,
-//             'picture2': null,
-//             'picture3': null,
-//             'picture4': null
-//         };
-//         btn_pict1.focus();
-//         setupImageUpload('#btn_pict1', '#picture1', '#gambar1', '#imagePreview1', '#btn_pict2', formData, 'Pict1');
-//         setupImageUpload('#btn_pict2', '#picture2', '#gambar2', '#imagePreview2', '#btn_pict3', formData, 'Pict2');
-//         setupImageUpload('#btn_pict3', '#picture3', '#gambar3', '#imagePreview3', '#btn_pict4', formData, 'Pict3');
-//         setupImageUpload('#btn_pict4', '#picture4', '#gambar4', '#imagePreview4', '#btn_simpan', formData, 'Pict4');
-//     }
-// }
-
-// threePictures.addEventListener('change', updateFocus);
-// fourPictures.addEventListener('change', updateFocus);
-
 function setupImageUpload(btnId, inputId, textId, previewId, nextBtnId, formData, imageKey) {
     const btn = document.querySelector(btnId);
     const fileInput = document.querySelector(inputId);
@@ -1061,7 +989,7 @@ function setupImageUpload(btnId, inputId, textId, previewId, nextBtnId, formData
     });
 }
 
-// // Setup image upload for three pictures
+// Setup image upload for three pictures
 function updateFocus() {
     console.log('masuk update focus');
     gambar1.disabled = false;
@@ -1082,10 +1010,6 @@ function updateFocus() {
             'picture2': null,
             'picture3': null
         };
-        // btn_pict1.focus();
-        // setupImageUpload('#btn_pict1', '#picture1', '#gambar1', '#imagePreview1', '#btn_pict2', formData, 'Pict1');
-        // setupImageUpload('#btn_pict2', '#picture2', '#gambar2', '#imagePreview2', '#btn_pict3', formData, 'Pict2');
-        // setupImageUpload('#btn_pict3', '#picture3', '#gambar3', '#imagePreview3', '#btn_simpan', formData, 'Pict3');
     } else if (fourPicturesChecked) {
         console.log(jumlah);
 
@@ -1097,11 +1021,6 @@ function updateFocus() {
             'picture3': null,
             'picture4': null
         };
-        // btn_pict1.focus();
-        // setupImageUpload('#btn_pict1', '#picture1', '#gambar1', '#imagePreview1', '#btn_pict2', formData, 'Pict1');
-        // setupImageUpload('#btn_pict2', '#picture2', '#gambar2', '#imagePreview2', '#btn_pict3', formData, 'Pict2');
-        // setupImageUpload('#btn_pict3', '#picture3', '#gambar3', '#imagePreview3', '#btn_pict4', formData, 'Pict3');
-        // setupImageUpload('#btn_pict4', '#picture4', '#gambar4', '#imagePreview4', '#btn_simpan', formData, 'Pict4');
     }
 }
 
@@ -1109,58 +1028,11 @@ function updateFocus() {
 threePictures.addEventListener('change', updateFocus);
 fourPictures.addEventListener('change', updateFocus);
 
-// function handleImageUpload(inputId, previewId, textInputId, autoTriggerNextId, focusButtonId) {
-//     const input = document.getElementById(inputId);
-//     const preview = document.getElementById(previewId);
-//     const textInput = document.getElementById(textInputId);
-//     const focusButton = focusButtonId ? document.getElementById(focusButtonId) : null;
-
-//     input.addEventListener('change', function (event) {
-//         const file = event.target.files[0];
-//         if (file) {
-//             const reader = new FileReader();
-//             reader.onload = function (e) {
-//                 preview.src = e.target.result;
-//                 preview.style.display = 'block';
-//             };
-//             reader.readAsDataURL(file);
-
-//             // Set the file name in the readonly input
-//             textInput.value = file.name;
-
-//             // Automatically trigger the next file input if provided
-//             if (autoTriggerNextId) {
-//                 document.getElementById(autoTriggerNextId).click();
-//             }
-
-//             // Focus on the button if provided
-//             if (focusButton) {
-//                 focusButton.focus();
-//             }
-//         } else {
-//             preview.style.display = 'none';
-//             textInput.value = '';
-//         }
-//     });
-// }
-
-
-// function triggerFileInput(inputId) {
-//     document.getElementById(inputId).click();
-// }
-
-// // Setup event handlers
-// handleImageUpload('picture1', 'imagePreview1', 'gambar1', 'picture2');
-// handleImageUpload('picture2', 'imagePreview2', 'gambar2', 'picture3');
-// handleImageUpload('picture3', 'imagePreview3', 'gambar3', 'picture4');
-// handleImageUpload('picture4', 'imagePreview4', 'gambar4', 'btn_simpan');
-
-
-
-
 // fungsi utama memeriksa semua input
 async function checkAllInputs() {
     for (const input of inputTestMethod) {
+        console.log('checkAllInputs');
+
         if (input.id === 'dia_val' && input.value.trim() === '') {
             const result = await Swal.fire({
                 icon: 'question',
@@ -1174,9 +1046,11 @@ async function checkAllInputs() {
             if (result.isConfirmed) {
                 dia_val.disabled = false;
                 dia_val.focus();
+                return;
+            } else {
+                dia_val.value = '';
             }
-            return false;
-        } else if (input.id === 'square_val' && input.value.trim() === '') {
+        } if (input.id === 'square_val' && input.value.trim() === '') {
             const result = await Swal.fire({
                 icon: 'question',
                 text: `Apakah Data Square Mau Anda Lengkapi?`,
@@ -1189,8 +1063,10 @@ async function checkAllInputs() {
             if (result.isConfirmed) {
                 square_val.disabled = false;
                 square_val.focus();
+                return;
+            } else {
+                square_val.value = '';
             }
-            return false;
         }
     }
     return true;
@@ -1208,10 +1084,6 @@ function enableKetik() {
     btn_batal.style.display = 'inline-block';
 
     btn_info.disabled = false;
-    // btn_pict1.disabled = false;
-    // btn_pict2.disabled = false;
-    // btn_pict3.disabled = false;
-    // btn_pict4.disabled = false;
 }
 
 // fungsi gak bisa ketik
@@ -1246,17 +1118,6 @@ function disableKetik() {
     labelpict2.textContent = '';
     labelpict3.textContent = '';
     labelpict4.textContent = '';
-
-    // btn_pict1.disabled = true;
-    // btn_pict2.disabled = true;
-    // btn_pict3.disabled = true;
-    // btn_pict4.disabled = true;
-
-    // kosongkan image preview
-    // imagePreview.style.display = 'none';
-    // imagePreview2.style.display = 'none';
-    // imagePreview3.style.display = 'none';
-    // imagePreview4.style.display = 'none';
 }
 
 // Initially disable Ketik on page load
@@ -1285,39 +1146,17 @@ btn_simpan.addEventListener('click', async function (e) {
             return;
         }
 
-        if (Top_Result.value.trim() === '' || Top_Result.value.trim() === '0' || Top_Result.value.trim() === '0.00') {
-            const result = await Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Inputkan Top Lift Test Result Terlebih Dahulu!',
-                returnFocus: false
-            });
-
-            if (result.isConfirmed) {
-                Top_Result.focus();
-            }
-            return;
-        }
-
-        if (Drop_Test.value.trim() === '' || Drop_Test.value.trim() === '0' || Drop_Test.value.trim() === '0.00') {
-            const result = await Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Inputkan Drop Test Terlebih Dahulu!',
-                returnFocus: false
-            });
-
-            if (result.isConfirmed) {
-                Drop_Test.focus();
-            }
-            return;
-        }
-
         let cLiftTxt = cLift && cLift.length > 0 ? cLift.join(', ') : null;
         let tLiftTxt = tLift && tLift.length > 0 ? tLift.join(', ') : null;
         let cyclicResultTxt = cResult && cResult.length > 0 ? (cResult.includes('Visible damages found at') ? cResult.join(', ') + ' ' + damageFoundDescCyInput.value.trim() : cResult.join(', ')) : null;
         let breakageTxt = breakage && breakage.length > 0 ? (breakage.includes('Others :') ? breakage.join(', ') + ' ' + othersTextInput.value.trim() : breakage.join(', ')) : null;
         let dropResultTxt = dResult && dResult.length > 0 ? (dResult.includes('Visible damages found at') ? dResult.join(', ') + ' ' + damageFoundDescDropInput.value.trim() : dResult.join(', ')) : null;
+
+        // console.log('cyclic lift: ', cLift);
+        // console.log('top lift: ', tLift);
+        // console.log('cyclic result: ', cResult);
+        // console.log('breakage loc: ', breakage);
+        // console.log('drop result: ', dResult);
 
         let text = ['Cyclic Test', 'Cyclic Test Result', 'Top Lift Test', 'Breakage Location', 'Drop Test'];
         let tidakTercentang = [];
@@ -1348,6 +1187,62 @@ btn_simpan.addEventListener('click', async function (e) {
                 }
             }
         }
+        // harus centang cyclic lift
+        if (cLift.length === 0) {
+            const result = await Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Centang Cyclic Lift Terlebih Dahulu!',
+                returnFocus: false
+            });
+            return;
+        }
+        // harus centang cyclic result
+        if (cResult.length === 0) {
+            const result = await Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Centang Cyclic Result Terlebih Dahulu!',
+                returnFocus: false
+            });
+            return;
+        }
+        // harus centang top lift
+        if (tLift.length === 0) {
+            const result = await Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Centang Top Lift Terlebih Dahulu!',
+                returnFocus: false
+            });
+            return;
+        }
+        // harus isi top result
+        if (Top_Result.value.trim() === '' || Top_Result.value.trim() === '0' || Top_Result.value.trim() === '0.00') {
+            const result = await Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Inputkan Top Lift Test Result Terlebih Dahulu!',
+                returnFocus: false
+            });
+
+            if (result.isConfirmed) {
+                Top_Result.focus();
+            }
+            return;
+        }
+        // harus centang breakage location
+        if (breakage.length === 0) {
+            const result = await Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Centang Breakage Location Terlebih Dahulu!',
+                returnFocus: false
+            });
+            return;
+        }
+
+
 
         submitForm(cLiftTxt, tLiftTxt, cyclicResultTxt, breakageTxt, dropResultTxt);
 
@@ -1427,25 +1322,36 @@ btn_hapus.addEventListener('click', function () {
     btn_info.focus();
 });
 
+// fungsi untuk simpan dari isi
 function submitForm(cLiftTxt, tLiftTxt, cyclicResultTxt, breakageTxt, dropResultTxt) {
-    // Assuming 'TestResult' and 'Top_Result' are properly defined elsewhere
+    if (Height_Approx.value === '') {
+        Height_Approx.value = 0.00;
+    }
+    if (dia_val.value === '') {
+        dia_val.value = 0.00;
+    }
+    if (Load_Speed.value === '') {
+        Load_Speed.value = 0.00;
+    }
+
+
     const hasil = TestResult < Top_Result.value ? 'PASS' : 'FAIL';
     const formData = new FormData();
 
     // Add form data fields
     formData.append('a', 1);
-    formData.append('RefNo', (refNo.value || '').trim());
+    formData.append('RefNo', (refNo.value).trim());
     formData.append('Height_Approx', formatInput(Height_Approx.value));
     formData.append('dia_val', formatInput(dia_val.value));
     formData.append('square_val', (square_val.value || '').trim());
     formData.append('Cyclic_Test', formatInput(Cyclic_Test.value));
     formData.append('Load_Speed', formatInput(Load_Speed.value));
     formData.append('Drop_Test', (Drop_Test.value || '').trim());
-    formData.append('Cyclic_Lift', (cLiftTxt || '').trim());
-    formData.append('Top_Lift', (tLiftTxt || '').trim());
-    formData.append('Top_Result', (Top_Result.value || '').trim());
-    formData.append('Cyclic_Result', (cyclicResultTxt || '').trim());
-    formData.append('Breakage_Location', (breakageTxt || '').trim());
+    formData.append('Cyclic_Lift', (cLiftTxt).trim());
+    formData.append('Top_Lift', (tLiftTxt).trim());
+    formData.append('Top_Result', (Top_Result.value).trim());
+    formData.append('Cyclic_Result', (cyclicResultTxt).trim());
+    formData.append('Breakage_Location', (breakageTxt).trim());
     formData.append('Drop_Result', (dropResultTxt || '').trim());
     formData.append('TestResult', hasil);
     formData.append('Jumlah', jumlah);
@@ -1520,11 +1426,11 @@ async function koreksiTest(cLiftTxt, tLiftTxt, cyclicResultTxt, breakageTxt, dro
     formData.append('Cyclic_Test', formatInput(Cyclic_Test.value));
     formData.append('Load_Speed', formatInput(Load_Speed.value));
     formData.append('Drop_Test', (Drop_Test.value || '').trim());
-    formData.append('Cyclic_Lift', (cLiftTxt || '').trim());
-    formData.append('Top_Lift', (tLiftTxt || '').trim());
-    formData.append('Top_Result', (Top_Result.value || '').trim());
-    formData.append('Cyclic_Result', (cyclicResultTxt || '').trim());
-    formData.append('Breakage_Location', (breakageTxt || '').trim());
+    formData.append('Cyclic_Lift', (cLiftTxt).trim());
+    formData.append('Top_Lift', (tLiftTxt).trim());
+    formData.append('Top_Result', (Top_Result.value).trim());
+    formData.append('Cyclic_Result', (cyclicResultTxt).trim());
+    formData.append('Breakage_Location', (breakageTxt).trim());
     formData.append('Drop_Result', (dropResultTxt || '').trim());
     formData.append('TestResult', hasil);
     formData.append('Jumlah', jumlah);

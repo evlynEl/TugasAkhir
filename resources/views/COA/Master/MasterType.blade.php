@@ -186,26 +186,29 @@
                             </div>
 
 
-                            <div class="card">
-                                <div class="table-responsive fixed-height">
-                                    <table id="tableData" class="display table-height"
-                                        style="width:100%; text-align:center;">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col" class="partInput">Part Section</th>
-                                                <th scope="col" class="materialInput">Material</th>
-                                                <th scope="col" class="itemInput">Item</th>
-                                                <th scope="col" class="standardInput">Standard</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody></tbody>
-                                    </table>
-
-                                </div>
+                            <div class="table-responsive fixed-height">
+                                <table id="tableData" class="display table-height"
+                                    style="width:100%; text-align:center;">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" class="partInput">Part Section</th>
+                                            <th scope="col" class="materialInput">Material</th>
+                                            <th scope="col" class="itemInput">Item</th>
+                                            <th scope="col" class="standardInput">Standard</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
                             </div>
                         </div>
 
-                        <button type="button" id="btn_proses" class="btn btn-outline-secondary" style="width: 10%">Proses</button>
+                        <div class="row mt-2">
+                            <div class="col-sm-2">
+                                <button type="button" id="btn_proses" class="btn btn-outline-secondary">Proses</button>
+                            </div>
+                        </div>
+
+
 
 
                     </div>

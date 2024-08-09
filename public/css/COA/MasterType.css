@@ -5,10 +5,11 @@ input[type="text"] {
 
 button.btn-info {
     font-size: 14px;
-    padding: 0 10px; 
+    padding: 0 10px;
 }
 
-#jenisBarang, #jenisJual {
+#jenisBarang,
+#jenisJual {
     outline: solid 1px #ddd;
     text-align: center;
     max-width: 55%;
@@ -23,14 +24,15 @@ button.btn-info {
 
 .form-check {
     display: flex;
-    align-items: center; /* Menyelaraskan radio button dan label */
+    align-items: center;
+    /* Menyelaraskan radio button dan label */
 }
 
-#jenisBarang .form-check-inline  {
+#jenisBarang .form-check-inline {
     margin-right: 3%;
 }
 
-#jenisJual .form-check-inline  {
+#jenisJual .form-check-inline {
     margin-right: 10%;
 }
 
@@ -44,14 +46,26 @@ button.btn-info {
     background-color: lightgray;
 }
 
-.fixed-height {
-    max-height: 200px;
+.table-responsive.fixed-height {
+    height: 200px;
     overflow-y: auto;
+    position: relative;
+    border-radius: 8px;
+    border: 2px solid gray;
+    width: 100%;
+    table-layout: fixed;
 }
 
-.table-height {
-    table-layout: auto;
+.table-responsive.fixed-height thead th {
+    position: sticky;
+    top: 0;
+    background: lightgoldenrodyellow;
+    z-index: 1;
+    white-space: nowrap;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
-
-
+#btn_proses{
+    width: 100%;
+}

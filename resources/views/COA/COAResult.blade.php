@@ -27,7 +27,7 @@
                                 <input type="text" class="form-control" id="customerName">
                             </div>
                             <div class="col-sm-1">
-                                <button type="button" class="btn btn-primary" id="buttonCustomer">...</button>
+                                <button type="button" class="btn btn-outline-secondary" id="buttonCustomer">...</button>
                             </div>
                         </div>
 
@@ -42,7 +42,7 @@
                                 <input type="text" class="form-control" id="typeName">
                             </div>
                             <div class="col-sm-1">
-                                <button type="button" class="btn btn-primary" id="buttonType">...</button>
+                                <button type="button" class="btn btn-outline-secondary" id="buttonType">...</button>
                             </div>
                         </div>
 
@@ -122,7 +122,7 @@
                                     <input type="text" class="form-control" id="part_section">
                                 </div>
                                 <div class="col-sm-1">
-                                    <button type="button" class="btn btn-primary" id="buttonPartSection">...</button>
+                                    <button type="button" class="btn btn-outline-secondary" id="buttonPartSection">...</button>
                                 </div>
                             </div>
                             <div class="row">
@@ -133,7 +133,7 @@
                                     <input type="text" class="form-control" id="material">
                                 </div>
                                 <div class="col-sm-1">
-                                    <button type="button" class="btn btn-primary" id="buttonMaterial">...</button>
+                                    <button type="button" class="btn btn-outline-secondary" id="buttonMaterial">...</button>
                                 </div>
                             </div>
                             <div class="row">
@@ -144,7 +144,7 @@
                                     <input type="text" class="form-control" id="item">
                                 </div>
                                 <div class="col-sm-1">
-                                    <button type="button" class="btn btn-primary" id="buttonItem">...</button>
+                                    <button type="button" class="btn btn-outline-secondary" id="buttonItem">...</button>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" class="form-control" id="idItem" readonly>
@@ -158,7 +158,7 @@
                                     <input type="text" class="form-control" id="test_result">
                                 </div>
                                 <div class="col-sm-1">
-                                    <button type="button" class="btn btn-primary" id="buttonTambah">Tambah</button>
+                                    <button type="button" class="btn btn-outline-secondary" id="buttonTambah">Tambah</button>
                                 </div>
                             </div>
 
@@ -176,13 +176,14 @@
                                 </div>
                             </div>
 
-                            <div class="row mt-1">
-                                <div class="col-sm-1">
-                                    <button type="button" class="btn btn-primary" id="buttonProses">Proses</button>
-                                </div>
-                            </div>
+
                         </div>
 
+                        <div class="row mt-2">
+                            <div class="col-sm-2">
+                                <button type="button" class="btn btn-outline-secondary" id="buttonProses">Proses</button>
+                            </div>
+                        </div>
 
                     </div>
                 </div>

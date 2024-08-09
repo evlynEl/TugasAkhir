@@ -86,6 +86,8 @@ class InputTestController extends Controller
             $dataValues["Data_$i"] = number_format((float)$value, 2, '.', '');
         }
 
+        // dd($request->all());
+
         try {
             if ($a === 1) { // ISI
                 if ($jumlah === 3) {
@@ -106,7 +108,7 @@ class InputTestController extends Controller
                         'Test_Result' => $testResult,
                         'UserInput' => $request->input('UserInput'),
                         'TimeInput' => now(), // or use getdate() equivalent in Laravel
-                        'Drop_Test' => $dropTest, // Ensure that this field is also included
+                        'Drop_Test' => $dropTest,
                     ]);
 
                     DB::connection('ConnTestQC')->table('Cyclic_FIBC')->insert(array_merge([
@@ -156,8 +158,8 @@ class InputTestController extends Controller
                         'Drop_Result' => $dropResult,
                         'Test_Result' => $testResult,
                         'UserInput' => $request->input('UserInput'),
-                        'TimeInput' => now(), // or use getdate() equivalent in Laravel
-                        'Drop_Test' => $dropTest, // Ensure that this field is also included
+                        'TimeInput' => now(),
+                        'Drop_Test' => $dropTest,
                     ]);
 
                     DB::connection('ConnTestQC')->table('Cyclic_FIBC')->insert(array_merge([

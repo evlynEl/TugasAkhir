@@ -25,7 +25,7 @@ class MasterTypeController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->all());    
+        // dd($request->all());
 
         $customerId = $request->input('customerId');
         $kodeBarang = $request->input('kodeBarang');
@@ -36,6 +36,8 @@ class MasterTypeController extends Controller
         $tableData = json_decode($request->input('tableData'), true);
         // dd($tableData);
 
+        DB::connection('ConnTestQC')->beginTransaction();
+
         try {
             // masukkan ke Master_COA
             DB::connection('ConnTestQC')->statement(
@@ -45,8 +47,9 @@ class MasterTypeController extends Controller
             );
 
             // ambil id dari Master_COA unk di pakai ke Detail_COA
-            $result = DB::connection('ConnTestQC')->select('
-                exec SP_1273_PROSES_COA 
+            $result = DB::connection('ConnTestQC')->select(
+                '
+                exec SP_1273_PROSES_COA
                 @Kode = ?, @IdCust = ?, @KodeBarang = ?, @Capacity = ?, @Dimension = ?,  @Commodity = ?',
                 [3, $customerId, $kodeBarang, $capacity, $dimension, $comodity]
             );
@@ -74,8 +77,10 @@ class MasterTypeController extends Controller
                 );
             }
 
+            DB::connection('ConnTestQC')->commit();
             return response()->json(['success' => 'Data inserted successfully'], 200);
         } catch (\Exception $e) {
+            DB::connection('ConnTestQC')->rollBack();
             return response()->json(['error' => 'Failed to insert data: ' . $e->getMessage()], 500);
         }
     }
