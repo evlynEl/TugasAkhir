@@ -12,6 +12,10 @@ document.addEventListener("DOMContentLoaded", function () {
     var afterTop = document.getElementById('afterTop');
     var testResult = document.getElementById('testResult');
 
+    var beforeTest3 = document.getElementById('beforeTest3');
+    var afterCyclic3 = document.getElementById('afterCyclic3');
+    var afterTop3 = document.getElementById('afterTop3');
+
     var refNumPreview = document.getElementById('refNumPreview');
     var revNoPreview = document.getElementById('revNoPreview');
     var datePreview = document.getElementById('datePreview');
@@ -621,14 +625,17 @@ document.addEventListener("DOMContentLoaded", function () {
                             var imageData1 = result[0].Pict_1;
                             var imageUrl1 = 'data:image/jpeg;base64,' + imageData1;
                             beforeTest.src = imageUrl1;
+                            beforeTest3.src = imageUrl1;
 
                             var imageData2 = result[0].Pict_2;
                             var imageUrl2 = 'data:image/jpeg;base64,' + imageData2;
-                            afterCyclic.src = imageUrl2
+                            afterCyclic.src = imageUrl2;
+                            afterCyclic3.src = imageUrl2;
 
                             var imageData3 = result[0].Pict_3;
                             var imageUrl3 = 'data:image/jpeg;base64,' + imageData3;
                             afterTop.src = imageUrl3;
+                            afterTop3.src = imageUrl3;
 
                             var imageData4 = result[0].Pict_4;
                             if (imageData4) {
