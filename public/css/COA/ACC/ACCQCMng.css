@@ -49,3 +49,8 @@ input[type="text"] {
     height: 30px;
     font-size: 14px;
 }
+
+button.btn-info {
+    font-size: 14px;
+    padding: 0 10px;
+}
