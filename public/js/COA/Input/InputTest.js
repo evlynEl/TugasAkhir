@@ -14,7 +14,6 @@ var Load_Speed = document.getElementById('Load_Speed');
 var Drop_Test = document.getElementById('Drop_Test');
 var Data_1 = document.getElementById('Data_1');
 
-
 // Test Result Section
 var cyclicbesar = document.getElementById('cyclicbesar');
 var Cyclic_Lift = document.getElementById('Cyclic_Lift');
@@ -64,6 +63,7 @@ var labelpict4 = document.getElementById('labelpict4');
 let a; // isi = 1, koreksi = 2, hapus = 3
 var refCopy;
 var hasil;
+var TestResult;
 
 const inputs = Array.from(document.querySelectorAll('.card-body input[type="text"]:not([readonly]), .card-body input[type="date"]:not([readonly])'));
 const inputTestMethod = Array.from(document.querySelectorAll('#test_method input[type="text"]')).filter(input => !/^Data_\d{1,2}$/.test(input.id) && input.id !== 'Drop_Test');
@@ -503,6 +503,8 @@ btn_info.addEventListener("click", function (e) {
                         // console.log(response.refCopy);
                         Cyclic_Test.value = response.cyclicTestValue;
                         TestResult = response.TestResult;
+                        // console.log('TestResult : ', TestResult);
+
 
                         if (a === 1) { // fill dari no ref isi
                             if (response.refCopy === '') { // tidak ada copy ref no
@@ -1322,6 +1324,8 @@ btn_hapus.addEventListener('click', function () {
     btn_info.focus();
 });
 
+// let TestResult;
+
 // fungsi untuk simpan dari isi
 function submitForm(cLiftTxt, tLiftTxt, cyclicResultTxt, breakageTxt, dropResultTxt) {
     if (Height_Approx.value === '') {
@@ -1335,7 +1339,7 @@ function submitForm(cLiftTxt, tLiftTxt, cyclicResultTxt, breakageTxt, dropResult
     }
 
 
-    const hasil = TestResult < Top_Result.value ? 'PASS' : 'FAIL';
+    hasil = TestResult < Top_Result.value ? 'PASS' : 'FAIL';
     const formData = new FormData();
 
     // Add form data fields
@@ -1415,7 +1419,7 @@ function submitForm(cLiftTxt, tLiftTxt, cyclicResultTxt, breakageTxt, dropResult
 
 // fungsi untuk simpan dari koreksi
 async function koreksiTest(cLiftTxt, tLiftTxt, cyclicResultTxt, breakageTxt, dropResultTxt) {
-    const hasil = TestResult < Top_Result.value ? 'PASS' : 'FAIL';
+    hasil = TestResult < Top_Result.value ? 'PASS' : 'FAIL';
     const formData = new FormData();
 
     formData.append('a', 2);

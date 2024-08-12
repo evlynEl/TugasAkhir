@@ -44,6 +44,8 @@ class InputTestController extends Controller
         $jumlah = (int)$request->input('Jumlah');
         $UserInput = Auth::user()->NomorUser;
 
+        // dd($testResult);
+
         // gambar 1
         $image = $request->file('gambar1data');
         $imageBinary = null;
@@ -291,10 +293,6 @@ class InputTestController extends Controller
         } else if ($id == 'getCyclic') {
             $cyclic = DB::connection('ConnTestQC')->select('exec [SP_1273_QTC_MAINT_FIBC] @Kode = ?, @RefNo = ?', [10, $request->input('no_ref')]);
 
-            if (empty($cyclic)) {
-                return response()->json(['error' => 'No cyclic data found'], 500);
-            }
-
             $cyclicData = $cyclic[0];
             $swl = $cyclicData->SWL;
             $cyclicTestValue = 2 * $swl;
@@ -391,6 +389,7 @@ class InputTestController extends Controller
                         'Breakage_Location_Remaining' => $breakageLocationRemaining,
                         'Drop_Result' => $dropResult,
                         'Drop_Result_Remaining' => $dropResultRemaining,
+                        'Test_Result' => $TestResult,
                         'data_attribute' => 'cyclic',
                         'data_attribute' => 'drop',
                         'Data_1' => $data_detailKor->Data_1,
@@ -439,8 +438,12 @@ class InputTestController extends Controller
                     return $item;
                 }, $data_getKoreksi);
 
+                // dd('Test_Result: ', $TestResult);
+
+
                 $data_full = [
                     'cyclicTestValue' => $cyclicTestValue,
+                    'TestResult' => $TestResult,
                     'koreksiData' => $data_getKoreksi
                 ];
 
