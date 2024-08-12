@@ -40,6 +40,8 @@ img{
         left: 0;
         top: 0;
         width: 100%;
+        transform: scale(0.9);
+        transform-origin: top left;
     }
 }
 

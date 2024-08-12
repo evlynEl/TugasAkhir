@@ -7,30 +7,40 @@
 }
 
 #dataChart {
-    max-width: 100%; /* Set max-width for the chart */
-    max-height: 250px; /* Set max-height for the chart */
+    max-width: 100%;
+    /* Set max-width for the chart */
+    max-height: 250px;
+    /* Set max-height for the chart */
 }
 
-img{
+img {
     padding: 2px;
 }
 
 .circle-border {
     display: inline-block;
-    padding: 10px 20px; /* Adjust the size as needed */
-    border: 2px solid #000; /* Border color and thickness */
-    border-radius: 50%; /* Makes the border circular */
-    text-align: center; /* Center the text inside the circle */
-    line-height: 1.5; /* Adjust line height if necessary */
+    padding: 10px 20px;
+    /* Adjust the size as needed */
+    border: 2px solid #000;
+    /* Border color and thickness */
+    border-radius: 50%;
+    /* Makes the border circular */
+    text-align: center;
+    /* Center the text inside the circle */
+    line-height: 1.5;
+    /* Adjust line height if necessary */
 }
+
 @media print {
+
     /* Hide everything by default */
     body * {
         visibility: hidden;
     }
 
     /* Show only elements with the class 'preview' */
-    .preview, .preview * {
+    .preview,
+    .preview * {
         visibility: visible;
     }
 
@@ -40,6 +50,8 @@ img{
         left: 0;
         top: 0;
         width: 100%;
+        transform: scale(0.9);
+        transform-origin: top left;
     }
 }
 
