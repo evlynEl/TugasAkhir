@@ -212,7 +212,7 @@ document.addEventListener("DOMContentLoaded", function () {
     btn_info.addEventListener("click", function (e) {
         try {
             Swal.fire({
-                title: 'ACC QC Spv',
+                title: 'ACC QC Manager',
                 html: `
                     <table id="table_list" class="table">
                         <thead>

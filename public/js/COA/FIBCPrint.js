@@ -220,7 +220,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         </table>`,
                 showCancelButton: true,
                 confirmButtonText: 'Pilih',
-                cancelButtonText: 'Close',
+                cancelButtonText: 'Tutup',
                 returnFocus: false,
                 preConfirm: () => {
                     const selectedData = $("#table_tahun")
@@ -277,7 +277,7 @@ document.addEventListener("DOMContentLoaded", function () {
     btn_info.addEventListener("click", function (e) {
         try {
             Swal.fire({
-                title: 'ACC QC Spv',
+                title: 'Print',
                 html: `
                     <table id="table_list" class="table">
                         <thead>

@@ -808,7 +808,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                 if (result[0].Square) {
                                     squarePressureCheckbox.checked = true;
                                     squarePressureCheckbox.disabled = false;
-                                    testSquare.textContent = formatDecimal(result[0].Square) + ' cm';
+                                    testSquare.textContent = result[0].Square + ' cm';
                                 } else {
                                     squarePressureCheckbox.checked = false;
                                     testSquare.textContent = '0.00 cm';
@@ -816,6 +816,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                 // B. Cyclic Test
                                 if (result[0].Cyclic_Test > 0) {
+
                                     cycleLoadApprox.textContent = formatNumber(result[0].Cyclic_Test) + ' kg (2 x SWL)';
                                 }
 

@@ -94,8 +94,8 @@ class ACCQCSpvController extends Controller
 
             try {
                 DB::connection('ConnTestQC')
-                    ->statement('exec [SP_1273_QTC_ACC_SPV_FIBC] 
-                @Kode = ?, 
+                    ->statement('exec [SP_1273_QTC_ACC_SPV_FIBC]
+                @Kode = ?,
                 @RefNo = ?,
                 @UserACC = ?
                 ', [
