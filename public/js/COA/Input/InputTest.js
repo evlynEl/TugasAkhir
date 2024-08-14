@@ -452,7 +452,7 @@ btn_info.addEventListener("click", function (e) {
                     responsive: true,
                     processing: true,
                     serverSide: true,
-                    order: [[0, "asc"]],
+                    order: [[1, "asc"]],
                     ajax: {
                         url: "FrmInputTest/getRef",
                         dataType: "json",

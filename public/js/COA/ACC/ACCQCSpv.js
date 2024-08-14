@@ -297,7 +297,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         responsive: true,
                         processing: true,
                         serverSide: true,
-                        order: [[0, "asc"]],
+                        order: [[1, "asc"]],
                         ajax: {
                             url: "FrmACCFIBC/getRef",
                             dataType: "json",

@@ -59,14 +59,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 html: `<table id="table_divisi" class="display" style="width:100%">
                             <thead>
                                 <tr>
-                                    <th>Divisi</th>
+                                    <th>ID Divisi</th>
+                                    <th>Nama Divisi</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
                         </table>`,
                 showCancelButton: true,
                 confirmButtonText: 'Pilih',
-                cancelButtonText: 'Close',
+                cancelButtonText: 'Tutup',
                 returnFocus: false,
                 preConfirm: () => {
                     const table = $("#table_divisi").DataTable();
@@ -83,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             responsive: true,
                             processing: true,
                             serverSide: true,
-                            order: [[0, "asc"]],
+                            order: [[1, "asc"]],
                             ajax: {
                                 url: "LaporanSaldo/getDivisi",
                                 dataType: "json",
@@ -93,10 +94,8 @@ document.addEventListener('DOMContentLoaded', function () {
                                 }
                             },
                             columns: [
-                                {
-                                    data: "NamaDivisi",
-                                    title: "Divisi"
-                                }
+                                {data: "IdDivisi"},
+                                {data: "NamaDivisi"}
                             ]
                         });
 
@@ -131,7 +130,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 html: `<table id="table_Objek" class="display" style="width:100%">
                             <thead>
                                 <tr>
-                                    <th>Objek</th>
+                                    <th>ID Objek</th>
+                                    <th>Nama Objek</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 showCancelButton: true,
                 confirmButtonText: 'Pilih',
                 returnFocus: false,
-                cancelButtonText: 'Close',
+                cancelButtonText: 'Tutup',
                 preConfirm: () => {
                     const table = $("#table_Objek").DataTable();
                     const selectedData = table.row(".selected").data();
@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             responsive: true,
                             processing: true,
                             serverSide: true,
-                            order: [[0, "asc"]],
+                            order: [[1, "asc"]],
                             ajax: {
                                 url: "LaporanSaldo/getObjek",
                                 dataType: "json",
@@ -169,10 +169,8 @@ document.addEventListener('DOMContentLoaded', function () {
                                 }
                             },
                             columns: [
-                                {
-                                    data: "NamaObjek",
-                                    title: "Objek"
-                                }
+                                {data: "Objek"},
+                                {data: "NamaObjek"}
                             ]
                         });
 
@@ -213,7 +211,7 @@ document.addEventListener('DOMContentLoaded', function () {
             success: function (response) {
                 if (response.success) {
                     console.log('adasd');
-                    
+
                 }
             },
             error: function (xhr, status, error) {
