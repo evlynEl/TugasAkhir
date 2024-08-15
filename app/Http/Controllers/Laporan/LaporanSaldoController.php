@@ -306,71 +306,248 @@ class LaporanSaldoController extends Controller
 
             try {
                 DB::transaction(function () use ($tanggal1, $tanggal2, $idObjek, $sw) {
-                    // First Procedure Call
+                    // delete table
                     DB::connection('ConnInventory')->statement(
-                        'exec [SP_LAPORAN_SALDO_COBA] @kode = ?, @IdObjek = ?, @tanggal1 = ?, @tanggal2 = ?',
-                        [1, $idObjek, $tanggal1, $tanggal2]
+                        'exec [SP_LAPORAN_SALDO_COBA] @kode = 1, @IdObjek = ?, @tanggal1 = ?, @tanggal2 = ?',
+                        [$idObjek, $tanggal1, $tanggal2]
                     );
 
-                    // Conditional Second Procedure Call
+                    // insert ke Lap_Acc
                     if ($sw === 0) {
                         DB::connection('ConnInventory')->statement(
-                            'exec [SP_LAPORAN_SALDO_COBA] @kode = ?, @IdObjek = ?, @tanggal1 = ?, @tanggal2 = ?',
-                            [2, $idObjek, $tanggal1, $tanggal2]
+                            'exec [SP_LAPORAN_SALDO_COBA] @kode = 2, @IdObjek = ?, @tanggal1 = ?, @tanggal2 = ?',
+                            [$idObjek, $tanggal1, $tanggal2]
                         );
                     }
 
-                    // Fetching Results
+                    // select data tergantung IdObjek
                     $results = DB::connection('ConnInventory')->select(
-                        'exec [SP_LAPORAN_SALDO_COBA] @kode = ?, @IdObjek = ?, @tanggal1 = ?, @tanggal2 = ?',
-                        [3, $idObjek, $tanggal1, $tanggal2]
+                        'exec [SP_LAPORAN_SALDO_COBA] @kode = 3, @IdObjek = ?, @tanggal1 = ?, @tanggal2 = ?',
+                        [$idObjek, $tanggal1, $tanggal2]
                     );
 
+                    // dd($results);
+                    $arrAll = [];
+                    $arrID = [];
+
                     foreach ($results as $result) {
-                        DB::connection('ConnInventory')->statement(
-                            'exec [SP_LAPORAN_SALDO_COBA] @kode = ?, @IdObjek = ?, @tanggal1 = ?, @tanggal2 = ?',
-                            [5, $idObjek, $tanggal1, $tanggal2]
-                        );
+                        $Divisi = $result->NamaDivisi;
+                        $Objek = $result->NamaObjek;
+                        $KelompokUtama = $result->NamaKelompokUtama;
+                        $Kelompok = $result->NamaKelompok;
+                        $SubKelompok = $result->NamaSubKelompok;
+                        $type = $result->Namatype;
+                        $KodeBarang = $result->KodeBarang;
+                        $Idtype = $result->Idtype;
+
+                        array_push($arrID, $Idtype);
+                        $arrAll[] = [
+                            'Divisi' => $Divisi,
+                            'Objek' => $Objek,
+                            'KelompokUtama' => $KelompokUtama,
+                            'Kelompok' => $Kelompok,
+                            'SubKelompok' => $SubKelompok,
+                            'Type' => $type,
+                            'KodeBarang' => $KodeBarang,
+                            'Idtype' => $Idtype,
+                        ];
+                        // dd($proses);
                     }
 
-                    // // Processing Results in Chunks (to avoid memory issues)
-                    // foreach (array_chunk($results, 100) as $chunk) {
-                    //     foreach ($chunk as $result) {
-                    //         // Data Preparation
-                    //         $NmDivisi = $result->NamaDivisi;
-                    //         $NmObjek = $result->NamaObjek;
-                    //         $NmKelut = $result->NamaKelompokUtama;
-                    //         $NmKel = $result->NamaKelompok;
-                    //         $NmSubKel = $result->NamaSubKelompok;
-                    //         $NamaType = $result->Namatype;
-                    //         $KodeBarang = $result->KodeBarang;
-                    //         $Idtype = $result->Idtype;
+                    $idChunks = array_chunk($arrID, 100);
 
-                    //         $AwalPrimer = $AwalSekunder = $AwalTritier = null;
-                    //         $MasukPrimer = $MasukSekunder = $MasukTritier = 0;
-                    //         $KeluarPrimer = $KeluarSekunder = $KeluarTritier = 0;
-                    //         $AkhirPrimer = $AkhirSekunder = $AkhirTritier = 0;
+                    foreach ($idChunks as $chunk) {
+                        $ids = implode(',', $chunk);
 
-                    //         // Final Procedure Call for Each Result
-                    //         DB::connection('ConnInventory')->statement(
-                    //             'exec [SP_LAPORAN_SALDO_COBA]
-                    //             @kode = ?, @IdObjek = ?, @tanggal1 = ?, @tanggal2 = ?,
-                    //             @AwalPrime = ?, @AwalSekunder = ?, @AwalTritier = ?,
-                    //             @MasukPrimer = ?, @MasukSekunder = ?, @MasukTritier = ?,
-                    //             @KeluarPrimer = ?, @KeluarSekunder = ?, @KeluarTritier = ?,
-                    //             @AkhirPrimer = ?, @AkhirSekunder = ?, @AkhirTritier = ?,
-                    //             @NmDivisi = ?, @NmObjek = ?, @NmKelut = ?, @NmKel = ?, @NmSubKel = ?, @NamaType = ?, @KodeBarang = ?, @Idtype = ?',
-                    //             [
-                    //                 5, $idObjek, $tanggal1, $tanggal2,
-                    //                 $AwalPrimer, $AwalSekunder, $AwalTritier,
-                    //                 $MasukPrimer, $MasukSekunder, $MasukTritier,
-                    //                 $KeluarPrimer, $KeluarSekunder, $KeluarTritier,
-                    //                 $AkhirPrimer, $AkhirSekunder, $AkhirTritier,
-                    //                 $NmDivisi, $NmObjek, $NmKelut, $NmKel, $NmSubKel, $NamaType, $KodeBarang, $Idtype
-                    //             ]
-                    //         );
-                    //     }
-                    // }
+                        $prosesSaldo = DB::connection('ConnInventory')->select(
+                            'exec [SP_LAP_SALDO_EXECUTE]
+                            @kode = 1, @IdObjek = ?, @tanggal1 = ?, @tanggal2 = ?, @IdType = ?',
+                            [$idObjek, $tanggal1, $tanggal2, $ids]
+                        );
+
+                        // dd($prosesSaldo);
+
+                        // get idtype dari $prosesSaldo
+                        $idTypeFilterSaldo1 = [];
+                        foreach ($prosesSaldo as $row) {
+                            $idTypeFilterSaldo1[] = $row->IdType;
+                        }
+                        // get awal dari $prosesSaldo
+                        $dataUangMap = [];
+                        $dataid = [];
+                        foreach ($prosesSaldo as $row) {
+                            $dataUangMap[$row->IdType] = [
+                                'AwalPrimer' => $row->SaldoPrimer,
+                                'AwalSekunder' => $row->SaldoSekunder,
+                                'AwalTritier' => $row->saldoTritier,
+                            ];
+                            $dataid[] = $row->IdType;
+                        }
+
+                        // set nilai kalau null pd awalan
+                        $allArrayWithSaldo = [];
+                        foreach ($arrAll as $data) {
+                            if (in_array($data['Idtype'], $idTypeFilterSaldo1)) {
+                                $IdType = $data['Idtype'];
+                                $saldoData = isset($dataUangMap[$IdType]) ? $dataUangMap[$IdType] : [
+                                    'AwalPrimer' => ".00",
+                                    'AwalSekunder' => ".00",
+                                    'AwalTritier' => ".00"
+                                ];
+
+                                $allArrayWithSaldo[] = array_merge($data, $saldoData);
+                            }
+                        }
+                        // dd($allArrayWithSaldo);
+
+
+
+                        // dd($allArrayWithSaldoUpdated);
+
+                        // array untuk primer, seknder, tritier
+                        // $dataid = [];
+                        // foreach ($prosesSaldo as $row) {
+                        //     $dataid[] = $row->IdType;
+                        // }
+
+                        $ids2 = implode(',', $dataid);
+
+                        $saldoKeluarMasuk = DB::connection('ConnInventory')->select(
+                            'exec [SP_LAP_SALDO_EXECUTE]
+                            @kode = 2, @IdObjek = ?, @tanggal1 = ?, @tanggal2 = ?, @IdType = ?',
+                            [$idObjek, $tanggal1, $tanggal2, $ids2]
+                        );
+
+                        // dd($saldoKeluarMasuk);
+
+                        $dataSaldoMap = [];
+                        foreach ($saldoKeluarMasuk as $row) {
+                            $dataSaldoMap[$row->idtype] = [
+                                'MasukPrimer' => $row->MasukPrimer,
+                                'MasukSekunder' => $row->MasukSekunder,
+                                'MasukTritier' => $row->MasukTritier,
+                                'KeluarPrimer' => $row->KeluarPrimer,
+                                'KeluarSekunder' => $row->KeluarSekunder,
+                                'KeluarTritier' => $row->KeluarTritier
+                            ];
+                        }
+
+                        $allArrayFinal = [];
+                        foreach ($allArrayWithSaldo as $data) {
+                            $Idtype = $data['Idtype'];
+
+                            // Default saldo values if Idtype is not found in $dataSaldoMap
+                            $defaultSaldoData = [
+                                'MasukPrimer' => "0.00",
+                                'MasukSekunder' => "0.00",
+                                'MasukTritier' => "0.00",
+                                'KeluarPrimer' => "0.00",
+                                'KeluarSekunder' => "0.00",
+                                'KeluarTritier' => "0.00"
+                            ];
+
+                            // Merge the default saldo data with the data from $dataSaldoMap if available
+                            $saldoData = isset($dataSaldoMap[$Idtype]) ? $dataSaldoMap[$Idtype] : $defaultSaldoData;
+
+                            $allArrayFinal[] = array_merge($data, $saldoData);
+                        }
+
+                        // dd($allArrayWithSaldo);
+
+                        $allArrayFinal = [];
+                        foreach ($allArrayWithSaldo as $data) {
+                            $IdType = $data['Idtype'];
+
+                            // Default saldo values if IdType is not found in $dataSaldoMap
+                            $defaultSaldoData = [
+                                'MasukPrimer' => "0.00",
+                                'MasukSekunder' => "0.00",
+                                'MasukTritier' => "0.00",
+                                'KeluarPrimer' => "0.00",
+                                'KeluarSekunder' => "0.00",
+                                'KeluarTritier' => "0.00"
+                            ];
+
+                            // Merge the default saldo data with the data from $dataSaldoMap if available
+                            $saldoData = isset($dataSaldoMap[$IdType]) ? $dataSaldoMap[$IdType] : $defaultSaldoData;
+
+                            $allArrayFinal[] = array_merge($data, $saldoData);
+                        }
+
+                        // dd($allArrayFinal);
+
+                        $allArrayFinalWithSaldo = [];
+                        foreach ($allArrayFinal as $data) {
+                            $IdType = $data['Idtype'];
+
+                            // Initialize variables for Awal, Masuk, and Keluar values
+                            $AwalPrimer = isset($data['AwalPrimer']) ? (float) $data['AwalPrimer'] : 0.00;
+                            $AwalSekunder = isset($data['AwalSekunder']) ? (float) $data['AwalSekunder'] : 0.00;
+                            $AwalTritier = isset($data['AwalTritier']) ? (float) $data['AwalTritier'] : 0.00;
+
+                            $MasukPrimer = isset($data['MasukPrimer']) ? (float) $data['MasukPrimer'] : 0.00;
+                            $MasukSekunder = isset($data['MasukSekunder']) ? (float) $data['MasukSekunder'] : 0.00;
+                            $MasukTritier = isset($data['MasukTritier']) ? (float) $data['MasukTritier'] : 0.00;
+
+                            $KeluarPrimer = isset($data['KeluarPrimer']) ? (float) $data['KeluarPrimer'] : 0.00;
+                            $KeluarSekunder = isset($data['KeluarSekunder']) ? (float) $data['KeluarSekunder'] : 0.00;
+                            $KeluarTritier = isset($data['KeluarTritier']) ? (float) $data['KeluarTritier'] : 0.00;
+
+                            // Calculate Saldo Akhir
+                            $SaldoAkhirPrimer = $AwalPrimer + $MasukPrimer - $KeluarPrimer;
+                            $SaldoAkhirSekunder = $AwalSekunder + $MasukSekunder - $KeluarSekunder;
+                            $SaldoAkhirTritier = $AwalTritier + $MasukTritier - $KeluarTritier;
+
+                            // Add the new SaldoAkhir values to the data array
+                            $data['SaldoAkhirPrimer'] = number_format($SaldoAkhirPrimer, 2, '.', '');
+                            $data['SaldoAkhirSekunder'] = number_format($SaldoAkhirSekunder, 2, '.', '');
+                            $data['SaldoAkhirTritier'] = number_format($SaldoAkhirTritier, 2, '.', '');
+
+                            // Add this data to the final array
+                            $allArrayFinalWithSaldo[] = $data;
+                        }
+
+                        // dd($allArrayFinalWithSaldo);
+
+
+                        foreach ($allArrayFinalWithSaldo as $data) {
+                            if (
+                                !(
+                                    $data['AwalPrimer'] == 0 &&
+                                    $data['AwalSekunder'] == 0 &&
+                                    $data['AwalTritier'] == 0 &&
+                                    $data['MasukPrimer'] == 0 &&
+                                    $data['MasukSekunder'] == 0 &&
+                                    $data['MasukTritier'] == 0 &&
+                                    $data['KeluarPrimer'] == 0 &&
+                                    $data['KeluarSekunder'] == 0 &&
+                                    $data['KeluarTritier'] == 0
+                                )
+                            ) {
+                                DB::connection('ConnInventory')->table('Lap_Acc')->insert([
+                                    'Divisi' => $data['NmDivisi'],
+                                    'Objek' => $data['NmObjek'],
+                                    'KelompokUtama' => $data['NmKelut'],
+                                    'Kelompok' => $data['NmKel'],
+                                    'SubKelompok' => $data['NmSubKel'],
+                                    'Type' => $data['NamaType'],
+                                    'KodeBarang' => $data['KodeBarang'],
+                                    'SaldoAwalPrimer' => $data['AwalPrimer'],
+                                    'SaldoAwalSekunder' => $data['AwalSekunder'],
+                                    'SaldoAwalTritier' => $data['AwalTritier'],
+                                    'PemasukanPrimer' => $data['MasukPrimer'],
+                                    'PemasukanSekunder' => $data['MasukSekunder'],
+                                    'PemasukanTritier' => $data['MasukTritier'],
+                                    'PengeluaranPrimer' => $data['KeluarPrimer'],
+                                    'PengeluaranSekunder' => $data['KeluarSekunder'],
+                                    'PengeluaranTritier' => $data['KeluarTritier'],
+                                    'SaldoAkhirPrimer' => $data['SaldoAkhirPrimer'],
+                                    'SaldoAkhirSekunder' => $data['SaldoAkhirSekunder'],
+                                    'SaldoAkhirTritier' => $data['SaldoAkhirTritier'],
+                                ]);
+                            }
+                        }
+                    }
                 });
 
                 return response()->json(['success' => 'Excel sudah bisa didownload'], 200);

@@ -14,7 +14,7 @@
                 @endif
                 <div class="card">
                     <div class="card-body RDZOverflow RDZMobilePaddingLR0">
-                        <label><strong>Laporan Stok per Periode</strong></label>
+                        <label><strong>Laporan Saldo</strong></label>
                         <div class="row">
                             <label class="col-sm-2 col-form-label">Divisi</label>
                             <div class="col-sm-1">

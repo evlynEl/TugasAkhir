@@ -94,8 +94,8 @@ document.addEventListener('DOMContentLoaded', function () {
                                 }
                             },
                             columns: [
-                                {data: "IdDivisi"},
-                                {data: "NamaDivisi"}
+                                { data: "IdDivisi" },
+                                { data: "NamaDivisi" }
                             ]
                         });
 
@@ -169,8 +169,8 @@ document.addEventListener('DOMContentLoaded', function () {
                                 }
                             },
                             columns: [
-                                {data: "Objek"},
-                                {data: "NamaObjek"}
+                                { data: "Objek" },
+                                { data: "NamaObjek" }
                             ]
                         });
 
@@ -210,8 +210,8 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             success: function (response) {
                 if (response.success) {
-                    console.log('adasd');
-
+                    updateDataTable(result);
+                    excelButton.disabled = false;
                 }
             },
             error: function (xhr, status, error) {
@@ -222,6 +222,97 @@ document.addEventListener('DOMContentLoaded', function () {
                     canClickProsesButton = true;
                 }, 3000);
             }
+        });
+    });
+
+    // Update the table and store the data in the array
+    function updateDataTable(data) {
+        var table = $('#tableLaporan').DataTable();
+        table.clear();
+
+        laporanArray = [];
+
+        data.forEach(function (item) {
+            table.row.add([
+                item.Divisi,
+                item.Objek,
+                item.KelompokUtama,
+                item.Kelompok,
+                item.SubKelompok,
+                item.Type,
+                item.SaldoAwalPrimer,
+                item.SaldoAwalSekunder,
+                item.SaldoAwalTritier,
+                item.PemasukanPrimer,
+                item.PemasukanSekunder,
+                item.PemasukanTritier,
+                item.PengeluaranPrimer,
+                item.PengeluaranSekunder,
+                item.PengeluaranTritier,
+                item.SaldoAkhirPrimer,
+                item.SaldoAkhirSekunder,
+                item.SaldoAkhirTritier,
+                item.KodeBarang
+            ]);
+
+            laporanArray.push({
+                Divisi: item.Divisi,
+                Objek: item.Objek,
+                KelompokUtama: item.KelompokUtama,
+                Kelompok: item.Kelompok,
+                SubKelompok: item.SubKelompok,
+                Type: item.Type,
+                KodeBarang: item.KodeBarang,
+                SaldoAwalPrimer: item.SaldoAwalPrimer,
+                SaldoAwalSekunder: item.SaldoAwalSekunder,
+                SaldoAwalTritier: item.SaldoAwalTritier,
+                PemasukanPrimer: item.PemasukanPrimer,
+                PemasukanSekunder: item.PemasukanSekunder,
+                PemasukanTritier: item.PemasukanTritier,
+                PengeluaranPrimer: item.PengeluaranPrimer,
+                PengeluaranSekunder: item.PengeluaranSekunder,
+                PengeluaranTritier: item.PengeluaranTritier,
+                SaldoAkhirPrimer: item.SaldoAkhirPrimer,
+                SaldoAkhirSekunder: item.SaldoAkhirSekunder,
+                SaldoAkhirTritier: item.SaldoAkhirTritier,
+            });
+        });
+
+        table.draw();
+    }
+
+    // table
+    $(document).ready(function () {
+        $('#tableLaporan').DataTable({
+            paging: false,
+            searching: false,
+            info: false,
+            ordering: false,
+            language: {
+                emptyTable: "",
+                zeroRecords: ""
+            },
+            columns: [
+                { title: 'Divisi' },
+                { title: 'Objek' },
+                { title: 'Kel. Utama' },
+                { title: 'Kelompok' },
+                { title: 'Sub Kelompok' },
+                { title: 'Type' },
+                { title: 'Kode Barang' },
+                { title: 'S. Awal Primer' },
+                { title: 'S. Awal Sekunder' },
+                { title: 'S. Awal Tritier' },
+                { title: 'Pemasukan Primer' },
+                { title: 'Pemasukan Sekunder' },
+                { title: 'Pemasukan Tritier' },
+                { title: 'Pengeluaran Primer' },
+                { title: 'Pengeluaran Sekunder' },
+                { title: 'Pengeluaran Tritier' },
+                { title: 'S. Akhir Primer' },
+                { title: 'S. Akhir Sekunder' },
+                { title: 'S. Akhir Tritier' }
+            ]
         });
     });
 
@@ -276,5 +367,4 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     }
-
 })
