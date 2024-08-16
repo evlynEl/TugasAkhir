@@ -67,7 +67,7 @@
 
                         <div class="row" style="margin-top: 0.5%">
                             <div class="col-sm-12">
-                                <div class="table-responsive fixed-height" style="height: 300px">
+                                <div class="table-responsive fixed-height" style="height: 400px">
                                     <table class="table table-bordered no-wrap-header" id="tableLaporan">
                                         <thead>
                                         </thead>
@@ -79,7 +79,7 @@
                         </div>
 
                         <div class="row" style="margin-top: 0.5%">
-                            <div class="col-sm-1">
+                            <div class="col-sm-2">
                                 <button type="button" class="btn btn-primary" id="excelButton" style="width: 100%">Tampil
                                     Excel</button>
                             </div>

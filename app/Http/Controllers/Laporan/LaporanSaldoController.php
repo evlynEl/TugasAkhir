@@ -30,7 +30,7 @@ class LaporanSaldoController extends Controller
     public function show($id, Request $request)
     {
         set_time_limit(300);
-
+        // divisi
         if ($id === 'getDivisi') {
             $UserInput = Auth::user()->NomorUser;
             $UserInput = trim($UserInput);
@@ -63,249 +63,16 @@ class LaporanSaldoController extends Controller
                 ];
             }
             return datatables($objekArr)->make(true);
-        }
 
-        // pakai sp
-        // else if ($id === 'prosesLaporanACC') {
-        //     $idObjek = $request->input('idObjek');
-        //     $tanggal1 = $request->input('tanggal1');
-        //     $tanggal2 = $request->input('tanggal2');
-        //     Log::info((string)$idObjek . $tanggal1 . $tanggal2);
-        //     try {
-        //         $result = DB::connection('ConnInventory')->statement('EXEC Sp_Lap_ACC @tanggal1 = ?, @tanggal2 = ?, @IdObjek = ?', [$tanggal1, $tanggal2, $idObjek]);
-        //         Log::info($result);
-        //         return response()->json(['success' => 'Excel sudah bisa didownload'], 200);
-        //     } catch (\Exception $e) {
-        //         return response()->json(['error' => 'Data gagal dijadikan Excel: ' . $e->getMessage()], 500);
-        //     }
-        // }
-
-        //  else if ($id === 'prosesLaporanACC') {
-        //     $idObjek = $request->input('idObjek');
-        //     $tanggal1 = $request->input('tanggal1');
-        //     $tanggal2 = $request->input('tanggal2');
-        //     $sw = 0;
-
-        //     if ($tanggal1 >= '1/1/2009') { //belom jalan
-        //         try {
-        //             DB::transaction(function () use ($tanggal1, $tanggal2, $idObjek, $sw) {
-        //                 DB::connection('ConnInventory')->table('LAP_ACC')->delete();
-
-        //                 if ($sw === 0) {
-        //                     $sw = 1;
-
-        //                     DB::connection('ConnInventory')->
-        //                         table('Lap_Acc')->insert([
-        //                                 'kelompokUtama' => '** Laporan Stok Tanggal: ' . $tanggal1 . ' s/d ' . $tanggal2
-        //                             ]);
-        //                 }
-
-        //                 $validIdObjeks = ['030', '228', '282'];
-
-        //                 if (in_array($idObjek, $validIdObjeks)) {
-        //                     $results = DB::connection('ConnInventory')->table('VW_TYPE_WAREHOUSE_ALL')
-        //                         ->select('NamaDivisi', 'NamaObjek', 'NamaKelompokUtama', 'NamaKelompok', 'NamaSubKelompok', 'Namatype', 'KodeBarang', 'Idtype')
-        //                         ->where('idobjek', $idObjek)
-        //                         ->where('namakelompokutama', '<>', DB::raw("COALESCE('Lain - Lain', 'Lain - Lain')"))
-        //                         ->whereNotLike('KodeBarang', '00%')
-        //                         ->orderBy('NamaKelompokUtama')
-        //                         ->orderBy('NamaKelompok')
-        //                         ->orderBy('NamaSubKelompok')
-        //                         ->orderBy('Namatype')
-        //                         ->get();
-        //                 } else {
-        //                     $results = DB::connection('ConnInventory')->table(DB::raw('(
-        //                         SELECT TOP 100 PERCENT
-        //                             dbo.Type.IdType,
-        //                             dbo.Type.NamaType,
-        //                             dbo.Type.KodeBarang,
-        //                             SATUAN_3.nama_satuan,
-        //                             dbo.Subkelompok.NamaSubKelompok,
-        //                             dbo.Kelompok.NamaKelompok,
-        //                             dbo.KelompokUtama.NamaKelompokUtama,
-        //                             dbo.Objek.NamaObjek,
-        //                             dbo.Divisi.NamaDivisi,
-        //                             dbo.Divisi.IdDivisi,
-        //                             dbo.Type.MinimumStock,
-        //                             dbo.Type.SaldoPrimer,
-        //                             dbo.Type.SaldoSekunder,
-        //                             dbo.Type.SaldoTritier,
-        //                             dbo.Objek.IdObjek,
-        //                             dbo.KelompokUtama.IdKelompokUtama,
-        //                             dbo.Kelompok.IdKelompok,
-        //                             dbo.Subkelompok.IdSubkelompok,
-        //                             Satuan_1.nama_satuan AS [satPrimer],
-        //                             Satuan_2.nama_satuan AS [satSekunder],
-        //                             dbo.Type.UnitPrimer,
-        //                             dbo.Type.UnitSekunder,
-        //                             dbo.Type.UnitTritier,
-        //                             dbo.Type.Nonaktif,
-        //                             dbo.Type.MaximumStock
-        //                         FROM dbo.SATUAN Satuan_1
-        //                             RIGHT OUTER JOIN dbo.Type
-        //                                 INNER JOIN dbo.SATUAN SATUAN_3
-        //                                     ON dbo.Type.UnitTritier = SATUAN_3.no_satuan
-        //                                 ON Satuan_1.no_satuan = dbo.Type.UnitPrimer
-        //                             LEFT OUTER JOIN dbo.SATUAN Satuan_2
-        //                                 ON dbo.Type.UnitSekunder = Satuan_2.no_satuan
-        //                             LEFT OUTER JOIN dbo.Objek
-        //                                 LEFT OUTER JOIN dbo.Divisi
-        //                                     ON dbo.Objek.IdDivisi_Objek = dbo.Divisi.IdDivisi
-        //                                 RIGHT OUTER JOIN dbo.KelompokUtama
-        //                                     ON dbo.Objek.IdObjek = dbo.KelompokUtama.IdObjek_KelompokUtama
-        //                                 RIGHT OUTER JOIN dbo.Kelompok
-        //                                     ON dbo.KelompokUtama.IdKelompokUtama = dbo.Kelompok.IdKelompokUtama_Kelompok
-        //                                 RIGHT OUTER JOIN dbo.Subkelompok
-        //                                     ON dbo.Kelompok.IdKelompok = dbo.Subkelompok.IdKelompok_Subkelompok
-        //                             ON dbo.Type.IdSubkelompok_Type = dbo.Subkelompok.IdSubkelompok
-        //                         ORDER BY dbo.Type.IdType
-        //                     ) AS VW_TYPE_WAREHOUSE_ALL'))
-        //                         ->select('VW_TYPE_WAREHOUSE_ALL.NamaDivisi', 'VW_TYPE_WAREHOUSE_ALL.NamaObjek', 'VW_TYPE_WAREHOUSE_ALL.NamaKelompokUtama', 'VW_TYPE_WAREHOUSE_ALL.NamaKelompok', 'VW_TYPE_WAREHOUSE_ALL.NamaSubKelompok', 'VW_TYPE_WAREHOUSE_ALL.Namatype', 'VW_TYPE_WAREHOUSE_ALL.KodeBarang', 'VW_TYPE_WAREHOUSE_ALL.Idtype')
-        //                         ->where('VW_TYPE_WAREHOUSE_ALL.idobjek', DB::raw("COALESCE('{$idObjek}', '{$idObjek}')"))
-        //                         ->orderBy('VW_TYPE_WAREHOUSE_ALL.NamaKelompokUtama')
-        //                         ->orderBy('VW_TYPE_WAREHOUSE_ALL.NamaKelompok')
-        //                         ->orderBy('VW_TYPE_WAREHOUSE_ALL.NamaSubKelompok')
-        //                         ->orderBy('VW_TYPE_WAREHOUSE_ALL.Namatype')
-        //                         ->get();
-        //                 }
-
-        //                 dd($results);
-
-        //                 foreach ($results as $result) {
-        //                     $NmDivisi = $result->NamaDivisi;
-        //                     $NmObjek = $result->NamaObjek;
-        //                     $NmKelut = $result->NamaKelompokUtama;
-        //                     $NmKel = $result->NamaKelompok;
-        //                     $NmSubKel = $result->NamaSubKelompok;
-        //                     $NamaType = $result->Namatype;
-        //                     $KodeBarang = $result->KodeBarang;
-        //                     $Idtype = $result->Idtype;
-
-        //                     $AwalPrimer = $AwalSekunder = $AwalTritier = null;
-        //                     $MasukPrimer = $MasukSekunder = $MasukTritier = 0;
-        //                     $KeluarPrimer = $KeluarSekunder = $KeluarTritier = 0;
-        //                     $AkhirPrimer = $AkhirSekunder = $AkhirTritier = 0;
-
-        //                     $maxIdTrans = DB::connection('ConnInventory')
-        //                         ->table('VW_PRG_TRANSAKSI_BARU as a')
-        //                         ->select(DB::raw('MAX(IdTransaksi) as MaxIdTrans'))
-        //                         ->whereExists(function ($query) use ($tanggal1, $Idtype) {
-        //                             $query->select('IdType')
-        //                                 ->from('VW_PRG_TRANSAKSI_BARU')
-        //                                 ->whereColumn('a.Saatlog', '<=', DB::raw("DATEADD(day, -1, '{$tanggal1}')"))
-        //                                 ->where('a.IdType', $Idtype);
-        //                         })
-        //                         ->groupBy('a.IdType')
-        //                         ->first();
-
-        //                     if ($maxIdTrans) {
-        //                         $maxIdTransValue = $maxIdTrans->MaxIdTrans;
-
-        //                         $awalSaldo = DB::connection('ConnInventory')
-        //                             ->table('VW_PRG_TRANSAKSI_BARU')
-        //                             ->select('SaldoPrimer', 'SaldoSekunder', 'SaldoTritier')
-        //                             ->where('IdTransaksi', $maxIdTransValue)
-        //                             ->first();
-
-        //                         $AwalPrimer = $awalSaldo->SaldoPrimer;
-        //                         $AwalSekunder = $awalSaldo->SaldoSekunder;
-        //                         $AwalTritier = $awalSaldo->SaldoTritier;
-        //                     }
-
-        //                     $AwalPrimer = $AwalPrimer ?? 0;
-        //                     $AwalSekunder = $AwalSekunder ?? 0;
-        //                     $AwalTritier = $AwalTritier ?? 0;
-
-        //                     $cariMasukKeluar = DB::connection('ConnInventory')
-        //                         ->table('VW_PRG_TRANSAKSI_BARU as a')
-        //                         ->select(
-        //                             DB::raw('SUM(jumlahpemasukanPrimer) as MasukPrimer'),
-        //                             DB::raw('SUM(jumlahpemasukanSekunder) as MasukSekunder'),
-        //                             DB::raw('SUM(jumlahpemasukanTritier) as MasukTritier'),
-        //                             DB::raw('SUM(jumlahpengeluaranPrimer) as KeluarPrimer'),
-        //                             DB::raw('SUM(jumlahpengeluaranSekunder) as KeluarSekunder'),
-        //                             DB::raw('SUM(jumlahpengeluaranTritier) as KeluarTritier')
-        //                         )
-        //                         ->whereExists(function ($query) use ($tanggal1, $tanggal2, $Idtype) {
-        //                             $query->select('IdType')
-        //                                 ->from('VW_PRG_TRANSAKSI_BARU')
-        //                                 ->whereBetween('a.Saatlog', [$tanggal1, $tanggal2])
-        //                                 ->where('a.IdType', $Idtype);
-        //                         })
-        //                         ->groupBy('a.IdType')
-        //                         ->first();
-
-        //                     if ($cariMasukKeluar) {
-        //                         $MasukPrimer = $cariMasukKeluar->MasukPrimer ?? 0;
-        //                         $MasukSekunder = $cariMasukKeluar->MasukSekunder ?? 0;
-        //                         $MasukTritier = $cariMasukKeluar->MasukTritier ?? 0;
-        //                         $KeluarPrimer = $cariMasukKeluar->KeluarPrimer ?? 0;
-        //                         $KeluarSekunder = $cariMasukKeluar->KeluarSekunder ?? 0;
-        //                         $KeluarTritier = $cariMasukKeluar->KeluarTritier ?? 0;
-        //                     }
-        //                     // if ($Idtype == '00000000000000005093') {
-        //                     //     dd($awalSaldo);
-        //                     // }
-        //                     $MasukPrimer = $MasukPrimer ?? 0;
-        //                     $MasukSekunder = $MasukSekunder ?? 0;
-        //                     $MasukTritier = $MasukTritier ?? 0;
-        //                     $KeluarPrimer = $KeluarPrimer ?? 0;
-        //                     $KeluarSekunder = $KeluarSekunder ?? 0;
-        //                     $KeluarTritier = $KeluarTritier ?? 0;
-        //                     // Saldo Akhir
-        //                     $AkhirPrimer = $AwalPrimer + $MasukPrimer - $KeluarPrimer;
-        //                     $AkhirSekunder = $AwalSekunder + $MasukSekunder - $KeluarSekunder;
-        //                     $AkhirTritier = $AwalTritier + $MasukTritier - $KeluarTritier;
-        //                 }
-        //                 Log::info($Idtype);
-        //                 // Insert into Lap_Acc if conditions are met
-        //                 if (
-        //                     !($AwalPrimer == 0 && $AwalSekunder == 0 && $AwalTritier == 0 &&
-        //                         $MasukPrimer == 0 && $MasukSekunder == 0 && $MasukTritier == 0 &&
-        //                         $KeluarPrimer == 0 && $KeluarSekunder == 0 && $KeluarTritier == 0)
-        //                 ) {
-        //                     $insertData = DB::connection('ConnInventory')->table('Lap_Acc')->insert([
-        //                         'Divisi' => $NmDivisi,
-        //                         'Objek' => $NmObjek,
-        //                         'KelompokUtama' => $NmKelut,
-        //                         'Kelompok' => $NmKel,
-        //                         'SubKelompok' => $NmSubKel,
-        //                         'Type' => $NamaType,
-        //                         'KodeBarang' => $KodeBarang,
-        //                         'SaldoAwalPrimer' => $AwalPrimer,
-        //                         'SaldoAwalSekunder' => $AwalSekunder,
-        //                         'SaldoAwalTritier' => $AwalTritier,
-        //                         'PemasukanPrimer' => $MasukPrimer,
-        //                         'PemasukanSekunder' => $MasukSekunder,
-        //                         'PemasukanTritier' => $MasukTritier,
-        //                         'PengeluaranPrimer' => $KeluarPrimer,
-        //                         'PengeluaranSekunder' => $KeluarSekunder,
-        //                         'PengeluaranTritier' => $KeluarTritier,
-        //                         'SaldoAkhirPrimer' => $AkhirPrimer,
-        //                         'SaldoAkhirSekunder' => $AkhirSekunder,
-        //                         'SaldoAkhirTritier' => $AkhirTritier,
-        //                     ]);
-
-        //                     Log::info((string)'Data masuk: ID Type: '. $Idtype . ' | Awal Primer: '. $AwalPrimer . ' | Status Insert Data: ' . $insertData);
-        //                 }
-
-        //             });
-
-        //             return response()->json(['success' => 'Excel sudah bisa didownload'], 200);
-        //         } catch (\Exception $e) {
-        //             return response()->json(['error' => 'Data gagal dijadikan Excel: ' . $e->getMessage()], 500);
-        //         }
-        //     }
-        // }
-
-        else if ($id === 'prosesLaporanACC') {
+            // proses
+        } else if ($id === 'prosesLaporanACC') {
             $idObjek = $request->input('idObjek');
             $tanggal1 = $request->input('tanggal1');
             $tanggal2 = $request->input('tanggal2');
             $sw = 0;
 
             try {
-                DB::transaction(function () use ($tanggal1, $tanggal2, $idObjek, $sw) {
+                $ArrLaporan = DB::transaction(function () use ($tanggal1, $tanggal2, $idObjek, $sw) {
                     // delete table
                     DB::connection('ConnInventory')->statement(
                         'exec [SP_LAPORAN_SALDO_COBA] @kode = 1, @IdObjek = ?, @tanggal1 = ?, @tanggal2 = ?',
@@ -321,24 +88,26 @@ class LaporanSaldoController extends Controller
                     }
 
                     // select data tergantung IdObjek
-                    $results = DB::connection('ConnInventory')->select(
+                    $data = DB::connection('ConnInventory')->select(
                         'exec [SP_LAPORAN_SALDO_COBA] @kode = 3, @IdObjek = ?, @tanggal1 = ?, @tanggal2 = ?',
                         [$idObjek, $tanggal1, $tanggal2]
                     );
 
-                    // dd($results);
+                    // dd($data);
+
+                    // dd($data);
                     $arrAll = [];
                     $arrID = [];
 
-                    foreach ($results as $result) {
-                        $Divisi = $result->NamaDivisi;
-                        $Objek = $result->NamaObjek;
-                        $KelompokUtama = $result->NamaKelompokUtama;
-                        $Kelompok = $result->NamaKelompok;
-                        $SubKelompok = $result->NamaSubKelompok;
-                        $type = $result->Namatype;
-                        $KodeBarang = $result->KodeBarang;
-                        $Idtype = $result->Idtype;
+                    foreach ($data as $row) {
+                        $Divisi = $row->NamaDivisi;
+                        $Objek = $row->NamaObjek;
+                        $KelompokUtama = $row->NamaKelompokUtama;
+                        $Kelompok = $row->NamaKelompok;
+                        $SubKelompok = $row->NamaSubKelompok;
+                        $type = $row->Namatype;
+                        $KodeBarang = $row->KodeBarang;
+                        $Idtype = $row->Idtype;
 
                         array_push($arrID, $Idtype);
                         $arrAll[] = [
@@ -351,27 +120,27 @@ class LaporanSaldoController extends Controller
                             'KodeBarang' => $KodeBarang,
                             'Idtype' => $Idtype,
                         ];
-                        // dd($proses);
+                        // dd($data);
                     }
 
-                    $idChunks = array_chunk($arrID, 100);
+                    // dd(count($arrAll));
+
+                    $idChunks = array_chunk($arrAll, 100);
+                    // dd($idChunks);
+
 
                     foreach ($idChunks as $chunk) {
-                        $ids = implode(',', $chunk);
+                        $ids = implode(',', array_column($chunk, 'Idtype'));
+                        // dd($ids);
 
                         $prosesSaldo = DB::connection('ConnInventory')->select(
                             'exec [SP_LAP_SALDO_EXECUTE]
                             @kode = 1, @IdObjek = ?, @tanggal1 = ?, @tanggal2 = ?, @IdType = ?',
-                            [$idObjek, $tanggal1, $tanggal2, $ids]
+                            [$idObjek, $tanggal1, $tanggal2, '00000000000001119469']
                         );
 
                         // dd($prosesSaldo);
 
-                        // get idtype dari $prosesSaldo
-                        $idTypeFilterSaldo1 = [];
-                        foreach ($prosesSaldo as $row) {
-                            $idTypeFilterSaldo1[] = $row->IdType;
-                        }
                         // get awal dari $prosesSaldo
                         $dataUangMap = [];
                         $dataid = [];
@@ -383,46 +152,52 @@ class LaporanSaldoController extends Controller
                             ];
                             $dataid[] = $row->IdType;
                         }
+                        // dd($dataUangMap);
 
                         // set nilai kalau null pd awalan
                         $allArrayWithSaldo = [];
-                        foreach ($arrAll as $data) {
-                            if (in_array($data['Idtype'], $idTypeFilterSaldo1)) {
-                                $IdType = $data['Idtype'];
-                                $saldoData = isset($dataUangMap[$IdType]) ? $dataUangMap[$IdType] : [
-                                    'AwalPrimer' => ".00",
-                                    'AwalSekunder' => ".00",
-                                    'AwalTritier' => ".00"
-                                ];
+                        foreach ($chunk as $data) {
+                            $IdType = $data['Idtype'];
+                            $saldoData = isset($dataUangMap[$IdType]) ? $dataUangMap[$IdType] : [
+                                'AwalPrimer' => 0,
+                                'AwalSekunder' => 0,
+                                'AwalTritier' => 0
+                            ];
 
-                                $allArrayWithSaldo[] = array_merge($data, $saldoData);
-                            }
+                            $allArrayWithSaldo[] = array_merge($data, $saldoData);
                         }
                         // dd($allArrayWithSaldo);
 
-
-
-                        // dd($allArrayWithSaldoUpdated);
-
-                        // array untuk primer, seknder, tritier
-                        // $dataid = [];
-                        // foreach ($prosesSaldo as $row) {
-                        //     $dataid[] = $row->IdType;
-                        // }
-
                         $ids2 = implode(',', $dataid);
+
+                        // dd(count($arrAll));
 
                         $saldoKeluarMasuk = DB::connection('ConnInventory')->select(
                             'exec [SP_LAP_SALDO_EXECUTE]
                             @kode = 2, @IdObjek = ?, @tanggal1 = ?, @tanggal2 = ?, @IdType = ?',
-                            [$idObjek, $tanggal1, $tanggal2, $ids2]
+                            [$idObjek, $tanggal1, $tanggal2, $ids]
                         );
+
+                        // foreach ($allArrayWithSaldo as $item) {
+                        //     if (isset($item['Idtype']) && $item['Idtype'] === '00000000000001119469') {
+                        //         dd($item);
+                        //     }
+                        // }
 
                         // dd($saldoKeluarMasuk);
 
+                        // $targetId = '00000000000001119469';
+                        // $found = false;
+
+                        // foreach ($saldoKeluarMasuk as $row) {
+                        //     if ($row->IdType === $targetId) {
+                        //         dd($row);
+                        //     }
+                        // }
+
                         $dataSaldoMap = [];
                         foreach ($saldoKeluarMasuk as $row) {
-                            $dataSaldoMap[$row->idtype] = [
+                            $dataSaldoMap[$row->IdType] = [
                                 'MasukPrimer' => $row->MasukPrimer,
                                 'MasukSekunder' => $row->MasukSekunder,
                                 'MasukTritier' => $row->MasukTritier,
@@ -431,49 +206,33 @@ class LaporanSaldoController extends Controller
                                 'KeluarTritier' => $row->KeluarTritier
                             ];
                         }
+                        // dd($dataSaldoMap);
 
                         $allArrayFinal = [];
                         foreach ($allArrayWithSaldo as $data) {
                             $Idtype = $data['Idtype'];
-
-                            // Default saldo values if Idtype is not found in $dataSaldoMap
-                            $defaultSaldoData = [
-                                'MasukPrimer' => "0.00",
-                                'MasukSekunder' => "0.00",
-                                'MasukTritier' => "0.00",
-                                'KeluarPrimer' => "0.00",
-                                'KeluarSekunder' => "0.00",
-                                'KeluarTritier' => "0.00"
+// --------------------------------------------------------------------------------------------------------------
+                            // Merge the default saldo data with the data from $dataSaldoMap if available
+                            $saldoData = isset($dataSaldoMap[$Idtype]) ? $dataSaldoMap[$Idtype] : [
+                                'MasukPrimer' => 0.00,
+                                'MasukSekunder' => 0.00,
+                                'MasukTritier' => 0.00,
+                                'KeluarPrimer' => 0.00,
+                                'KeluarSekunder' => 0.00,
+                                'KeluarTritier' => 0.00
                             ];
 
-                            // Merge the default saldo data with the data from $dataSaldoMap if available
-                            $saldoData = isset($dataSaldoMap[$Idtype]) ? $dataSaldoMap[$Idtype] : $defaultSaldoData;
-
-                            $allArrayFinal[] = array_merge($data, $saldoData);
+                            // $allArrayFinal[] = array_merge($data, $saldoData);
                         }
 
-                        // dd($allArrayWithSaldo);
+                        dd($saldoKeluarMasuk, $allArrayWithSaldo);
 
-                        $allArrayFinal = [];
-                        foreach ($allArrayWithSaldo as $data) {
-                            $IdType = $data['Idtype'];
-
-                            // Default saldo values if IdType is not found in $dataSaldoMap
-                            $defaultSaldoData = [
-                                'MasukPrimer' => "0.00",
-                                'MasukSekunder' => "0.00",
-                                'MasukTritier' => "0.00",
-                                'KeluarPrimer' => "0.00",
-                                'KeluarSekunder' => "0.00",
-                                'KeluarTritier' => "0.00"
-                            ];
-
-                            // Merge the default saldo data with the data from $dataSaldoMap if available
-                            $saldoData = isset($dataSaldoMap[$IdType]) ? $dataSaldoMap[$IdType] : $defaultSaldoData;
-
-                            $allArrayFinal[] = array_merge($data, $saldoData);
+                        $targetId = '00000000000001119469';
+                        foreach ($allArrayFinal as $row) {
+                            if ($row->Idtype === $targetId) {
+                                dd($row);
+                            }
                         }
-
                         // dd($allArrayFinal);
 
                         $allArrayFinalWithSaldo = [];
@@ -507,30 +266,31 @@ class LaporanSaldoController extends Controller
                             $allArrayFinalWithSaldo[] = $data;
                         }
 
-                        // dd($allArrayFinalWithSaldo);
 
+
+                        dd($allArrayFinalWithSaldo);
 
                         foreach ($allArrayFinalWithSaldo as $data) {
                             if (
                                 !(
-                                    $data['AwalPrimer'] == 0 &&
-                                    $data['AwalSekunder'] == 0 &&
-                                    $data['AwalTritier'] == 0 &&
-                                    $data['MasukPrimer'] == 0 &&
-                                    $data['MasukSekunder'] == 0 &&
-                                    $data['MasukTritier'] == 0 &&
-                                    $data['KeluarPrimer'] == 0 &&
-                                    $data['KeluarSekunder'] == 0 &&
-                                    $data['KeluarTritier'] == 0
+                                    $data['AwalPrimer'] == 0.00 &&
+                                    $data['AwalSekunder'] == 0.00 &&
+                                    $data['AwalTritier'] == 0.00 &&
+                                    $data['MasukPrimer'] == 0.00 &&
+                                    $data['MasukSekunder'] == 0.00 &&
+                                    $data['MasukTritier'] == 0.00 &&
+                                    $data['KeluarPrimer'] == 0.00 &&
+                                    $data['KeluarSekunder'] == 0.00 &&
+                                    $data['KeluarTritier'] == 0.00
                                 )
                             ) {
                                 DB::connection('ConnInventory')->table('Lap_Acc')->insert([
-                                    'Divisi' => $data['NmDivisi'],
-                                    'Objek' => $data['NmObjek'],
-                                    'KelompokUtama' => $data['NmKelut'],
-                                    'Kelompok' => $data['NmKel'],
-                                    'SubKelompok' => $data['NmSubKel'],
-                                    'Type' => $data['NamaType'],
+                                    'Divisi' => $data['Divisi'],
+                                    'Objek' => $data['Objek'],
+                                    'KelompokUtama' => $data['KelompokUtama'],
+                                    'Kelompok' => $data['Kelompok'],
+                                    'SubKelompok' => $data['SubKelompok'],
+                                    'Type' => $data['Type'],
                                     'KodeBarang' => $data['KodeBarang'],
                                     'SaldoAwalPrimer' => $data['AwalPrimer'],
                                     'SaldoAwalSekunder' => $data['AwalSekunder'],
@@ -548,11 +308,50 @@ class LaporanSaldoController extends Controller
                             }
                         }
                     }
+
+
+                    // Fetch data from Lap_ACC
+                    $Lap_Acc = DB::connection('ConnInventory')->select(
+                        'SELECT Divisi, Objek, KelompokUtama, Kelompok, SubKelompok, Type,
+                        KodeBarang, SaldoAwalPrimer, SaldoAwalSekunder, SaldoAwalTritier,
+                        PemasukanPrimer, PemasukanSekunder, PemasukanTritier,
+                        PengeluaranPrimer, PengeluaranSekunder, PengeluaranTritier,
+                        SaldoAkhirPrimer, SaldoAkhirSekunder, SaldoAkhirTritier
+                    FROM Lap_ACC'
+                    );
+
+                    // Process and format the data
+                    $ArrLaporan = [];
+                    foreach ($Lap_Acc as $listLaporan) {
+                        $ArrLaporan[] = [
+                            'Divisi' => trim($listLaporan->Divisi),
+                            'Objek' => trim($listLaporan->Objek),
+                            'KelompokUtama' => trim($listLaporan->KelompokUtama),
+                            'Kelompok' => trim($listLaporan->Kelompok),
+                            'SubKelompok' => trim($listLaporan->SubKelompok),
+                            'Type' => trim($listLaporan->Type),
+                            'SaldoAwalPrimer' => trim($listLaporan->SaldoAwalPrimer),
+                            'SaldoAwalSekunder' => trim($listLaporan->SaldoAwalSekunder),
+                            'SaldoAwalTritier' => trim($listLaporan->SaldoAwalTritier),
+                            'PemasukanPrimer' => trim($listLaporan->PemasukanPrimer),
+                            'PemasukanSekunder' => trim($listLaporan->PemasukanSekunder),
+                            'PemasukanTritier' => trim($listLaporan->PemasukanTritier),
+                            'PengeluaranPrimer' => trim($listLaporan->PengeluaranPrimer),
+                            'PengeluaranSekunder' => trim($listLaporan->PengeluaranSekunder),
+                            'PengeluaranTritier' => trim($listLaporan->PengeluaranTritier),
+                            'SaldoAkhirPrimer' => trim($listLaporan->SaldoAkhirPrimer),
+                            'SaldoAkhirSekunder' => trim($listLaporan->SaldoAkhirSekunder),
+                            'SaldoAkhirTritier' => trim($listLaporan->SaldoAkhirTritier),
+                            'KodeBarang' => trim($listLaporan->KodeBarang),
+                        ];
+                    }
+
+                    return $ArrLaporan;
                 });
 
-                return response()->json(['success' => 'Excel sudah bisa didownload'], 200);
+                return response()->json($ArrLaporan);
             } catch (\Exception $e) {
-                return response()->json(['error' => 'Data gagal dijadikan Excel: ' . $e->getMessage()], 500);
+                return response()->json(['error' => $e->getMessage()], 500);
             }
         }
     }

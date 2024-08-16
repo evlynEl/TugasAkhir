@@ -199,6 +199,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // proses
     prosesButton.addEventListener("click", function (e) {
+        if (divisi.value === '') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Pilih Dahulu Divisinya !',
+            });
+        }
+        if (objek.value === '') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Pilih Dahulu Objeknya !',
+            });
+        }
+
         $.ajax({
             type: 'GET',
             url: 'LaporanSaldo/prosesLaporanACC',
@@ -208,11 +223,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 tanggal2: tanggalAkhir.value,
                 idObjek: objek.value
             },
-            success: function (response) {
-                if (response.success) {
-                    updateDataTable(result);
-                    excelButton.disabled = false;
-                }
+            success: function (result) {
+                updateDataTable(result);
+                excelButton.disabled = false;
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Data Selesai Diproses, Silahkan Refresh di Excel Untuk Melihat Data',
+                });
             },
             error: function (xhr, status, error) {
                 console.error(error);
@@ -233,6 +251,12 @@ document.addEventListener('DOMContentLoaded', function () {
         laporanArray = [];
 
         data.forEach(function (item) {
+            for (let key in item) {
+                if (item.hasOwnProperty(key) && item[key] === ".00") {
+                    item[key] = 0.00;
+                }
+            }
+
             table.row.add([
                 item.Divisi,
                 item.Objek,
@@ -276,6 +300,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 SaldoAkhirSekunder: item.SaldoAkhirSekunder,
                 SaldoAkhirTritier: item.SaldoAkhirTritier,
             });
+
+            // console.log(laporanArray);
+
         });
 
         table.draw();
