@@ -30,7 +30,7 @@ class LaporanStokController extends Controller
 
     public function show($id, Request $request)
     {
-        set_time_limit(300);
+        // set_time_limit(300);
         // divisi
         if ($id === 'getDivisi') {
             $divisiConn = DB::connection('ConnInventory')
@@ -201,8 +201,8 @@ class LaporanStokController extends Controller
                             ->get();
                     }
 
-                    $arrayIdType = [];
-                    $arrayAllData = [];
+                    $arrID = [];
+                    $arrAll = [];
 
                     foreach ($data as $row) {
 
@@ -215,8 +215,8 @@ class LaporanStokController extends Controller
                         $Idtype = $row->IdType;
                         $KodeBarang = $row->KodeBarang;
 
-                        array_push($arrayIdType, $Idtype);
-                        $arrayAllData[] = [
+                        array_push($arrID, $Idtype);
+                        $arrAll[] = [
                             'NmObjek' => $NmObjek,
                             'NmKelut' => $NmKelut,
                             'NmKel' => $NmKel,
@@ -339,213 +339,212 @@ class LaporanStokController extends Controller
 
                     }
 
-                    // dd($arrayIdType);
-                    // dd($arrayAllData);
-                    $IdTypeString = implode(',', $arrayIdType);
+                    // dd(count($arrAll));
 
-                    $dataUang = DB::connection('ConnInventory')->select('EXEC [SP_LAPORANSTOK_COBA_INSERT]
+                    $idChunks = array_chunk($arrAll, 100);
+                    foreach ($idChunks as $chunk) {
+                        $IdTypeString = implode(',', array_column($chunk, 'Idtype'));
+
+                        $dataUang = DB::connection('ConnInventory')->select('EXEC [SP_LAPORANSTOK_COBA_INSERT]
                     @kode = 1, @tanggal1 = ?, @tanggal2 = ?, @IdObjek = ?, @IdType = ?',
-                        [$tanggal1, $tanggal2, $idObjek, $IdTypeString]
-                    );
+                            [$tanggal1, $tanggal2, $idObjek, $IdTypeString]
+                        );
 
-                    // dd($dataUang);
+                        $dataUangMap = [];
+                        foreach ($dataUang as $row) {
+                            $dataUangMap[$row->idtype] = [
+                                'AwalPrimer' => $row->SaldoPrimer,
+                                'AwalSekunder' => $row->SaldoSekunder,
+                                'AwalTritier' => $row->saldoTritier,
+                            ];
+                        }
 
-                    // Step 1: Extract Idtype values from $dataUang
-                    $idTypeFilterSaldo1 = [];
-                    foreach ($dataUang as $row) {
-                        $idTypeFilterSaldo1[] = $row->idtype;
-                    }
+                        // dd($dataUangMap);
 
-                    // Step 2: Create associative array from $dataUang
-                    $dataUangMap = [];
-                    foreach ($dataUang as $row) {
-                        $dataUangMap[$row->idtype] = [
-                            'AwalPrimer' => $row->SaldoPrimer,
-                            'AwalSekunder' => $row->SaldoSekunder,
-                            'AwalTritier' => $row->saldoTritier,
-                        ];
-                    }
-
-                    // Step 3: Filter $arrayAllData and add saldo values
-                    $allArrayWithSaldo = [];
-                    foreach ($arrayAllData as $data) {
-                        if (in_array($data['Idtype'], $idTypeFilterSaldo1)) {
-                            $Idtype = $data['Idtype'];
-                            $saldoData = isset($dataUangMap[$Idtype]) ? $dataUangMap[$Idtype] : [
-                                'AwalPrimer' => ".00",
-                                'AwalSekunder' => ".00",
-                                'AwalTritier' => ".00"
+                        $allArrayWithSaldo = [];
+                        foreach ($chunk as $data) {
+                            $IdType = $data['Idtype'];
+                            $saldoData = isset($dataUangMap[$IdType]) ? $dataUangMap[$IdType] : [
+                                'AwalPrimer' => null,
+                                'AwalSekunder' => null,
+                                'AwalTritier' => null
                             ];
 
                             $allArrayWithSaldo[] = array_merge($data, $saldoData);
                         }
-                    }
 
-                    // dd($allArrayWithSaldo);
+                        // dd($allArrayWithSaldo);
 
-                    $arrayFilterAwalTritierNol = [];
+                        $arrayFilterAwalTritierNol = [];
 
-                    foreach ($allArrayWithSaldo as $item) {
-                        if ($item['AwalTritier'] === ".00") {
-                            $arrayFilterAwalTritierNol[] = $item['Idtype'];
+                        foreach ($allArrayWithSaldo as $item) {
+                            if ($item['AwalTritier'] === null) {
+                                $arrayFilterAwalTritierNol[] = $item['Idtype'];
+                            }
                         }
-                    }
 
-                    $arrayFilterAwalTritierNol = implode(',', $arrayFilterAwalTritierNol);
+                        // dd($arrayFilterAwalTritierNol);
+                        $arrayFilterAwalTritierNol = implode(',', $arrayFilterAwalTritierNol);
 
-                    $dataUangAwalTritier = DB::connection('ConnInventory')->select('EXEC [SP_LAPORANSTOK_COBA_INSERT]
+                        $dataUangAwalTritier = DB::connection('ConnInventory')->select('EXEC [SP_LAPORANSTOK_COBA_INSERT]
                     @kode = 2, @tanggal1 = ?, @tanggal2 = ?, @IdObjek = ?, @IdType = ?',
-                        [$tanggal1, $tanggal2, $idObjek, $arrayFilterAwalTritierNol]
-                    );
+                            [$tanggal1, $tanggal2, $idObjek, $arrayFilterAwalTritierNol]
+                        );
 
-                    // dd($dataUangAwalTritier);
-                    $dataUangAwalTritierMap = [];
-                    foreach ($dataUangAwalTritier as $row) {
-                        $dataUangAwalTritierMap[$row->Idtype] = [
-                            'AwalPrimer' => $row->SaldoPrimer,
-                            'AwalSekunder' => $row->SaldoSekunder,
-                            'AwalTritier' => $row->saldoTritier
-                        ];
-                    }
-
-                    $arrayFilterAwalTritierNolArray = explode(',', $arrayFilterAwalTritierNol);
-                    $arrayFilterAwalTritierNolArray = array_filter($arrayFilterAwalTritierNolArray);
-
-                    $allArrayWithSaldoUpdated = [];
-
-                    foreach ($allArrayWithSaldo as $item) {
-                        if (isset($dataUangAwalTritierMap[$item['Idtype']])) {
-                            $item = array_merge($item, $dataUangAwalTritierMap[$item['Idtype']]);
+                        // dd($dataUangAwalTritier);
+                        $dataUangAwalTritierMap = [];
+                        foreach ($dataUangAwalTritier as $row) {
+                            $dataUangAwalTritierMap[$row->idtype] = [
+                                'AwalPrimer' => $row->SaldoPrimer,
+                                'AwalSekunder' => $row->SaldoSekunder,
+                                'AwalTritier' => $row->SaldoTritier
+                            ];
                         }
-                        $allArrayWithSaldoUpdated[] = $item;
-                    }
 
-                    // Ensure default values for saldo fields
-                    foreach ($allArrayWithSaldoUpdated as $item) {
-                        $item['AwalPrimer'] = isset($item['AwalPrimer']) ? $item['AwalPrimer'] : "0.00";
-                        $item['AwalSekunder'] = isset($item['AwalSekunder']) ? $item['AwalSekunder'] : "0.00";
-                        $item['AwalTritier'] = isset($item['AwalTritier']) ? $item['AwalTritier'] : "0.00";
-                    }
+                        // dd($dataUangAwalTritier);
 
-                    // dd($allArrayWithSaldoUpdated);
+                        $arrayFilterAwalTritierNolArray = explode(',', $arrayFilterAwalTritierNol);
+                        $arrayFilterAwalTritierNolArray = array_filter($arrayFilterAwalTritierNolArray);
 
-                    $idTypeFilterSaldo1 = implode(',', $idTypeFilterSaldo1);
+                        $allArrayWithSaldoUpdated = [];
 
-                    $dataSaldoKeluarMasuk = DB::connection('ConnInventory')->select('EXEC [SP_LAPORANSTOK_COBA_INSERT]
+                        foreach ($allArrayWithSaldo as $item) {
+                            if (isset($dataUangAwalTritierMap[$item['Idtype']])) {
+                                $item = array_merge($item, $dataUangAwalTritierMap[$item['Idtype']]);
+                            }
+                            $allArrayWithSaldoUpdated[] = $item;
+                        }
+
+                        // dd($allArrayWithSaldoUpdated);
+
+                        // Ensure default values for saldo fields
+                        foreach ($allArrayWithSaldoUpdated as $item) {
+                            $item['AwalPrimer'] = isset($item['AwalPrimer']) ? $item['AwalPrimer'] : 0;
+                            $item['AwalSekunder'] = isset($item['AwalSekunder']) ? $item['AwalSekunder'] : 0;
+                            $item['AwalTritier'] = isset($item['AwalTritier']) ? $item['AwalTritier'] : 0;
+                 
+                        }
+
+                        // dd($allArrayWithSaldoUpdated);
+
+                        // $idTypeFilterSaldo1 = implode(',', $idTypeFilterSaldo1);
+
+                        $dataSaldoKeluarMasuk = DB::connection('ConnInventory')->select('EXEC [SP_LAPORANSTOK_COBA_INSERT]
                     @kode = 3, @tanggal1 = ?, @tanggal2 = ?, @IdObjek = ?, @IdType = ?',
-                        [$tanggal1, $tanggal2, $idObjek, $idTypeFilterSaldo1]
-                    );
+                            [$tanggal1, $tanggal2, $idObjek, $IdTypeString]
+                        );
 
-                    // dd($dataSaldoKeluarMasuk);
+                        // dd($dataSaldoKeluarMasuk);
 
-                    $dataSaldoMap = [];
-                    foreach ($dataSaldoKeluarMasuk as $row) {
-                        $dataSaldoMap[$row->idtype] = [
-                            'MasukPrimer' => $row->jumlahpemasukanPrimer,
-                            'MasukSekunder' => $row->jumlahpemasukanSekunder,
-                            'MasukTritier' => $row->jumlahpemasukanTritier,
-                            'KeluarPrimer' => $row->jumlahpengeluaranPrimer,
-                            'KeluarSekunder' => $row->jumlahpengeluaranSekunder,
-                            'KeluarTritier' => $row->jumlahpengeluaranTritier
-                        ];
-                    }
+                        $dataSaldoMap = [];
+                        foreach ($dataSaldoKeluarMasuk as $row) {
+                            $dataSaldoMap[$row->idtype] = [
+                                'MasukPrimer' => $row->jumlahpemasukanPrimer,
+                                'MasukSekunder' => $row->jumlahpemasukanSekunder,
+                                'MasukTritier' => $row->jumlahpemasukanTritier,
+                                'KeluarPrimer' => $row->jumlahpengeluaranPrimer,
+                                'KeluarSekunder' => $row->jumlahpengeluaranSekunder,
+                                'KeluarTritier' => $row->jumlahpengeluaranTritier
+                            ];
+                        }
 
 
-                    $allArrayFinal = [];
-                    foreach ($allArrayWithSaldoUpdated as $data) {
-                        $Idtype = $data['Idtype'];
+                        $allArrayFinal = [];
+                        foreach ($allArrayWithSaldoUpdated as $data) {
+                            $Idtype = $data['Idtype'];
 
-                        // Default saldo values if Idtype is not found in $dataSaldoMap
-                        $defaultSaldoData = [
-                            'MasukPrimer' => "0.00",
-                            'MasukSekunder' => "0.00",
-                            'MasukTritier' => "0.00",
-                            'KeluarPrimer' => "0.00",
-                            'KeluarSekunder' => "0.00",
-                            'KeluarTritier' => "0.00"
-                        ];
+                            // Default saldo values if Idtype is not found in $dataSaldoMap
+                            $defaultSaldoData = [
+                                'MasukPrimer' => 0,
+                                'MasukSekunder' => 0,
+                                'MasukTritier' => 0,
+                                'KeluarPrimer' => 0,
+                                'KeluarSekunder' => 0,
+                                'KeluarTritier' => 0
+                            ];
 
-                        // Merge the default saldo data with the data from $dataSaldoMap if available
-                        $saldoData = isset($dataSaldoMap[$Idtype]) ? $dataSaldoMap[$Idtype] : $defaultSaldoData;
+                            // Merge the default saldo data with the data from $dataSaldoMap if available
+                            $saldoData = isset($dataSaldoMap[$Idtype]) ? $dataSaldoMap[$Idtype] : $defaultSaldoData;
 
-                        $allArrayFinal[] = array_merge($data, $saldoData);
-                    }
+                            $allArrayFinal[] = array_merge($data, $saldoData);
+                        }
 
-                    $allArrayFinalWithSaldo = [];
-                    foreach ($allArrayFinal as $data) {
-                        $Idtype = $data['Idtype'];
+                        
 
-                        // Initialize variables for Awal, Masuk, and Keluar values
-                        $AwalPrimer = isset($data['AwalPrimer']) ? (float) $data['AwalPrimer'] : 0.00;
-                        $AwalSekunder = isset($data['AwalSekunder']) ? (float) $data['AwalSekunder'] : 0.00;
-                        $AwalTritier = isset($data['AwalTritier']) ? (float) $data['AwalTritier'] : 0.00;
+                        $allArrayFinalWithSaldo = [];
+                        foreach ($allArrayFinal as $data) {
+                            $Idtype = $data['Idtype'];
 
-                        $MasukPrimer = isset($data['MasukPrimer']) ? (float) $data['MasukPrimer'] : 0.00;
-                        $MasukSekunder = isset($data['MasukSekunder']) ? (float) $data['MasukSekunder'] : 0.00;
-                        $MasukTritier = isset($data['MasukTritier']) ? (float) $data['MasukTritier'] : 0.00;
+                            // Initialize variables for Awal, Masuk, and Keluar values
+                            $AwalPrimer = isset($data['AwalPrimer']) ? (float) $data['AwalPrimer'] : 0.00;
+                            $AwalSekunder = isset($data['AwalSekunder']) ? (float) $data['AwalSekunder'] : 0.00;
+                            $AwalTritier = isset($data['AwalTritier']) ? (float) $data['AwalTritier'] : 0.00;
 
-                        $KeluarPrimer = isset($data['KeluarPrimer']) ? (float) $data['KeluarPrimer'] : 0.00;
-                        $KeluarSekunder = isset($data['KeluarSekunder']) ? (float) $data['KeluarSekunder'] : 0.00;
-                        $KeluarTritier = isset($data['KeluarTritier']) ? (float) $data['KeluarTritier'] : 0.00;
+                            $MasukPrimer = isset($data['MasukPrimer']) ? (float) $data['MasukPrimer'] : 0.00;
+                            $MasukSekunder = isset($data['MasukSekunder']) ? (float) $data['MasukSekunder'] : 0.00;
+                            $MasukTritier = isset($data['MasukTritier']) ? (float) $data['MasukTritier'] : 0.00;
 
-                        // Calculate Saldo Akhir
-                        $SaldoAkhirPrimer = $AwalPrimer + $MasukPrimer - $KeluarPrimer;
-                        $SaldoAkhirSekunder = $AwalSekunder + $MasukSekunder - $KeluarSekunder;
-                        $SaldoAkhirTritier = $AwalTritier + $MasukTritier - $KeluarTritier;
+                            $KeluarPrimer = isset($data['KeluarPrimer']) ? (float) $data['KeluarPrimer'] : 0.00;
+                            $KeluarSekunder = isset($data['KeluarSekunder']) ? (float) $data['KeluarSekunder'] : 0.00;
+                            $KeluarTritier = isset($data['KeluarTritier']) ? (float) $data['KeluarTritier'] : 0.00;
 
-                        // Add the new SaldoAkhir values to the data array
-                        $data['SaldoAkhirPrimer'] = number_format($SaldoAkhirPrimer, 2, '.', '');
-                        $data['SaldoAkhirSekunder'] = number_format($SaldoAkhirSekunder, 2, '.', '');
-                        $data['SaldoAkhirTritier'] = number_format($SaldoAkhirTritier, 2, '.', '');
+                            // Calculate Saldo Akhir
+                            $SaldoAkhirPrimer = $AwalPrimer + $MasukPrimer - $KeluarPrimer;
+                            $SaldoAkhirSekunder = $AwalSekunder + $MasukSekunder - $KeluarSekunder;
+                            $SaldoAkhirTritier = $AwalTritier + $MasukTritier - $KeluarTritier;
 
-                        // Add this data to the final array
-                        $allArrayFinalWithSaldo[] = $data;
-                    }
+                            // Add the new SaldoAkhir values to the data array
+                            $data['SaldoAkhirPrimer'] = number_format($SaldoAkhirPrimer, 2, '.', '');
+                            $data['SaldoAkhirSekunder'] = number_format($SaldoAkhirSekunder, 2, '.', '');
+                            $data['SaldoAkhirTritier'] = number_format($SaldoAkhirTritier, 2, '.', '');
 
-                    // dd($allArrayFinalWithSaldo);
+                            // Add this data to the final array
+                            $allArrayFinalWithSaldo[] = $data;
+                        }
 
-                    foreach ($allArrayFinalWithSaldo as $data) {
-                        // Check if any of the values are non-zero
-                        if (
-                            !(
-                                $data['AwalPrimer'] == 0 &&
-                                $data['AwalSekunder'] == 0 &&
-                                $data['AwalTritier'] == 0 &&
-                                $data['MasukPrimer'] == 0 &&
-                                $data['MasukSekunder'] == 0 &&
-                                $data['MasukTritier'] == 0 &&
-                                $data['KeluarPrimer'] == 0 &&
-                                $data['KeluarSekunder'] == 0 &&
-                                $data['KeluarTritier'] == 0
-                            )
-                        ) {
-                            // If the condition is met, insert the data into the database
-                            DB::connection('ConnInventory')->table('laporan')->insert([
-                                'Objek' => $data['NmObjek'],
-                                'KelompokUtama' => $data['NmKelut'],
-                                'Kelompok' => $data['NmKel'],
-                                'SubKelompok' => $data['NmSubKel'],
-                                'IdType' => $data['Idtype'],
-                                'Type' => $data['NamaType'],
-                                'SaldoAwalPrimer' => $data['AwalPrimer'],
-                                'SaldoAwalSekunder' => $data['AwalSekunder'],
-                                'SaldoAwalTritier' => $data['AwalTritier'],
-                                'PemasukanPrimer' => $data['MasukPrimer'],
-                                'PemasukanSekunder' => $data['MasukSekunder'],
-                                'PemasukanTritier' => $data['MasukTritier'],
-                                'PengeluaranPrimer' => $data['KeluarPrimer'],
-                                'PengeluaranSekunder' => $data['KeluarSekunder'],
-                                'PengeluaranTritier' => $data['KeluarTritier'],
-                                'SaldoAkhirPrimer' => $data['SaldoAkhirPrimer'],
-                                'SaldoAkhirSekunder' => $data['SaldoAkhirSekunder'],
-                                'SaldoAkhirTritier' => $data['SaldoAkhirTritier'],
-                                'KodeBarang' => $data['KodeBarang']
-                            ]);
+                        // dd($allArrayFinalWithSaldo);
+
+                        foreach ($allArrayFinalWithSaldo as $data) {
+                            // Check if any of the values are non-zero
+                            if (
+                                !(
+                                    $data['AwalPrimer'] == 0 &&
+                                    $data['AwalSekunder'] == 0 &&
+                                    $data['AwalTritier'] == 0 &&
+                                    $data['MasukPrimer'] == 0 &&
+                                    $data['MasukSekunder'] == 0 &&
+                                    $data['MasukTritier'] == 0 &&
+                                    $data['KeluarPrimer'] == 0 &&
+                                    $data['KeluarSekunder'] == 0 &&
+                                    $data['KeluarTritier'] == 0
+                                )
+                            ) {
+                                // If the condition is met, insert the data into the database
+                                DB::connection('ConnInventory')->table('laporan')->insert([
+                                    'Objek' => $data['NmObjek'],
+                                    'KelompokUtama' => $data['NmKelut'],
+                                    'Kelompok' => $data['NmKel'],
+                                    'SubKelompok' => $data['NmSubKel'],
+                                    'IdType' => $data['Idtype'],
+                                    'Type' => $data['NamaType'],
+                                    'SaldoAwalPrimer' => $data['AwalPrimer'],
+                                    'SaldoAwalSekunder' => $data['AwalSekunder'],
+                                    'SaldoAwalTritier' => $data['AwalTritier'],
+                                    'PemasukanPrimer' => $data['MasukPrimer'],
+                                    'PemasukanSekunder' => $data['MasukSekunder'],
+                                    'PemasukanTritier' => $data['MasukTritier'],
+                                    'PengeluaranPrimer' => $data['KeluarPrimer'],
+                                    'PengeluaranSekunder' => $data['KeluarSekunder'],
+                                    'PengeluaranTritier' => $data['KeluarTritier'],
+                                    'SaldoAkhirPrimer' => $data['SaldoAkhirPrimer'],
+                                    'SaldoAkhirSekunder' => $data['SaldoAkhirSekunder'],
+                                    'SaldoAkhirTritier' => $data['SaldoAkhirTritier'],
+                                    'KodeBarang' => $data['KodeBarang']
+                                ]);
+                            }
                         }
                     }
-
-
-
+                    // dd($allArrayFinalWithSaldo);
 
                     // Fetch data from VW_Laporan
                     $vwLaporanData = DB::connection('ConnInventory')->select(

@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }).then((result) => {
                 if (result.isConfirmed) {
                     const selectedRow = result.value;
-                    namaDivisi.value = selectedRow.NamaDivisi ? selectedRow.NamaDivisi.trim() : '';
+                    namaDivisi.value = selectedRow.NamaDivisi ? decodeHtmlEntities(selectedRow.NamaDivisi.trim()) : '';
 
                     $.ajax({
                         type: 'GET',
@@ -260,7 +260,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }).then((result) => {
                 if (result.isConfirmed) {
                     const selectedRow = result.value;
-                    namaObjek.value = selectedRow.NamaObjek ? selectedRow.NamaObjek.trim() : '';
+                    namaObjek.value = selectedRow.NamaObjek ? decodeHtmlEntities(selectedRow.NamaObjek.trim()) : '';
 
                     $.ajax({
                         type: 'GET',
@@ -289,6 +289,12 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error("An error occurred:", error);
         }
     });
+
+    function decodeHtmlEntities(str) {
+        let textarea = document.createElement('textarea');
+        textarea.innerHTML = str;
+        return textarea.value;
+    }
 
     // kel utama
 
@@ -361,7 +367,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }).then((result) => {
                     if (result.isConfirmed) {
                         const selectedRow = result.value;
-                        namaKelUtama.value = selectedRow.NamaKelompokUtama ? selectedRow.NamaKelompokUtama.trim() : '';
+                        namaKelUtama.value = selectedRow.NamaKelompokUtama ? decodeHtmlEntities(selectedRow.NamaKelompokUtama.trim()) : '';
 
                         if (namaKelUtama.value !== 'ALL') {
                             $.ajax({
@@ -453,6 +459,12 @@ document.addEventListener('DOMContentLoaded', function () {
             success: function (result) {
                 updateDataTable(result);
                 excelButton.disabled = false;
+                
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Data di tabel sudah diupdate.',
+                });
             },
             error: function (xhr, status, error) {
                 console.error('Error fetching data:', error);
