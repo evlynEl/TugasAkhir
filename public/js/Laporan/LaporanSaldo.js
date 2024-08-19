@@ -477,11 +477,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         worksheet.columns = worksheet.columns.map((col, index) => {
-            // Set a fixed width for the "Divisi" column (index 0)
-            if (index === 0) {
-                return { ...col, width: 15 }; // Adjust this width as needed
-            }
-            return { ...col, width: columnWidths[index] };
+            return { ...col, width: calculateColumnWidths(headerData.concat(tableLaporanExcel.rows().data().toArray()))[index] };
         });
 
         workbook.xlsx.writeBuffer().then(function (buffer) {
