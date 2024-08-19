@@ -126,11 +126,11 @@ class LaporanStokController extends Controller
 
             try {
                 $laporan1Arr = DB::transaction(function () use ($tanggal1, $tanggal2, $idObjek, $idKelUtama) {
-                    $hapus = DB::connection('ConnInventory')->statement('EXEC [SP_LAPORANSTOK_COBA] @kode = 1, @tanggal1 = ?, @tanggal2 = ?, @IdObjek = ?', [$tanggal1, $tanggal2, $idObjek]);
+                    $hapus = DB::connection('ConnInventory')->statement('EXEC [SP_LAPORANSTOK_EXECUTE] @kode = 1, @tanggal1 = ?, @tanggal2 = ?, @IdObjek = ?', [$tanggal1, $tanggal2, $idObjek]);
 
                     if (empty($idKelUtama)) {
                         // pakai sp sendiri
-                        $data = DB::connection('ConnInventory')->select('EXEC [SP_LAPORANSTOK_COBA] @kode = 2, @tanggal1 = ?, @tanggal2 = ?, @IdObjek = ?', [$tanggal1, $tanggal2, $idObjek]);
+                        $data = DB::connection('ConnInventory')->select('EXEC [SP_LAPORANSTOK_EXECUTE] @kode = 2, @tanggal1 = ?, @tanggal2 = ?, @IdObjek = ?', [$tanggal1, $tanggal2, $idObjek]);
                     } else {
                         $data = DB::connection('ConnInventory')->select('EXEC [SP_LAPORANSTOK_KEL_UTAMA] @tanggal1 = ?, @tanggal2 = ?, @IdObjek = ?, @IdKelUtama = ?', [$tanggal1, $tanggal2, $idObjek, $idKelUtama]);
                     }
@@ -168,7 +168,7 @@ class LaporanStokController extends Controller
                     foreach ($idChunks as $chunk) {
                         $IdTypeString = implode(',', array_column($chunk, 'Idtype'));
 
-                        $dataUang = DB::connection('ConnInventory')->select('EXEC [SP_LAPORANSTOK_COBA_INSERT]
+                        $dataUang = DB::connection('ConnInventory')->select('EXEC [SP_LAPORANSTOK_SELECT]
                     @kode = 1, @tanggal1 = ?, @tanggal2 = ?, @IdObjek = ?, @IdType = ?',
                             [$tanggal1, $tanggal2, $idObjek, $IdTypeString]
                         );
@@ -209,7 +209,7 @@ class LaporanStokController extends Controller
                         // dd($arrayFilterAwalTritierNol);
                         $arrayFilterAwalTritierNol = implode(',', $arrayFilterAwalTritierNol);
 
-                        $dataUangAwalTritier = DB::connection('ConnInventory')->select('EXEC [SP_LAPORANSTOK_COBA_INSERT]
+                        $dataUangAwalTritier = DB::connection('ConnInventory')->select('EXEC [SP_LAPORANSTOK_SELECT]
                     @kode = 2, @tanggal1 = ?, @tanggal2 = ?, @IdObjek = ?, @IdType = ?',
                             [$tanggal1, $tanggal2, $idObjek, $arrayFilterAwalTritierNol]
                         );
@@ -252,12 +252,12 @@ class LaporanStokController extends Controller
 
                         // $idTypeFilterSaldo1 = implode(',', $idTypeFilterSaldo1);
 
-                        $dataSaldoKeluarMasuk = DB::connection('ConnInventory')->select('EXEC [SP_LAPORANSTOK_COBA_INSERT]
+                        $dataSaldoKeluarMasuk = DB::connection('ConnInventory')->select('EXEC [SP_LAPORANSTOK_SELECT]
                     @kode = 3, @tanggal1 = ?, @tanggal2 = ?, @IdObjek = ?, @IdType = ?',
                             [$tanggal1, $tanggal2, $idObjek, $IdTypeString]
                         );
 
-                        // dd($dataSaldoKeluarMasuk);
+                        dd($dataSaldoKeluarMasuk);
 
                         $dataSaldoMap = [];
                         foreach ($dataSaldoKeluarMasuk as $row) {
