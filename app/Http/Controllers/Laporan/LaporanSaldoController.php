@@ -75,21 +75,21 @@ class LaporanSaldoController extends Controller
                 $ArrLaporan = DB::transaction(function () use ($tanggal1, $tanggal2, $idObjek, $sw) {
                     // delete table
                     DB::connection('ConnInventory')->statement(
-                        'exec [SP_LAPORAN_SALDO_COBA] @kode = 1, @IdObjek = ?, @tanggal1 = ?, @tanggal2 = ?',
+                        'exec [SP_LAPORAN_SALDO_SELECT] @kode = 1, @IdObjek = ?, @tanggal1 = ?, @tanggal2 = ?',
                         [$idObjek, $tanggal1, $tanggal2]
                     );
 
                     // insert ke Lap_Acc
                     if ($sw === 0) {
                         DB::connection('ConnInventory')->statement(
-                            'exec [SP_LAPORAN_SALDO_COBA] @kode = 2, @IdObjek = ?, @tanggal1 = ?, @tanggal2 = ?',
+                            'exec [SP_LAPORAN_SALDO_SELECT] @kode = 2, @IdObjek = ?, @tanggal1 = ?, @tanggal2 = ?',
                             [$idObjek, $tanggal1, $tanggal2]
                         );
                     }
 
                     // select data tergantung IdObjek
                     $data = DB::connection('ConnInventory')->select(
-                        'exec [SP_LAPORAN_SALDO_COBA] @kode = 3, @IdObjek = ?, @tanggal1 = ?, @tanggal2 = ?',
+                        'exec [SP_LAPORAN_SALDO_SELECT] @kode = 3, @IdObjek = ?, @tanggal1 = ?, @tanggal2 = ?',
                         [$idObjek, $tanggal1, $tanggal2]
                     );
 
