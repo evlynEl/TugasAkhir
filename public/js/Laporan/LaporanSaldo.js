@@ -403,27 +403,14 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
 
-    function formatDateToMMDDYYYY(dateStr) {
-        var date = new Date(dateStr);
-        var month = ('0' + (date.getMonth() + 1)).slice(-2);
-        var day = ('0' + date.getDate()).slice(-2);
-        var year = date.getFullYear();
-        return month + '/' + day + '/' + year;
-    }
-
     // bikin excel
     excelButton.addEventListener("click", function (e) {
         var tableLaporanExcel = $('#tableLaporan').DataTable();
         var workbook = new ExcelJS.Workbook();
         var worksheet = workbook.addWorksheet('Laporan Data');
 
-        var formattedTanggalAwal = formatDateToMMDDYYYY(tanggalAwal.value);
-        var formattedTanggalAkhir = formatDateToMMDDYYYY(tanggalAkhir.value);
-
         // Header data for Excel
         var headerData = [
-            ["Tanggal: " + formattedTanggalAwal + " s/d " + formattedTanggalAkhir],
-            [],
             ["Divisi", "Objek", "Kel. Utama", "Kelompok", "Sub Kelompok", "Type",
                 "Kode Barang", "S. Awal Primer", "S. Awal Sekunder", "S. Awal Tritier",
                 "Pemasukan Primer", "Pemasukan Sekunder", "Pemasukan Tritier",
@@ -437,7 +424,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
         tableLaporanExcel.rows().every(function () {
             var row = this.data();
-            worksheet.addRow(row);
+            var rowData = row.map(cell => {
+                // Try to convert the cell to a number if possible
+                return isNaN(cell) || cell === '' ? cell : Number(cell);
+            });
+            worksheet.addRow(rowData);
         });
 
         // Define border style
@@ -488,5 +479,6 @@ document.addEventListener('DOMContentLoaded', function () {
             link.click();
         });
     });
+
 
 })

@@ -59,10 +59,6 @@
                                 <button type="button" class="btn btn-success" id="prosesButton"
                                     style="width: 100%">Proses</button>
                             </div>
-                            <div class="col-sm-1">
-                                <button type="button" class="btn btn-danger" id="cancelButton"
-                                    style="width: 100%">Cancel</button>
-                            </div>
                         </div>
 
                         <div class="row" style="margin-top: 0.5%">
