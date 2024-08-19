@@ -126,17 +126,14 @@ class LaporanSaldoController extends Controller
                     // dd(count($arrAll));
 
                     $idChunks = array_chunk($arrAll, 100);
-                    // dd($idChunks);
-
 
                     foreach ($idChunks as $chunk) {
                         $ids = implode(',', array_column($chunk, 'Idtype'));
-                        // dd($ids);
 
                         $prosesSaldo = DB::connection('ConnInventory')->select(
                             'exec [SP_LAP_SALDO_EXECUTE]
                             @kode = 1, @IdObjek = ?, @tanggal1 = ?, @tanggal2 = ?, @IdType = ?',
-                            [$idObjek, $tanggal1, $tanggal2, '00000000000001119469']
+                            [$idObjek, $tanggal1, $tanggal2, $ids]
                         );
 
                         // dd($prosesSaldo);
@@ -167,9 +164,6 @@ class LaporanSaldoController extends Controller
                             $allArrayWithSaldo[] = array_merge($data, $saldoData);
                         }
                         // dd($allArrayWithSaldo);
-
-                        $ids2 = implode(',', $dataid);
-
                         // dd(count($arrAll));
 
                         $saldoKeluarMasuk = DB::connection('ConnInventory')->select(
@@ -178,22 +172,7 @@ class LaporanSaldoController extends Controller
                             [$idObjek, $tanggal1, $tanggal2, $ids]
                         );
 
-                        // foreach ($allArrayWithSaldo as $item) {
-                        //     if (isset($item['Idtype']) && $item['Idtype'] === '00000000000001119469') {
-                        //         dd($item);
-                        //     }
-                        // }
-
                         // dd($saldoKeluarMasuk);
-
-                        // $targetId = '00000000000001119469';
-                        // $found = false;
-
-                        // foreach ($saldoKeluarMasuk as $row) {
-                        //     if ($row->IdType === $targetId) {
-                        //         dd($row);
-                        //     }
-                        // }
 
                         $dataSaldoMap = [];
                         foreach ($saldoKeluarMasuk as $row) {
@@ -211,27 +190,28 @@ class LaporanSaldoController extends Controller
                         $allArrayFinal = [];
                         foreach ($allArrayWithSaldo as $data) {
                             $Idtype = $data['Idtype'];
-// --------------------------------------------------------------------------------------------------------------
-                            // Merge the default saldo data with the data from $dataSaldoMap if available
-                            $saldoData = isset($dataSaldoMap[$Idtype]) ? $dataSaldoMap[$Idtype] : [
-                                'MasukPrimer' => 0.00,
-                                'MasukSekunder' => 0.00,
-                                'MasukTritier' => 0.00,
-                                'KeluarPrimer' => 0.00,
-                                'KeluarSekunder' => 0.00,
-                                'KeluarTritier' => 0.00
+
+                            // Initialize all saldo values to 0
+                            $saldoData = [
+                                'MasukPrimer' => 0,
+                                'MasukSekunder' => 0,
+                                'MasukTritier' => 0,
+                                'KeluarPrimer' => 0,
+                                'KeluarSekunder' => 0,
+                                'KeluarTritier' => 0
                             ];
 
-                            // $allArrayFinal[] = array_merge($data, $saldoData);
-                        }
-
-                        dd($saldoKeluarMasuk, $allArrayWithSaldo);
-
-                        $targetId = '00000000000001119469';
-                        foreach ($allArrayFinal as $row) {
-                            if ($row->Idtype === $targetId) {
-                                dd($row);
+                            // Update saldo values if data exists in $dataSaldoMap
+                            if (isset($dataSaldoMap[$Idtype])) {
+                                foreach ($dataSaldoMap[$Idtype] as $key => $value) {
+                                    if (array_key_exists($key, $saldoData)) {
+                                        $saldoData[$key] = $value;
+                                    }
+                                }
                             }
+
+                            // Merge the updated saldoData with the original data
+                            $allArrayFinal[] = array_merge($data, $saldoData);
                         }
                         // dd($allArrayFinal);
 
@@ -266,9 +246,7 @@ class LaporanSaldoController extends Controller
                             $allArrayFinalWithSaldo[] = $data;
                         }
 
-
-
-                        dd($allArrayFinalWithSaldo);
+                        // dd($allArrayFinalWithSaldo);
 
                         foreach ($allArrayFinalWithSaldo as $data) {
                             if (
@@ -308,7 +286,6 @@ class LaporanSaldoController extends Controller
                             }
                         }
                     }
-
 
                     // Fetch data from Lap_ACC
                     $Lap_Acc = DB::connection('ConnInventory')->select(

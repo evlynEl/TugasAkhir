@@ -50,8 +50,59 @@ $('#tanggalAkhir').on('keydown', function (e) {
 
 tanggalToday();
 
-document.addEventListener('DOMContentLoaded', function () {
+function handleTableKeydown(e, tableId) {
+    const table = $(`#${tableId}`).DataTable();
+    const rows = $(`#${tableId} tbody tr`);
+    const rowCount = rows.length;
 
+    if (e.key === "Enter") {
+        e.preventDefault();
+        const selectedRow = table.row(".selected").data();
+        if (selectedRow) {
+            Swal.getConfirmButton().click();
+        } else {
+            const firstRow = $(`#${tableId} tbody tr:first-child`);
+            if (firstRow.length) {
+                firstRow.click();
+                Swal.getConfirmButton().click();
+            }
+        }
+    } else if (e.key === "ArrowDown") {
+        e.preventDefault();
+        if (currentIndex === null) {
+            currentIndex = 0;
+        } else {
+            currentIndex = (currentIndex + 1) % rowCount;
+        }
+        rows.removeClass("selected");
+        $(rows[currentIndex]).addClass("selected");
+    } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        if (currentIndex === null) {
+            currentIndex = rowCount - 1;
+        } else {
+            currentIndex = (currentIndex - 1 + rowCount) % rowCount;
+        }
+        rows.removeClass("selected");
+        $(rows[currentIndex]).addClass("selected");
+    } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        currentIndex = null;
+        const pageInfo = table.page.info();
+        if (pageInfo.page < pageInfo.pages - 1) {
+            table.page('next').draw('page');
+        }
+    } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        currentIndex = null;
+        const pageInfo = table.page.info();
+        if (pageInfo.page > 0) {
+            table.page('previous').draw('page');
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
     buttonDivisi.addEventListener("click", function (e) {
         try {
             Swal.fire({
@@ -243,12 +294,22 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Update the table and store the data in the array
     function updateDataTable(data) {
         var table = $('#tableLaporan').DataTable();
         table.clear();
 
         laporanArray = [];
+
+        // sort dari kelompok utama
+        data.sort(function(a, b) {
+            if (a.KelompokUtama < b.KelompokUtama) {
+                return -1;
+            }
+            if (a.KelompokUtama > b.KelompokUtama) {
+                return 1;
+            }
+            return 0;
+        });
 
         data.forEach(function (item) {
             for (let key in item) {
@@ -300,13 +361,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 SaldoAkhirSekunder: item.SaldoAkhirSekunder,
                 SaldoAkhirTritier: item.SaldoAkhirTritier,
             });
-
-            // console.log(laporanArray);
-
         });
 
+        // Draw the table
         table.draw();
     }
+
 
     // table
     $(document).ready(function () {
@@ -343,55 +403,47 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    function handleTableKeydown(e, tableId) {
-        const table = $(`#${tableId}`).DataTable();
-        const rows = $(`#${tableId} tbody tr`);
-        const rowCount = rows.length;
+    // bikin excel
+    excelButton.addEventListener("click", function (e) {
+        const headers = [
+            "Divisi", "Objek", "KelompokUtama", "Kelompok", "SubKelompok", "Type",
+            "SaldoAwalPrimer", "SaldoAwalSekunder", "SaldoAwalTritier",
+            "PemasukanPrimer", "PemasukanSekunder", "PemasukanTritier",
+            "PengeluaranPrimer", "PengeluaranSekunder", "PengeluaranTritier",
+            "SaldoAkhirPrimer", "SaldoAkhirSekunder", "SaldoAkhirTritier",
+            "KodeBarang"
+        ];
 
-        if (e.key === "Enter") {
-            e.preventDefault();
-            const selectedRow = table.row(".selected").data();
-            if (selectedRow) {
-                Swal.getConfirmButton().click();
-            } else {
-                const firstRow = $(`#${tableId} tbody tr:first-child`);
-                if (firstRow.length) {
-                    firstRow.click();
-                    Swal.getConfirmButton().click();
-                }
-            }
-        } else if (e.key === "ArrowDown") {
-            e.preventDefault();
-            if (currentIndex === null) {
-                currentIndex = 0;
-            } else {
-                currentIndex = (currentIndex + 1) % rowCount;
-            }
-            rows.removeClass("selected");
-            $(rows[currentIndex]).addClass("selected");
-        } else if (e.key === "ArrowUp") {
-            e.preventDefault();
-            if (currentIndex === null) {
-                currentIndex = rowCount - 1;
-            } else {
-                currentIndex = (currentIndex - 1 + rowCount) % rowCount;
-            }
-            rows.removeClass("selected");
-            $(rows[currentIndex]).addClass("selected");
-        } else if (e.key === "ArrowRight") {
-            e.preventDefault();
-            currentIndex = null;
-            const pageInfo = table.page.info();
-            if (pageInfo.page < pageInfo.pages - 1) {
-                table.page('next').draw('page');
-            }
-        } else if (e.key === "ArrowLeft") {
-            e.preventDefault();
-            currentIndex = null;
-            const pageInfo = table.page.info();
-            if (pageInfo.page > 0) {
-                table.page('previous').draw('page');
-            }
-        }
-    }
+        const excelData = [headers];
+        laporanArray.forEach(function(item) {
+            excelData.push([
+                item.Divisi,
+                item.Objek,
+                item.KelompokUtama,
+                item.Kelompok,
+                item.SubKelompok,
+                item.Type,
+                item.SaldoAwalPrimer,
+                item.SaldoAwalSekunder,
+                item.SaldoAwalTritier,
+                item.PemasukanPrimer,
+                item.PemasukanSekunder,
+                item.PemasukanTritier,
+                item.PengeluaranPrimer,
+                item.PengeluaranSekunder,
+                item.PengeluaranTritier,
+                item.SaldoAkhirPrimer,
+                item.SaldoAkhirSekunder,
+                item.SaldoAkhirTritier,
+                item.KodeBarang
+            ]);
+        });
+
+        const worksheet = XLSX.utils.aoa_to_sheet(excelData);
+
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Laporan");
+
+        XLSX.writeFile(workbook, "LaporanSaldo.xlsx");
+    });
 })
