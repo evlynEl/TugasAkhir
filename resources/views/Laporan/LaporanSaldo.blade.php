@@ -80,8 +80,7 @@
 
                         <div class="row" style="margin-top: 0.5%">
                             <div class="col-sm-2">
-                                <button type="button" class="btn btn-primary" id="excelButton" style="width: 100%">Tampil
-                                    Excel</button>
+                                <button type="button" class="btn btn-primary" id="excelButton" style="width: 100%">Excel</button>
                             </div>
                         </div>
 

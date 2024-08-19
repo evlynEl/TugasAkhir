@@ -300,8 +300,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         laporanArray = [];
 
-        // sort dari kelompok utama
-        data.sort(function(a, b) {
+        // Sort by Kelompok Utama
+        data.sort(function (a, b) {
             if (a.KelompokUtama < b.KelompokUtama) {
                 return -1;
             }
@@ -325,6 +325,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 item.Kelompok,
                 item.SubKelompok,
                 item.Type,
+                item.KodeBarang,
                 item.SaldoAwalPrimer,
                 item.SaldoAwalSekunder,
                 item.SaldoAwalTritier,
@@ -336,8 +337,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 item.PengeluaranTritier,
                 item.SaldoAkhirPrimer,
                 item.SaldoAkhirSekunder,
-                item.SaldoAkhirTritier,
-                item.KodeBarang
+                item.SaldoAkhirTritier
             ]);
 
             laporanArray.push({
@@ -359,7 +359,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 PengeluaranTritier: item.PengeluaranTritier,
                 SaldoAkhirPrimer: item.SaldoAkhirPrimer,
                 SaldoAkhirSekunder: item.SaldoAkhirSekunder,
-                SaldoAkhirTritier: item.SaldoAkhirTritier,
+                SaldoAkhirTritier: item.SaldoAkhirTritier
             });
         });
 
@@ -367,8 +367,7 @@ document.addEventListener('DOMContentLoaded', function () {
         table.draw();
     }
 
-
-    // table
+    // DataTable
     $(document).ready(function () {
         $('#tableLaporan').DataTable({
             paging: false,
@@ -403,47 +402,95 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+
+    function formatDateToMMDDYYYY(dateStr) {
+        var date = new Date(dateStr);
+        var month = ('0' + (date.getMonth() + 1)).slice(-2);
+        var day = ('0' + date.getDate()).slice(-2);
+        var year = date.getFullYear();
+        return month + '/' + day + '/' + year;
+    }
+
     // bikin excel
     excelButton.addEventListener("click", function (e) {
-        const headers = [
-            "Divisi", "Objek", "KelompokUtama", "Kelompok", "SubKelompok", "Type",
-            "SaldoAwalPrimer", "SaldoAwalSekunder", "SaldoAwalTritier",
-            "PemasukanPrimer", "PemasukanSekunder", "PemasukanTritier",
-            "PengeluaranPrimer", "PengeluaranSekunder", "PengeluaranTritier",
-            "SaldoAkhirPrimer", "SaldoAkhirSekunder", "SaldoAkhirTritier",
-            "KodeBarang"
+        var tableLaporanExcel = $('#tableLaporan').DataTable();
+        var workbook = new ExcelJS.Workbook();
+        var worksheet = workbook.addWorksheet('Laporan Data');
+
+        var formattedTanggalAwal = formatDateToMMDDYYYY(tanggalAwal.value);
+        var formattedTanggalAkhir = formatDateToMMDDYYYY(tanggalAkhir.value);
+
+        // Header data for Excel
+        var headerData = [
+            ["Tanggal: " + formattedTanggalAwal + " s/d " + formattedTanggalAkhir],
+            [],
+            ["Divisi", "Objek", "Kel. Utama", "Kelompok", "Sub Kelompok", "Type",
+                "Kode Barang", "S. Awal Primer", "S. Awal Sekunder", "S. Awal Tritier",
+                "Pemasukan Primer", "Pemasukan Sekunder", "Pemasukan Tritier",
+                "Pengeluaran Primer", "Pengeluaran Sekunder", "Pengeluaran Tritier",
+                "S. Akhir Primer", "S. Akhir Sekunder", "S. Akhir Tritier"]
         ];
 
-        const excelData = [headers];
-        laporanArray.forEach(function(item) {
-            excelData.push([
-                item.Divisi,
-                item.Objek,
-                item.KelompokUtama,
-                item.Kelompok,
-                item.SubKelompok,
-                item.Type,
-                item.SaldoAwalPrimer,
-                item.SaldoAwalSekunder,
-                item.SaldoAwalTritier,
-                item.PemasukanPrimer,
-                item.PemasukanSekunder,
-                item.PemasukanTritier,
-                item.PengeluaranPrimer,
-                item.PengeluaranSekunder,
-                item.PengeluaranTritier,
-                item.SaldoAkhirPrimer,
-                item.SaldoAkhirSekunder,
-                item.SaldoAkhirTritier,
-                item.KodeBarang
-            ]);
+        headerData.forEach((row, rowIndex) => {
+            worksheet.addRow(row);
         });
 
-        const worksheet = XLSX.utils.aoa_to_sheet(excelData);
+        tableLaporanExcel.rows().every(function () {
+            var row = this.data();
+            worksheet.addRow(row);
+        });
 
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Laporan");
+        // Define border style
+        var borderStyle = {
+            top: { style: 'thin' },
+            left: { style: 'thin' },
+            bottom: { style: 'thin' },
+            right: { style: 'thin' }
+        };
 
-        XLSX.writeFile(workbook, "LaporanSaldo.xlsx");
+        var boldStyle = {
+            font: {
+                bold: true
+            }
+        };
+
+        worksheet.eachRow({ includeEmpty: true }, function (row, rowNumber) {
+            if (rowNumber === 3 || rowNumber === 1) {
+                row.eachCell({ includeEmpty: true }, function (cell) {
+                    cell.border = borderStyle;
+                    cell.font = boldStyle.font;
+                });
+            }
+        });
+
+        function calculateColumnWidths(data) {
+            var colWidths = [];
+            data.forEach(row => {
+                row.forEach((cell, index) => {
+                    const cellLength = String(cell).length;
+                    if (!colWidths[index] || cellLength > colWidths[index]) {
+                        colWidths[index] = cellLength;
+                    }
+                });
+            });
+            return colWidths.map(length => length + 1);
+        }
+
+        worksheet.columns = worksheet.columns.map((col, index) => {
+            // Set a fixed width for the "Divisi" column (index 0)
+            if (index === 0) {
+                return { ...col, width: 15 }; // Adjust this width as needed
+            }
+            return { ...col, width: columnWidths[index] };
+        });
+
+        workbook.xlsx.writeBuffer().then(function (buffer) {
+            var blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+            var link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'Laporan Saldo.xlsx';
+            link.click();
+        });
     });
+
 })
