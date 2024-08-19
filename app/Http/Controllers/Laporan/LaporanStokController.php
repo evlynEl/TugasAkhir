@@ -257,7 +257,7 @@ class LaporanStokController extends Controller
                             [$tanggal1, $tanggal2, $idObjek, $IdTypeString]
                         );
 
-                        dd($dataSaldoKeluarMasuk);
+                        // dd($dataSaldoKeluarMasuk);
 
                         $dataSaldoMap = [];
                         foreach ($dataSaldoKeluarMasuk as $row) {

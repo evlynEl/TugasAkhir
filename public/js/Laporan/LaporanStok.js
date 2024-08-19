@@ -459,7 +459,7 @@ document.addEventListener('DOMContentLoaded', function () {
             success: function (result) {
                 updateDataTable(result);
                 excelButton.disabled = false;
-                
+
                 Swal.fire({
                     icon: 'success',
                     title: 'Success',
@@ -656,7 +656,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                         // Adding table data
                                         tableDetailExcel.rows().every(function () {
                                             var row = this.data();
-                                            worksheet.addRow([
+                                            var rowData = [
                                                 row.TypeTransaksi,
                                                 row.PemasukanPrimer,
                                                 row.PemasukanSekunder,
@@ -664,8 +664,12 @@ document.addEventListener('DOMContentLoaded', function () {
                                                 row.PengeluaranPrimer,
                                                 row.PengeluaranSekunder,
                                                 row.PengeluaranTritier
-                                            ]);
+                                            ].map(cell => {
+                                                return isNaN(cell) || cell === '' ? cell : Number(cell);
+                                            });
+                                            worksheet.addRow(rowData);
                                         });
+
 
                                         var boldStyle = {
                                             font: {
@@ -958,7 +962,10 @@ document.addEventListener('DOMContentLoaded', function () {
         // Add table data to worksheet
         tableLaporanExcel.rows().every(function () {
             var row = this.data();
-            worksheet.addRow(row);
+            var rowData = row.map(cell => {
+                return isNaN(cell) || cell === '' ? cell : Number(cell);
+            });
+            worksheet.addRow(rowData);
         });
 
         // Define border style
