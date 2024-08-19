@@ -131,7 +131,7 @@ class LaporanSaldoController extends Controller
                         $ids = implode(',', array_column($chunk, 'Idtype'));
 
                         $prosesSaldo = DB::connection('ConnInventory')->select(
-                            'exec [SP_LAP_SALDO_EXECUTE]
+                            'exec [SP_LAPORAN_SALDO_EXECUTE]
                             @kode = 1, @IdObjek = ?, @tanggal1 = ?, @tanggal2 = ?, @IdType = ?',
                             [$idObjek, $tanggal1, $tanggal2, $ids]
                         );
@@ -167,7 +167,7 @@ class LaporanSaldoController extends Controller
                         // dd(count($arrAll));
 
                         $saldoKeluarMasuk = DB::connection('ConnInventory')->select(
-                            'exec [SP_LAP_SALDO_EXECUTE]
+                            'exec [SP_LAPORAN_SALDO_EXECUTE]
                             @kode = 2, @IdObjek = ?, @tanggal1 = ?, @tanggal2 = ?, @IdType = ?',
                             [$idObjek, $tanggal1, $tanggal2, $ids]
                         );
