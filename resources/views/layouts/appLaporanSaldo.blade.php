@@ -10,7 +10,7 @@
     <title style="font-size: 20px">@yield('title', 'Laporan Saldo')</title>
 
     <!-- Title and Logo -->
-    <link rel="icon" href="{{ asset('/images/laporan_saldo.png') }}" type="image/gif" sizes="16x16">
+    <link rel="icon" href="{{ asset('/images/laporan saldo.png') }}" type="image/gif" sizes="16x16">
     <title style="font-size: 20px">{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Scripts -->
