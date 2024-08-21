@@ -23,27 +23,58 @@ class KodePerkiraanController extends Controller
         //
     }
 
-    //Store a newly created resource in storage.
     public function store(Request $request)
     {
-        $data = $request->all();
-        // dd($data , " Masuk store");
-        DB::connection('ConnInventory')->statement('exec SP_1003_INV_insert_perkiraan  @XNoKodePerkiraan = ? , @XKeterangan = ?', [
-            $data['Kode'],
-            $data['Keterangan']
-        ]);
-        return redirect()->route('KodePerkiraan.index')->with('alert', 'Data berhasil ditambahkan!');
+        //
     }
 
-    //Display the specified resource.
-    public function show($cr)
-    {
-        $crExplode = explode(".", $cr);
+    public function show($id, Request $request)
+    {   $a = (int)$request->input('a');
+        $kode = $request->input('kode');
+        $keterangan = $request->input('keterangan');
 
-        //getListPerkiraan
-        if ($crExplode[1] == "getListPerkiraan") {
-            $dataPerkiraan = DB::connection('ConnInventory')->select('exec SP_1003_INV_list_perkiraan ');
-            return response()->json($dataPerkiraan);
+        if ($id === 'getPerkiraan') {
+            if ($a === 1) {
+                // cek kode perkiraan
+                $cekKodePerkiraan = DB::connection('ConnInventory')->select('exec SP_1003_INV_CheckNo_Perkiraan @XNoKodePerkiraan = ?', [$kode]);
+                if ($cekKodePerkiraan && $cekKodePerkiraan[0]->Jumlah === "0") {
+                    // insert
+                    DB::connection('ConnInventory')->statement(
+                        'exec SP_1003_INV_insert_perkiraan @XNoKodePerkiraan = ? , @XKeterangan = ?',
+                        [$kode, $keterangan]
+                    );
+                    return response()->json(['success' => 'Data Berhasil Disimpan'], 200);
+                }
+                return response()->json(['error' => 'Kode Perkiraan already exists'], 400);
+
+            } else if ($a === 2) {
+                // Update
+                DB::connection('ConnInventory')->statement(
+                    'exec SP_1003_INV_update_perkiraan @XNoKodePerkiraan = ? , @XKeterangan = ?',
+                    [$kode, $keterangan]
+                );
+                return response()->json(['success' => 'Data Berhasil Dikoreksi'], 200);
+
+            } else if ($a === 3) {
+                // Delete
+                DB::connection('ConnInventory')->statement(
+                    'exec SP_1003_INV_delete_perkiraan @XNoKodePerkiraan = ?', [$kode]
+                );
+                return response()->json(['success' => 'Data Berhasil Dihapus'], 200);
+            }
+
+            // daftar kode perkiraan
+        } else if ($id === 'getAllKodePerkiraan') {
+            $dataPerkiraan = DB::connection('ConnInventory')->select('exec SP_1003_INV_list_perkiraan');
+            $data_perkiraan = [];
+            foreach ($dataPerkiraan as $detail_kodeperkiraan) {
+                $data_perkiraan[] = [
+                    'NoKodePerkiraan' => $detail_kodeperkiraan->NoKodePerkiraan,
+                    'Keterangan' => $detail_kodeperkiraan->Keterangan
+                ];
+            }
+            // dd($dataPerkiraan);
+            return datatables($dataPerkiraan)->make(true);
         }
     }
 
@@ -54,15 +85,9 @@ class KodePerkiraanController extends Controller
     }
 
     //Update the specified resource in storage.
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
-        $data = $request->all();
-        // dd($data , " Masuk update bosq");
-        DB::connection('ConnInventory')->statement('exec SP_1003_INV_update_perkiraan  @XNoKodePerkiraan = ? , @XKeterangan = ? ', [
-            $data['Kode'],
-            $data['Keterangan']
-        ]);
-        return redirect()->route('KodePerkiraan.index')->with('alert', 'Data berhasil diupdate!');
+        //
     }
 
     //Remove the specified resource from storage.
