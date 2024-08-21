@@ -126,7 +126,7 @@ Route::group(['middleware' => ['auth']], function () {
 
 
     #region Inventory
-    Route::get('Inventory', 'App\Http\Controllers\Payroll\HomeController@index');
+    Route::get('Inventory', 'App\Http\Controllers\HomeController@Inventory');
     Route::resource('Inventory/KodePerkiraan', KodePerkiraanController::class);
     Route::resource('Inventory/MaintenanceObjek', MaintenanceObjekController::class);
     Route::resource('Inventory/MaintenanceType', MaintenanceTypeController::class);
