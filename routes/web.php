@@ -57,73 +57,38 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/home', 'App\Http\Controllers\HomeController@index')->name('home');
 
-    // Laporan Stok
+    #region Laporan Stok
     Route::resource('LaporanStok', LaporanStokController::class);
 
-    // Laporan Saldo
+    #region Laporan Saldo
     Route::resource('LaporanSaldo', LaporanSaldoController::class);
 
-    // QC
+    #region QC
     Route::get('QC', 'App\Http\Controllers\HomeController@QC');
     Route::resource('QCFitur', QCController::class);
 
-    // Route::get('InputAfalanQC', 'App\Http\Controllers\QC\Afalan\QCInputAfalanController@index');
     Route::resource('InputAfalanQC', QCInputAfalanController::class);
-
-    // Route::get('KoreksiAfalan', 'App\Http\Controllers\QC\Afalan\QCKoreksiAfalanController@index');
     Route::resource('KoreksiAfalan', QCKoreksiAfalanController::class);
-
-    // Route::get('CircularTropodo', 'App\Http\Controllers\QC\Circular\QCCircularTropodoController@index');
     Route::resource('CircularTropodo', QCCircularTropodoController::class);
-
-    // Route::get('CircularMojosari', 'App\Http\Controllers\QC\Circular\QCCircularMojosariController@index');
     Route::resource('CircularMojosari', QCCircularMojosariController::class);
-
-    // Route::get('ExtruderTropodo', 'App\Http\Controllers\QC\Extruder\QCExtruderTropodoController@index');
     Route::resource('ExtruderTropodo', QCExtruderTropodoController::class);
-
-    // Route::get('ExtruderB', 'App\Http\Controllers\QC\Extruder\QCExtruderBController@index');
     Route::resource('ExtruderB', QCExtruderBController::class);
-
-    // Route::get('ExtruderD', 'App\Http\Controllers\QC\Extruder\QCExtruderDController@index');
     Route::resource('ExtruderD', QCExtruderDController::class);
 
 
-    // COA
+    #region COA
     Route::get('COA', 'App\Http\Controllers\HomeController@COA');
     Route::resource('FrmInputFIBC', InputDetailController::class);
-
-    // Route::get('COA', 'App\Http\Controllers\HomeController@COA');
     Route::resource('FrmInputTest', InputTestController::class);
-
-    // Route::get('FrmACCMng_FIBC', 'App\Http\Controllers\COA\FIBC\ACC\ACCQCManController@index');
     Route::resource('FrmACCMng_FIBC', ACCQCManController::class);
-
-    // Route::get('FrmACCFIBC', 'App\Http\Controllers\COA\FIBC\ACC\ACCQCSpvController@index');
     Route::resource('FrmACCFIBC', ACCQCSpvController::class);
-
-    // Route::get('FrmPrintFIBC', 'App\Http\Controllers\COA\FIBC\FIBCPrintController@index');
     Route::resource('FrmPrintFIBC', FIBCPrintController::class);
-
-
-
     //tidak dipake
-    // Route::get('COA', 'App\Http\Controllers\HomeController@COA');
     Route::resource('FrmMasterPart', MasterPartController::class);
-
-    // Route::get('COA', 'App\Http\Controllers\HomeController@COA');
     Route::resource('FrmMasterMaterial', MasterMaterialController::class);
-
-    // Route::get('FrmMasterType', 'App\Http\Controllers\COA\COA\Master\MasterTypeController@index');
     Route::resource('FrmMasterType', MasterTypeController::class);
-
-    // Route::get('FrmResult', 'App\Http\Controllers\COA\COA\ResultController@index');
     Route::resource('FrmResult', ResultController::class);
-
-    // Route::get('FrmPrintResult', 'App\Http\Controllers\COA\COA\PrintController@index');
     Route::resource('FrmPrintResult', PrintController::class);
-
-    // Route::get('FrmACCResult', 'App\Http\Controllers\COA\COA\ACCController@index');
     Route::resource('FrmACCResult', ACCController::class);
 
 

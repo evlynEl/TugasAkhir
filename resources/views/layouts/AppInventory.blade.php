@@ -8,7 +8,11 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title style="font-size: 20px">@yield('title', 'Inventory')</title>
+
     <link rel="icon" href="{{ asset('/images/KRR.png') }}" type="image/gif" sizes="16x16">
+    <title style="font-size: 20px">{{ config('app.name', 'Laravel') }}</title>
+
     {{-- <title style="font-size: 20px">{{ config('app.name', 'Payroll') }}</title> --}}
 
     <!-- Scripts -->
