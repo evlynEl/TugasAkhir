@@ -63,8 +63,25 @@ class MaintenanceTypeController extends Controller
     }
 
     //Display the specified resource.
-    public function show($cr)
-    {
+    public function show($id, Request $request)
+    {   $user = Auth::user()->NomorUser;
+        dd($user);
+
+        // mendapatkan daftar divisi
+        if ($id === 'getDivisi') {
+            $divisi = DB::connection('ConnInventory')->select('exec SP_1003_INV_userdivisi @XKdUser = ?', [$user]);
+            $data_divisi = [];
+            foreach ($divisi as $detail_divisi) {
+                $data_divisi[] = [
+                    'NamaDivisi' => $detail_divisi->NamaDivisi,
+                    'IdDivisi' => $detail_divisi->IdDivisi,
+                    'KodeUser' => $detail_divisi->KodeUser
+                ];
+            }
+            // dd($divisi);
+            return datatables($divisi)->make(true);
+        }
+
         $crExplode = explode(".", $cr);
         $lastIndex = count($crExplode) - 1;
         //getListPerkiraan
