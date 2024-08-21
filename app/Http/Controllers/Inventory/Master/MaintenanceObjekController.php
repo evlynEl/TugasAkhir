@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Inventory\Master;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\HakAksesController;
 
 class MaintenanceObjekController extends Controller
 {
@@ -13,9 +14,8 @@ class MaintenanceObjekController extends Controller
     public function index()
     {
 
-        $data = 'HAPPY HAPPY HAPPY';
-        // dd($dataDivisi);
-        return view('Inventory.Master.MaintenanceObjek', compact('data'));
+        $access = (new HakAksesController)->HakAksesFiturMaster('Inventory'); //tidak perlu menu di navbar
+        return view('Inventory.Master.MaintenanceObjek', compact('access'));
     }
 
     //Show the form for creating a new resource.
