@@ -127,4 +127,40 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('FrmACCResult', ACCController::class);
 
 
+    #region Inventory
+    Route::get('Inventory', 'App\Http\Controllers\Payroll\HomeController@index');
+    Route::resource('Inventory/KodePerkiraan', App\Http\Controllers\Inventory\Master\KodePerkiraanController::class);
+    Route::resource('Inventory/MaintenanceObjek', App\Http\Controllers\Inventory\Master\MaintenanceObjekController::class);
+    Route::resource('Inventory/MaintenanceType', App\Http\Controllers\Inventory\Master\MaintenanceTypeController::class);
+    Route::resource('Inventory/StokBarang', App\Http\Controllers\Inventory\Master\StokBarangController::class);
+    Route::resource('Inventory/TerimaPurchasing', App\Http\Controllers\Inventory\Transaksi\TerimaPurchasingController::class);
+    Route::resource('Inventory/PermohonanHibah', App\Http\Controllers\Inventory\Transaksi\PermohonanHibahController::class);
+    Route::resource('Inventory/AccPermohonanHibah', App\Http\Controllers\Inventory\Transaksi\AccHibahController::class);
+    Route::resource('Inventory/PenerimaHibah', App\Http\Controllers\Inventory\Transaksi\PenerimaHibahController::class);
+    Route::resource('Inventory/FormMhnPenerima', App\Http\Controllers\Inventory\Transaksi\Mutasi\FormMhnPenerimaController::class);
+    Route::resource('Inventory/FormAccMhnPenerima', App\Http\Controllers\Inventory\Transaksi\Mutasi\FormAccMhnPenerimaController::class);
+    Route::resource('Inventory/FormAccPemberiBarang', App\Http\Controllers\Inventory\Transaksi\Mutasi\FormAccPemberiBarangController::class);
+    Route::resource('Inventory/FormPemberiBarang', App\Http\Controllers\Inventory\Transaksi\Mutasi\FormPemberiBarangController::class);
+    Route::resource('Inventory/FormMhnPemberi', App\Http\Controllers\Inventory\Transaksi\Mutasi\FormMhnPemberiController::class);
+    Route::resource('Inventory/FormPermohonanPenerima', App\Http\Controllers\Inventory\Transaksi\Mutasi\FormPermohonanPenerimaController::class);
+    Route::resource('Inventory/FormPermohonanPenerimaBenang', App\Http\Controllers\Inventory\Transaksi\Mutasi\FormPermohonanPenerimaBenangController::class);
+    Route::resource('Inventory/FormPermohonanSatuDivisi', App\Http\Controllers\Inventory\Transaksi\Mutasi\FormPermohonanSatuDivisiController::class);
+    Route::resource('Inventory/FormAccSatuDivisi', App\Http\Controllers\Inventory\Transaksi\Mutasi\FormAccSatuDivisiController::class);
+    Route::resource('Inventory/FormReturPenjualan', App\Http\Controllers\Inventory\Transaksi\Mutasi\FormReturPenjualanController::class);
+    Route::resource('Inventory/FormPengembalianPascaPenjualan', App\Http\Controllers\Inventory\Transaksi\Mutasi\FormPengembalianPascaPenjualanController::class);
+    Route::resource('Inventory/FormKonversiBarang', App\Http\Controllers\Inventory\Transaksi\Konversi\FormKonversiBarangController::class);
+    Route::resource('Inventory/FormAccKonversiBarang', App\Http\Controllers\Inventory\Transaksi\Konversi\FormAccKonversiBarangController::class);
+    Route::resource('Inventory/FormPenghangusanBarang', App\Http\Controllers\Inventory\Transaksi\Penghangusan\FormPenghangusanBarangController::class);
+    Route::resource('Inventory/FormAccPenghangusanBarang', App\Http\Controllers\Inventory\Transaksi\Penghangusan\FormAccPenghangusanBarangController::class);
+    Route::resource('Inventory/FormPenyesuaianBarang', App\Http\Controllers\Inventory\Transaksi\Penyesuaian\FormPenyesuaianBarangController::class);
+    Route::resource('Inventory/FormAccPenyesuaianBarang', App\Http\Controllers\Inventory\Transaksi\Penyesuaian\FormAccPenyesuaianBarangController::class);
+    Route::resource('Inventory/FormTerimaBenangTropodo', App\Http\Controllers\Inventory\Transaksi\TerimaBenang\FormTerimaBenangTropodoController::class);
+    Route::resource('Inventory/FormTerimaBenangGedungD', App\Http\Controllers\Inventory\Transaksi\TerimaBenang\FormTerimaBenangGedungDController::class);
+    Route::resource('Inventory/FormPemakaianGelondongan', App\Http\Controllers\Inventory\Transaksi\Gelondongan\FormPemakaianGelondonganController::class);
+    Route::resource('Inventory/KartuStok', App\Http\Controllers\Inventory\Informasi\KartuStokController::class);
+    Route::resource('Inventory/TransaksiHarian', App\Http\Controllers\Inventory\Informasi\TransaksiHarianController::class);
+    Route::resource('Inventory/TransaksiBulanan', App\Http\Controllers\Inventory\Informasi\TransaksiBulananController::class);
+    Route::resource('Inventory/LacakTransaksi', App\Http\Controllers\Inventory\Informasi\LacakTransaksiController::class);
+    Route::resource('Inventory/CariKodeBarang', App\Http\Controllers\Inventory\Informasi\CariKodeBarangController::class);
+    #endregion
 });
