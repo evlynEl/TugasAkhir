@@ -82,4 +82,15 @@ class HomeController extends Controller
             return redirect('home')->with('status','Anda Tidak Memiliki Hak Akses Program Contoh!');
         }
     }
+
+    public function Inventory()
+    {
+        $result = (new HakAksesController)->HakAksesProgram('Inventory');
+        $access = (new HakAksesController)->HakAksesFiturMaster('Inventory');
+        if ($result > 0) {
+            return view('layouts.appInventory', compact('access'));
+        } else {
+            return redirect('home')->with('status','Anda Tidak Memiliki Hak Akses Program Contoh!');
+        }
+    }
 }
