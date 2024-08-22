@@ -101,8 +101,7 @@ class MaintenanceTypeController extends Controller
             foreach ($divisi as $detail_divisi) {
                 $data_divisi[] = [
                     'NamaDivisi' => $detail_divisi->NamaDivisi,
-                    'IdDivisi' => $detail_divisi->IdDivisi,
-                    'KodeUser' => $detail_divisi->KodeUser
+                    'IdDivisi' => $detail_divisi->IdDivisi
                 ];
             }
             return datatables($divisi)->make(true);
@@ -114,8 +113,7 @@ class MaintenanceTypeController extends Controller
             foreach ($objek as $detail_objek) {
                 $data_objek[] = [
                     'NamaObjek' => $detail_objek->NamaObjek,
-                    'IdObjek' => $detail_objek->IdObjek,
-                    'IdDivisi' => $detail_objek->IdDivisi
+                    'IdObjek' => $detail_objek->IdObjek
                 ];
             }
             return datatables($objek)->make(true);

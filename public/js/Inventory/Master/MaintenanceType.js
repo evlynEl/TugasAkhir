@@ -50,6 +50,9 @@ var btn_hapus = document.getElementById('btn_hapus');
 var no_katUtama;
 var no_kategori;
 var no_subkategori;
+var no_tritier;
+var no_sekunder;
+var no_primer;
 let a; // isi = 1, koreksi = 2, hapus = 3
 const inputs = Array.from(document.querySelectorAll('.card-body input[type="text"]:not([readonly]), .card-body input[type="date"]:not([readonly])'));
 
@@ -80,7 +83,6 @@ btn_divisi.addEventListener("click", function (e) {
                         <tr>
                             <th scope="col">ID Divisi</th>
                             <th scope="col">Nama Divisi</th>
-                            <th scope="col">Kode User</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -118,8 +120,7 @@ btn_divisi.addEventListener("click", function (e) {
                         },
                         columns: [
                             { data: "IdDivisi" },
-                            { data: "NamaDivisi" },
-                            { data: "KodeUser" }
+                            { data: "NamaDivisi" }
                         ]
                     });
 
@@ -155,7 +156,6 @@ btn_objek.addEventListener("click", function (e) {
                         <tr>
                             <th scope="col">ID Objek</th>
                             <th scope="col">Nama Objek</th>
-                            <th scope="col">ID Divisi</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -194,8 +194,7 @@ btn_objek.addEventListener("click", function (e) {
                         },
                         columns: [
                             { data: "IdObjek" },
-                            { data: "NamaObjek" },
-                            { data: "IdDivisi" }
+                            { data: "NamaObjek" }
                         ]
                     });
 
@@ -1039,7 +1038,7 @@ btn_proses.addEventListener("click", function (e) {
                 data: {
                     _token: csrfToken,
                     a: a,
-                    
+
                     namaType: namaType.value,
                     ketType: ketType.value,
                     PIB: PIB.value,
