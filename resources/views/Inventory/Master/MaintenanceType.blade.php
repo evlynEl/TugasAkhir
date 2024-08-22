@@ -256,21 +256,33 @@
                                 </div>
                                 <div class="col-md-2 pl-0">
                                     <select class="form-control" id="satuan" name="satuan">
-                                        <option value="-"></option>
-                                        <option value="-">-</option>
-                                        <option value="-">-</option>
-                                        <option value="-">-</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
 
                         <div class="baris-4 p-1">
-                            <div class="col-md-12">
-                                <input type="checkbox" name="konversi" id="konversi" style="margin-right: 1%">Aturan
-                                Konversi
+                            <div class="row align-items-center">
+                                <div class="col-md-2 d-flex align-items-center">
+                                    <input type="checkbox" name="konversi" id="konversi" style="margin-right: 1%;"> Aturan Konversi
+                                </div>
+
+                                <label for="primerSekunder">Konversi Primer Ke Sekunder &#10148;</label>
+                                <div class="col-md-2">
+                                    <div class="input-label">
+                                        <input type="text" class="form-control input-field" id="primerSekunder" name="primerSekunder">
+                                    </div>
+                                </div>
+
+                                <label for="sekunderTritier">Konversi Sekunder Ke Tritier &#10148;</label>
+                                <div class="col-md-2">
+                                    <div class="input-label">
+                                        <input type="text" class="form-control input-field" id="sekunderTritier" name="sekunderTritier">
+                                    </div>
+                                </div>
                             </div>
                         </div>
+
 
                         <button type="button" id="btn_isi" class="btn btn-outline-secondary">Isi</button>
                         <button type="button" id="btn_proses" class="btn btn-outline-secondary">Proses</button>

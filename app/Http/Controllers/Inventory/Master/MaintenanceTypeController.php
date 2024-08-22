@@ -92,6 +92,16 @@ class MaintenanceTypeController extends Controller
         $sekunder = $request->input('sekunder');
         $primer = $request->input('primer');
         $satuan = $request->input('satuan');
+        $primerSekunder = $request->input('primerSekunder');
+        $sekunderTritier = $request->input('sekunderTritier');
+
+        $no_tritier = $request->input('no_tritier');
+        $no_sekunder = $request->input('no_sekunder');
+        $no_primer = $request->input('no_primer');
+
+        $no_katUtama = $request->input('no_katUtama');
+        $no_kategori = $request->input('no_kategori');
+        $no_subkategori = $request->input('no_subkategori');
 
 
         // mendapatkan daftar divisi
@@ -108,7 +118,7 @@ class MaintenanceTypeController extends Controller
 
             // mendapatkan daftar objek
         } else if ($id === 'getObjek') {
-            $objek = DB::connection('ConnInventory')->select('exec SP_1003_INV_User_Objek @XKdUser = ?, @XIdDivisi = ?', [$user, $request->input('divisi')]);
+            $objek = DB::connection('ConnInventory')->select('exec SP_1003_INV_User_Objek @XKdUser = ?, @XIdDivisi = ?', [$user, $divisiId]);
             $data_objek = [];
             foreach ($objek as $detail_objek) {
                 $data_objek[] = [
@@ -120,7 +130,7 @@ class MaintenanceTypeController extends Controller
 
             // mendapatkan daftar kelompok utama
         } else if ($id === 'getKelUt') {
-            $kelut = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdObjek_KelompokUtama @XIdObjek_KelompokUtama = ?', [$request->input('objekId')]);
+            $kelut = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdObjek_KelompokUtama @XIdObjek_KelompokUtama = ?', [$objekId]);
             $data_kelut = [];
             foreach ($kelut as $detail_kelut) {
                 $data_kelut[] = [
@@ -132,7 +142,7 @@ class MaintenanceTypeController extends Controller
 
             // mendapatkan daftar kelompok
         } else if ($id === 'getKelompok') {
-            $kelompok = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdKelompokUtama_Kelompok @XIdKelompokUtama_Kelompok = ?', [$request->input('kelutId')]);
+            $kelompok = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdKelompokUtama_Kelompok @XIdKelompokUtama_Kelompok = ?', [$kelutId]);
             $data_kelompok = [];
             foreach ($kelompok as $detail_kelompok) {
                 $data_kelompok[] = [
@@ -144,7 +154,7 @@ class MaintenanceTypeController extends Controller
 
             // mendapatkan daftar sub kelompok
         } else if ($id === 'getSubkel') {
-            $subkel = DB::connection('ConnInventory')->select('exec SP_1003_INV_IDKELOMPOK_SUBKELOMPOK @XIdKelompok_SubKelompok = ?', [$request->input('kelompokId')]);
+            $subkel = DB::connection('ConnInventory')->select('exec SP_1003_INV_IDKELOMPOK_SUBKELOMPOK @XIdKelompok_SubKelompok = ?', [$kelompokId]);
             $data_subkel = [];
             foreach ($subkel as $detail_subkel) {
                 $data_subkel[] = [
@@ -168,7 +178,7 @@ class MaintenanceTypeController extends Controller
 
             // mendapatkan daftar kategori
         } else if ($id === 'getKategori') {
-            $kategori = DB::connection('ConnPurchase')->select('exec SP_1003_INV_mohon_beli @MyType = 2, @MyValue = ?', [$request->input('no_katUtama')]);
+            $kategori = DB::connection('ConnPurchase')->select('exec SP_1003_INV_mohon_beli @MyType = 2, @MyValue = ?', [$no_katUtama]);
             $data_kategori = [];
             foreach ($kategori as $detail_kategori) {
                 $data_kategori[] = [
@@ -180,7 +190,7 @@ class MaintenanceTypeController extends Controller
 
             // mendapatkan daftar sub kategori
         } else if ($id === 'getSubkategori') {
-            $subKategori = DB::connection('ConnPurchase')->select('exec SP_1003_INV_mohon_beli @MyType = 3, @MyValue = ?', [$request->input('no_kategori')]);
+            $subKategori = DB::connection('ConnPurchase')->select('exec SP_1003_INV_mohon_beli @MyType = 3, @MyValue = ?', [$no_kategori]);
             $data_subKategori = [];
             foreach ($subKategori as $detail_subKategori) {
                 $data_subKategori[] = [
@@ -192,7 +202,8 @@ class MaintenanceTypeController extends Controller
 
             // mendapatkan daftar barang
         } else if ($id === 'getBarang') {
-            $barang = DB::connection('ConnPurchase')->select('exec SP_1003_INV_lihat_type @no_jns_1 = ?', [$request->input('no_subkategori')]);
+            // mendapatkan barang
+            $barang = DB::connection('ConnPurchase')->select('exec SP_1003_INV_lihat_type @no_jns_1 = ?', [$no_subkategori]);
             $data_barang = [];
             foreach ($barang as $detail_barang) {
                 $data_barang[] = [
@@ -200,19 +211,39 @@ class MaintenanceTypeController extends Controller
                     'NAMA_BRG' => $detail_barang->NAMA_BRG
                 ];
             }
-            return datatables($barang)->make(true);
+            return datatables($data_barang)->make(true);
+
+            // auto fill satuan primer, sekunder, tritier dr kode barang
+        } else if ($id === 'getFillSatuan') {
+            // Fetch unit information from the database
+            $satuanBarang = DB::connection('ConnPurchase')->select('exec SP_1003_INV_KdBrg_Satuan_YBarang @kodebarang = ?', [$kdBarang]);
+
+            // Prepare the response data
+            $data_satuanBarang = [];
+            foreach ($satuanBarang as $detail_satuanBarang) {
+                $data_satuanBarang[] = [
+                    'NmSat_Tri' => $detail_satuanBarang->NmSat_Tri,
+                    'NmSat_Sek' => $detail_satuanBarang->NmSat_Sek,
+                    'NmSat_Prim' => $detail_satuanBarang->NmSat_Prim
+                ];
+            }
+
+            // Return the data as a JSON response
+            return response()->json($data_satuanBarang);
+            // return response()->json($dataDetailNoRoll);
+
 
             // mendapatkan satuan primer, sekunder, tritier
         } else if ($id === 'getSatuan') {
-            $tritier = DB::connection('ConnInventory')->select('exec SP_1003_INV_list_satuan');
-            $data_tritier = [];
-            foreach ($tritier as $detail_tritier) {
-                $data_tritier[] = [
-                    'no_satuan' => $detail_tritier->no_satuan,
-                    'nama_satuan' => $detail_tritier->nama_satuan
+            $satuan = DB::connection('ConnInventory')->select('exec SP_1003_INV_list_satuan');
+            $data_satuan = [];
+            foreach ($satuan as $detail_satuan) {
+                $data_satuan[] = [
+                    'no_satuan' => $detail_satuan->no_satuan,
+                    'nama_satuan' => $detail_satuan->nama_satuan
                 ];
             }
-            return datatables($tritier)->make(true);
+            return datatables($satuan)->make(true);
 
             // proses terjadi
         } else if ($id === 'proses') {
@@ -241,14 +272,14 @@ class MaintenanceTypeController extends Controller
                             @XStokAwalSekunder = ?, @XTotalPemasukanSekunder = ?, @XSaldoSekunder = ?, @XUnitSekunder = ?,
                             @XStokAwalTritier = ?, @XTotalPemasukanTritier = ?, @XSaldoTritier = ?, @XUnitTritier = ?,
                             @XPakaiAturanKonversi = ?, @XKonvSekunderKePrimer = ?, @XKonvTritierkeSekunder = ?, @XNonaktif = ?,
-                            @XMinimumStok = ?, @XPosisi = ?, @Xno_satuan_umum = ?, @userInput = ?, @noPIB = ?, @noPEB = ?, @rack = ?',
+                            @XMinimumStok = ?, @Xno_satuan_umum = ?, @userInput = ?, @noPIB = ?, @noPEB = ?',
                         [
                             $idtype, $namaType, $ketType, $subkelId, $kdBarang,
-                            $saatStokAwal, 0,0,0, $primer,
-                            0,0,0, $sekunder,
-                            0,0,0, $triter,
-                            $konversi, $konvSekunderKePrimer, $konvTritierkeSekunder, $nonaktif,
-                            $minimumStok, $posisi, $noSatuanUmum, $userInput, $noPIB, $noPEB, $rack
+                            now(), 0,0,0, $no_primer,
+                            0,0,0, $no_sekunder,
+                            0,0,0, $no_tritier,
+                            $konversi, $primerSekunder, $sekunderTritier, "Y",
+                            0, $satuan, $user, $PIB, $PEB
                         ]
                     );
                     return response()->json(['success'], 200);
