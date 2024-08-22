@@ -12,7 +12,7 @@ class MaintenanceObjekController extends Controller
 {
     public function index()
     {
-        $access = (new HakAksesController)->HakAksesFiturMaster('QC');
+        $access = (new HakAksesController)->HakAksesFiturMaster('Inventory');
         return view('Inventory.Master.MaintenanceObjek', compact('access'));
     }
 
@@ -127,6 +127,41 @@ class MaintenanceObjekController extends Controller
                 return response()->json(['error' => 'Data gagal diSIMPAN: ' . $e->getMessage()], 500);
             }
         }
+        // update objek
+        else if ($id == 'updateObjek') {
+            $XIdObjek = $request->input('XIdObjek');
+            $XNamaObjek = $request->input('XNamaObjek');
+            $XIdDivisi_Objek = $request->input('XIdDivisi_Objek');
+
+            try {
+                DB::connection('ConnInventory')
+                    ->statement(
+                        'exec SP_1003_INV_Update_Objek @XIdObjek = ?, @XNamaObjek = ?, @XIdDivisi_Objek = ?'
+                        ,
+                        [$XIdObjek, $XNamaObjek, $XIdDivisi_Objek]
+                    );
+                return response()->json(['success' => 'Data sudah diSIMPAN'], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Data gagal diSIMPAN: ' . $e->getMessage()], 500);
+            }
+        }
+        // delete objek
+        else if ($id == 'deleteObjek') {
+            $XIdObjek = $request->input('XIdObjek');
+            $XIdDivisi_Objek = $request->input('XIdDivisi_Objek');
+
+            try {
+                DB::connection('ConnInventory')
+                    ->statement(
+                        'exec SP_1003_INV_Delete_Objek @XIdObjek = ?, @XIdDivisi_Objek = ?'
+                        ,
+                        [$XIdObjek, $XIdDivisi_Objek]
+                    );
+                return response()->json(['success' => 'Objek berhasil diHAPUS'], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Objek gagal diHAPUS: ' . $e->getMessage()], 500);
+            }
+        }
 
         #region kel utama
         else if ($id == 'getKelUtama') {
@@ -186,6 +221,57 @@ class MaintenanceObjekController extends Controller
             } catch (\Exception $e) {
                 return response()->json(['error' => 'Data gagal diSIMPAN: ' . $e->getMessage()], 500);
             }
+        }
+        // update KelUtama
+        else if ($id == 'updateKelUtama') {
+            $XIdKelompokUtama = $request->input('XIdKelompokUtama');
+            $XNamaKelompokUtama = $request->input('XNamaKelompokUtama');
+            $XIdObjek_KelompokUtama = $request->input('XIdObjek_KelompokUtama');
+            try {
+                DB::connection('ConnInventory')
+                    ->statement(
+                        'exec SP_1003_INV_Update_KelompokUtama @XIdKelompokUtama = ?, @XNamaKelompokUtama = ?, @XIdObjek_KelompokUtama = ?'
+                        ,
+                        [$XIdKelompokUtama, $XNamaKelompokUtama, $XIdObjek_KelompokUtama]
+                    );
+                return response()->json(['success' => 'Data sudah diSIMPAN'], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Data gagal diSIMPAN: ' . $e->getMessage()], 500);
+            }
+        }
+        // delete KelUtama
+        else if ($id == 'deleteKelUtama') {
+            $XIdKelompokUtama = $request->input('XIdKelompokUtama');
+            $XIdObjek_KelompokUtama = $request->input('XIdObjek_KelompokUtama');
+            try {
+                DB::connection('ConnInventory')
+                    ->statement(
+                        'exec SP_1003_INV_Delete_KelompokUtama @XIdKelompokUtama = ?, @XIdObjek_KelompokUtama = ?'
+                        ,
+                        [$XIdKelompokUtama, $XIdObjek_KelompokUtama]
+                    );
+                return response()->json(['success' => 'Kelompok Utama berhasil diHAPUS'], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Kelompok Utama gagal diHAPUS: ' . $e->getMessage()], 500);
+            }
+        }
+        // cek hapus Kel
+        else if ($id == 'cekHapusKelompokUtama') {
+            $XIdObjek_kelompokutama = $request->input('XIdObjek_kelompokutama');
+
+            $listPerkiraanConn = DB::connection('ConnInventory')
+                ->select('exec [SP_1003_INV_idObjek_kelompokutama] 
+                @XIdObjek_kelompokutama = ?'
+                    ,
+                    [$XIdObjek_kelompokutama]
+                );
+            $PerkiraanArr = [];
+            foreach ($listPerkiraanConn as $listPerkiraan) {
+                $PerkiraanArr[] = [
+                    'NamaKelompokUtama' => $listPerkiraan->NamaKelompokUtama,
+                ];
+            }
+            return response()->json($PerkiraanArr);
         }
 
         #region kelompok
@@ -247,10 +333,60 @@ class MaintenanceObjekController extends Controller
                 return response()->json(['error' => 'Data gagal diSIMPAN: ' . $e->getMessage()], 500);
             }
         }
+        // update Kel
+        else if ($id == 'updateKel') {
+            $XIdKelompok = $request->input('XIdKelompok');
+            $XNamaKelompok = $request->input('XNamaKelompok');
+            $XIdKelompokUtama_Kelompok = $request->input('XIdKelompokUtama_Kelompok');
+            try {
+                DB::connection('ConnInventory')
+                    ->statement(
+                        'exec SP_1003_INV_Update_Kelompok @XIdKelompok = ?, @XNamaKelompok = ?, @XIdKelompokUtama_Kelompok = ?'
+                        ,
+                        [$XIdKelompok, $XNamaKelompok, $XIdKelompokUtama_Kelompok]
+                    );
+                return response()->json(['success' => 'Data sudah diSIMPAN'], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Data gagal diSIMPAN: ' . $e->getMessage()], 500);
+            }
+        }
+        // delete Kel
+        else if ($id == 'deleteKel') {
+            $XIdKelompok = $request->input('XIdKelompok');
+            $XIdKelompokUtama_Kelompok = $request->input('XIdKelompokUtama_Kelompok');
+            try {
+                DB::connection('ConnInventory')
+                    ->statement(
+                        'exec [SP_1003_INV_Delete_Kelompok]
+                                @XIdKelompok = ?, @XIdKelompokUtama_Kelompok = ?'
+                        ,
+                        [$XIdKelompok, $XIdKelompokUtama_Kelompok]
+                    );
+                return response()->json(['success' => 'Kelompok berhasil diHAPUS'], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Kelompok gagal diHAPUS: ' . $e->getMessage()], 500);
+            }
+        }
+        // cek hapus Kel
+        else if ($id == 'cekHapusKelompok') {
+            $XIdkelompokutama_kelompok = $request->input('XIdkelompokutama_kelompok');
+
+            $listPerkiraanConn = DB::connection('ConnInventory')
+                ->select('exec [SP_1003_INV_idkelompokutama_kelompok] @XIdkelompokutama_kelompok = ?', [$XIdkelompokutama_kelompok]);
+            $PerkiraanArr = [];
+            foreach ($listPerkiraanConn as $listPerkiraan) {
+                $PerkiraanArr[] = [
+                    'namakelompok' => $listPerkiraan->namakelompok,
+                ];
+            }
+            return response()->json($PerkiraanArr);
+        }
 
         #region sub kelompok
         else if ($id == 'getSubKel') {
             $XIdKelompok_SubKelompok = $request->input('idKel');
+
+            $XIdKelompok_SubKelompok = $XIdKelompok_SubKelompok ?? '0';
 
             $listSubKelConn = DB::connection('ConnInventory')
                 ->select('exec [SP_1003_INV_IDKELOMPOK_SUBKELOMPOK] @XIdKelompok_SubKelompok = ?', [$XIdKelompok_SubKelompok]);
@@ -294,12 +430,12 @@ class MaintenanceObjekController extends Controller
         else if ($id == 'insertSubKel') {
             $XIdSubKelompok = $request->input('XIdSubKelompok');
             $XNamaSubKelompok = $request->input('XNamaSubKelompok');
-            $XIdKelompok_SubKelompok = $request->input('XIdKelompok_SubKelompok');
+            $XIdKelompok_SubKelompok = $request->input('XIdKelompokUtama_Kelompok');
             $XKodePerkiraan = $request->input('XKodePerkiraan');
             try {
                 DB::connection('ConnInventory')
                     ->statement(
-                        'exec SP_1003_INV_Insert_SubKelompok
+                        'exec [SP_1003_INV_Insert_SubKelompok]
                         @XIdSubKelompok = ?, @XNamaSubKelompok = ?, @XIdKelompok_SubKelompok = ?, @XKodePerkiraan = ?'
                         ,
                         [$XIdSubKelompok, $XNamaSubKelompok, $XIdKelompok_SubKelompok, $XKodePerkiraan]
@@ -308,6 +444,56 @@ class MaintenanceObjekController extends Controller
             } catch (\Exception $e) {
                 return response()->json(['error' => 'Data gagal diSIMPAN: ' . $e->getMessage()], 500);
             }
+        }
+        // update subKel
+        else if ($id == 'updateSubKel') {
+            $XIdSubKelompok = $request->input('XIdSubKelompok');
+            $XNamaSubKelompok = $request->input('XNamaSubKelompok');
+            $XIdKelompok_SubKelompok = $request->input('XIdKelompok_SubKelompok');
+            $XKodePerkiraan = $request->input('XKodePerkiraan');
+            try {
+                DB::connection('ConnInventory')
+                    ->statement(
+                        'exec [SP_1003_INV_Update_SubKelompok]
+                        @XIdSubKelompok = ?, @XNamaSubKelompok = ?, @XIdKelompok_SubKelompok = ?, @XKodePerkiraan = ?'
+                        ,
+                        [$XIdSubKelompok, $XNamaSubKelompok, $XIdKelompok_SubKelompok, $XKodePerkiraan]
+                    );
+                return response()->json(['success' => 'Data sudah diSIMPAN'], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Data gagal diSIMPAN: ' . $e->getMessage()], 500);
+            }
+        }
+        // delete subKel
+        else if ($id == 'deleteSubKel') {
+            $XIdSubKelompok = $request->input('XIdSubKelompok');
+            $XIdKelompok_SubKelompok = $request->input('XIdKelompok_SubKelompok');
+            try {
+                DB::connection('ConnInventory')
+                    ->statement(
+                        'exec [SP_1003_INV_Delete_SubKelompok]
+                        @XIdSubKelompok = ?, @XIdKelompok_SubKelompok = ?'
+                        ,
+                        [$XIdSubKelompok, $XIdKelompok_SubKelompok]
+                    );
+                return response()->json(['success' => 'Subkelompok berhasil diHAPUS'], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Subkelompok gagal diHAPUS: ' . $e->getMessage()], 500);
+            }
+        }
+        // cek hapus SubKel
+        else if ($id == 'cekHapusSubKelompok') {
+            $XIdkelompok_subkelompok = $request->input('XIdkelompok_subkelompok');
+
+            $listPerkiraanConn = DB::connection('ConnInventory')
+                ->select('exec [SP_1003_INV_idkelompok_subkelompok] @XIdkelompok_subkelompok = ?', [$XIdkelompok_subkelompok]);
+            $PerkiraanArr = [];
+            foreach ($listPerkiraanConn as $listPerkiraan) {
+                $PerkiraanArr[] = [
+                    'NamaSubKelompok' => $listPerkiraan->NamaSubKelompok,
+                ];
+            }
+            return response()->json($PerkiraanArr);
         }
 
         #region id perkiraan

@@ -17,111 +17,148 @@ class StokBarangController extends Controller
         return view('Inventory.Master.StokBarang', compact('access'));
     }
 
+    public function show($id, Request $request)
+    {
+        $user = Auth::user()->NomorUser;
+        // mendapatkan daftar divisi
+        if ($id === 'getDivisi') {
+            $divisi = DB::connection('ConnInventory')->select('exec SP_1003_INV_userdivisi @XKdUser = ?', [$user]);
+            $data_divisi = [];
+            foreach ($divisi as $detail_divisi) {
+                $data_divisi[] = [
+                    'NamaDivisi' => $detail_divisi->NamaDivisi,
+                    'IdDivisi' => $detail_divisi->IdDivisi,
+                    'KodeUser' => $detail_divisi->KodeUser
+                ];
+            }
+            return datatables($divisi)->make(true);
+
+            // mendapatkan daftar objek
+        } else if ($id === 'getObjek') {
+            $objek = DB::connection('ConnInventory')->select('exec SP_1003_INV_User_Objek @XKdUser = ?, @XIdDivisi = ?', [$user, $request->input('divisi')]);
+            $data_objek = [];
+            foreach ($objek as $detail_objek) {
+                $data_objek[] = [
+                    'NamaObjek' => $detail_objek->NamaObjek,
+                    'IdObjek' => $detail_objek->IdObjek,
+                    'IdDivisi' => $detail_objek->IdDivisi
+                ];
+            }
+            return datatables($objek)->make(true);
+
+            // mendapatkan daftar kelompok utama
+        } else if ($id === 'getKelUt') {
+            $kelut = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdObjek_KelompokUtama @XIdObjek_KelompokUtama = ?', [$request->input('objekId')]);
+            $data_kelut = [];
+            foreach ($kelut as $detail_kelut) {
+                $data_kelut[] = [
+                    'NamaKelompokUtama' => $detail_kelut->NamaKelompokUtama,
+                    'IdKelompokUtama' => $detail_kelut->IdKelompokUtama
+                ];
+            }
+            return datatables($kelut)->make(true);
+
+            // mendapatkan daftar kelompok
+        } else if ($id === 'getKelompok') {
+            $kelompok = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdKelompokUtama_Kelompok @XIdKelompokUtama_Kelompok = ?', [$request->input('kelutId')]);
+            $data_kelompok = [];
+            foreach ($kelompok as $detail_kelompok) {
+                $data_kelompok[] = [
+                    'idkelompok' => $detail_kelompok->idkelompok,
+                    'namakelompok' => $detail_kelompok->namakelompok
+                ];
+            }
+            return datatables($kelompok)->make(true);
+
+            // mendapatkan daftar sub kelompok
+        } else if ($id === 'getSubkel') {
+            $subkel = DB::connection('ConnInventory')->select('exec SP_1003_INV_IDKELOMPOK_SUBKELOMPOK @XIdKelompok_SubKelompok = ?', [$request->input('kelompokId')]);
+            $data_subkel = [];
+            foreach ($subkel as $detail_subkel) {
+                $data_subkel[] = [
+                    'IdSubkelompok' => $detail_subkel->IdSubkelompok,
+                    'NamaSubKelompok' => $detail_subkel->NamaSubKelompok
+                ];
+            }
+            return datatables($subkel)->make(true);
+        }
+
+        // ambil id type dan nama type
+        else if ($id === 'getIdType') {
+            $subkel = DB::connection('ConnInventory')->select('exec SP_1003_INV_idsubkelompok_type
+            @XIdSubKelompok_Type = ?', [$request->input('XIdSubKelompok_Type')]);
+            $data_subkel = [];
+            foreach ($subkel as $detail_subkel) {
+                $data_subkel[] = [
+                    'IdType' => $detail_subkel->IdType,
+                    'NamaType' => $detail_subkel->NamaType
+                ];
+            }
+            return datatables($subkel)->make(true);
+        }
+
+        // ambil id berat tritier sekunder primer
+        else if ($id === 'getBerat') {
+            $subkel = DB::connection('ConnInventory')->select('exec SP_1003_INV_NamaType_Type
+            @IdType = ?, @IdSubKel = ?', [$request->input('IdType'), $request->input('IdSubKel')]);
+            $data_subkel = [];
+            foreach ($subkel as $detail_subkel) {
+                $data_subkel[] = [
+                    'KodeBarang' => $detail_subkel->KodeBarang,
+                    'satuan_primer' => $detail_subkel->satuan_primer,
+                    'satuan_sekunder' => $detail_subkel->satuan_sekunder,
+                    'satuan_tritier' => $detail_subkel->satuan_tritier,
+                    'MinimumStock' => $detail_subkel->MinimumStock,
+                    'MaximumStock' => $detail_subkel->MaximumStock,
+                ];
+            }
+            return datatables($subkel)->make(true);
+        }
+
+
+    }
+
     //Show the form for creating a new resource.
     public function create()
     {
         //
     }
 
-    //Store a newly created resource in storage.
     public function store(Request $request)
     {
-        $data = $request->all();
-        // dd($data , " Masuk store");
-        DB::connection('ConnInventory')->statement('exec SP_1003_INV_insert_type @XIdType = ?, @XNamaType = ?, @XUraianType = ?
-        , @XIdSubkelompok_Type = ?, @XKodeBarang = ?, @XSaatStokAwal = ?, @XStokAwalPrimer = ?, @XTotalPemasukanPrimer = ?, @XSaldoPrimer = ?, @XUnitPrimer = ?, @XStokAwalSekunder = ?, XTotalPemasukanSekunder = ?
-        , @XSaldoSekunder = ?, @XUnitSekunder = ?, @XStokAwalTritier = ?, @XTotalPemasukanTritier = ?, @XSaldoTritier = ?, @XUnitTritier = ?, @XPakaiAturanKonversi = ?, @XKonvSekunderKePrimer = ?, @XKonvTritierKeSekunder = ?
-        , @XNonaktif = ?, @XMinimumStok = ?, @XNo_satuan_umum = ?, @userInput = ?', [
-            $data['IdType'],
-            $data['NamaType'],
-            $data['UraianType'],
-            $data['IdSubKel'],
-            $data['KodeBarang'],
-            $data['SaatStokAwal'],
-            $data['StokAwalPrimer'],
-            $data['TotalPemasukanPrimer'],
-            $data['SaldoPrimer'],
-            $data['UnitPrimer'],
-            $data['StokAwalSekunder'],
-            $data['TotalPemasukanSekunder'],
-            $data['SaldoSekunder'],
-            $data['UnitSekunder'],
-            $data['StokAwalTritier'],
-            $data['TotalPemasukanTritier'],
-            $data['SaldoTritier'],
-            $data['UnitTritier'],
-            $data['AturanKonversi'],
-            $data['KonvSekunderPrimer'],
-            $data['KonvTritierSekunder'],
-            $data['NonAktif'],
-            $data['MinimumStok'],
-            $data['NoSatuanUmum'],
-            $data['userInput']
-        ]);
 
-        return redirect()->route('MaxMinStok.index')->with('alert', 'Data berhasil ditambahkan!');
     }
 
-    //Display the specified resource.
-    public function show($cr)
-    {
-        $crExplode = explode(".", $cr);
-        $lastIndex = count($crExplode) - 1;
-        //getListPerkiraan
-        if ($crExplode[$lastIndex] == "getDivisi") {
-            $dataDivisi = DB::connection('ConnInventory')->select('exec SP_1003_INV_userdivisi @XKdUser = ?', [$crExplode[0]]);
-            return response()->json($dataDivisi);
-        } else if ($crExplode[$lastIndex] == "getObjek") {
-            $dataObjek = DB::connection('ConnInventory')->select('exec SP_1003_INV_User_Objek @XKdUser = ?, @XIdDivisi = ?', [$crExplode[0], $crExplode[1]]);
-            return response()->json($dataObjek);
-        } else if ($crExplode[$lastIndex] == "getKelompokUtama") {
-            $dataKelut = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdObjek_KelompokUtama @XIdObjek_KelompokUtama = ?', [$crExplode[0]]);
-            return response()->json($dataKelut);
-        } else if ($crExplode[$lastIndex] == "getKelompok") {
-            $dataKelompok = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdKelompokUtama_Kelompok @XIdKelompokUtama_Kelompok = ?', [$crExplode[0]]);
-            return response()->json($dataKelompok);
-        } else if ($crExplode[$lastIndex] == "getSubKelompok") {
-            $dataSubKelompok = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdKelompok_SubKelompok @XIdKelompok_SubKelompok = ?', [$crExplode[0]]);
-            return response()->json($dataSubKelompok);
-        } else if ($crExplode[$lastIndex] == "getType") {
-            $dataType = DB::connection('ConnInventory')->select('exec SP_1003_INV_idsubkelompok_type @XIdSubKelompok_Type = ?', [$crExplode[0]]);
-            return response()->json($dataType);
-        } else if ($crExplode[$lastIndex] == "getType2") {
-            $dataKategori = DB::connection('ConnInventory')->select('exec SP_1003_INV_NamaType_Type @IdType = ?, @IdSubKel = ?', [$crExplode[0], $crExplode[1]]);
-            return response()->json($dataKategori);
-        }
-    }
-
-    // Show the form for editing the specified resource.
     public function edit($id)
     {
         //
     }
 
     //Update the specified resource in storage.
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
-        $data = $request->all();
-        // dd($data , " Masuk update");
-        DB::connection('ConnInventory')->statement('exec SP_1003_INV_update_type @XIdType = ?, @XIdSubKelompok = ?, @XMinStok = ?
-        , @XMaxStok = ?', [
-            $data['IdType'],
-            $data['IdSubKel'],
-            $data['MinStok'],
-            $data['MaxStok']
-        ]);
-        return redirect()->route('MaxMinStok.index')->with('alert', 'Data berhasil diupdate!');
+        if ($id == 'updateMaxStock') {
+            $XIdType = $request->input('XIdType');
+            $XIdSubKelompok = $request->input('XIdSubKelompok');
+            $XMinStok = $request->input('XMinStok');
+            $XMaxStok = $request->input('XMaxStok');
+
+            try {
+                $coba = DB::connection('ConnInventory')->statement('exec SP_1003_INV_update_maximum_stok
+                @XIdType = ?, @XIdSubKelompok = ?, @XMinStok = ?, @XMaxStok = ?',
+                    [$XIdType, $XIdSubKelompok, $XMinStok, $XMaxStok]
+                );
+
+                return response()->json(['success' => 'Berhasil update data.'], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Gagal update data: ' . $e->getMessage()], 500);
+            }
+        }
     }
 
     //Remove the specified resource from storage.
     public function destroy(Request $request)
     {
-        $data = $request->all();
-        // dd('Masuk Destroy', $data);
-            DB::connection('ConnInventory')->statement('exec SP_1003_INV_delete_type  @XIdType = ?', [
-                $data['IdType']
-            ]);
 
-        return redirect()->route('MaxMinStok.index')->with('alert', 'Data berhasil dihapus!');
     }
 }

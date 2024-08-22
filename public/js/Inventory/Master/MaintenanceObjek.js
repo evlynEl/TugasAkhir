@@ -412,7 +412,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     //#endregion
 
-    //#region Button Kelompok
+    //#region Button subKelompok
     btnSubKelompok.addEventListener("click", function (e) {
         try {
             Swal.fire({
@@ -667,6 +667,7 @@ document.addEventListener('DOMContentLoaded', function () {
         namaKodePerkiraan.value = '';
     }
 
+    var nomorButton = 0;
     //#region button isi
     btnIsi.addEventListener('click', async () => {
         nomorButton = 1;
@@ -703,12 +704,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     //#region proses button
     btnProses.addEventListener('click', async () => {
+        const flag = 0;
+
         if (!divisi.value) {
             Swal.fire({
                 icon: 'error',
                 title: 'Divisi Kosong!',
                 text: 'Data Tidak Dapat Di Proses!!...',
             });
+            flag = 1;
             return;
         }
 
@@ -729,47 +733,203 @@ document.addEventListener('DOMContentLoaded', function () {
                                 title: 'Nama Perkiraan Tidak Ada!',
                                 text: 'Data Tidak Dapat Di Proses!!...',
                             });
+                            flag = 1;
                             return;
                         }
 
                         else {
-                            //#region ISI objek
-                            if (objek.value === '') {
-                                $.ajax({
-                                    type: 'GET',
-                                    url: 'MaintenanceObjek/cekObjek',
-                                    data: {
-                                        _token: csrfToken,
-                                        IdDivisi: divisi.value,
-                                        objek: namaObjek.value
-                                    },
-                                    success: function (result) {
-                                        if (parseInt(result[0].ada) !== 0) {
-                                            Swal.fire({
-                                                icon: 'error',
-                                                title: 'Objek Sudah Ada!',
-                                                text: 'Data Tidak Dapat Di Proses!!...',
-                                            });
-                                            return;
-                                        }
-                                        else {
-                                            $.ajax({
-                                                type: 'GET',
-                                                url: 'MaintenanceObjek/ambilCounter',
-                                                data: {
-                                                    _token: csrfToken,
-                                                },
-                                                success: function (result) {
-                                                    objek.value = result[0].IdObjek;
+                            if (flag !== 1) {
+                                //#region ISI objek
+                                if (objek.value === '') {
+                                    $.ajax({
+                                        type: 'GET',
+                                        url: 'MaintenanceObjek/cekObjek',
+                                        data: {
+                                            _token: csrfToken,
+                                            IdDivisi: divisi.value,
+                                            objek: namaObjek.value
+                                        },
+                                        success: function (result) {
+                                            if (parseInt(result[0].ada) !== 0) {
+                                                Swal.fire({
+                                                    icon: 'error',
+                                                    title: 'Objek Sudah Ada!',
+                                                    text: 'Data Tidak Dapat Di Proses!!...',
+                                                });
+                                                return;
+                                            }
+                                            else {
+                                                $.ajax({
+                                                    type: 'GET',
+                                                    url: 'MaintenanceObjek/ambilCounter',
+                                                    data: {
+                                                        _token: csrfToken,
+                                                    },
+                                                    success: function (result) {
+                                                        objek.value = result[0].IdObjek;
 
+                                                        $.ajax({
+                                                            type: 'GET',
+                                                            url: 'MaintenanceObjek/updateObjekCounter',
+                                                            data: {
+                                                                _token: csrfToken,
+                                                                XIdObjek: objek.value
+                                                            },
+                                                            success: function (result) {
+                                                            },
+                                                            error: function (xhr, status, error) {
+                                                                console.error(error);
+                                                            },
+                                                            complete: function () {
+                                                                setTimeout(() => {
+                                                                    canClickProsesButton = true;
+                                                                }, 3000);
+                                                            }
+                                                        });
+
+                                                        $.ajax({
+                                                            type: 'GET',
+                                                            url: 'MaintenanceObjek/insertObjek',
+                                                            data: {
+                                                                _token: csrfToken,
+                                                                XIdObjek: objek.value,
+                                                                XNamaObjek: namaObjek.value,
+                                                                XIdDivisi_Objek: divisi.value
+                                                            },
+                                                            success: function (result) {
+                                                                if (result.success) {
+                                                                    kelUtamaISI();
+                                                                }
+                                                            },
+                                                            error: function (xhr, status, error) {
+                                                                console.error(error);
+                                                            },
+                                                            complete: function () {
+                                                                setTimeout(() => {
+                                                                    canClickProsesButton = true;
+                                                                }, 3000);
+                                                            }
+                                                        });
+                                                    },
+                                                    error: function (xhr, status, error) {
+                                                        console.error(error);
+                                                    },
+                                                    complete: function () {
+                                                        setTimeout(() => {
+                                                            canClickProsesButton = true;
+                                                        }, 3000);
+                                                    }
+                                                });
+                                            }
+                                        },
+                                        error: function (xhr, status, error) {
+                                            console.error(error);
+                                        },
+                                        complete: function () {
+                                            setTimeout(() => {
+                                                canClickProsesButton = true;
+                                            }, 3000);
+                                        }
+                                    });
+                                    return;
+                                }
+
+                                else if (kelompokUtama.value === '' && objek.value) {
+                                    kelUtamaISI();
+                                    return;
+                                }
+
+                                else if (kelompok.value === '' && kelompokUtama.value) {
+                                    kelompokISI();
+                                    return;
+                                }
+
+                                else if (subKelompok.value === '' && kelompok.value) {
+                                    subKelISI();
+                                    return;
+                                }
+
+                                else {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Sukses ISI',
+                                        text: 'Data berhasil disimpan.',
+                                    });
+                                    return;
+                                }
+
+                                //#region ISI kel utama 
+                                function kelUtamaISI() {
+                                    if (kelompokUtama.value === '' && objek.value) {
+                                        $.ajax({
+                                            type: 'GET',
+                                            url: 'MaintenanceObjek/cekKelUtama',
+                                            data: {
+                                                _token: csrfToken,
+                                                IdObjek: objek.value,
+                                                kelut: namaKelompokUtama.value
+                                            },
+                                            success: function (result) {
+                                                if (parseInt(result[0].ada) !== 0) {
+                                                    Swal.fire({
+                                                        icon: 'error',
+                                                        title: 'Kelompok Utama Sudah Ada!',
+                                                        text: 'Data Tidak Dapat Di Proses!!...',
+                                                    });
+                                                    return;
+                                                }
+                                                else {
                                                     $.ajax({
                                                         type: 'GET',
-                                                        url: 'MaintenanceObjek/updateObjekCounter',
+                                                        url: 'MaintenanceObjek/ambilCounter',
                                                         data: {
                                                             _token: csrfToken,
-                                                            XIdObjek: objek.value
                                                         },
                                                         success: function (result) {
+                                                            kelompokUtama.value = result[0].IdKelUtama;
+
+                                                            $.ajax({
+                                                                type: 'GET',
+                                                                url: 'MaintenanceObjek/updateKelUtamaCounter',
+                                                                data: {
+                                                                    _token: csrfToken,
+                                                                    XIdKelompokUtama: kelompokUtama.value
+                                                                },
+                                                                success: function (result) {
+                                                                },
+                                                                error: function (xhr, status, error) {
+                                                                    console.error(error);
+                                                                },
+                                                                complete: function () {
+                                                                    setTimeout(() => {
+                                                                        canClickProsesButton = true;
+                                                                    }, 3000);
+                                                                }
+                                                            });
+
+                                                            $.ajax({
+                                                                type: 'GET',
+                                                                url: 'MaintenanceObjek/insertKelUtama',
+                                                                data: {
+                                                                    _token: csrfToken,
+                                                                    XIdKelompokUtama: kelompokUtama.value,
+                                                                    XNamaKelompokUtama: namaKelompokUtama.value,
+                                                                    XIdObjek_KelompokUtama: objek.value
+                                                                },
+                                                                success: function (result) {
+                                                                    if (result.success) {
+                                                                        kelompokISI();
+                                                                    }
+                                                                },
+                                                                error: function (xhr, status, error) {
+                                                                    console.error(error);
+                                                                },
+                                                                complete: function () {
+                                                                    setTimeout(() => {
+                                                                        canClickProsesButton = true;
+                                                                    }, 3000);
+                                                                }
+                                                            });
                                                         },
                                                         error: function (xhr, status, error) {
                                                             console.error(error);
@@ -780,17 +940,92 @@ document.addEventListener('DOMContentLoaded', function () {
                                                             }, 3000);
                                                         }
                                                     });
+                                                }
+                                            },
+                                            error: function (xhr, status, error) {
+                                                console.error(error);
+                                            },
+                                            complete: function () {
+                                                setTimeout(() => {
+                                                    canClickProsesButton = true;
+                                                }, 3000);
+                                            }
+                                        });
+                                    }
+                                }
 
+                                //#region ISI kelompok 
+                                function kelompokISI() {
+                                    if (kelompok.value === '' && kelompokUtama.value) {
+                                        $.ajax({
+                                            type: 'GET',
+                                            url: 'MaintenanceObjek/cekKel',
+                                            data: {
+                                                _token: csrfToken,
+                                                IdKelut: kelompokUtama.value,
+                                                kelompok: namaKelompok.value
+                                            },
+                                            success: function (result) {
+                                                if (parseInt(result[0].ada) !== 0) {
+                                                    Swal.fire({
+                                                        icon: 'error',
+                                                        title: 'Kelompok Sudah Ada!',
+                                                        text: 'Data Tidak Dapat Di Proses!!...',
+                                                    });
+                                                    return;
+                                                }
+                                                else {
                                                     $.ajax({
                                                         type: 'GET',
-                                                        url: 'MaintenanceObjek/insertObjek',
+                                                        url: 'MaintenanceObjek/ambilCounter',
                                                         data: {
                                                             _token: csrfToken,
-                                                            XIdObjek: objek.value,
-                                                            XNamaObjek: namaObjek.value,
-                                                            XIdDivisi_Objek: divisi.value
                                                         },
                                                         success: function (result) {
+                                                            kelompok.value = result[0].IdKelompok;
+
+                                                            $.ajax({
+                                                                type: 'GET',
+                                                                url: 'MaintenanceObjek/updateKelCounter',
+                                                                data: {
+                                                                    _token: csrfToken,
+                                                                    XIdKelompok: kelompok.value
+                                                                },
+                                                                success: function (result) {
+                                                                },
+                                                                error: function (xhr, status, error) {
+                                                                    console.error(error);
+                                                                },
+                                                                complete: function () {
+                                                                    setTimeout(() => {
+                                                                        canClickProsesButton = true;
+                                                                    }, 3000);
+                                                                }
+                                                            });
+
+                                                            $.ajax({
+                                                                type: 'GET',
+                                                                url: 'MaintenanceObjek/insertKel',
+                                                                data: {
+                                                                    _token: csrfToken,
+                                                                    XIdKelompok: kelompok.value,
+                                                                    XNamaKelompok: namaKelompok.value,
+                                                                    XIdKelompokUtama_Kelompok: kelompokUtama.value
+                                                                },
+                                                                success: function (result) {
+                                                                    if (result.success) {
+                                                                        subKelISI();
+                                                                    }
+                                                                },
+                                                                error: function (xhr, status, error) {
+                                                                    console.error(error);
+                                                                },
+                                                                complete: function () {
+                                                                    setTimeout(() => {
+                                                                        canClickProsesButton = true;
+                                                                    }, 3000);
+                                                                }
+                                                            });
                                                         },
                                                         error: function (xhr, status, error) {
                                                             console.error(error);
@@ -800,10 +1035,450 @@ document.addEventListener('DOMContentLoaded', function () {
                                                                 canClickProsesButton = true;
                                                             }, 3000);
                                                         }
+                                                    });
+                                                }
+                                            },
+                                            error: function (xhr, status, error) {
+                                                console.error(error);
+                                            },
+                                            complete: function () {
+                                                setTimeout(() => {
+                                                    canClickProsesButton = true;
+                                                }, 3000);
+                                            }
+                                        });
+                                    }
+                                }
+
+                                //#region ISI Sub kelompok 
+                                function subKelISI() {
+                                    if (subKelompok.value === '' && kelompok.value) {
+                                        $.ajax({
+                                            type: 'GET',
+                                            url: 'MaintenanceObjek/cekSubKel',
+                                            data: {
+                                                _token: csrfToken,
+                                                IdKelp: kelompok.value,
+                                                subkel: namaSubKelompok.value
+                                            },
+                                            success: function (result) {
+                                                if (parseInt(result[0].ada) !== 0) {
+                                                    Swal.fire({
+                                                        icon: 'error',
+                                                        title: 'Sub Kelompok Sudah Ada!',
+                                                        text: 'Data Tidak Dapat Di Proses!!...',
+                                                    });
+                                                    return;
+                                                }
+                                                else {
+                                                    $.ajax({
+                                                        type: 'GET',
+                                                        url: 'MaintenanceObjek/ambilCounter',
+                                                        data: {
+                                                            _token: csrfToken,
+                                                        },
+                                                        success: function (result) {
+                                                            subKelompok.value = result[0].IdSubKelompok;
+
+                                                            $.ajax({
+                                                                type: 'GET',
+                                                                url: 'MaintenanceObjek/updateSubKelCounter',
+                                                                data: {
+                                                                    _token: csrfToken,
+                                                                    XIdSubKelompok: subKelompok.value
+                                                                },
+                                                                success: function (result) {
+                                                                },
+                                                                error: function (xhr, status, error) {
+                                                                    console.error(error);
+                                                                },
+                                                                complete: function () {
+                                                                    setTimeout(() => {
+                                                                        canClickProsesButton = true;
+                                                                    }, 3000);
+                                                                }
+                                                            });
+
+                                                            $.ajax({
+                                                                type: 'GET',
+                                                                url: 'MaintenanceObjek/insertSubKel',
+                                                                data: {
+                                                                    _token: csrfToken,
+                                                                    XIdSubKelompok: subKelompok.value,
+                                                                    XNamaSubKelompok: namaSubKelompok.value,
+                                                                    XIdKelompokUtama_Kelompok: kelompok.value,
+                                                                    XKodePerkiraan: kodePerkiraan.value
+                                                                },
+                                                                success: function (result) {
+                                                                    if (result.success) {
+                                                                        Swal.fire({
+                                                                            icon: 'success',
+                                                                            title: 'Sukses ISI',
+                                                                            text: result.success,
+                                                                        });
+                                                                    }
+                                                                },
+                                                                error: function (xhr, status, error) {
+                                                                    console.error(error);
+                                                                },
+                                                                complete: function () {
+                                                                    setTimeout(() => {
+                                                                        canClickProsesButton = true;
+                                                                    }, 3000);
+                                                                }
+                                                            });
+                                                        },
+                                                        error: function (xhr, status, error) {
+                                                            console.error(error);
+                                                        },
+                                                        complete: function () {
+                                                            setTimeout(() => {
+                                                                canClickProsesButton = true;
+                                                            }, 3000);
+                                                        }
+                                                    });
+                                                }
+                                            },
+                                            error: function (xhr, status, error) {
+                                                console.error(error);
+                                            },
+                                            complete: function () {
+                                                setTimeout(() => {
+                                                    canClickProsesButton = true;
+                                                }, 3000);
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(error);
+                    },
+                    complete: function () {
+                        setTimeout(() => {
+                            canClickProsesButton = true;
+                        }, 3000);
+                    }
+                });
+            }
+            if (namaObjek.value === '') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Isi Nama Objek!',
+                    text: 'Data tidak bisa diproses.',
+                    didClose: () => {
+                        btnObjek.focus();
+                    }
+                });
+            }
+            else if (namaKelompokUtama.value === '') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Isi Nama Kelompok Utama!',
+                    text: 'Data tidak bisa diproses.',
+                    didClose: () => {
+                        btnKelompokUtama.focus();
+                    }
+                });
+            }
+            else if (namaKelompok.value === '') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Isi Nama Kelompok!',
+                    text: 'Data tidak bisa diproses.',
+                    didClose: () => {
+                        btnKelompok.focus();
+                    }
+                });
+            }
+            else if (namaSubKelompok.value === '') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Isi Nama Sub Kelompok!',
+                    text: 'Data tidak bisa diproses.',
+                    didClose: () => {
+                        btnSubKelompok.focus();
+                    }
+                });
+            }
+            else if (namaKodePerkiraan.value === '') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Isi Nama Kode Perkiraan!',
+                    text: 'Data tidak bisa diproses.',
+                    didClose: () => {
+                        btnKodePerkiraan.focus();
+                    }
+                });
+            }
+
+        }
+
+        //#region KOREKSI
+        else if (nomorButton == 2) {
+            if (flag !== 1) {
+
+                //#region KOREKSI OBJEK
+                if (objek.value && namaObjek.value) {
+                    $.ajax({
+                        type: 'GET',
+                        url: 'MaintenanceObjek/updateObjek',
+                        data: {
+                            _token: csrfToken,
+                            XIdObjek: objek.value,
+                            XNamaObjek: namaObjek.value,
+                            XIdDivisi_Objek: divisi.value,
+                        },
+                        success: function (result) {
+                        },
+                        error: function (xhr, status, error) {
+                            console.error(error);
+                        },
+                        complete: function () {
+                            setTimeout(() => {
+                                canClickProsesButton = true;
+                            }, 3000);
+                        }
+                    });
+                }
+
+                //#region KOREKSI kelUtama
+                if (kelompokUtama.value && kelompokUtama.value) {
+                    $.ajax({
+                        type: 'GET',
+                        url: 'MaintenanceObjek/updateKelUtama',
+                        data: {
+                            _token: csrfToken,
+                            XIdKelompokUtama: kelompokUtama.value,
+                            XNamaKelompokUtama: namaKelompokUtama.value,
+                            XIdObjek_KelompokUtama: objek.value,
+                        },
+                        success: function (result) {
+                        },
+                        error: function (xhr, status, error) {
+                            console.error(error);
+                        },
+                        complete: function () {
+                            setTimeout(() => {
+                                canClickProsesButton = true;
+                            }, 3000);
+                        }
+                    });
+                }
+
+                //#region KOREKSI kelompok
+                if (kelompok.value && namaKelompok.value) {
+                    $.ajax({
+                        type: 'GET',
+                        url: 'MaintenanceObjek/updateKel',
+                        data: {
+                            _token: csrfToken,
+                            XIdKelompok: kelompok.value,
+                            XNamaKelompok: namaKelompok.value,
+                            XIdKelompokUtama_Kelompok: kelompokUtama.value,
+                        },
+                        success: function (result) {
+                        },
+                        error: function (xhr, status, error) {
+                            console.error(error);
+                        },
+                        complete: function () {
+                            setTimeout(() => {
+                                canClickProsesButton = true;
+                            }, 3000);
+                        }
+                    });
+                }
+
+                //#region KOREKSI subkelompok
+                if (subKelompok.value && namaSubKelompok.value) {
+                    $.ajax({
+                        type: 'GET',
+                        url: 'MaintenanceObjek/updateSubKel',
+                        data: {
+                            _token: csrfToken,
+                            XIdSubKelompok: subKelompok.value,
+                            XNamaSubKelompok: namaSubKelompok.value,
+                            XIdKelompok_SubKelompok: kelompok.value,
+                            XKodePerkiraan: kodePerkiraan.value,
+                        },
+                        success: function (result) {
+                        },
+                        error: function (xhr, status, error) {
+                            console.error(error);
+                        },
+                        complete: function () {
+                            setTimeout(() => {
+                                canClickProsesButton = true;
+                            }, 3000);
+                        }
+                    });
+                }
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Sukses Koreksi',
+                    text: 'Berhasil Koreksi Data.',
+                });
+            }
+        }
+
+        //#region HAPUS
+        else if (nomorButton === 3) {
+
+            //#region HAPUS lengkap
+            if (namaSubKelompok.value && namaKelompok.value && namaKelompokUtama.value && namaObjek.value) {
+                Swal.fire({
+                    icon: 'question',
+                    title: 'Hapus Subkelompok ??..',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya',
+                    cancelButtonText: 'Tidak',
+                    returnFocus: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: 'GET',
+                            url: 'MaintenanceObjek/deleteSubKel',
+                            data: {
+                                _token: csrfToken,
+                                XIdSubKelompok: subKelompok.value,
+                                XIdKelompok_SubKelompok: kelompok.value,
+                            },
+                            success: function (result) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Sukses Hapus',
+                                    text: result.success,
+                                }).then(() => {
+                                    Swal.fire({
+                                        icon: 'question',
+                                        title: 'Hapus Kelompok ??..',
+                                        showCancelButton: true,
+                                        confirmButtonText: 'Ya',
+                                        cancelButtonText: 'Tidak',
+                                        returnFocus: false
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            console.log('hapus');
+                                            $.ajax({
+                                                type: 'GET',
+                                                url: 'MaintenanceObjek/deleteKel',
+                                                data: {
+                                                    _token: csrfToken,
+                                                    XIdKelompok: kelompok.value,
+                                                    XIdKelompokUtama_Kelompok: kelompokUtama.value,
+                                                },
+                                                success: function (result) {
+                                                    Swal.fire({
+                                                        icon: 'success',
+                                                        title: 'Sukses Hapus',
+                                                        text: result.success,
+                                                    }).then(() => {
+                                                        Swal.fire({
+                                                            icon: 'question',
+                                                            title: 'Hapus Kelompok Utama ??..',
+                                                            showCancelButton: true,
+                                                            confirmButtonText: 'Ya',
+                                                            cancelButtonText: 'Tidak',
+                                                            returnFocus: false
+                                                        }).then((result) => {
+                                                            if (result.isConfirmed) {
+                                                                $.ajax({
+                                                                    type: 'GET',
+                                                                    url: 'MaintenanceObjek/deleteKelUtama',
+                                                                    data: {
+                                                                        _token: csrfToken,
+                                                                        XIdKelompokUtama: kelompokUtama.value,
+                                                                        XIdObjek_KelompokUtama: objek.value,
+                                                                    },
+                                                                    success: function (result) {
+                                                                        Swal.fire({
+                                                                            icon: 'success',
+                                                                            title: 'Sukses Hapus',
+                                                                            text: result.success,
+                                                                        }).then(() => {
+                                                                            Swal.fire({
+                                                                                icon: 'question',
+                                                                                title: 'Hapus Objek ??..',
+                                                                                showCancelButton: true,
+                                                                                confirmButtonText: 'Ya',
+                                                                                cancelButtonText: 'Tidak',
+                                                                                returnFocus: false
+                                                                            }).then((result) => {
+                                                                                if (result.isConfirmed) {
+                                                                                    $.ajax({
+                                                                                        type: 'GET',
+                                                                                        url: 'MaintenanceObjek/deleteObjek',
+                                                                                        data: {
+                                                                                            _token: csrfToken,
+                                                                                            XIdObjek: objek.value,
+                                                                                            XIdDivisi_Objek: divisi.value,
+                                                                                        },
+                                                                                        success: function (result) {
+                                                                                            Swal.fire({
+                                                                                                icon: 'success',
+                                                                                                title: 'Sukses Hapus',
+                                                                                                text: result.success,
+                                                                                            }).then(() => {
+                                                                                                clearInput();
+                                                                                                disableInputs();
+                                                                                            });
+                                                                                        },
+                                                                                        error: function (xhr, status, error) {
+                                                                                            Swal.fire({
+                                                                                                icon: 'error',
+                                                                                                title: 'Hubungi EDP!',
+                                                                                                text: xhr.responseJSON.error ?? 'Data gagal dihapus'
+                                                                                            });
+                                                                                            clearInput();
+                                                                                            disableInputs();
+                                                                                        },
+                                                                                        complete: function () {
+                                                                                            setTimeout(() => {
+                                                                                                canClickProsesButton = true;
+                                                                                            }, 3000);
+                                                                                        }
+                                                                                    });
+                                                                                } else {
+                                                                                    clearInput();
+                                                                                    disableInputs();
+                                                                                }
+                                                                            });
+                                                                        });
+                                                                    },
+                                                                    error: function (xhr, status, error) {
+                                                                        Swal.fire({
+                                                                            icon: 'error',
+                                                                            title: 'Hubungi EDP!',
+                                                                            text: xhr.responseJSON.error ?? 'Data gagal dihapus'
+                                                                        });
+                                                                        clearInput();
+                                                                        disableInputs();
+                                                                    },
+                                                                    complete: function () {
+                                                                        setTimeout(() => {
+                                                                            canClickProsesButton = true;
+                                                                        }, 3000);
+                                                                    }
+                                                                });
+                                                            } else {
+                                                                clearInput();
+                                                                disableInputs();
+                                                            }
+                                                        });
                                                     });
                                                 },
                                                 error: function (xhr, status, error) {
-                                                    console.error(error);
+                                                    Swal.fire({
+                                                        icon: 'error',
+                                                        title: 'Hubungi EDP!',
+                                                        text: xhr.responseJSON.error ?? 'Data gagal dihapus'
+                                                    });
+                                                    clearInput();
+                                                    disableInputs();
                                                 },
                                                 complete: function () {
                                                     setTimeout(() => {
@@ -811,294 +1486,357 @@ document.addEventListener('DOMContentLoaded', function () {
                                                     }, 3000);
                                                 }
                                             });
+                                        } else {
+                                            clearInput();
+                                            disableInputs();
                                         }
-                                    },
-                                    error: function (xhr, status, error) {
-                                        console.error(error);
-                                    },
-                                    complete: function () {
-                                        setTimeout(() => {
-                                            canClickProsesButton = true;
-                                        }, 3000);
-                                    }
+                                    });
                                 });
+                            },
+                            error: function (xhr, status, error) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Hubungi EDP!',
+                                    text: xhr.responseJSON.error ?? 'Data gagal dihapus'
+                                });
+                                clearInput();
+                                disableInputs();
+                            },
+                            complete: function () {
+                                setTimeout(() => {
+                                    canClickProsesButton = true;
+                                }, 3000);
                             }
+                        });
+                    } else {
+                        clearInput();
+                        disableInputs();
+                    }
+                });
 
-                            //#region ISI kel utama 
-                            if (kelompokUtama.value === '') {
-                                $.ajax({
-                                    type: 'GET',
-                                    url: 'MaintenanceObjek/cekKelUtama',
-                                    data: {
-                                        _token: csrfToken,
-                                        IdObjek: objek.value,
-                                        kelut: namaKelompokUtama.value
-                                    },
-                                    success: function (result) {
-                                        if (parseInt(result[0].ada) !== 0) {
+
+            }
+
+            //#region HAPUS kosong 1
+            else if (namaSubKelompok.value === '' && namaKelompok.value && namaKelompokUtama.value && namaObjek.value) {
+                $.ajax({
+                    type: 'GET',
+                    url: 'MaintenanceObjek/cekHapusSubKelompok',
+                    data: {
+                        _token: csrfToken,
+                        XIdkelompok_subkelompok: kelompok.value,
+                    },
+                    success: function (result) {
+                        if (result) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Isi Nama Sub Kelompok!',
+                                text: 'Data Tidak Dapat Di Proses!!...',
+                            });
+                            return;
+                        }
+                        else {
+                            Swal.fire({
+                                icon: 'question',
+                                title: 'Hapus Kelompok ??..',
+                                showCancelButton: true,
+                                confirmButtonText: 'Ya',
+                                cancelButtonText: 'Tidak',
+                                returnFocus: false
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    $.ajax({
+                                        type: 'GET',
+                                        url: 'MaintenanceObjek/deleteKel',
+                                        data: {
+                                            _token: csrfToken,
+                                            XIdKelompok: kelompok.value,
+                                            XIdKelompokUtama_Kelompok: kelompokUtama.value,
+                                        },
+                                        success: function (result) {
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Sukses Hapus',
+                                                text: result.success,
+                                            }).then(() => {
+                                                Swal.fire({
+                                                    icon: 'question',
+                                                    title: 'Hapus Kelompok Utama ??..',
+                                                    showCancelButton: true,
+                                                    confirmButtonText: 'Ya',
+                                                    cancelButtonText: 'Tidak',
+                                                    returnFocus: false
+                                                }).then((result) => {
+                                                    if (result.isConfirmed) {
+                                                        $.ajax({
+                                                            type: 'GET',
+                                                            url: 'MaintenanceObjek/deleteKelUtama',
+                                                            data: {
+                                                                _token: csrfToken,
+                                                                XIdKelompokUtama: kelompokUtama.value,
+                                                                XIdObjek_KelompokUtama: objek.value,
+                                                            },
+                                                            success: function (result) {
+                                                                Swal.fire({
+                                                                    icon: 'success',
+                                                                    title: 'Sukses Hapus',
+                                                                    text: result.success,
+                                                                }).then(() => {
+                                                                    Swal.fire({
+                                                                        icon: 'question',
+                                                                        title: 'Hapus Objek ??..',
+                                                                        showCancelButton: true,
+                                                                        confirmButtonText: 'Ya',
+                                                                        cancelButtonText: 'Tidak',
+                                                                        returnFocus: false
+                                                                    }).then((result) => {
+                                                                        if (result.isConfirmed) {
+                                                                            $.ajax({
+                                                                                type: 'GET',
+                                                                                url: 'MaintenanceObjek/deleteObjek',
+                                                                                data: {
+                                                                                    _token: csrfToken,
+                                                                                    XIdObjek: objek.value,
+                                                                                    XIdDivisi_Objek: divisi.value,
+                                                                                },
+                                                                                success: function (result) {
+                                                                                    Swal.fire({
+                                                                                        icon: 'success',
+                                                                                        title: 'Sukses Hapus',
+                                                                                        text: result.success,
+                                                                                    });
+                                                                                },
+                                                                                error: function (xhr, status, error) {
+                                                                                    Swal.fire({
+                                                                                        icon: 'error',
+                                                                                        title: 'Hubungi EDP!',
+                                                                                        text: xhr.responseJSON.error ?? 'Data gagal dihapus'
+                                                                                    });
+                                                                                },
+                                                                                complete: function () {
+                                                                                    setTimeout(() => {
+                                                                                        canClickProsesButton = true;
+                                                                                    }, 3000);
+                                                                                }
+                                                                            });
+                                                                        }
+                                                                    });
+                                                                });
+                                                            },
+                                                            error: function (xhr, status, error) {
+                                                                Swal.fire({
+                                                                    icon: 'error',
+                                                                    title: 'Hubungi EDP!',
+                                                                    text: xhr.responseJSON.error ?? 'Data gagal dihapus'
+                                                                });
+                                                            },
+                                                            complete: function () {
+                                                                setTimeout(() => {
+                                                                    canClickProsesButton = true;
+                                                                }, 3000);
+                                                            }
+                                                        });
+                                                    }
+                                                });
+                                            });
+                                        },
+                                        error: function (xhr, status, error) {
                                             Swal.fire({
                                                 icon: 'error',
-                                                title: 'Kelompok Utama Sudah Ada!',
-                                                text: 'Data Tidak Dapat Di Proses!!...',
+                                                title: 'Hubungi EDP!',
+                                                text: xhr.responseJSON.error ?? 'Data gagal dihapus'
                                             });
-                                            return;
+                                        },
+                                        complete: function () {
+                                            setTimeout(() => {
+                                                canClickProsesButton = true;
+                                            }, 3000);
                                         }
-                                        else {
-                                            $.ajax({
-                                                type: 'GET',
-                                                url: 'MaintenanceObjek/ambilCounter',
-                                                data: {
-                                                    _token: csrfToken,
-                                                },
-                                                success: function (result) {
-                                                    kelompokUtama.value = result[0].IdKelUtama;
+                                    });
+                                }
+                            });
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(error);
+                    },
+                    complete: function () {
+                        setTimeout(() => {
+                            canClickProsesButton = true;
+                        }, 3000);
+                    }
+                });
+            }
 
-                                                    $.ajax({
-                                                        type: 'GET',
-                                                        url: 'MaintenanceObjek/updateKelUtamaCounter',
-                                                        data: {
-                                                            _token: csrfToken,
-                                                            XIdKelompokUtama: kelompokUtama.value
-                                                        },
-                                                        success: function (result) {
-                                                        },
-                                                        error: function (xhr, status, error) {
-                                                            console.error(error);
-                                                        },
-                                                        complete: function () {
-                                                            setTimeout(() => {
-                                                                canClickProsesButton = true;
-                                                            }, 3000);
-                                                        }
-                                                    });
-
-                                                    $.ajax({
-                                                        type: 'GET',
-                                                        url: 'MaintenanceObjek/insertKelUtama',
-                                                        data: {
-                                                            _token: csrfToken,
-                                                            XIdKelompokUtama: kelompokUtama.value,
-                                                            XNamaKelompokUtama: namaKelompokUtama.value,
-                                                            XIdObjek_KelompokUtama: objek.value
-                                                        },
-                                                        success: function (result) {
-                                                        },
-                                                        error: function (xhr, status, error) {
-                                                            console.error(error);
-                                                        },
-                                                        complete: function () {
-                                                            setTimeout(() => {
-                                                                canClickProsesButton = true;
-                                                            }, 3000);
-                                                        }
-                                                    });
-                                                },
-                                                error: function (xhr, status, error) {
-                                                    console.error(error);
-                                                },
-                                                complete: function () {
-                                                    setTimeout(() => {
-                                                        canClickProsesButton = true;
-                                                    }, 3000);
-                                                }
+            //#region hapus kosong 2
+            else if (namaSubKelompok.value === '' && namaKelompok.value === '' && namaKelompokUtama.value && namaObjek.value) {
+                $.ajax({
+                    type: 'GET',
+                    url: 'MaintenanceObjek/cekHapusKelompok',
+                    data: {
+                        _token: csrfToken,
+                        XIdkelompokutama_kelompok: kelompokUtama.value,
+                    },
+                    success: function (result) {
+                        if (result) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Isi Nama Kelompok!',
+                                text: 'Data Tidak Dapat Di Proses!!...',
+                            });
+                            return;
+                        }
+                        else {
+                            Swal.fire({
+                                icon: 'question',
+                                title: 'Hapus Kelompok Utama ??..',
+                                showCancelButton: true,
+                                confirmButtonText: 'Ya',
+                                cancelButtonText: 'Tidak',
+                                returnFocus: false
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    $.ajax({
+                                        type: 'GET',
+                                        url: 'MaintenanceObjek/deleteKelUtama',
+                                        data: {
+                                            _token: csrfToken,
+                                            XIdKelompokUtama: kelompokUtama.value,
+                                            XIdObjek_KelompokUtama: objek.value,
+                                        },
+                                        success: function (result) {
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Sukses Hapus',
+                                                text: result.success,
+                                            }).then(() => {
+                                                Swal.fire({
+                                                    icon: 'question',
+                                                    title: 'Hapus Objek ??..',
+                                                    showCancelButton: true,
+                                                    confirmButtonText: 'Ya',
+                                                    cancelButtonText: 'Tidak',
+                                                    returnFocus: false
+                                                }).then((result) => {
+                                                    if (result.isConfirmed) {
+                                                        $.ajax({
+                                                            type: 'GET',
+                                                            url: 'MaintenanceObjek/deleteObjek',
+                                                            data: {
+                                                                _token: csrfToken,
+                                                                XIdObjek: objek.value,
+                                                                XIdDivisi_Objek: divisi.value,
+                                                            },
+                                                            success: function (result) {
+                                                                Swal.fire({
+                                                                    icon: 'success',
+                                                                    title: 'Sukses Hapus',
+                                                                    text: result.success,
+                                                                });
+                                                            },
+                                                            error: function (xhr, status, error) {
+                                                                Swal.fire({
+                                                                    icon: 'error',
+                                                                    title: 'Hubungi EDP!',
+                                                                    text: xhr.responseJSON.error ?? 'Data gagal dihapus'
+                                                                });
+                                                            },
+                                                            complete: function () {
+                                                                setTimeout(() => {
+                                                                    canClickProsesButton = true;
+                                                                }, 3000);
+                                                            }
+                                                        });
+                                                    }
+                                                });
                                             });
-                                        }
-                                    },
-                                    error: function (xhr, status, error) {
-                                        console.error(error);
-                                    },
-                                    complete: function () {
-                                        setTimeout(() => {
-                                            canClickProsesButton = true;
-                                        }, 3000);
-                                    }
-                                });
-                            }
-
-                            //#region ISI kelompok 
-                            if (kelompok.value === '') {
-                                $.ajax({
-                                    type: 'GET',
-                                    url: 'MaintenanceObjek/cekKel',
-                                    data: {
-                                        _token: csrfToken,
-                                        IdKelut: kelompokUtama.value,
-                                        kelompok: namaKelompok.value
-                                    },
-                                    success: function (result) {
-                                        if (parseInt(result[0].ada) !== 0) {
+                                        },
+                                        error: function (xhr, status, error) {
                                             Swal.fire({
                                                 icon: 'error',
-                                                title: 'Kelompok Sudah Ada!',
-                                                text: 'Data Tidak Dapat Di Proses!!...',
+                                                title: 'Hubungi EDP!',
+                                                text: xhr.responseJSON.error ?? 'Data gagal dihapus'
                                             });
-                                            return;
+                                        },
+                                        complete: function () {
+                                            setTimeout(() => {
+                                                canClickProsesButton = true;
+                                            }, 3000);
                                         }
-                                        else {
-                                            $.ajax({
-                                                type: 'GET',
-                                                url: 'MaintenanceObjek/ambilCounter',
-                                                data: {
-                                                    _token: csrfToken,
-                                                },
-                                                success: function (result) {
-                                                    kelompok.value = result[0].IdKelompok;
+                                    });
+                                }
+                            });
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(error);
+                    },
+                    complete: function () {
+                        setTimeout(() => {
+                            canClickProsesButton = true;
+                        }, 3000);
+                    }
+                });
+            }
 
-                                                    $.ajax({
-                                                        type: 'GET',
-                                                        url: 'MaintenanceObjek/updateKelCounter',
-                                                        data: {
-                                                            _token: csrfToken,
-                                                            XIdKelompok: kelompok.value
-                                                        },
-                                                        success: function (result) {
-                                                        },
-                                                        error: function (xhr, status, error) {
-                                                            console.error(error);
-                                                        },
-                                                        complete: function () {
-                                                            setTimeout(() => {
-                                                                canClickProsesButton = true;
-                                                            }, 3000);
-                                                        }
-                                                    });
-
-                                                    $.ajax({
-                                                        type: 'GET',
-                                                        url: 'MaintenanceObjek/insertKel',
-                                                        data: {
-                                                            _token: csrfToken,
-                                                            XIdKelompok: kelompok.value,
-                                                            XNamaKelompok: namaKelompok.value,
-                                                            XIdKelompokUtama_Kelompok: kelompokUtama.value
-                                                        },
-                                                        success: function (result) {
-                                                        },
-                                                        error: function (xhr, status, error) {
-                                                            console.error(error);
-                                                        },
-                                                        complete: function () {
-                                                            setTimeout(() => {
-                                                                canClickProsesButton = true;
-                                                            }, 3000);
-                                                        }
-                                                    });
-                                                },
-                                                error: function (xhr, status, error) {
-                                                    console.error(error);
-                                                },
-                                                complete: function () {
-                                                    setTimeout(() => {
-                                                        canClickProsesButton = true;
-                                                    }, 3000);
-                                                }
+            //#region hapus kosong 3
+            else if (namaSubKelompok.value === '' && namaKelompok.value === '' && namaKelompokUtama.value === '' && namaObjek.value) {
+                $.ajax({
+                    type: 'GET',
+                    url: 'MaintenanceObjek/cekHapusKelompokUtama',
+                    data: {
+                        _token: csrfToken,
+                        XIdkelompokutama_kelompok: kelompokUtama.value,
+                    },
+                    success: function (result) {
+                        if (result) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Isi Nama Kelompok Utama!',
+                                text: 'Data Tidak Dapat Di Proses!!...',
+                            });
+                            return;
+                        }
+                        else {
+                            Swal.fire({
+                                icon: 'question',
+                                title: 'Hapus Objek ??..',
+                                showCancelButton: true,
+                                confirmButtonText: 'Ya',
+                                cancelButtonText: 'Tidak',
+                                returnFocus: false
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    $.ajax({
+                                        type: 'GET',
+                                        url: 'MaintenanceObjek/deleteObjek',
+                                        data: {
+                                            _token: csrfToken,
+                                            XIdObjek: objek.value,
+                                            XIdDivisi_Objek: divisi.value,
+                                        },
+                                        success: function (result) {
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Sukses Hapus',
+                                                text: result.success,
                                             });
-                                        }
-                                    },
-                                    error: function (xhr, status, error) {
-                                        console.error(error);
-                                    },
-                                    complete: function () {
-                                        setTimeout(() => {
-                                            canClickProsesButton = true;
-                                        }, 3000);
-                                    }
-                                });
-                            }
-
-                            //#region ISI Sub kelompok 
-                            if (subKelompok.value === '') {
-                                $.ajax({
-                                    type: 'GET',
-                                    url: 'MaintenanceObjek/cekSubKel',
-                                    data: {
-                                        _token: csrfToken,
-                                        IdKelp: kelompok.value,
-                                        subkel: namaSubKelompok.value
-                                    },
-                                    success: function (result) {
-                                        if (parseInt(result[0].ada) !== 0) {
+                                        },
+                                        error: function (xhr, status, error) {
                                             Swal.fire({
                                                 icon: 'error',
-                                                title: 'Sub Kelompok Sudah Ada!',
-                                                text: 'Data Tidak Dapat Di Proses!!...',
+                                                title: 'Hubungi EDP!',
+                                                text: xhr.responseJSON.error ?? 'Data gagal dihapus'
                                             });
-                                            return;
+                                        },
+                                        complete: function () {
+                                            setTimeout(() => {
+                                                canClickProsesButton = true;
+                                            }, 3000);
                                         }
-                                        else {
-                                            $.ajax({
-                                                type: 'GET',
-                                                url: 'MaintenanceObjek/ambilCounter',
-                                                data: {
-                                                    _token: csrfToken,
-                                                },
-                                                success: function (result) {
-                                                    subKelompok.value = result[0].IdSubKelompok;
-
-                                                    $.ajax({
-                                                        type: 'GET',
-                                                        url: 'MaintenanceObjek/updateSubKelCounter',
-                                                        data: {
-                                                            _token: csrfToken,
-                                                            XIdSubKelompok: subKelompok.value
-                                                        },
-                                                        success: function (result) {
-                                                        },
-                                                        error: function (xhr, status, error) {
-                                                            console.error(error);
-                                                        },
-                                                        complete: function () {
-                                                            setTimeout(() => {
-                                                                canClickProsesButton = true;
-                                                            }, 3000);
-                                                        }
-                                                    });
-
-                                                    $.ajax({
-                                                        type: 'GET',
-                                                        url: 'MaintenanceObjek/insertSubKel',
-                                                        data: {
-                                                            _token: csrfToken,
-                                                            XIdSubKelompok: subKelompok.value,
-                                                            XNamaSubKelompok: namaSubKelompok.value,
-                                                            XIdKelompokUtama_Kelompok: kelompok.value,
-                                                            XKodePerkiraan: kodePerkiraan.value
-                                                        },
-                                                        success: function (result) {
-                                                        },
-                                                        error: function (xhr, status, error) {
-                                                            console.error(error);
-                                                        },
-                                                        complete: function () {
-                                                            setTimeout(() => {
-                                                                canClickProsesButton = true;
-                                                            }, 3000);
-                                                        }
-                                                    });
-                                                },
-                                                error: function (xhr, status, error) {
-                                                    console.error(error);
-                                                },
-                                                complete: function () {
-                                                    setTimeout(() => {
-                                                        canClickProsesButton = true;
-                                                    }, 3000);
-                                                }
-                                            });
-                                        }
-                                    },
-                                    error: function (xhr, status, error) {
-                                        console.error(error);
-                                    },
-                                    complete: function () {
-                                        setTimeout(() => {
-                                            canClickProsesButton = true;
-                                        }, 3000);
-                                    }
-                                });
-                            }
-
-
+                                    });
+                                }
+                            });
                         }
                     },
                     error: function (xhr, status, error) {
