@@ -1039,7 +1039,7 @@ btn_proses.addEventListener("click", function (e) {
                 data: {
                     _token: csrfToken,
                     a: a,
-                    
+
                     namaType: namaType.value,
                     ketType: ketType.value,
                     PIB: PIB.value,
@@ -1069,11 +1069,11 @@ btn_proses.addEventListener("click", function (e) {
                 timeout: 30000,
                 success: function (response) {
                     if (response.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Data terSIMPAN',
-                            text: 'Kode type: 'response[0].idtype,
-                        }).then(() => {
+                        // Swal.fire({
+                        //     icon: 'success',
+                        //     title: 'Data terSIMPAN',
+                        //     text: 'Kode type: 'response[0].idtype,
+                        // }).then(() => {
                             // kode.value = '';
                             // keterangan.value = '';
                             // disableKetik();
