@@ -18,7 +18,8 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="divisiNama" name="divisiNama" readonly>
+                                        <input type="text" class="form-control" id="divisiNama" name="divisiNama"
+                                            readonly>
                                         <div class="input-group-append">
                                             <button type="button" id="btn_divisi" class="btn btn-info">...</button>
                                         </div>
@@ -49,7 +50,8 @@
                                 </div>
                                 <div class="col-md-2">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="kelompokNama" name="kelompokNama" readonly>
+                                        <input type="text" class="form-control" id="kelompokNama" name="kelompokNama"
+                                            readonly>
                                         <div class="input-group-append">
                                             <button type="button" id="btn_kelompok" class="btn btn-info">...</button>
                                         </div>
@@ -80,7 +82,8 @@
                                 </div>
                                 <div class="col-md-2">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="subkelNama" name="subkelNama" readonly>
+                                        <input type="text" class="form-control" id="subkelNama" name="subkelNama"
+                                            readonly>
                                         <div class="input-group-append">
                                             <button type="button" id="btn_subkel" class="btn btn-info">...</button>
                                         </div>
@@ -97,7 +100,8 @@
                                 </div>
                                 <div class="col-md-9">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="katUtama" name="katUtama" class="form-control" readonly>
+                                        <input type="text" class="form-control" id="katUtama" name="katUtama"
+                                            class="form-control" readonly>
                                         <div class="input-group-append">
                                             <button type="button" id="btn_katUtama" class="btn btn-info">...</button>
                                         </div>
@@ -109,7 +113,8 @@
                                 </div>
                                 <div class="col-md-9">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="kategori" name="kategori" class="form-control" readonly>
+                                        <input type="text" class="form-control" id="kategori" name="kategori"
+                                            class="form-control" readonly>
                                         <div class="input-group-append">
                                             <button type="button" id="btn_kateogri" class="btn btn-info">...</button>
                                         </div>
@@ -121,7 +126,8 @@
                                 </div>
                                 <div class="col-md-9 pb-1">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="jenis" name="jenis" class="form-control" readonly>
+                                        <input type="text" class="form-control" id="jenis" name="jenis"
+                                            class="form-control" readonly>
                                         <div class="input-group-append">
                                             <button type="button" id="btn_jenis" class="btn btn-info">...</button>
                                         </div>
@@ -138,7 +144,8 @@
                                 </div>
                                 <div class="col-md-7 pl-0 pr-0">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="namaBarang" name="namaBarang" class="form-control" readonly>
+                                        <input type="text" class="form-control" id="namaBarang" name="namaBarang"
+                                            class="form-control" readonly>
                                         <div class="input-group-append">
                                             <button type="button" id="btn_brang" class="btn btn-info">...</button>
                                         </div>
@@ -154,7 +161,8 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="kode_type" name="kode_type" class="form-control" readonly>
+                                        <input type="text" class="form-control" id="kode_type" name="kode_type"
+                                            class="form-control" readonly>
                                         <div class="input-group-append">
                                             <button type="button" id="btn_kodetype" class="btn btn-info">...</button>
                                         </div>
@@ -199,9 +207,6 @@
                                 <div class="col-md-9">
                                     <input type="text" class="form-control" id="ketType" name="ketType"
                                         class="form-control">
-                                </div>
-                                <div class="col-md-1">
-                                    {{-- <label>lblKdBarang</label> --}}
                                 </div>
                             </div>
 
@@ -263,25 +268,35 @@
 
                         <div class="baris-4 p-1">
                             <div class="row align-items-center">
-                                <div class="col-md-2 d-flex align-items-center">
-                                    <input type="checkbox" name="konversi" id="konversi" style="margin-right: 1%;"> Aturan Konversi
+                                <div class="col-md-2 d-flex align-items-center mt-2 mb-2">
+                                    <input type="checkbox" name="konversi" id="konversi" style="margin: 0 5%;">
+                                    <label for="konversi" id="konversiLabel">Aturan Konversi</label>
                                 </div>
 
-                                <label for="primerSekunder">Konversi Primer Ke Sekunder &#10148;</label>
-                                <div class="col-md-2">
-                                    <div class="input-label">
-                                        <input type="text" class="form-control input-field" id="primerSekunder" name="primerSekunder">
+                                <div class="col-md-10 d-flex align-items-center">
+                                    <div class="row pl-4" id="konvPS">
+                                        <label for="primerSekunder">Konversi Primer Ke Sekunder &#10148;</label>
+                                        <div class="col-md-5">
+                                            <div class="input-label">
+                                                <input type="text" class="form-control input-field"
+                                                    id="primerSekunder" name="primerSekunder">
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <label for="sekunderTritier">Konversi Sekunder Ke Tritier &#10148;</label>
-                                <div class="col-md-2">
-                                    <div class="input-label">
-                                        <input type="text" class="form-control input-field" id="sekunderTritier" name="sekunderTritier">
+                                    <div class="row" id="konvST">
+                                        <label for="sekunderTritier">Konversi Sekunder Ke Tritier &#10148;</label>
+                                        <div class="col-md-5">
+                                            <div class="input-label">
+                                                <input type="text" class="form-control input-field"
+                                                    id="sekunderTritier" name="sekunderTritier">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
 
 
                         <button type="button" id="btn_isi" class="btn btn-outline-secondary">Isi</button>
