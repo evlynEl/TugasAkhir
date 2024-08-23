@@ -1,0 +1,703 @@
+var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+// Assigning elements to variables
+var divisiId = document.getElementById("divisiId");
+var divisiNama = document.getElementById("divisiNama");
+var objekId = document.getElementById("objekId");
+var objekNama = document.getElementById("objekNama");
+var kelompokId = document.getElementById("kelompokId");
+var kelompokNama = document.getElementById("kelompokNama");
+var kelutId = document.getElementById("kelutId");
+var kelutNama = document.getElementById("kelutNama");
+var subkelId = document.getElementById("subkelId");
+var subkelNama = document.getElementById("subkelNama");
+var triter = document.getElementById("triter");
+var sekunder = document.getElementById("sekunder");
+var primer = document.getElementById("primer");
+var satuanPrimer = document.getElementById("satuanPrimer");
+var satuanSekunder = document.getElementById("satuanSekunder");
+var satuanTritier = document.getElementById("satuanTritier");
+var tanggal = document.getElementById("tanggal");
+
+// Button Variables
+var btn_divisi = document.getElementById('btn_divisi');
+var btn_objek = document.getElementById('btn_objek');
+var btn_kelompok = document.getElementById('btn_kelompok');
+var btn_kelut = document.getElementById('btn_kelut');
+var btn_subkel = document.getElementById('btn_subkel');
+var btn_print = document.getElementById('btn_print');
+var btn_ok = document.getElementById('btn_ok');
+
+$('#tanggal').on('keypress', function (event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        btn_ok.focus();
+    }
+});
+
+var today = new Date().toISOString().slice(0, 10);
+tanggal.value = today;
+
+// fungsi swal select pake arrow
+function handleTableKeydown(e, tableId) {
+    const table = $(`#${tableId}`).DataTable();
+    const rows = $(`#${tableId} tbody tr`);
+    const rowCount = rows.length;
+
+    if (e.key === "Enter") {
+        e.preventDefault();
+        const selectedRow = table.row(".selected").data();
+        if (selectedRow) {
+            Swal.getConfirmButton().click();
+        } else {
+            const firstRow = $(`#${tableId} tbody tr:first-child`);
+            if (firstRow.length) {
+                firstRow.click();
+                Swal.getConfirmButton().click();
+            }
+        }
+    } else if (e.key === "ArrowDown") {
+        e.preventDefault();
+        if (currentIndex === null) {
+            currentIndex = 0;
+        } else {
+            currentIndex = (currentIndex + 1) % rowCount;
+        }
+        rows.removeClass("selected");
+        $(rows[currentIndex]).addClass("selected");
+    } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        if (currentIndex === null) {
+            currentIndex = rowCount - 1;
+        } else {
+            currentIndex = (currentIndex - 1 + rowCount) % rowCount;
+        }
+        rows.removeClass("selected");
+        $(rows[currentIndex]).addClass("selected");
+    } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        currentIndex = null;
+        const pageInfo = table.page.info();
+        if (pageInfo.page < pageInfo.pages - 1) {
+            table.page('next').draw('page');
+        }
+    } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        currentIndex = null;
+        const pageInfo = table.page.info();
+        if (pageInfo.page > 0) {
+            table.page('previous').draw('page');
+        }
+    }
+}
+
+// button list divisi
+btn_divisi.addEventListener("click", function (e) {
+
+    objekId.value = '';
+    objekNama.value = '';
+    kelompokId.value = '';
+    kelompokNama.value = '';
+    kelutId.value = '';
+    kelutNama.value = '';
+    subkelId.value = '';
+    subkelNama.value = '';
+
+    try {
+        Swal.fire({
+            title: 'Divisi',
+            html: `
+                <table id="table_list" class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID Divisi</th>
+                            <th scope="col">Nama Divisi</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            `,
+            preConfirm: () => {
+                const selectedData = $("#table_list")
+                    .DataTable()
+                    .row(".selected")
+                    .data();
+                if (!selectedData) {
+                    Swal.showValidationMessage("Please select a row");
+                    return false;
+                }
+                return selectedData;
+            },
+            returnFocus: false,
+            showCloseButton: true,
+            showConfirmButton: true,
+            confirmButtonText: 'Select',
+            didOpen: () => {
+                $(document).ready(function () {
+                    const table = $("#table_list").DataTable({
+                        responsive: true,
+                        processing: true,
+                        serverSide: true,
+                        order: [1, "asc"],
+                        ajax: {
+                            url: "TransaksiHarian/getDivisi",
+                            dataType: "json",
+                            type: "GET",
+                            data: {
+                                _token: csrfToken
+                            }
+                        },
+                        columns: [
+                            { data: "IdDivisi" },
+                            { data: "NamaDivisi" },
+                        ]
+                    });
+
+                    $("#table_list tbody").on("click", "tr", function () {
+                        table.$("tr.selected").removeClass("selected");
+                        $(this).addClass("selected");
+                    });
+
+                    currentIndex = null;
+                    Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
+                });
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                divisiId.value = result.value.IdDivisi.trim();
+                divisiNama.value = result.value.NamaDivisi.trim();
+                btn_objek.focus();
+            }
+        });
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+// button list objek
+btn_objek.addEventListener("click", function (e) {
+
+    objekId.value = '';
+    objekNama.value = '';
+    kelompokId.value = '';
+    kelompokNama.value = '';
+    kelutId.value = '';
+    kelutNama.value = '';
+    subkelId.value = '';
+    subkelNama.value = '';
+
+    try {
+        Swal.fire({
+            title: 'Objek',
+            html: `
+                <table id="table_list" class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID Objek</th>
+                            <th scope="col">Nama Objek</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            `,
+            preConfirm: () => {
+                const selectedData = $("#table_list")
+                    .DataTable()
+                    .row(".selected")
+                    .data();
+                if (!selectedData) {
+                    Swal.showValidationMessage("Please select a row");
+                    return false;
+                }
+                return selectedData;
+            },
+            returnFocus: false,
+            showCloseButton: true,
+            showConfirmButton: true,
+            confirmButtonText: 'Select',
+            didOpen: () => {
+                $(document).ready(function () {
+                    const table = $("#table_list").DataTable({
+                        responsive: true,
+                        processing: true,
+                        serverSide: true,
+                        order: [0, "asc"],
+                        ajax: {
+                            url: "TransaksiHarian/getObjek",
+                            dataType: "json",
+                            type: "GET",
+                            data: {
+                                _token: csrfToken,
+                                divisi: divisiId.value
+                            }
+                        },
+                        columns: [
+                            { data: "IdObjek" },
+                            { data: "NamaObjek" },
+                        ]
+                    });
+
+                    $("#table_list tbody").on("click", "tr", function () {
+                        table.$("tr.selected").removeClass("selected");
+                        $(this).addClass("selected");
+                    });
+
+                    currentIndex = null;
+                    Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
+                });
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                objekId.value = result.value.IdObjek.trim();
+                objekNama.value = result.value.NamaObjek.trim();
+                btn_kelut.focus();
+            }
+        });
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+// button list kelompok utama
+btn_kelut.addEventListener("click", function (e) {
+
+    kelompokId.value = '';
+    kelompokNama.value = '';
+    kelutId.value = '';
+    kelutNama.value = '';
+    subkelId.value = '';
+    subkelNama.value = '';
+
+    try {
+        Swal.fire({
+            title: 'Kelompok Utama',
+            html: `
+                <table id="table_list" class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Nama Kelompok Utama</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            `,
+            preConfirm: () => {
+                const selectedData = $("#table_list")
+                    .DataTable()
+                    .row(".selected")
+                    .data();
+                if (!selectedData) {
+                    Swal.showValidationMessage("Please select a row");
+                    return false;
+                }
+                return selectedData;
+            },
+            returnFocus: false,
+            showCloseButton: true,
+            showConfirmButton: true,
+            confirmButtonText: 'Select',
+            didOpen: () => {
+                $(document).ready(function () {
+                    const table = $("#table_list").DataTable({
+                        responsive: true,
+                        processing: true,
+                        serverSide: true,
+                        order: [0, "asc"],
+                        ajax: {
+                            url: "TransaksiHarian/getKelUt",
+                            dataType: "json",
+                            type: "GET",
+                            data: {
+                                _token: csrfToken,
+                                objekId: objekId.value
+                            }
+                        },
+                        columns: [
+                            { data: "IdKelompokUtama" },
+                            { data: "NamaKelompokUtama" }
+                        ]
+                    });
+
+                    $("#table_list tbody").on("click", "tr", function () {
+                        table.$("tr.selected").removeClass("selected");
+                        $(this).addClass("selected");
+                    });
+
+                    currentIndex = null;
+                    Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
+                });
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                kelutId.value = result.value.IdKelompokUtama.trim();
+                kelutNama.value = result.value.NamaKelompokUtama.trim();
+                btn_kelompok.focus();
+            }
+        });
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+// button list kelompok
+btn_kelompok.addEventListener("click", function (e) {
+
+    kelompokId.value = '';
+    kelompokNama.value = '';
+    subkelId.value = '';
+    subkelNama.value = '';
+
+    try {
+        Swal.fire({
+            title: 'Kelompok',
+            html: `
+                <table id="table_list" class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Nama Kelompok</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            `,
+            preConfirm: () => {
+                const selectedData = $("#table_list")
+                    .DataTable()
+                    .row(".selected")
+                    .data();
+                if (!selectedData) {
+                    Swal.showValidationMessage("Please select a row");
+                    return false;
+                }
+                return selectedData;
+            },
+            returnFocus: false,
+            showCloseButton: true,
+            showConfirmButton: true,
+            confirmButtonText: 'Select',
+            didOpen: () => {
+                $(document).ready(function () {
+                    const table = $("#table_list").DataTable({
+                        responsive: true,
+                        processing: true,
+                        serverSide: true,
+                        order: [1, "asc"],
+                        ajax: {
+                            url: "TransaksiHarian/getKelompok",
+                            dataType: "json",
+                            type: "GET",
+                            data: {
+                                _token: csrfToken,
+                                kelutId: kelutId.value
+                            }
+                        },
+                        columns: [
+                            { data: "idkelompok" },
+                            { data: "namakelompok" }
+                        ]
+                    });
+
+                    $("#table_list tbody").on("click", "tr", function () {
+                        table.$("tr.selected").removeClass("selected");
+                        $(this).addClass("selected");
+                    });
+
+                    currentIndex = null;
+                    Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
+                });
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                kelompokId.value = result.value.idkelompok.trim();
+                kelompokNama.value = result.value.namakelompok.trim();
+                btn_subkel.focus();
+            }
+        });
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+// button list sub kelompok
+btn_subkel.addEventListener("click", function (e) {
+
+    subkelId.value = '';
+    subkelNama.value = '';
+
+    try {
+        Swal.fire({
+            title: 'Sub Kelompok',
+            html: `
+                <table id="table_list" class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID Sub Kelompok</th>
+                            <th scope="col">Nama Sub Kelompok</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            `,
+            preConfirm: () => {
+                const selectedData = $("#table_list")
+                    .DataTable()
+                    .row(".selected")
+                    .data();
+                if (!selectedData) {
+                    Swal.showValidationMessage("Please select a row");
+                    return false;
+                }
+                return selectedData;
+            },
+            returnFocus: false,
+            showCloseButton: true,
+            showConfirmButton: true,
+            confirmButtonText: 'Select',
+            didOpen: () => {
+                $(document).ready(function () {
+                    const table = $("#table_list").DataTable({
+                        responsive: true,
+                        processing: true,
+                        serverSide: true,
+                        order: [1, "asc"],
+                        ajax: {
+                            url: "TransaksiHarian/getSubkel",
+                            dataType: "json",
+                            type: "GET",
+                            data: {
+                                _token: csrfToken,
+                                kelompokId: kelompokId.value
+                            }
+                        },
+                        columns: [
+                            { data: "IdSubkelompok" },
+                            { data: "NamaSubKelompok" }
+                        ]
+                    });
+
+                    $("#table_list tbody").on("click", "tr", function () {
+                        table.$("tr.selected").removeClass("selected");
+                        $(this).addClass("selected");
+                    });
+
+                    currentIndex = null;
+                    Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
+                });
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                subkelId.value = result.value.IdSubkelompok.trim();
+                subkelNama.value = result.value.NamaSubKelompok.trim();
+                tanggal.focus();
+            }
+        });
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+$(document).ready(function () {
+    $('#tableData').DataTable({
+        paging: false,
+        searching: false,
+        info: false,
+        ordering: true,
+        columns: [
+            { title: 'Tgl Mohon' },
+            { title: 'No. Trans' },
+            { title: 'Id Type' },
+            { title: 'Jenis Transaksi' },
+            { title: 'Nama Barang' },
+            { title: 'Masuk Primer' },
+            { title: 'Masuk Sekunder' },
+            { title: 'Masuk Tritier' },
+            { title: 'Keluar Primer' },
+            { title: 'Keluar Sekunder' },
+            { title: 'Keluar Tritier' },
+        ]
+    });
+});
+
+function updateDataTable(data) {
+    var table = $('#tableData').DataTable();
+    table.clear();
+
+    data.forEach(function (item) {
+        table.row.add([
+            item.AwalTrans,
+            item.IdTransaksi,
+            item.IdType,
+            item.TypeTransaksi,
+            item.NamaType,
+            formatNumber(item.JumlahPemasukanPrimer),
+            formatNumber(item.JumlahPemasukanSekunder),
+            formatNumber(item.JumlahPemasukanTritier),
+            formatNumber(item.JumlahPengeluaranPrimer),
+            formatNumber(item.JumlahPengeluaranSekunder),
+            formatNumber(item.JumlahPengeluaranTritier),
+        ]);
+    });
+
+    table.draw();
+}
+
+function formatNumber(value) {
+    if (!isNaN(parseFloat(value)) && isFinite(value)) {
+        return parseFloat(value).toFixed(2);
+    }
+    return value;
+}
+
+
+$('#tableData tbody').on('click', 'tr', function () {
+    var table = $('#tableData').DataTable();
+    table.$('tr.selected').removeClass('selected');
+    $(this).addClass('selected');
+    var data = table.row(this).data();
+    let IdType = data[2];
+
+    console.log(IdType);
+
+    $.ajax({
+        type: 'GET',
+        url: 'TransaksiHarian/getSaldo',
+        data: {
+            IdType: IdType,
+            _token: csrfToken
+        },
+        success: function (result) {
+            if (result) {
+                triter.value = formatNumber(result[0].SaldoTritier);
+                primer.value = formatNumber(result[0].SaldoPrimer);
+                sekunder.value = formatNumber(result[0].SaldoSekunder);
+                satuanPrimer.value = result[0].SatPrimer ?? '';
+                satuanSekunder.value = result[0].SatSekunder ?? '';
+                satuanTritier.value = result[0].SatTritier ?? '';
+            }
+            else {
+                triter.value = '';
+                primer.value = '';
+                sekunder.value = '';
+                satuanPrimer.value = '';
+                satuanSekunder.value = '';
+                satuanTritier.value = '';
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
+});
+
+
+// button ok
+btn_ok.addEventListener("click", function (e) {
+    primer.value = '';
+    triter.value = '';
+    sekunder.value = '';
+    satuanPrimer.value = '';
+    satuanSekunder.value = '';
+    satuanTritier.value = '';
+
+    // subkel(full)
+    if (subkelId.value) {
+
+        $.ajax({
+            type: 'GET',
+            url: 'TransaksiHarian/getTransaksiHarian4Data',
+            data: {
+                _token: csrfToken,
+                XIdSubKelompok: subkelId.value,
+                tanggal: tanggal.value,
+            },
+            success: function (result) {
+                updateDataTable(result);
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Data di tabel sudah diupdate.',
+                });
+            },
+            error: function (xhr, status, error) {
+            },
+        });
+    }
+
+    // objek
+    else if (kelompokId.value) {
+
+        $.ajax({
+            type: 'GET',
+            url: 'TransaksiHarian/getTransaksiHarianKelompok',
+            data: {
+                _token: csrfToken,
+                IdKel: kelompokId.value,
+                tanggal: tanggal.value,
+            },
+            success: function (result) {
+                updateDataTable(result);
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Data di tabel sudah diupdate.',
+                });
+            },
+            error: function (xhr, status, error) {
+            },
+        });
+    }
+
+    // kelutama
+    else if (kelutId.value) {
+
+        $.ajax({
+            type: 'GET',
+            url: 'TransaksiHarian/getTransaksiHarianKelut',
+            data: {
+                _token: csrfToken,
+                IdKelut: kelutId.value,
+                tanggal: tanggal.value,
+            },
+            success: function (result) {
+                updateDataTable(result);
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Data di tabel sudah diupdate.',
+                });
+            },
+            error: function (xhr, status, error) {
+            },
+        });
+    }
+
+    // kelutama
+    else if (objekId.value) {
+
+        $.ajax({
+            type: 'GET',
+            url: 'TransaksiHarian/getTransaksiHarianObjek',
+            data: {
+                _token: csrfToken,
+                IdObjek: objekId.value,
+                tanggal: tanggal.value,
+            },
+            success: function (result) {
+                updateDataTable(result);
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Data di tabel sudah diupdate.',
+                });
+            },
+            error: function (xhr, status, error) {
+            },
+        });
+    }
+});

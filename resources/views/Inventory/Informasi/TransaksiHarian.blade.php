@@ -4,25 +4,29 @@
         <div class="row justify-content-center">
             <div class="col-md-10 RDZMobilePaddingLR0">
                 <div class="card">
-                    <div class="card-header" style="">Maintenance Max/Min Stock Barang per Divisi</div>
+                    <div class="card-header" style="">Transaksi Harian</div>
                     <div class="card-body RDZOverflow RDZMobilePaddingLR0">
 
                         <div class="row pt-2">
                             <div class="col-1 ml-2">
                                 <label for="divisiId">Divisi</label>
                             </div>
+                            <div class="col-md-1">
+                                <input type="text" id="divisiId" name="divisiId" class="form-control" readonly>
+                            </div>
                             <div class="col-md-2">
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="divisiNama" name="divisiNama" readonly>
                                     <div class="input-group-append">
-                                        <button type="button" id="btn_divisi" class="btn btn-info" disabled>...</button>
+                                        <button type="button" id="btn_divisi" class="btn btn-info">...</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <br>
                         {{-- ATAS --}}
-                        <div class="baris-1 pl-1">
+                        <div class="baris-1 pl-3">
+
                             <div class="row pr-5">
                                 <div class="col-sm-2">
                                     <label for="objekId">Objek</label>
@@ -34,7 +38,7 @@
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="objekNama" name="objekNama" readonly>
                                         <div class="input-group-append">
-                                            <button type="button" id="btn_objek" class="btn btn-info" disabled>...</button>
+                                            <button type="button" id="btn_objek" class="btn btn-info">...</button>
                                         </div>
                                     </div>
                                 </div>
@@ -46,11 +50,9 @@
                                 </div>
                                 <div class="col-md-2">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="kelompokNama" name="kelompokNama"
-                                            readonly>
+                                        <input type="text" class="form-control" id="kelompokNama" name="kelompokNama" readonly>
                                         <div class="input-group-append">
-                                            <button type="button" id="btn_kelompok" class="btn btn-info"
-                                                disabled>...</button>
+                                            <button type="button" id="btn_kelompok" class="btn btn-info">...</button>
                                         </div>
                                     </div>
                                 </div>
@@ -67,7 +69,7 @@
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="kelutNama" name="kelutNama" readonly>
                                         <div class="input-group-append">
-                                            <button type="button" id="btn_kelut" class="btn btn-info" disabled>...</button>
+                                            <button type="button" id="btn_kelut" class="btn btn-info">...</button>
                                         </div>
                                     </div>
                                 </div>
@@ -79,131 +81,94 @@
                                 </div>
                                 <div class="col-md-2">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="subkelNama" name="subkelNama"
-                                            readonly>
+                                        <input type="text" class="form-control" id="subkelNama" name="subkelNama" readonly>
                                         <div class="input-group-append">
-                                            <button type="button" id="btn_subkel" class="btn btn-info"
-                                                disabled>...</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="baris-3 pl-1">
-                            <div class="row pt-2">
-                                <div class="col-md-2 pr-0">
-                                    <label for="kode_type">Kode Type</label>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" id="kode_type" name="kode_type"
-                                            class="form-control" readonly>
-                                        <div class="input-group-append">
-                                            <button type="button" id="btn_kodetype" class="btn btn-info"
-                                                disabled>...</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-2 offset-md-1">
-                                    <span id="kodeBarang"></span>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-2">
-                                    <label for="type-id">Nama Type</label>
-                                </div>
-                                <div class="col-md-9">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" id="namaType" name="namaType"
-                                            class="form-control" readonly>
-                                        <div class="input-group-append">
-                                            <button type="button" id="btn_namatype" class="btn btn-info"
-                                                disabled>...</button>
+                                            <button type="button" id="btn_subkel" class="btn btn-info">...</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="row">
-                                <div class="col-md-2">
-                                    <label for="type-id">Keterangan</label>
-                                </div>
-                                <div class="col-md-9">
-                                    <input type="text" class="form-control" id="ketType" name="ketType"
-                                        class="form-control" readonly>
-                                </div>
-                                <div class="col-md-1">
-                                    {{-- <label>lblKdBarang</label> --}}
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-2">
-                                    <label>Satuan</label>
-                                </div>
-
-                                <div class="col-md-1 pl-2">
-                                    <label for="tritier">Tritier</label>
+                            <div class="row pb-1 pr-5">
+                                <div class="col-sm-2">
+                                    <label for="tanggal">Tanggal</label>
                                 </div>
                                 <div class="col-md-2">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" id="triter" name="triter"
-                                            class="form-control" readonly>
-                                    </div>
+                                    <input type="date" id="tanggal" name="tanggal" class="form-control">
                                 </div>
-
-                                <div class="col-md-1 pl-3">
-                                    <label for="tritier">Sekunder</label>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" id="sekunder" name="sekunder"
-                                            class="form-control" readonly>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-1 pl-3">
-                                    <label for="tritier">Primer</label>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" id="primer" name="primer"
-                                            class="form-control" readonly>
-                                    </div>
+                                <div class="col-sm-1">
+                                    <button type="button" id="btn_ok" class="btn btn-outline-secondary">OK</button>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="baris-3 pl-1">
+
+                        <div class="baris-1 pl-3">
                             <div class="row">
-                                <div class="col-md-2 offset-sm-2">
-                                    <label for="minim">Minimum Stock</label>
+                                <div class="col-sm-2 mt-2 mb-2">
+                                    <label>Saldo Akhir</label>
                                 </div>
-                                <div class="col-md-2">
-                                    <input type="text" class="form-control" id="minim" name="minim"
-                                        class="form-control" readonly>
+
+                                <div class="col-sm-2 mt-2">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="primer" name="primer" readonly>
+                                    </div>
                                 </div>
-                                <div class="col-md-2">
-                                    <label for="maximum">Maximum Stock</label>
+                                <div class="col-sm-1 mt-2" style="margin-left: -2%">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="satuanPrimer"
+                                            name="satuanPrimer" readonly>
+                                    </div>
                                 </div>
-                                <div class="col-md-2">
-                                    <input type="text" class="form-control" id="maximum" name="maximum"
-                                        class="form-control" readonly>
+
+                                <div class="col-sm-2 mt-2" style="margin-left: 3%">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="sekunder" name="sekunder" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-sm-1 mt-2" style="margin-left: -2%">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="satuanSekunder"
+                                            name="satuanSekunder" readonly>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-2 mt-2" style="margin-left: 3%">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="triter" name="triter" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-sm-1 mt-2" style="margin-left: -2%">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="satuanTritier"
+                                            name="satuanTritier" readonly>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-top: 0.5%">
+                            <div class="col-sm-12">
+                                <div class="table-responsive fixed-height" style="height: 300px">
+                                    <table class="table table-bordered no-wrap-header" id="tableData">
+                                        <thead>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
 
-                        <button type="button" id="btn_isi" class="btn btn-outline-secondary">Isi</button>
-                        <button type="button" id="btn_koreksi" class="btn btn-outline-secondary">Koreksi</button>
-                        <button type="button" id="btn_proses" class="btn btn-outline-secondary" disabled>Proses</button>
-                        <button type="button" id="btn_batal" class="btn btn-outline-secondary" disabled>Batal</button>
+                        <button type="button" id="btn_print" class="btn btn-outline-secondary"
+                            style="display: none">Print</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <link rel="stylesheet" href="{{ asset('css/Inventory/Master/TransaksiHarian.css') }}">
-    <script src="{{ asset('js/Inventory/Master/TransaksiHarian.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('css/Inventory/Informasi/TransaksiHarian.css') }}">
+    <script src="{{ asset('js/Inventory/Informasi/TransaksiHarian.js') }}"></script>
 @endsection

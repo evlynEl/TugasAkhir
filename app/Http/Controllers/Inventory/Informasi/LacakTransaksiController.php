@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Inventory\Informasi;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\HakAksesController;
 
 class LacakTransaksiController extends Controller
 {
@@ -13,10 +14,8 @@ class LacakTransaksiController extends Controller
     public function index()
     {
 
-        $data = 'HAPPY HAPPY HAPPY';
-
-        // dd($dataDivisi);
-        return view('Inventory.Informasi.LacakTransaksi', compact('data'));
+        $access = (new HakAksesController)->HakAksesFiturMaster('Inventory'); //tidak perlu menu di navbar
+        return view('Inventory.Informasi.LacakTransaksi', compact('access'));
     }
 
     //Show the form for creating a new resource.
@@ -28,53 +27,255 @@ class LacakTransaksiController extends Controller
     //Store a newly created resource in storage.
     public function store(Request $request)
     {
-        $data = $request->all();
-        // dd($data , " Masuk store");
-        DB::connection('ConnInventory')->statement('exec SP_1273_INV_Insert_02_TmpTransaksi @XIdTypeTransaksi = ?, @XUraianDetailTransaksi = ?, @XSaatawalTransaksi = ?
-        , @XIdType = ?, @XIdPenerima = ?, @XJumlahKeluarPrimer = ?, @XJumlahKeluarSekunder = ?, @XJumlahKeluarTritier = ?, @XAsalIdSubKelompok = ?, @XTujuanIdSubkelompok = ?, @Harga = ?', [
-            $data['IdTypeTransaksi'],
-            $data['UraianDetailTransaksi'],
-            $data['SaatAwalTransaksi'],
-            $data['IdType'],
-            $data['IdPenerima'],
-            $data['JumlahKeluarPrimer'],
-            $data['JumlahKeluarSekunder'],
-            $data['JumlahKeluarTritier'],
-            $data['AsalIdSubKel'],
-            $data['TujuanIdSubKel'],
-            $data['Harga']
-        ]);
-
-        return redirect()->route('FormMhnPenerima.index')->with('alert', 'Data berhasil ditambahkan!');
+        // 
     }
 
     //Display the specified resource.
-    public function show($cr)
+    public function show($id, Request $request)
     {
-        $crExplode = explode(".", $cr);
-        $lastIndex = count($crExplode) - 1;
-        //getListPerkiraan
-        if ($crExplode[$lastIndex] == "getDivisi") {
-            $dataDivisi = DB::connection('ConnInventory')->select('exec SP_1003_INV_userdivisi @XKdUser = ?', [$crExplode[0]]);
-            return response()->json($dataDivisi);
-        } else if ($crExplode[$lastIndex] == "getObjek") {
-            $dataObjek = DB::connection('ConnInventory')->select('exec SP_1003_INV_User_Objek @XKdUser = ?, @XIdDivisi = ?', [$crExplode[0], $crExplode[1]]);
-            return response()->json($dataObjek);
-        } else if ($crExplode[$lastIndex] == "getKelompokUtama") {
-            $dataKelut = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdObjek_KelompokUtama @XIdObjek_KelompokUtama = ?', [$crExplode[0]]);
-            return response()->json($dataKelut);
-        } else if ($crExplode[$lastIndex] == "getKelompok") {
-            $dataKelompok = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdKelompokUtama_Kelompok @XIdKelompokUtama_Kelompok = ?', [$crExplode[0]]);
-            return response()->json($dataKelompok);
-        } else if ($crExplode[$lastIndex] == "getSubKelompok") {
-            $dataSubKelompok = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdKelompok_SubKelompok @XIdKelompok_SubKelompok = ?', [$crExplode[0]]);
-            return response()->json($dataSubKelompok);
-        } else if ($crExplode[$lastIndex] == "getListMohon") {
-            $dataMohon = DB::connection('ConnInventory')->select('exec SP_1003_INV_List_Mohon_TmpTransaksi @Kode = ?, @XIdTypeTransaksi = ?, @XIdDivisi = ?', [$crExplode[0],$crExplode[1],$crExplode[2]]);
-            return response()->json($dataMohon);
-        } else if ($crExplode[$lastIndex] == "getDataPemohon") {
-            $dataPemohon = DB::connection('ConnInventory')->select('exec SP_1003_INV_List_Mohon_TmpTransaksi @Kode = ?, @XIdTypeTransaksi = ?, @XIdDivisi = ?, @XUser = ?', [$crExplode[0], $crExplode[1]]);
-            return response()->json($dataPemohon);
+        $user = Auth::user()->NomorUser;
+
+        // get user id
+        if ($id === 'getUserId') {
+            return response()->json(['user' => $user]);
+        }
+
+        // get divisi
+        else if ($id === 'getDivisi') {
+            $divisi = DB::connection('ConnInventory')->select('exec SP_1003_INV_userdivisi @XKdUser = ?', [$user]);
+            $data_divisi = [];
+            foreach ($divisi as $detail_divisi) {
+                $data_divisi[] = [
+                    'NamaDivisi' => $detail_divisi->NamaDivisi,
+                    'IdDivisi' => $detail_divisi->IdDivisi,
+                    'KodeUser' => $detail_divisi->KodeUser
+                ];
+            }
+            return datatables($divisi)->make(true);
+
+            // mendapatkan daftar objek
+        } else if ($id === 'getObjek') {
+            $objek = DB::connection('ConnInventory')->select('exec SP_1003_INV_User_Objek @XKdUser = ?, @XIdDivisi = ?', [$user, $request->input('divisi')]);
+            $data_objek = [];
+            foreach ($objek as $detail_objek) {
+                $data_objek[] = [
+                    'NamaObjek' => $detail_objek->NamaObjek,
+                    'IdObjek' => $detail_objek->IdObjek,
+                    'IdDivisi' => $detail_objek->IdDivisi
+                ];
+            }
+            return datatables($objek)->make(true);
+
+            // mendapatkan daftar kelompok utama
+        } else if ($id === 'getKelUt') {
+            $kelut = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdObjek_KelompokUtama @XIdObjek_KelompokUtama = ?', [$request->input('objekId')]);
+            $data_kelut = [];
+            foreach ($kelut as $detail_kelut) {
+                $data_kelut[] = [
+                    'NamaKelompokUtama' => $detail_kelut->NamaKelompokUtama,
+                    'IdKelompokUtama' => $detail_kelut->IdKelompokUtama
+                ];
+            }
+            return datatables($kelut)->make(true);
+
+            // mendapatkan daftar kelompok
+        } else if ($id === 'getKelompok') {
+            $kelompok = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdKelompokUtama_Kelompok @XIdKelompokUtama_Kelompok = ?', [$request->input('kelutId')]);
+            $data_kelompok = [];
+            foreach ($kelompok as $detail_kelompok) {
+                $data_kelompok[] = [
+                    'idkelompok' => $detail_kelompok->idkelompok,
+                    'namakelompok' => $detail_kelompok->namakelompok
+                ];
+            }
+            return datatables($kelompok)->make(true);
+
+            // mendapatkan daftar sub kelompok
+        } else if ($id === 'getSubkel') {
+            $XIdKelompok_SubKelompok = $request->input('kelompokId');
+
+            $XIdKelompok_SubKelompok = $XIdKelompok_SubKelompok ?? '0';
+
+            $subkel = DB::connection('ConnInventory')->select('exec SP_1003_INV_IDKELOMPOK_SUBKELOMPOK @XIdKelompok_SubKelompok = ?', [$XIdKelompok_SubKelompok]);
+            $data_subkel = [];
+            foreach ($subkel as $detail_subkel) {
+                $data_subkel[] = [
+                    'IdSubkelompok' => $detail_subkel->IdSubkelompok,
+                    'NamaSubKelompok' => $detail_subkel->NamaSubKelompok
+                ];
+            }
+            return datatables($subkel)->make(true);
+        }
+
+        // Lacak by divisi
+        else if ($id === 'lacakDivisi') {
+            $Status = $request->input('Status');
+            $IdTypeTransaksi = $request->input('IdTypeTransaksi');
+            $Tanggal = $request->input('Tanggal');
+            $IdDivisi = $request->input('IdDivisi');
+
+            $subkel = DB::connection('ConnInventory')->select('exec SP_1003_INV_Lacak_TmpTransaksi
+            @Kode = ?, @Status = ?, @IdTypeTransaksi = ?, @Tanggal = ?, @IdDivisi = ?',
+                [1, $Status, $IdTypeTransaksi, $Tanggal, $IdDivisi]
+            );
+            $data_subkel = [];
+            foreach ($subkel as $detail_subkel) {
+                $data_subkel[] = [
+                    'idtransaksi' => $detail_subkel->idtransaksi,
+                    'NamaType' => $detail_subkel->NamaType,
+                    'nmpenerima' => $detail_subkel->nmpenerima,
+                    'ACCPenerima' => $detail_subkel->ACCPenerima,
+                    'ACCPemberi' => $detail_subkel->ACCPemberi,
+                    'nmpemberi' => $detail_subkel->nmpemberi,
+                    'jumlahpengeluaranprimer' => $detail_subkel->jumlahpengeluaranprimer,
+                    'jumlahpengeluaransekunder' => $detail_subkel->jumlahpengeluaransekunder,
+                    'jumlahpengeluarantritier' => $detail_subkel->jumlahpengeluarantritier,
+                ];
+            }
+            return response()->json($data_subkel);
+        }
+
+        // Lacak by objek
+        else if ($id === 'lacakObjek') {
+            $Status = $request->input('Status');
+            $IdTypeTransaksi = $request->input('IdTypeTransaksi');
+            $Tanggal = $request->input('Tanggal');
+            $IdDivisi = $request->input('IdDivisi');
+            $Idobjek = $request->input('Idobjek');
+
+            $subkel = DB::connection('ConnInventory')->select('exec SP_1003_INV_Lacak_TmpTransaksi
+            @Kode = ?, @Status = ?, @IdTypeTransaksi = ?, @Tanggal = ?, @IdDivisi = ?, @Idobjek = ?',
+                [2, $Status, $IdTypeTransaksi, $Tanggal, $IdDivisi, $Idobjek]
+            );
+            $data_subkel = [];
+            foreach ($subkel as $detail_subkel) {
+                $data_subkel[] = [
+                    'idtransaksi' => $detail_subkel->idtransaksi,
+                    'NamaType' => $detail_subkel->NamaType,
+                    'nmpenerima' => $detail_subkel->nmpenerima,
+                    'ACCPenerima' => $detail_subkel->ACCPenerima,
+                    'ACCPemberi' => $detail_subkel->ACCPemberi,
+                    'nmpemberi' => $detail_subkel->nmpemberi,
+                    'jumlahpengeluaranprimer' => $detail_subkel->jumlahpengeluaranprimer,
+                    'jumlahpengeluaransekunder' => $detail_subkel->jumlahpengeluaransekunder,
+                    'jumlahpengeluarantritier' => $detail_subkel->jumlahpengeluarantritier,
+                ];
+            }
+            return response()->json($data_subkel);
+        }
+
+        // Lacak by kel ut
+        else if ($id === 'lacakKelUt') {
+            $Status = $request->input('Status');
+            $IdTypeTransaksi = $request->input('IdTypeTransaksi');
+            $Tanggal = $request->input('Tanggal');
+            $IdDivisi = $request->input('IdDivisi');
+            $Idobjek = $request->input('Idobjek');
+            $Idkelutama = $request->input('Idkelutama');
+
+            $subkel = DB::connection('ConnInventory')->select('exec SP_1003_INV_Lacak_TmpTransaksi
+            @Kode = ?, @Status = ?, @IdTypeTransaksi = ?, @Tanggal = ?, @IdDivisi = ?, @Idobjek = ?, @Idkelutama = ?',
+                [3, $Status, $IdTypeTransaksi, $Tanggal, $IdDivisi, $Idobjek, $Idkelutama]
+            );
+            $data_subkel = [];
+
+            if ($Status == 1) {
+                foreach ($subkel as $detail_subkel) {
+                    $data_subkel[] = [
+                        'idtransaksi' => $detail_subkel->idtransaksi,
+                        'NamaType' => $detail_subkel->NamaType,
+                        'nmpenerima' => $detail_subkel->nmpenerima,
+                        'ACCPenerima' => $detail_subkel->ACCPenerima,
+                        'ACCPemberi' => $detail_subkel->ACCPemberi,
+                        'nmpemberi' => $detail_subkel->nmpemberi,
+                        'jumlahpengeluaranprimer' => $detail_subkel->jumlahpengeluaranprimer,
+                        'jumlahpengeluaransekunder' => $detail_subkel->jumlahpengeluaransekunder,
+                        'jumlahpengeluarantritier' => $detail_subkel->jumlahpengeluarantritier,
+                    ];
+                }
+            } else {
+                foreach ($subkel as $detail_subkel) {
+                    $data_subkel[] = [
+                        'idtransaksi' => $detail_subkel->IdTransaksi,
+                        'NamaType' => $detail_subkel->NamaType,
+                        'nmpenerima' => $detail_subkel->NmPenerima,
+                        'ACCPenerima' => $detail_subkel->ACCPenerima,
+                        'ACCPemberi' => $detail_subkel->ACCPemberi,
+                        'nmpemberi' => $detail_subkel->NmPemberi,
+                        'jumlahpengeluaranprimer' => $detail_subkel->JumlahPengeluaranPrimer,
+                        'jumlahpengeluaransekunder' => $detail_subkel->JumlahPengeluaranSekunder,
+                        'jumlahpengeluarantritier' => $detail_subkel->JumlahPengeluaranTritier,
+                    ];
+                }
+            }
+            return response()->json($data_subkel);
+        }
+
+        // Lacak by kel ut
+        else if ($id === 'lacakKelompok') {
+            $Status = $request->input('Status');
+            $IdTypeTransaksi = $request->input('IdTypeTransaksi');
+            $Tanggal = $request->input('Tanggal');
+            $IdDivisi = $request->input('IdDivisi');
+            $Idobjek = $request->input('Idobjek');
+            $Idkelutama = $request->input('Idkelutama');
+            $Idkelompok = $request->input('Idkelompok');
+
+            $subkel = DB::connection('ConnInventory')->select('exec SP_1003_INV_Lacak_TmpTransaksi
+            @Kode = ?, @Status = ?, @IdTypeTransaksi = ?, @Tanggal = ?, @IdDivisi = ?, @Idobjek = ?, @Idkelutama = ?, @Idkelompok = ?',
+                [4, $Status, $IdTypeTransaksi, $Tanggal, $IdDivisi, $Idobjek, $Idkelutama, $Idkelompok]
+            );
+            $data_subkel = [];
+
+            foreach ($subkel as $detail_subkel) {
+                $data_subkel[] = [
+                    'idtransaksi' => $detail_subkel->idtransaksi,
+                    'NamaType' => $detail_subkel->NamaType,
+                    'nmpenerima' => $detail_subkel->nmpenerima,
+                    'ACCPenerima' => $detail_subkel->ACCPenerima,
+                    'ACCPemberi' => $detail_subkel->ACCPemberi,
+                    'nmpemberi' => $detail_subkel->nmpemberi,
+                    'jumlahpengeluaranprimer' => $detail_subkel->jumlahpengeluaranprimer,
+                    'jumlahpengeluaransekunder' => $detail_subkel->jumlahpengeluaransekunder,
+                    'jumlahpengeluarantritier' => $detail_subkel->jumlahpengeluarantritier,
+                ];
+
+            }
+            return response()->json($data_subkel);
+        }
+
+        // Lacak by kel ut
+        else if ($id === 'lacakSubKelompok') {
+            $Status = $request->input('Status');
+            $IdTypeTransaksi = $request->input('IdTypeTransaksi');
+            $Tanggal = $request->input('Tanggal');
+            $IdDivisi = $request->input('IdDivisi');
+            $Idobjek = $request->input('Idobjek');
+            $Idkelutama = $request->input('Idkelutama');
+            $Idkelompok = $request->input('Idkelompok');
+            $Idsubkel = $request->input('Idsubkel');
+
+            $subkel = DB::connection('ConnInventory')->select('exec SP_1003_INV_Lacak_TmpTransaksi
+            @Kode = ?, @Status = ?, @IdTypeTransaksi = ?, @Tanggal = ?, @IdDivisi = ?, @Idobjek = ?, @Idkelutama = ?, @Idkelompok = ?, @Idsubkel = ?',
+                [5, $Status, $IdTypeTransaksi, $Tanggal, $IdDivisi, $Idobjek, $Idkelutama, $Idkelompok, $Idsubkel]
+            );
+            $data_subkel = [];
+
+            foreach ($subkel as $detail_subkel) {
+                $data_subkel[] = [
+                    'idtransaksi' => $detail_subkel->idtransaksi,
+                    'NamaType' => $detail_subkel->NamaType,
+                    'nmpenerima' => $detail_subkel->nmpenerima,
+                    'ACCPenerima' => $detail_subkel->ACCPenerima,
+                    'ACCPemberi' => $detail_subkel->ACCPemberi,
+                    'nmpemberi' => $detail_subkel->nmpemberi,
+                    'jumlahpengeluaranprimer' => $detail_subkel->jumlahpengeluaranprimer,
+                    'jumlahpengeluaransekunder' => $detail_subkel->jumlahpengeluaransekunder,
+                    'jumlahpengeluarantritier' => $detail_subkel->jumlahpengeluarantritier,
+                ];
+
+            }
+            return response()->json($data_subkel);
         }
     }
 
@@ -87,28 +288,12 @@ class LacakTransaksiController extends Controller
     //Update the specified resource in storage.
     public function update(Request $request)
     {
-        $data = $request->all();
-        // dd($data , " Masuk update");
-        DB::connection('ConnInventory')->statement('exec SP_1003_INV_Update_TmpTransaksi @XIdTransaksi = ?, @XUraianDetailTransaksi = ?, @XJumlahKeluarPrimer = ?, @XJumlahKeluarSekunder = ?, @XJumlahKeluarTritier = ?, @XTujuanIdSubkelompok = ?', [
-            $data['IdTransaksi'],
-            $data['UraianDetailTransaksi'],
-            $data['JumlahKeluarPrimer'],
-            $data['JumlahKeluarSekunder'],
-            $data['JumlahKeluarTritier'],
-            $data['TujuanIdSubKel'],
-        ]);
-        return redirect()->route('FormMhnPenerima.index')->with('alert', 'Data berhasil diupdate!');
+        //
     }
 
     //Remove the specified resource from storage.
     public function destroy(Request $request)
     {
-        $data = $request->all();
-        // dd('Masuk Destroy', $data);
-            DB::connection('ConnInventory')->statement('exec SP_1003_INV_Delete_TmpTransaksi  @XIdTransaksi = ?', [
-                $data['IdTransaksi']
-            ]);
-
-        return redirect()->route('MaxMinStok.index')->with('alert', 'Data berhasil dihapus!');
+        //
     }
 }
