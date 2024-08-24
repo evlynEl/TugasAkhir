@@ -105,8 +105,6 @@ class MaintenanceTypeController extends Controller
 
         $idtype = $request->input('idtype');
 
-        // dd($request->all());
-
 
         if ($id === 'getDivisi') {
             // mendapatkan daftar divisi
@@ -215,9 +213,7 @@ class MaintenanceTypeController extends Controller
                     'NAMA_BRG' => $detail_barang->NAMA_BRG
                 ];
             }
-            return datatables($data_barang)->make(true);
 
-        } else if ($id === 'getFillSatuan') {
             // auto fill satuan primer, sekunder, tritier dr kode barang
             $satuanBarang = DB::connection('ConnPurchase')->select('exec SP_1003_INV_KdBrg_Satuan_YBarang @KodeBarang = ?', [$kdBarang]);
 
@@ -233,7 +229,34 @@ class MaintenanceTypeController extends Controller
                 ];
             }
 
-            return response()->json($data_satuanBarang);
+            $response_data = [
+                'data_barang' => $data_barang,
+                'data_satuanBarang' => $data_satuanBarang
+            ];
+
+            dd($response_data);
+
+            return datatables($response_data)->make(true);
+
+        } else if ($id === 'getFillSatuan') {
+            // auto fill satuan primer, sekunder, tritier dr kode barang
+            $namaSatuan = DB::connection('ConnInventory')->select('exec SP_1003_INV_Nama_Satuan @XNama_Satuan = ?', [$trotoer]);
+
+            $data_namaSatuan = [];
+            foreach ($namaSatuan as $detail_namaSatuan) {
+                $data_namaSatuan[] = [
+                    'NmSat_Tri' => $detail_namaSatuan->NmSat_Tri,
+                    'ST_TRI' => $detail_namaSatuan->ST_TRI,
+                    'NmSat_Sek' => $detail_namaSatuan->NmSat_Sek,
+                    'ST_SEK' => $detail_namaSatuan->ST_SEK,
+                    'NmSat_Prim' => $detail_namaSatuan->NmSat_Prim,
+                    'ST_PRIM' => $detail_namaSatuan->ST_PRIM
+                ];
+            }
+
+            dd($data_namaSatuan);
+
+            return response()->json($data_namaSatuan);
 
         } else if ($id === 'getSatuan') {
             // daftar satuan primer, sekunder, tritier
@@ -257,17 +280,19 @@ class MaintenanceTypeController extends Controller
                     'NamaType' => $detail_getKoreksi->NamaType
                 ];
             }
+            // dd($subkelId, $getKoreksi);
             return datatables($getKoreksi)->make(true);
 
         } else if ($id === 'getSatuanKodeBarang') {
             // get beberapa data untuk koreksi
-            $unit = DB::connection('ConnPurchase')->select('exec SP_1003_INV_NamaType_Type  @IdType = ?, @IdSubKel = ?', [$idtype, $subkelId]);
+            $unit = DB::connection('ConnInventory')->select('exec SP_1003_INV_NamaType_Type  @IdType = ?, @IdSubKel = ?', [$idtype, $subkelId]);
 
             $data_unit = [];
             foreach ($unit as $detail_unit) {
                 $data_unit[] = [
                     'NamaType' => $detail_unit->NamaType,
                     'UraianType' => $detail_unit->UraianType,
+                    'KodeBarang' => $detail_unit->KodeBarang,
                     'PIB' => $detail_unit->PIB,
                     'PakaiAturanKonversi' => $detail_unit->PakaiAturanKonversi,
                     'KonvSekunderKePrimer' => $detail_unit->KonvSekunderKePrimer,
@@ -281,7 +306,7 @@ class MaintenanceTypeController extends Controller
                 ];
             }
 
-            $kode = DB::connection('ConnPurchase')->select('exec SP_1003_INV_mohon_beli @MyType = 6, @MyValue = ?', [$kdBarang]);
+            $kode = DB::connection('ConnPurchase')->select('exec SP_1003_INV_mohon_beli @MyType = 6, @MyValue = ?', [$detail_unit->KodeBarang]);
 
             $data_kode = [];
             foreach ($kode as $detail_kode) {
@@ -299,26 +324,29 @@ class MaintenanceTypeController extends Controller
                 'data_kode' => $data_kode
             ];
 
-            dd($response_data);
+            // dd($response_data);
 
             return response()->json($response_data);
 
-        } else if ($id === 'getFinalSatuan') {
+        } else if ($id === 'getSatuanUmum') {
             // daftar kode barang untuk koreksi
-            $satuanFinal = DB::connection('ConnInventory')->select('exec SP_1003_INV_nama_satumum @no_satumum = ?', [$satuan]);
+            $cekSatuanType = DB::connection('ConnInventory')->select('exec SP_1003_INV_satumum_type @idtype = ?', [$idtype]);
+            $satuan_umum = $cekSatuanType[0]->SatuanUmum;
+            // dd($satuan_umum, !empty($satuan_umum));
 
-            $data_satuanFinal = [];
-            foreach ($satuanFinal as $detail_satuanFinal) {
-                $data_satuanFinal[] = [
-                    'no_satuan' => $detail_satuanFinal->no_satuan,
-                    'nama_satuan' => $detail_satuanFinal->nama_satuan
-                ];
+            if (isset($satuan_umum) && $satuan_umum === "") {
+                // dd('masuk');
+                $satuanFinal = DB::connection('ConnInventory')->select('exec SP_1003_INV_nama_satumum @no_satumum = ?', [$satuan_umum]);
+                $satuan_final = $satuanFinal[0]->nama_satuan;
+
+                return response()->json($satuan_final);
+            } else {
+                return response()->json([]);
             }
-            return datatables($satuanFinal)->make(true);
 
         } else if ($id === 'proses') {
             // proses terjadi
-            if ($a === 1) {
+            if ($a === 1) { // ISI
                 // cek id kode barang
                 $cekKodeBarang = DB::connection('ConnInventory')->select(
                     'exec SP_1003_INV_CheckKodeBarang_Type
@@ -360,20 +388,20 @@ class MaintenanceTypeController extends Controller
 
                     return response()->json(['success' => true, 'data' => [['idtype' => $idtype]]], 200);
                 }
-            } else if ($a === 2) {
+            } else if ($a === 2) { // KOREKSI
 
                 DB::connection('ConnInventory')->statement(
                     'exec SP_1003_INV_update_type
                     @XIdType = ?, @XNamaType = ?, @XUraianType = ?, @XIdSubKelompok_Type = ?, @XKodeBarang = ?,
                     @XUnitPrimer = ?, @XUnitSekunder = ?, @XUnitTritier = ?, @XPakaiAturanKonversi = ?,
                     @XKonvSekunderKePrimer = ?, @XKonvTritierkeSekunder = ?, @Xno_satuan_umum = ?,  @noPIB = ?, @noPEB = ?',
-                    [$idtype, $namaType, $uraianType, $subkelId, $kdBarang,
+                    [$kodeType, $namaType, $uraianType, $subkelId, $kdBarang,
                     $no_primer, $no_sekunder, $no_tritier, $konversi,
                     $primerSekunder, $sekunderTritier, $satuanUmum, $user, $PIB, $PEB]
                 );
+                dd($request->all());
 
-                return response()->json(['success'=> 'Data terSIMPAN', 'Kode type: $idType'], 200);
-
+                return response()->json(['success' => 'Data updated successfully'], 200);
             }
         }
     }
