@@ -1,500 +1,117 @@
 @extends('layouts.AppInventory')
 @section('content')
-    {{-- <script type="text/javascript" src="{{ asset('js/Master/MaintenanceType.js') }}"></script> --}}
-    <script>
-        $(document).ready(function() {
-            $("#tabel_Purchasing").DataTable({
-                order: [
-                    [0, "asc"]
-                ],
-            });
-        });
-    </script>
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-md-10 RDZMobilePaddingLR0">
-
-                <div class="card" style="width:1200px;">
+                <div class="card">
                     <div class="card-header" style="">Cari Kode Barang</div>
+                    <div class="card-body RDZOverflow RDZMobilePaddingLR0">
 
-                    <div class="card-body" style="">
-                        <div class="" style="">
-                            <div class="row" style="margin-left:-185px;">
-                                <div class="form-group col-md-3 d-flex justify-content-end">
-                                    <span class="aligned-text">Divisi:</span>
-                                </div>
-                                <div class="form-group col-md-9 mt-3 mt-md-0">
-                                    <input class="form-control" type="text" id="Nama_Div" readonly
-                                        style="resize: none; height: 40px; max-width: 342px;">
-
-                                    <div class="modal fade" id="modalKaryawan" role="dialog"
-                                        arialabelledby="modalLabel" area-hidden="true" style="">
-                                        <div class="modal-dialog " role="document">
-                                            <div class="modal-content" style="">
-                                                <div class="modal-header" style="justify-content: center;">
-
-                                                    <div class="row" style=";">
-                                                        <div class="table-responsive" style="margin:30px;">
-                                                            <table id="tabel_Karyawan"
-                                                                class="table table-bordered">
-                                                                <thead class="thead-dark">
-                                                                    <tr>
-                                                                        <th scope="col">Id Pegawai</th>
-                                                                        <th scope="col">Nama Pegawai</th>
-
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-
-
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-
-                                </div>
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <label for="divisiId">Divisi</label>
                             </div>
-                            <div class="row" style="margin-left:-185px;">
-                                <div class="form-group col-md-3 d-flex justify-content-end">
-                                    <span class="aligned-text">Objek:</span>
-                                </div>
-                                <div class="form-group col-md-9 mt-3 mt-md-0">
-                                    <input class="form-control" type="text" id="Nama_Div" readonly
-                                        style="resize: none; height: 40px; max-width: 342px;">
-                                        <button type="button" class="btn" style="margin-left: 10px;"
-                                        id="karyawanButton" data-toggle="modal"
-                                        data-target="#modalKaryawan">...</button>
-                                        <input class="form-control" type="text" id="Nama_Div" readonly
-                                        style="resize: none; height: 40px; max-width: 142px;margin-left:10px;">
-                                    <div class="modal fade" id="modalKaryawan" role="dialog"
-                                        arialabelledby="modalLabel" area-hidden="true" style="">
-                                        <div class="modal-dialog " role="document">
-                                            <div class="modal-content" style="">
-                                                <div class="modal-header" style="justify-content: center;">
-
-                                                    <div class="row" style=";">
-                                                        <div class="table-responsive" style="margin:30px;">
-                                                            <table id="tabel_Karyawan"
-                                                                class="table table-bordered">
-                                                                <thead class="thead-dark">
-                                                                    <tr>
-                                                                        <th scope="col">Id Pegawai</th>
-                                                                        <th scope="col">Nama Pegawai</th>
-
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-
-
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-
-                                </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="divisiNama" name="divisiNama">
                             </div>
-                            <div class="row" style="margin-left:-185px;">
-                                <div class="form-group col-md-3 d-flex justify-content-end">
-                                    <span class="aligned-text">Nama&nbsp;Barang:</span>
-                                </div>
-                                <div class="form-group col-md-9 mt-3 mt-md-0">
-                                    <input class="form-control" type="text" id="Nama_Div" readonly
-                                        style="resize: none; height: 40px; max-width:842px;">
-                                        <button type="button" class="btn" style="margin-left: 10px;"
-                                        id="karyawanButton" data-toggle="modal"
-                                        data-target="#modalKaryawan">OK</button>
-
-                                    <div class="modal fade" id="modalKaryawan" role="dialog"
-                                        arialabelledby="modalLabel" area-hidden="true" style="">
-                                        <div class="modal-dialog " role="document">
-                                            <div class="modal-content" style="">
-                                                <div class="modal-header" style="justify-content: center;">
-
-                                                    <div class="row" style=";">
-                                                        <div class="table-responsive" style="margin:30px;">
-                                                            <table id="tabel_Karyawan"
-                                                                class="table table-bordered">
-                                                                <thead class="thead-dark">
-                                                                    <tr>
-                                                                        <th scope="col">Id Pegawai</th>
-                                                                        <th scope="col">Nama Pegawai</th>
-
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-
-
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-
-                                </div>
+                            <div class="col-sm-1">
+                                <input type="text" id="divisiId" name="divisiId" class="form-control"
+                                    style="display: none">
                             </div>
-                            <div class="" style="">
-                                <div class="row" style="margin-left:-185px;margin-top:35px;">
-                                    <div class="form-group col-md-3 d-flex justify-content-end">
-                                        <span class="aligned-text">Kode/Nama&nbsp;Barang:</span>
-                                    </div>
-                                    <div class="form-group col-md-9 mt-3 mt-md-0">
-                                        <input class="form-control" type="text" id="Nama_Div" readonly
-                                            style="resize: none; height: 40px; max-width:242px;">
-                                        <input class="form-control" type="text" id="Nama_Div" readonly
-                                            style="resize: none; height: 40px; max-width:716px;">
-
-
-
-
-
-                                    </div>
-                                </div>
-                                <div class="card-body-container" style="display: flex; flex-wrap: wrap; margin: 10px;margin-top:-20px;">
-                                    <div class="card-body" style="flex: 0 0 50%; max-width: 50%;">
-                                        {{-- <div class="row" style="">
-                                            <div class="form-group col-md-3 d-flex justify-content-end">
-                                                <input type="radio" id="opsiKerja1" name="opsiKerja" value="Harian" checked
-                                                    style="vertical-align: middle;">&nbsp;Harian
-                                            </div>
-                                            <div class="form-group col-md-9 mt-3 mt-md-0">
-                                                <input type="radio" id="opsiKerja2" name="opsiKerja" value="Staff"
-                                                    style="vertical-align: middle;">&nbsp;Staff
-                                            </div>
-                                        </div> --}}
-
-                                        <div class="row" style="">
-                                            <div class="form-group col-md-3 d-flex justify-content-end">
-                                                <span class="aligned-text"> Objek:</span>
-                                            </div>
-                                            <div class="form-group col-md-9 mt-3 mt-md-0">
-                                                <input class="form-control" type="text" id="Nama_Peg" readonly
-                                                    style="resize: none; height: 40px; max-width: 450px;">
-                                                <div class="modal fade" id="modalKaryawan" role="dialog"
-                                                    arialabelledby="modalLabel" area-hidden="true" style="">
-                                                    <div class="modal-dialog " role="document">
-                                                        <div class="modal-content" style="">
-                                                            <div class="modal-header" style="justify-content: center;">
-
-                                                                <div class="row" style=";">
-                                                                    <div class="table-responsive" style="margin:30px;">
-                                                                        <table id="tabel_Karyawan"
-                                                                            class="table table-bordered">
-                                                                            <thead class="thead-dark">
-                                                                                <tr>
-                                                                                    <th scope="col">Id Pegawai</th>
-                                                                                    <th scope="col">Nama Pegawai</th>
-
-                                                                                </tr>
-                                                                            </thead>
-                                                                            <tbody>
-
-
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-
-
-                                            </div>
-
-                                        </div>
-                                        <div class="row" style="">
-                                            <div class="form-group col-md-3 d-flex justify-content-end">
-                                                <span class="aligned-text"> Kel. Utama:</span>
-                                            </div>
-                                            <div class="form-group col-md-9 mt-3 mt-md-0">
-                                                <input class="form-control" type="text" id="Nama_Peg" readonly
-                                                    style="resize: none; height: 40px; max-width: 450px;">
-                                                <div class="modal fade" id="modalKaryawan" role="dialog"
-                                                    arialabelledby="modalLabel" area-hidden="true" style="">
-                                                    <div class="modal-dialog " role="document">
-                                                        <div class="modal-content" style="">
-                                                            <div class="modal-header" style="justify-content: center;">
-
-                                                                <div class="row" style=";">
-                                                                    <div class="table-responsive" style="margin:30px;">
-                                                                        <table id="tabel_Karyawan"
-                                                                            class="table table-bordered">
-                                                                            <thead class="thead-dark">
-                                                                                <tr>
-                                                                                    <th scope="col">Id Pegawai</th>
-                                                                                    <th scope="col">Nama Pegawai</th>
-
-                                                                                </tr>
-                                                                            </thead>
-                                                                            <tbody>
-
-
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-
-
-                                            </div>
-
-                                        </div>
-
-
-
-
-                                    </div>
-
-                                    <div class="card-body" style="flex: 0 0 50%; max-width: 50%;">
-                                        <div class="row" style="">
-                                            <div class="form-group col-md-3 d-flex justify-content-end">
-                                                <span class="aligned-text"> Kelompok:</span>
-                                            </div>
-                                            <div class="form-group col-md-9 mt-3 mt-md-0">
-                                                <input class="form-control" type="text" id="Nama_Peg" readonly
-                                                    style="resize: none; height: 40px; max-width: 450px;">
-                                                <div class="modal fade" id="modalKaryawan" role="dialog"
-                                                    arialabelledby="modalLabel" area-hidden="true" style="">
-                                                    <div class="modal-dialog " role="document">
-                                                        <div class="modal-content" style="">
-                                                            <div class="modal-header" style="justify-content: center;">
-
-                                                                <div class="row" style=";">
-                                                                    <div class="table-responsive" style="margin:30px;">
-                                                                        <table id="tabel_Karyawan"
-                                                                            class="table table-bordered">
-                                                                            <thead class="thead-dark">
-                                                                                <tr>
-                                                                                    <th scope="col">Id Pegawai</th>
-                                                                                    <th scope="col">Nama Pegawai</th>
-
-                                                                                </tr>
-                                                                            </thead>
-                                                                            <tbody>
-
-
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-
-
-                                            </div>
-
-                                        </div>
-                                        <div class="row" style="">
-                                            <div class="form-group col-md-3 d-flex justify-content-end">
-                                                <span class="aligned-text"> Sub. Kel:</span>
-                                            </div>
-                                            <div class="form-group col-md-9 mt-3 mt-md-0">
-                                                <input class="form-control" type="text" id="Nama_Peg" readonly
-                                                    style="resize: none; height: 40px; max-width: 450px;">
-                                                <div class="modal fade" id="modalKaryawan" role="dialog"
-                                                    arialabelledby="modalLabel" area-hidden="true" style="">
-                                                    <div class="modal-dialog " role="document">
-                                                        <div class="modal-content" style="">
-                                                            <div class="modal-header" style="justify-content: center;">
-
-                                                                <div class="row" style=";">
-                                                                    <div class="table-responsive" style="margin:30px;">
-                                                                        <table id="tabel_Karyawan"
-                                                                            class="table table-bordered">
-                                                                            <thead class="thead-dark">
-                                                                                <tr>
-                                                                                    <th scope="col">Id Pegawai</th>
-                                                                                    <th scope="col">Nama Pegawai</th>
-
-                                                                                </tr>
-                                                                            </thead>
-                                                                            <tbody>
-
-
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-
-
-                                            </div>
-
-                                        </div>
-
-
-
-                                    </div>
-                                    <div id="form-container"></div>
-                                    <div class="col-6" style="text-align: left;">
-
-                                    </div>
-
-
-
-
-                                </div>
-
-                            </div>
-
-
-
-
-
-
-                        </div>
-                        <div class="table-responsive">
-                            <table class="table table-striped table-bordered" id="tabel_Purchasing">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Kode Barang</th>
-                                        <th scope="col">Nama Barang</th>
-                                        <th scope="col">Type</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="table-group-divider">
-                                    <tr>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                    </tr>
-                                    <tr>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                    </tr>
-                                    <tr>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                    </tr>
-                                    <tr>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                    </tr>
-                                    <tr>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                    </tr>
-                                    {{-- <td>
-                                                <a href="" title="Edit Employee">
-                                                    <button class="btn btn-primary btn-sm">
-                                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit
-                                                    </button>
-                                                </a>
-                                                <form method="POST" action="" accept-charset="UTF-8" style="display:inline">
-                                                    <button type="submit" class="btn btn-danger btn-sm" title="Delete Employee" onclick='return confirm("Confirm delete?")'>
-                                                        <i class="fa fa-trash-o" aria-hidden="true"></i> Delete
-                                                    </button>
-                                                </form>
-                                            </td> --}}
-
-                                    {{-- </tr> --}}
-                                    {{-- @foreach ($employees as $data)
-                                        <tr>
-                                            <td>{{ $data->id }}</td>
-                                            <td>{{ $data->name }}</td>
-                                            <td>{{ $data->gender }}</td>
-                                            <td>{{ $data->email }}</td>
-                                            <td>{{ $data->address }}</td>
-                                            <td>
-                                                <a href="{{ route('employees.edit', $data->id) }}" title="Edit Employee">
-                                                    <button class="btn btn-primary btn-sm">
-                                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit
-                                                    </button>
-                                                </a>
-                                                <form method="POST" action="{{route('employees.destroy', $data->id)}}" accept-charset="UTF-8" style="display:inline">
-                                                @csrf
-                                                @method('delete')
-                                                    <button type="submit" class="btn btn-danger btn-sm" title="Delete Employee" onclick='return confirm("Confirm delete?")'>
-                                                        <i class="fa fa-trash-o" aria-hidden="true"></i> Delete
-                                                    </button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                        @endforeach --}}
-                                </tbody>
-
-                            </table>
-
-                        </div>
-                        <div style="text-align: right; margin: 10px;">
-                            <button type="button" class="btn " style="width: 95px" id="buttonProses">Keluar</button>
                         </div>
 
+                        <div class="row mt-1">
+                            <div class="col-sm-2">
+                                <label for="objekId">Objek</label>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="objekNama" name="objekNama">
+                                    <div class="input-group-append">
+                                        <button type="button" id="btn_objek" class="btn btn-info">...</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-1">
+                                <input type="text" id="objekId" name="objekId" class="form-control">
+                            </div>
+                        </div>
 
+                        <div class="row mt-1">
+                            <div class="col-sm-2">
+                                <label for="namaBarang">Nama Barang</label>
+                            </div>
+                            <div class="col-sm-8">
+                                <input type="text" id="namaBarang" name="namaBarang" class="form-control">
+                            </div>
+                            <div class="col-sm-1">
+                                <button type="button" id="btn_ok" class="btn btn-info" style="height: 100%">OK</button>
+                            </div>
+                        </div>
 
+                        <div class="bordered">
+                            <div class="row mt-2 ml-2">
+                                <div class="col-sm-2">
+                                    <label for="kelutId">Kode/Nama Barang</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" id="kodeId" name="kodeId" readonly>
+                                </div>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control" id="kodeNama" name="kodeNama" readonly>
+                                </div>
+                            </div>
 
+                            <div class="row ml-2 mt-1">
+                                <div class="col-sm-2">
+                                    <label for="kodeType">Kode Type</label>
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="kodeType" name="kodeType" readonly>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label for="subkelId">&nbsp; Kelompok</label>
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="kelompokNama" name="kelompokNama" readonly>
+                                </div>
+                            </div>
 
+                            <div class="row ml-2 mt-1 mb-2">
+                                <div class="col-sm-2">
+                                    <label for="kelutNama">Kelompok Utama</label>
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="kelutNama" name="kelutNama" readonly>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label for="subkelId">&nbsp; Sub Kelompok</label>
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="subkelNama" name="subkelNama"
+                                        readonly>
+                                </div>
+                            </div>
+                        </div>
 
-
-
-
+                        <div class="row" style="margin-top: 0.5%">
+                            <div class="col-sm-12">
+                                <div class="table-responsive fixed-height" style="height: 300px">
+                                    <table class="table table-bordered no-wrap-header" id="tableData">
+                                        <thead>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
 
                     </div>
-
-
-
-
-
-
-
-
-
-
-
                 </div>
-
-
-
-
-
-
-
             </div>
-
-
-
-
-
-
         </div>
-
-
-
-
-
-
     </div>
+    <link rel="stylesheet" href="{{ asset('css/Inventory/Informasi/CariKodeBarang.css') }}">
+    <script src="{{ asset('js/Inventory/Informasi/CariKodeBarang.js') }}"></script>
 @endsection

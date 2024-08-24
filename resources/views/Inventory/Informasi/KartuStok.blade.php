@@ -1,317 +1,149 @@
 @extends('layouts.AppInventory')
 @section('content')
-    {{-- <script type="text/javascript" src="{{ asset('js/Master/MaintenanceType.js') }}"></script> --}}
-    <script>
-        $(document).ready(function() {
-            $("#tabel_Purchasing").DataTable({
-                order: [
-                    [0, "asc"]
-                ],
-                scrollX: true,
-            });
-        });
-    </script>
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-md-10 RDZMobilePaddingLR0">
-
-                <div class="card" style="width:1200px;">
+                <div class="card">
                     <div class="card-header" style="">Kartu Stok</div>
+                    <div class="card-body RDZOverflow RDZMobilePaddingLR0">
 
-                    <div class="card-body" style="">
-                        <div class="" style="">
-
-                            {{-- <div class="row" style="">
-                                        <div class="form-group col-md-3 d-flex justify-content-end">
-                                            <input type="radio" id="opsiKerja1" name="opsiKerja" value="Harian" checked
-                                                style="vertical-align: middle;">&nbsp;Harian
-                                        </div>
-                                        <div class="form-group col-md-9 mt-3 mt-md-0">
-                                            <input type="radio" id="opsiKerja2" name="opsiKerja" value="Staff"
-                                                style="vertical-align: middle;">&nbsp;Staff
-                                        </div>
-                                    </div> --}}
-                            <div class="row" style="margin-left:-200px;">
-                                <div class="form-group col-md-3 d-flex justify-content-end">
-                                    <span class="aligned-text">Divisi:</span>
-                                </div>
-                                <div class="form-group col-md-9 mt-3 mt-md-0">
-                                    <input class="form-control" type="text" id="Nama_Peg" readonly
-                                        style="resize: none; height: 40px; max-width: 100px;">
-                                    <input class="form-control" type="text" id="Nama_Div" readonly
-                                        style="resize: none; height: 40px; max-width: 450px;">
-                                    <button type="button" class="btn" style="margin-left: 10px;" data-toggle="modal"
-                                        data-target="#modalKawin">...</button>
-
-
-
+                        <div class="row pt-1">
+                            <div class="col-sm-2">
+                                <label for="divisiId">Divisi</label>
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="text" id="divisiId" name="divisiId" class="form-control" readonly>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="divisiNama" name="divisiNama" readonly>
+                                    <div class="input-group-append">
+                                        <button type="button" id="btn_divisi" class="btn btn-info">...</button>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="row" style="margin-left:-200px;">
-                                <div class="form-group col-md-3 d-flex justify-content-end">
-                                    <span class="aligned-text"> Objek:</span>
-                                </div>
-                                <div class="form-group col-md-9 mt-3 mt-md-0">
-                                    <input class="form-control" type="text" id="Nama_Peg" readonly
-                                        style="resize: none; height: 40px; max-width: 100px;">
-                                    <input class="form-control" type="text" id="Nama_Peg" readonly
-                                        style="resize: none; height: 40px; max-width: 450px;">
-                                    <button type="button" class="btn" style="margin-left: 10px;" data-toggle="modal"
-                                        data-target="#modalKawin">...</button>
-
-
-
-                                </div>
-
-                            </div>
-                            <div class="row" style="margin-left:-200px;">
-                                <div class="form-group col-md-3 d-flex justify-content-end">
-                                    <span class="aligned-text"> Kel.Utama:</span>
-                                </div>
-                                <div class="form-group col-md-9 mt-3 mt-md-0">
-                                    <input class="form-control" type="text" id="Nama_Peg" readonly
-                                        style="resize: none; height: 40px; max-width: 100px;">
-                                    <input class="form-control" type="text" id="Nama_Peg" readonly
-                                        style="resize: none; height: 40px; max-width: 450px;">
-                                    <button type="button" class="btn" style="margin-left: 10px;" data-toggle="modal"
-                                        data-target="#modalKawin">...</button>
-
-
-
-                                </div>
-
-                            </div>
-                            <div class="row" style="margin-left:-200px;">
-                                <div class="form-group col-md-3 d-flex justify-content-end">
-                                    <span class="aligned-text"> Kelompok:</span>
-                                </div>
-                                <div class="form-group col-md-9 mt-3 mt-md-0">
-                                    <input class="form-control" type="text" id="Nama_Peg" readonly
-                                        style="resize: none; height: 40px; max-width: 100px;">
-                                    <input class="form-control" type="text" id="Nama_Peg" readonly
-                                        style="resize: none; height: 40px; max-width: 450px;">
-                                    <button type="button" class="btn" style="margin-left: 10px;" data-toggle="modal"
-                                        data-target="#modalKawin">...</button>
-
-
-
-                                </div>
-
-                            </div>
-                            <div class="row" style="margin-left:-200px;">
-                                <div class="form-group col-md-3 d-flex justify-content-end">
-                                    <span class="aligned-text"> Sub. Kel:</span>
-                                </div>
-                                <div class="form-group col-md-9 mt-3 mt-md-0">
-                                    <input class="form-control" type="text" id="Nama_Peg" readonly
-                                        style="resize: none; height: 40px; max-width: 100px;">
-                                    <input class="form-control" type="text" id="Nama_Peg" readonly
-                                        style="resize: none; height: 40px; max-width: 450px;">
-                                    <button type="button" class="btn" style="margin-left: 10px;" data-toggle="modal"
-                                        data-target="#modalKawin">...</button>
-
-
-
-                                </div>
-
-                            </div>
-                            <div class="row" style="margin-left:-200px;">
-                                <div class="form-group col-md-3 d-flex justify-content-end">
-                                    <span class="aligned-text"> &nbsp;:</span>
-                                </div>
-                                <div class="form-group col-md-9 mt-3 mt-md-0">
-                                    <input type="radio" id="opsi1" name="opsi">
-                                    <span class="aligned-text" style="margin-left:10px;"> Tampil&nbsp;Stok</span>
-                                    <button type="button" class="btn" style="margin-left: 10px;width:100px;" data-toggle="modal"
-                                        data-target="#modalKawin">OK</button>
-
-
-
-                                </div>
-
-                            </div>
-
-
-
-
-
-
-                        </div>
-                        <div class="table-responsive">
-                            <table class="table table-striped table-bordered" id="tabel_Purchasing">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Nama Objek</th>
-                                        <th scope="col">Nama Kelompok Utama</th>
-                                        <th scope="col">Nama Kelompok</th>
-                                        <th scope="col">Nama Subkelompok</th>
-                                        <th scope="col">Kode Barang</th>
-                                        <th scope="col">Nama Barang</th>
-                                        <th scope="col">Saldo Primer</th>
-                                        <th scope="col">Sat_Primer</th>
-                                        <th scope="col">Saldo Sekunder</th>
-                                        <th scope="col">Sat_Sekunder</th>
-                                        <th scope="col">Saldo Tritier</th>
-                                        <th scope="col">Sat_Tritier</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="table-group-divider">
-                                    <tr>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                    </tr>
-                                    <tr>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                    </tr>
-                                    <tr>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                    </tr>
-                                    <tr>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                    </tr>
-                                    <tr>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                        <td> Tes </td>
-                                    </tr>
-                                    {{-- <td>
-                                                <a href="" title="Edit Employee">
-                                                    <button class="btn btn-primary btn-sm">
-                                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit
-                                                    </button>
-                                                </a>
-                                                <form method="POST" action="" accept-charset="UTF-8" style="display:inline">
-                                                    <button type="submit" class="btn btn-danger btn-sm" title="Delete Employee" onclick='return confirm("Confirm delete?")'>
-                                                        <i class="fa fa-trash-o" aria-hidden="true"></i> Delete
-                                                    </button>
-                                                </form>
-                                            </td> --}}
-
-                                    {{-- </tr> --}}
-                                    {{-- @foreach ($employees as $data)
-                                        <tr>
-                                            <td>{{ $data->id }}</td>
-                                            <td>{{ $data->name }}</td>
-                                            <td>{{ $data->gender }}</td>
-                                            <td>{{ $data->email }}</td>
-                                            <td>{{ $data->address }}</td>
-                                            <td>
-                                                <a href="{{ route('employees.edit', $data->id) }}" title="Edit Employee">
-                                                    <button class="btn btn-primary btn-sm">
-                                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit
-                                                    </button>
-                                                </a>
-                                                <form method="POST" action="{{route('employees.destroy', $data->id)}}" accept-charset="UTF-8" style="display:inline">
-                                                @csrf
-                                                @method('delete')
-                                                    <button type="submit" class="btn btn-danger btn-sm" title="Delete Employee" onclick='return confirm("Confirm delete?")'>
-                                                        <i class="fa fa-trash-o" aria-hidden="true"></i> Delete
-                                                    </button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                        @endforeach --}}
-                                </tbody>
-
-                            </table>
-
                         </div>
 
+                        <div class="row pt-1">
+                            <div class="col-sm-2">
+                                <label for="objekId">Objek</label>
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="text" id="objekId" name="objekId" class="form-control" readonly>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="objekNama" name="objekNama" readonly>
+                                    <div class="input-group-append">
+                                        <button type="button" id="btn_objek" class="btn btn-info">...</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <a id="deleteObjek" href="#">Clear Objek</a>
+                            </div>
+                        </div>
 
+                        <div class="row pt-1">
+                            <div class="col-sm-2">
+                                <label for="kelutId">Kel. Utama</label>
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="text" id="kelutId" name="kelutId" class="form-control" readonly>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="kelutNama" name="kelutNama"
+                                        readonly>
+                                    <div class="input-group-append">
+                                        <button type="button" id="btn_kelut" class="btn btn-info">...</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <a id="deleteKelompokutama" href="#">Clear KelUtama</a>
+                            </div>
+                        </div>
 
+                        <div class="row pt-1">
+                            <div class="col-sm-2">
+                                <label for="kelompokId">Kelompok</label>
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="text" id="kelompokId" name="kelompokId" class="form-control"
+                                    readonly>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="kelompokNama" name="kelompokNama"
+                                        readonly>
+                                    <div class="input-group-append">
+                                        <button type="button" id="btn_kelompok" class="btn btn-info">...</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <a id="deleteKelompok" href="#">Clear Kelompok</a>
+                            </div>
+                        </div>
 
+                        <div class="row pt-1">
+                            <div class="col-sm-2">
+                                <label for="subkelId">Sub Kelompok</label>
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="text" id="subkelId" name="subkelId" class="form-control" readonly>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="subkelNama" name="subkelNama"
+                                        readonly>
+                                    <div class="input-group-append">
+                                        <button type="button" id="btn_subkel" class="btn btn-info">...</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <a id="deleteSubKelompok" href="#">Clear SubKelompok</a>
+                            </div>
+                        </div>
 
+                        <div class="row pt-1">
+                            <div class="col-sm-2 offset-sm-2">
+                                <div class="form-check mb-0">
+                                    <input class="form-check-input" type="checkbox" id="tampilStok" name="tampilStok">
+                                    <label class="form-check-label ms-2" for="tampilStok">Tampil Stok</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-1">
+                                <button type="button" id="btn_ok" class="btn btn-info">OK</button>
+                            </div>
+                        </div>                        
 
+                        <div class="row" style="margin-top: 0.5%">
+                            <div class="col-sm-12">
+                                <div class="table-responsive fixed-height" style="height: 300px">
+                                    <table class="table table-bordered no-wrap-header" id="tableData">
+                                        <thead>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
 
-
-
-
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <label><strong>*Klik 2x pada type barang untuk melihat list transaksi</strong></label>
+                            </div>
+                        </div>
 
                     </div>
-
-
-
-
-
-
-
-
-
-
-
                 </div>
-
-
-
-
-
-
-
             </div>
-
-
-
-
-
-
         </div>
-
-
-
-
-
-
     </div>
+    <link rel="stylesheet" href="{{ asset('css/Inventory/Informasi/KartuStok.css') }}">
+    <script src="{{ asset('js/Inventory/Informasi/KartuStok.js') }}"></script>
 @endsection

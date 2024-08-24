@@ -557,17 +557,34 @@ $(document).ready(function () {
     });
 });
 
+function decodeHtmlEntities(text) {
+    var txt = document.createElement("textarea");
+    txt.innerHTML = text;
+    return txt.value;
+}
+
+function escapeHtml(text) {
+    var map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, function (m) { return map[m]; });
+}
+
 function updateDataTable(data) {
     var table = $('#tableData').DataTable();
     table.clear();
 
     data.forEach(function (item) {
         table.row.add([
-            item.Bulan,
-            item.Tahun,
-            item.IdType,
-            item.KodeBarang,
-            item.NamaType,
+            escapeHtml(item.Bulan),
+            escapeHtml(item.Tahun),
+            escapeHtml(item.IdType),
+            escapeHtml(item.KodeBarang),
+            escapeHtml(item.NamaType),
             formatNumber(item.MasukPrimer),
             formatNumber(item.MasukSekunder),
             formatNumber(item.MasukTritier),

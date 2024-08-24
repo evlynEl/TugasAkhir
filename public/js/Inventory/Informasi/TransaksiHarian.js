@@ -520,17 +520,34 @@ $(document).ready(function () {
     });
 });
 
+function decodeHtmlEntities(text) {
+    var txt = document.createElement("textarea");
+    txt.innerHTML = text;
+    return txt.value;
+}
+
+function escapeHtml(text) {
+    var map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, function (m) { return map[m]; });
+}
+
 function updateDataTable(data) {
     var table = $('#tableData').DataTable();
     table.clear();
 
     data.forEach(function (item) {
         table.row.add([
-            item.AwalTrans,
-            item.IdTransaksi,
-            item.IdType,
-            item.TypeTransaksi,
-            item.NamaType,
+            escapeHtml(item.AwalTrans),
+            escapeHtml(item.IdTransaksi),
+            escapeHtml(item.IdType),
+            escapeHtml(item.TypeTransaksi),
+            escapeHtml(item.NamaType),
             formatNumber(item.JumlahPemasukanPrimer),
             formatNumber(item.JumlahPemasukanSekunder),
             formatNumber(item.JumlahPemasukanTritier),

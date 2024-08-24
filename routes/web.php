@@ -1,4 +1,5 @@
 <?php
+use App\Http\Controllers\Inventory\Informasi\ListDetailTransaksiController;
 use App\Http\Controllers\Inventory\InventoryController;
 use function foo\func;
 use Illuminate\Support\Facades\Auth;
@@ -157,6 +158,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('FormTerimaBenangGedungD', FormTerimaBenangGedungDController::class);
     Route::resource('FormPemakaianGelondongan', FormPemakaianGelondonganController::class);
     Route::resource('KartuStok', KartuStokController::class);
+    Route::resource('ListDetailTransaksi', ListDetailTransaksiController::class);
     Route::resource('TransaksiHarian', TransaksiHarianController::class);
     Route::resource('TransaksiBulanan', TransaksiBulananController::class);
     Route::resource('LacakTransaksi', LacakTransaksiController::class);

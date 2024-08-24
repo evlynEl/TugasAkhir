@@ -112,7 +112,7 @@
 
                                 <div class="row pt-1">
                                     <div class="col-sm-3">
-                                        <label for="objekId">Objek</label>
+                                        <label for="obje`Id">Objek</label>
                                     </div>
                                     <div class="col-sm-3">
                                         <input type="text" id="objekId" name="objekId" class="form-control"

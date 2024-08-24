@@ -509,18 +509,35 @@ btn_subkel.addEventListener("click", function (e) {
     }
 });
 
+function decodeHtmlEntities(text) {
+    var txt = document.createElement("textarea");
+    txt.innerHTML = text;
+    return txt.value;
+}
+
+function escapeHtml(text) {
+    var map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, function (m) { return map[m]; });
+}
+
 function updateDataTable(data) {
     var table = $('#tableData').DataTable();
     table.clear().draw();
 
     data.forEach(function (item) {
         table.row.add([
-            item.idtransaksi,
-            item.NamaType,
-            item.nmpenerima,
-            item.ACCPenerima,
-            item.ACCPemberi,
-            item.nmpemberi,
+            escapeHtml(item.idtransaksi),
+            escapeHtml(item.NamaType),
+            escapeHtml(item.nmpenerima),
+            escapeHtml(item.ACCPenerima),
+            escapeHtml(item.ACCPemberi),
+            escapeHtml(item.nmpemberi),
             formatNumber(item.jumlahpengeluaranprimer),
             formatNumber(item.jumlahpengeluaransekunder),
             formatNumber(item.jumlahpengeluarantritier),
