@@ -8,7 +8,7 @@
                 <label>Id Type</label>
             </div>
             <div class="col-sm-3">
-                <input type="text" class="form-control" readonly>
+                <input type="text" id="idType" class="form-control" readonly>
             </div>
         </div>
 
@@ -19,40 +19,40 @@
 
             <div class="col-sm-2 mt-2">
                 <div class="input-group">
-                    <input type="text" class="form-control" 
+                    <input type="text" id="saldoPrimer" class="form-control" 
                         readonly>
                 </div>
             </div>
 
             <div class="col-sm-1 mt-2">
                 <div class="input-group">
-                    <input type="text" class="form-control" readonly>
+                    <input type="text" id="satPrimer" class="form-control" readonly>
                 </div>
             </div>
 
             <div class="col-sm-2 mt-2">
                 <div class="input-group">
-                    <input type="text" class="form-control" 
+                    <input type="text" id="saldoSekunder" class="form-control" 
                         readonly>
                 </div>
             </div>
 
             <div class="col-sm-1 mt-2">
                 <div class="input-group">
-                    <input type="text" class="form-control" readonly>
+                    <input type="text" id="satSekunder" class="form-control" readonly>
                 </div>
             </div>
 
             <div class="col-sm-2 mt-2">
                 <div class="input-group">
-                    <input type="text" class="form-control"
+                    <input type="text" id="saldoTritier" class="form-control"
                         readonly>
                 </div>
             </div>
 
             <div class="col-sm-1 mt-2">
                 <div class="input-group">
-                    <input type="text" class="form-control" readonly>
+                    <input type="text" id="satTritier" class="form-control" readonly>
                 </div>
             </div>
         </div>
@@ -66,15 +66,26 @@
             <div class="col-sm-2">
                 <input type="date" class="form-control" id="tanggalAkhir">
             </div>
+            <div class="col-sm-1">
+                <button type="button" id="btn_cari" class="btn btn-info">Cari</button>
+            </div>
         </div>
 
         <div class="row">
-            
+            <div class="col-sm-3">
+                <span id="aturanKonversi">Aturan Konversi:</span>
+            </div>
+            <div class="col-sm-3">
+                <span id="aturanPrimerSekunder">Primer Ke Sekunder:</span>
+            </div>
+            <div class="col-sm-3">
+                <span id="aturanSekunderTritier">Sekunder Ke Tritier:</span>
+            </div>
         </div>
 
         <div class="row" style="margin-top: 0.5%">
             <div class="col-sm-12">
-                <div class="table-responsive fixed-height" style="height: 300px">
+                <div class="table-responsive fixed-height" style="height: 350px">
                     <table class="table table-bordered no-wrap-header" id="tableData">
                         <thead>
                         </thead>
@@ -86,6 +97,6 @@
         </div>
 
     </div>
-    <link rel="stylesheet" href="{{ asset('css/Inventory/Informasi/KartuStok.css') }}">
-    <script src="{{ asset('js/Inventory/Informasi/KartuStok.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('css/Inventory/Informasi/ListDetailTransaksi.css') }}">
+    <script src="{{ asset('js/Inventory/Informasi/ListDetailTransaksi.js') }}"></script>
 @endsection

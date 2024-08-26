@@ -7,16 +7,16 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class PermohonanHibahController extends Controller
+class PemakaianGelondonganController extends Controller
 {
     //Display a listing of the resource.
     public function index()
     {
 
-        $data = 'Tes';
+        $data = 'HAPPY HAPPY HAPPY';
 
         // dd($dataDivisi);
-        return view('Inventory.Transaksi.Hibah.PermohonanHibah', compact('data'));
+        return view('Inventory.Transaksi.Gelondongan.FormPemakaianGelondongan', compact('data'));
     }
 
     //Show the form for creating a new resource.
@@ -30,20 +30,22 @@ class PermohonanHibahController extends Controller
     {
         $data = $request->all();
         // dd($data , " Masuk store");
-        DB::connection('ConnInventory')->statement('exec SP_1003_INV_Insert_13_TmpTransaksi @XIdTypeTransaksi = ?, @XIdType = ?, @XIdPemberi = ?, @XSaatAwalTransaksi = ?
-        , @XJumlahMasukPrimer = ?, @XJumlahMasukSekunder = ?, @XJumlahMasukTritier = ?, @XAsalIdSubKelompok = ?, @XUraianDetailTransaksi = ?', [
+        DB::connection('ConnInventory')->statement('exec SP_1273_INV_Insert_02_TmpTransaksi @XIdTypeTransaksi = ?, @XUraianDetailTransaksi = ?, @XSaatawalTransaksi = ?
+        , @XIdType = ?, @XIdPenerima = ?, @XJumlahKeluarPrimer = ?, @XJumlahKeluarSekunder = ?, @XJumlahKeluarTritier = ?, @XAsalIdSubKelompok = ?, @XTujuanIdSubkelompok = ?, @Harga = ?', [
             $data['IdTypeTransaksi'],
-            $data['IdType'],
-            $data['IdPemberi'],
+            $data['UraianDetailTransaksi'],
             $data['SaatAwalTransaksi'],
-            $data['JumlahMasukPrimer'],
-            $data['JumlahMasukSekunder'],
-            $data['JumlahMasukTritier'],
-            $data['IdSubKelompokAsal'],
-            $data['UraianTransaksi']
+            $data['IdType'],
+            $data['IdPenerima'],
+            $data['JumlahKeluarPrimer'],
+            $data['JumlahKeluarSekunder'],
+            $data['JumlahKeluarTritier'],
+            $data['AsalIdSubKel'],
+            $data['TujuanIdSubKel'],
+            $data['Harga']
         ]);
 
-        return redirect()->route('MohonHibah.index')->with('alert', 'Data berhasil ditambahkan!');
+        return redirect()->route('FormMhnPenerima.index')->with('alert', 'Data berhasil ditambahkan!');
     }
 
     //Display the specified resource.
@@ -53,10 +55,10 @@ class PermohonanHibahController extends Controller
         $lastIndex = count($crExplode) - 1;
         //getListPerkiraan
         if ($crExplode[$lastIndex] == "getDivisi") {
-            $dataDivisi = DB::connection('ConnInventory')->select('exec SP_1003_INV_UserDivisi_Diminta @XKdUser = ?', [$crExplode[0]]);
+            $dataDivisi = DB::connection('ConnInventory')->select('exec SP_1003_INV_userdivisi @XKdUser = ?', [$crExplode[0]]);
             return response()->json($dataDivisi);
         } else if ($crExplode[$lastIndex] == "getObjek") {
-            $dataObjek = DB::connection('ConnInventory')->select('exec SP_1003_INV_UserObjek_Diminta @XKdUser = ?, @XIdDivisi = ?', [$crExplode[0], $crExplode[1]]);
+            $dataObjek = DB::connection('ConnInventory')->select('exec SP_1003_INV_User_Objek @XKdUser = ?, @XIdDivisi = ?', [$crExplode[0], $crExplode[1]]);
             return response()->json($dataObjek);
         } else if ($crExplode[$lastIndex] == "getKelompokUtama") {
             $dataKelut = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdObjek_KelompokUtama @XIdObjek_KelompokUtama = ?', [$crExplode[0]]);
@@ -65,14 +67,14 @@ class PermohonanHibahController extends Controller
             $dataKelompok = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdKelompokUtama_Kelompok @XIdKelompokUtama_Kelompok = ?', [$crExplode[0]]);
             return response()->json($dataKelompok);
         } else if ($crExplode[$lastIndex] == "getSubKelompok") {
-            $dataSubKelompok = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdKelompok_SubKelompok @XIdKelompok_SubKelompok = ?', [3, $crExplode[0], $crExplode[1]]);
+            $dataSubKelompok = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdKelompok_SubKelompok @XIdKelompok_SubKelompok = ?', [$crExplode[0]]);
             return response()->json($dataSubKelompok);
-        } else if ($crExplode[$lastIndex] == "getType") {
-            $dataSubKelompok = DB::connection('ConnInventory')->select('exec SP_1003_INV_idsubkelompok_type @XIdSubKelompok_Type = ?', [$crExplode[0]]);
-            return response()->json($dataSubKelompok);
-        }else if ($crExplode[$lastIndex] == "getDataMohon") {
-            $dataTransfer = DB::connection('ConnInventory')->select('exec SP_1003_INV_List_Mohon_TmpTransaksi @Kode = ?, @XIdTypeTransaksi = ?, @XIdDivisi = ?', [4, 13, $crExplode[0]]);
-            return response()->json($dataTransfer);
+        } else if ($crExplode[$lastIndex] == "getListMohon") {
+            $dataMohon = DB::connection('ConnInventory')->select('exec SP_1003_INV_List_Mohon_TmpTransaksi @Kode = ?, @XIdTypeTransaksi = ?, @XIdDivisi = ?', [$crExplode[0],$crExplode[1],$crExplode[2]]);
+            return response()->json($dataMohon);
+        } else if ($crExplode[$lastIndex] == "getDataPemohon") {
+            $dataPemohon = DB::connection('ConnInventory')->select('exec SP_1003_INV_List_Mohon_TmpTransaksi @Kode = ?, @XIdTypeTransaksi = ?, @XIdDivisi = ?, @XUser = ?', [$crExplode[0], $crExplode[1]]);
+            return response()->json($dataPemohon);
         }
     }
 
@@ -87,15 +89,15 @@ class PermohonanHibahController extends Controller
     {
         $data = $request->all();
         // dd($data , " Masuk update");
-        DB::connection('ConnInventory')->statement('exec SP_1003_INV_Update_TmpTransaksi @XIdTransaksi = ?, @XJumlahKeluarPrimer = ?, @XJumlahKeluarSekunder = ?, @XJumlahKeluarTritier = ?, @, @XTujuanSubkelompok = ?, @XUraianDetailTransaksi = ?', [
+        DB::connection('ConnInventory')->statement('exec SP_1003_INV_Update_TmpTransaksi @XIdTransaksi = ?, @XUraianDetailTransaksi = ?, @XJumlahKeluarPrimer = ?, @XJumlahKeluarSekunder = ?, @XJumlahKeluarTritier = ?, @XTujuanIdSubkelompok = ?', [
             $data['IdTransaksi'],
+            $data['UraianDetailTransaksi'],
             $data['JumlahKeluarPrimer'],
             $data['JumlahKeluarSekunder'],
             $data['JumlahKeluarTritier'],
-            $data['TujuanSubKel'],
-            $data['UraianDetailTransaksi']
+            $data['TujuanIdSubKel'],
         ]);
-        return redirect()->route('MohonHibah.index')->with('alert', 'Data berhasil diproses!');
+        return redirect()->route('FormMhnPenerima.index')->with('alert', 'Data berhasil diupdate!');
     }
 
     //Remove the specified resource from storage.

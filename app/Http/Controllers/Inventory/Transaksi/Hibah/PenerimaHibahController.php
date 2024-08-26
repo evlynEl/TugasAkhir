@@ -1,22 +1,20 @@
 <?php
 
-namespace App\Http\Controllers\Inventory\Transaksi;
+namespace App\Http\Controllers\Inventory\Transaksi\Hibah;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\HakAksesController;
 
-class AccHibahController extends Controller
+class PenerimaHibahController extends Controller
 {
     //Display a listing of the resource.
     public function index()
     {
-
-        $data = 'Test';
-
-        // dd($dataDivisi);
-        return view('Inventory.Transaksi.Hibah.AccHibah', compact('data'));
+        $access = (new HakAksesController)->HakAksesFiturMaster('Inventory'); //tidak perlu menu di navbar
+        return view('Inventory.Transaksi.Hibah.PenerimaHibah', compact('access'));
     }
 
     //Show the form for creating a new resource.
@@ -51,16 +49,13 @@ class AccHibahController extends Controller
     {
         $crExplode = explode(".", $cr);
         $lastIndex = count($crExplode) - 1;
-        //getListPerkiraan
+        //getData
         if ($crExplode[$lastIndex] == "getDivisi") {
-            $dataDivisi = DB::connection('ConnInventory')->select('exec SP_1003_INV_userdivisi_Diminta @XKdUser = ?', [$crExplode[0]]);
+            $dataDivisi = DB::connection('ConnInventory')->select('exec SP_1003_INV_userdivisi @XKdUser = ?', [$crExplode[0]]);
             return response()->json($dataDivisi);
-        } else if ($crExplode[$lastIndex] == "getBelumAcc") {
-            $dataBelumAcc = DB::connection('ConnInventory')->select('exec SP_1003_INV_List_BelumACC_TmpTransaksi @Kode = ?, @XIdTypeTransaksi = ?, @XIdDivisi = ?', [12, 13, $crExplode[0]]);
-            return response()->json($dataBelumAcc);
-        } else if ($crExplode[$lastIndex] == "getSudahAcc") {
-            $dataSudahAcc = DB::connection('ConnInventory')->select('exec SP_1003_INV_List_SudahACC_TmpTransaksi @Kode = ?, @XIdTypeTransaksi = ?, @XIdDivisi = ?', [5, 13, $crExplode[0]]);
-            return response()->json($dataSudahAcc);
+        } else if ($crExplode[$lastIndex] == "getUserObjek") {
+            $dataObjek = DB::connection('ConnInventory')->select('exec SP_1003_INV_List_BelumACC_TmpTransaksi @XKdUser = ?, @XIdDivisi = ?', [12, 13, $crExplode[0]]);
+            return response()->json($dataObjek);
         }
     }
 
@@ -75,18 +70,14 @@ class AccHibahController extends Controller
     {
         $data = $request->all();
         // dd($data , " Masuk update");
-        if ($data['updateProsesAcc'] == "AccManager") {
-            DB::connection('ConnInventory')->statement('exec SP_1003_INV_PROSES_ACC_HIBAH @Kode = ?, @UserACC = ?, @YIdTransaksi = ?', [
-                1,
-                $data['UserACC'],
-                $data['IdTransaksi']
-            ]);
-        } else if ($data['updateProsesAcc'] == "BatalAcc") {
-            DB::connection('ConnInventory')->statement('exec SP_1003_INV_PROSES_ACC_HIBAH @Kode = ?, @YIdTransaksi = ?', [
-                4,
-                $data['IdTransaksi']
-            ]);
-        }
+        DB::connection('ConnInventory')->statement('exec SP_1003_INV_PROSES_TERIMA_HIBAH @IdTransaksi = ?, @IdType = ?, @Penerima = ?, @MasukPrimer = ?, @MasukSekunder = ?, @MasukTritier = ? ', [
+            $data['IdTransaksi'],
+            $data['IdType'],
+            $data['Penerima'],
+            $data['MasukPrimer'],
+            $data['MasukSekunder'],
+            $data['MasukTritier']
+        ]);
         return redirect()->route('AccHibah.index')->with('alert', 'Data berhasil diproses!');
     }
 

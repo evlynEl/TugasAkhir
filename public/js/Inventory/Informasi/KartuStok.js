@@ -829,6 +829,7 @@ function updateDataTable(data) {
             escapeHtml(item.sat_sekunder),
             formatNumber(item.SaldoTritier),
             escapeHtml(item.sat_tritier),
+            escapeHtml(item.IdSubkelompok),
         ]);
     });
 
@@ -846,9 +847,27 @@ $('#tableData tbody').on('dblclick', 'tr', function () {
     var table = $('#tableData').DataTable();
     var detailArray = table.row(this).data();
 
-    window.open('ListDetailTransaksi', '_blank');
-    
+    var detailObject = {
+        IdType: detailArray[0],
+        NamaKelompokUtama: detailArray[1],
+        NamaKelompok: detailArray[2],
+        NamaSubKelompok: detailArray[3],
+        KodeBarang: detailArray[4],
+        NamaType: detailArray[5],
+        SaldoPrimer: detailArray[6],
+        sat_primer: detailArray[7],
+        SaldoSekunder: detailArray[8],
+        sat_sekunder: detailArray[9],
+        SaldoTritier: detailArray[10],
+        sat_tritier: detailArray[11],
+        IdSubkelompok: detailArray[12],
+    };
+
+    var queryString = $.param(detailObject);
+
+    window.open('ListDetailTransaksi?' + queryString, '_blank');
 });
+
 
 
 $('#tableData tbody').on('click', 'tr', function () {

@@ -1,584 +1,222 @@
 @extends('layouts.AppInventory')
 @section('content')
-    {{-- <script type="text/javascript" src="{{ asset('js/Agenda/agendaJam.js') }}"></script> --}}
-    <script>
-        $(document).ready(function() {
-            $("#tabel_Hibah").DataTable({
-                order: [
-                    [0, "asc"]
-                ],
-            });
-        });
-    </script>
-    <div class="container-fluid">
-        <div class="row justify-content-center">
-            <div class="col-md-10 RDZMobilePaddingLR0">
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-10 RDZMobilePaddingLR0">
+            <div class="card">
+                <div class="card-header">Informasi Lacak Transaksi</div>
+                <div class="card-body RDZOverflow RDZMobilePaddingLR0">
 
-                <div class="card">
-                    <div class="card-header">Permohonan Hibah</div>
-                    <div class="card-body RDZOverflow RDZMobilePaddingLR0" style="flex: 1; margin-left:10 px">
-                        <div style="display: flex; flex-wrap: nowrap; align-items: center;">
-                            <div style="flex: 1; margin-right: 10px;">
-                                <label style="margin-right: 10px;">Tanggal</label>
-                                <div style="display: flex; align-items: center;">
-                                    <input class="form-control" type="date" id="TglAwal" name="TglAwal"
-                                        value="{{ old('TglAwal', now()->format('Y-m-d')) }}" style="width: 210px;">
+                    <div class="row">
+                        <div class="col-sm-5 offset-sm-1 bordered">
 
-
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <label>Menampilkan Data Transaksi berdasarkan</label>
                                 </div>
-
-                            </div>
-                            <div style="flex: 1; margin-right: 10px;margin-left:35px">
-                                <label style="margin-right: 10px;">Divisi</label>
-                                <div class="form-group col-md-9 mt-3 mt-md-0" style="margin-left:-15px;">
-
-                                    <input class="form-control" type="text" id="Id_Div" readonly
-                                        style="resize: none; height: 40px; max-width: 100px;">
-                                    <input class="form-control" type="text" id="Nama_Div" readonly
-                                        style="resize: none; height: 40px; max-width: 450px;">
-                                    {{-- <select class="form-control" id="Nama_Div" readonly name="Nama_Div"
-                                    style="resize: none; height: 40px; max-width: 250px;">
-                                    <option value=""></option>
-                                    @foreach ($divisi as $data)
-                                        <option value="{{ $data->Id_Div }}">{{ $data->Nama_Div }}</option>
-                                    @endforeach
-                                </select> --}}
-                                    <button type="button" class="btn" style="margin-left: 10px; " id="divisiButton"
-                                        data-toggle="modal" data-target="#modalDivPeg">...</button>
-
-                                    <div class="modal fade" id="modalDivPeg" role="dialog" arialabelledby="modalLabel"
-                                        area-hidden="true" style="">
-                                        <div class="modal-dialog " role="document">
-                                            <div class="modal-content" style="">
-                                                <div class="modal-header" style="justify-content: center;">
-
-                                                    <div class="row" style=";">
-                                                        <div class="table-responsive" style="margin:30px;">
-                                                            <table id="tabel_Divisi" class="table table-bordered">
-                                                                <thead class="thead-dark">
-                                                                    <tr>
-                                                                        <th scope="col">Id Divisi</th>
-                                                                        <th scope="col">Nama Divisi</th>
-
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-
-
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-
                             </div>
 
+                            <div class="row">
+                                <div class="col-sm-12 ml-3" style="color: blue">
+                                    <label>Mutasi 1 (SATU) Divisi</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 ml-3">
+                                    <input type="radio" id="Pemberi3" name="opsi" value="Pemberi3">
+                                    <label for="Pemberi3">Sebagai Pemberi Barang (Pemohon)</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 ml-3">
+                                    <input type="radio" id="Penerima3" name="opsi" value="Penerima3">
+                                    <label for="Penerima3">Sebagai Penerima Barang</label>
+                                </div>
+                            </div>
 
+                            <div class="row">
+                                <div class="col-sm-12 ml-3" style="color: blue">
+                                    <label>Mutasi Antar Divisi AWAL PENERIMA BARANG</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 ml-3">
+                                    <input type="radio" id="Penerima1" name="opsi" value="Penerima1">
+                                    <label for="Penerima1">Sebagai Penerima Barang (Pemohon)</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 ml-3">
+                                    <input type="radio" id="Penerima2" name="opsi" value="Penerima2">
+                                    <label for="Penerima2">Sebagai Pemberi Barang</label>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-12 ml-3" style="color: blue">
+                                    <label>Mutasi Antar Divisi AWAL PEMBERI BARANG</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 ml-3">
+                                    <input type="radio" id="Pemberi1" name="opsi" value="Pemberi1">
+                                    <label for="Pemberi1">Sebagai Pemberi Barang (Pemohon)</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 ml-3">
+                                    <input type="radio" id="Pemberi2" name="opsi" value="Pemberi2">
+                                    <label for="Pemberi2">Sebagai Penerima Barang</label>
+                                </div>
+                            </div>
 
                         </div>
-                        <br>
+
+                        <div class="col-sm-5 ml-3 bordered">
+
+                            <div class="row pt-2">
+                                <div class="col-sm-4">
+                                    <label for="divisiId">Tanggal Mohon</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input type="date" id="tanggal" name="tanggal" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="row pt-1">
+                                <div class="col-sm-3">
+                                    <label for="divisiId">User Id</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="text" id="userId" name="userId" class="form-control" readonly>
+                                </div>
+                            </div>
+
+                            <div class="row pt-1">
+                                <div class="col-sm-3">
+                                    <label for="divisiId">Divisi</label>
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" id="divisiId" name="divisiId" class="form-control" readonly>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="divisiNama" name="divisiNama"
+                                            readonly>
+                                        <div class="input-group-append">
+                                            <button type="button" id="btn_divisi" class="btn btn-info">...</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row pt-1">
+                                <div class="col-sm-3">
+                                    <label for="obje`Id">Objek</label>
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" id="objekId" name="objekId" class="form-control"
+                                        readonly>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="objekNama" name="objekNama"
+                                            readonly>
+                                        <div class="input-group-append">
+                                            <button type="button" id="btn_objek" class="btn btn-info">...</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row pt-1">
+                                <div class="col-sm-3">
+                                    <label for="kelutId">Kel Utama</label>
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" id="kelutId" name="kelutId" class="form-control"
+                                        readonly>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="kelutNama" name="kelutNama"
+                                            readonly>
+                                        <div class="input-group-append">
+                                            <button type="button" id="btn_kelut" class="btn btn-info">...</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row pt-1">
+                                <div class="col-sm-3">
+                                    <label for="kelompokId">Kelompok</label>
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" id="kelompokId" name="kelompokId" class="form-control"
+                                        readonly>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="kelompokNama"
+                                            name="kelompokNama" readonly>
+                                        <div class="input-group-append">
+                                            <button type="button" id="btn_kelompok"
+                                                class="btn btn-info">...</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row pt-1">
+                                <div class="col-sm-3">
+                                    <label for="subkelId">Sub Kelompok</label>
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" id="subkelId" name="subkelId" class="form-control"
+                                        readonly>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="subkelNama" name="subkelNama"
+                                            readonly>
+                                        <div class="input-group-append">
+                                            <button type="button" id="btn_subkel" class="btn btn-info">...</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row pt-1">
+                                <div class="col-sm-10 offset-sm-1">
+                                    <button type="button" id="btn_ok" style="width: 100%"
+                                        class="btn btn-outline-secondary">OK</button>
+                                </div>
+                            </div>
+
+                        </div>
 
                     </div>
 
-                    <div class="card-body-container" style="display: flex; flex-wrap: nowrap;">
-                        <div class="card-body" style="flex: 1; margin-right: 10px;">
-                            <div class="card-body"
-                                style="flex: 1; margin-right: 10px; border: 1px solid #000000; border-radius: 3px; text-align: middle;"
-                                id="peroranganSection">
-                                <div class="card-body RDZOverflow RDZMobilePaddingLR0" style="flex: 1; margin-left:10;">
-
-                                    <br>
-                                    <div class="table-responsive">
-                                        <table class="table table-striped table-bordered" id="tabel_Hibah">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col">No Transaksi</th>
-                                                    <th scope="col">Nama Type</th>
-
-                                                </tr>
-                                            </thead>
-                                            <tbody class="table-group-divider">
-
-                                                {{-- @foreach ($dataDivisi as $data)
-                                                    <tr>
-                                                        <td>{{ $data->Id_Div }}</td>
-                                                        <td>{{ $data->Nama_Div }}</td>
-
-                                                    </tr>
-                                                @endforeach --}}
-                                            </tbody>
-
-                                        </table>
-                                    </div>
-
-                                </div>
+                    <div class="row" style="margin-top: 0.5%">
+                        <div class="col-sm-10 offset-sm-1">
+                            <div class="table-responsive fixed-height" style="height: 300px">
+                                <table class="table table-bordered no-wrap-header" id="tableData">
+                                    <thead>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
-                        <div class="card-body" style="flex: 1; margin-right: 10px;">
-                            <div class="card-body"
-                                style="flex: 1; margin-right: 10px; border: 1px solid #000000; border-radius: 3px;"
-                                id="divisiSection">
-                                <div class="card-body RDZOverflow RDZMobilePaddingLR0" style="flex: 1; margin-left:10;">
-
-                                    <br>
-                                    <div class="row" style="margin-left:-100px;">
-                                        <div class="form-group col-md-3 d-flex justify-content-end">
-                                            <span class="aligned-text">Objek:</span>
-                                        </div>
-                                        <div class="form-group col-md-9 mt-3 mt-md-0">
-
-                                            <input class="form-control" type="text" id="Kd_Posisi" disabled
-                                                style="resize: none; height: 40px; max-width: 100px;">
-                                            <input class="form-control" type="text" id="Nama_Posisi" disabled
-                                                style="resize: none; height: 40px; max-width: 450px;">
-                                            {{-- <select class="form-control" id="Nama_Div" readonly name="Nama_Div"
-                                                style="resize: none; height: 40px; max-width: 250px;">
-                                                <option value=""></option>
-                                                @foreach ($divisi as $data)
-                                                    <option value="{{ $data->Id_Div }}">{{ $data->Nama_Div }}</option>
-                                                @endforeach
-                                            </select> --}}
-                                            <button type="button" class="btn" style="margin-left: 10px; "
-                                                id="posisiButton" onclick="showModalPosisi()" disabled>...</button>
-
-                                            <div class="modal fade" id="modalPosisi" role="dialog"
-                                                arialabelledby="modalLabel" area-hidden="true" style="">
-                                                <div class="modal-dialog " role="document">
-                                                    <div class="modal-content" style="">
-                                                        <div class="modal-header" style="justify-content: center;">
-                                                            <div class="row" style=";">
-                                                                <div class="table-responsive" style="margin:30px;">
-                                                                    <table id="tabel_Posisi" class="table table-bordered">
-                                                                        <thead class="thead-dark">
-                                                                            <tr>
-                                                                                <th scope="col">Kd Posisi</th>
-                                                                                <th scope="col">Nama Posisi</th>
-
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody>
-                                                                            {{-- @foreach ($dataPosisi as $data)
-                                                                                <tr>
-
-                                                                                    <td>{{ $data->KD_Posisi }}</td>
-                                                                                    <td>{{ $data->Nm_Posisi }}</td>
-
-
-
-                                                                                </tr>
-                                                                            @endforeach
-             --}}
-                                                                        </tbody>
-                                                                    </table>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="row" style="margin-left:-100px;">
-                                        <div class="form-group col-md-3 d-flex justify-content-end">
-                                            <span class="aligned-text">Kelompok Utama:</span>
-                                        </div>
-                                        <div class="form-group col-md-9 mt-3 mt-md-0">
-
-                                            <input class="form-control" type="text" id="Kd_Posisi" disabled
-                                                style="resize: none; height: 40px; max-width: 100px;">
-                                            <input class="form-control" type="text" id="Nama_Posisi" disabled
-                                                style="resize: none; height: 40px; max-width: 450px;">
-                                            {{-- <select class="form-control" id="Nama_Div" readonly name="Nama_Div"
-                                                style="resize: none; height: 40px; max-width: 250px;">
-                                                <option value=""></option>
-                                                @foreach ($divisi as $data)
-                                                    <option value="{{ $data->Id_Div }}">{{ $data->Nama_Div }}</option>
-                                                @endforeach
-                                            </select> --}}
-                                            <button type="button" class="btn" style="margin-left: 10px; "
-                                                id="posisiButton" onclick="showModalPosisi()" disabled>...</button>
-
-                                            <div class="modal fade" id="modalPosisi" role="dialog"
-                                                arialabelledby="modalLabel" area-hidden="true" style="">
-                                                <div class="modal-dialog " role="document">
-                                                    <div class="modal-content" style="">
-                                                        <div class="modal-header" style="justify-content: center;">
-                                                            <div class="row" style=";">
-                                                                <div class="table-responsive" style="margin:30px;">
-                                                                    <table id="tabel_Posisi" class="table table-bordered">
-                                                                        <thead class="thead-dark">
-                                                                            <tr>
-                                                                                <th scope="col">Kd Posisi</th>
-                                                                                <th scope="col">Nama Posisi</th>
-
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody>
-                                                                            {{-- @foreach ($dataPosisi as $data)
-                                                                                <tr>
-
-                                                                                    <td>{{ $data->KD_Posisi }}</td>
-                                                                                    <td>{{ $data->Nm_Posisi }}</td>
-
-
-
-                                                                                </tr>
-                                                                            @endforeach
-             --}}
-                                                                        </tbody>
-                                                                    </table>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="row" style="margin-left:-100px;">
-                                        <div class="form-group col-md-3 d-flex justify-content-end">
-                                            <span class="aligned-text">Kelompok:</span>
-                                        </div>
-                                        <div class="form-group col-md-9 mt-3 mt-md-0">
-
-                                            <input class="form-control" type="text" id="Kd_Posisi" disabled
-                                                style="resize: none; height: 40px; max-width: 100px;">
-                                            <input class="form-control" type="text" id="Nama_Posisi" disabled
-                                                style="resize: none; height: 40px; max-width: 450px;">
-                                            {{-- <select class="form-control" id="Nama_Div" readonly name="Nama_Div"
-                                                style="resize: none; height: 40px; max-width: 250px;">
-                                                <option value=""></option>
-                                                @foreach ($divisi as $data)
-                                                    <option value="{{ $data->Id_Div }}">{{ $data->Nama_Div }}</option>
-                                                @endforeach
-                                            </select> --}}
-                                            <button type="button" class="btn" style="margin-left: 10px; "
-                                                id="posisiButton" onclick="showModalPosisi()" disabled>...</button>
-
-                                            <div class="modal fade" id="modalPosisi" role="dialog"
-                                                arialabelledby="modalLabel" area-hidden="true" style="">
-                                                <div class="modal-dialog " role="document">
-                                                    <div class="modal-content" style="">
-                                                        <div class="modal-header" style="justify-content: center;">
-                                                            <div class="row" style=";">
-                                                                <div class="table-responsive" style="margin:30px;">
-                                                                    <table id="tabel_Posisi" class="table table-bordered">
-                                                                        <thead class="thead-dark">
-                                                                            <tr>
-                                                                                <th scope="col">Kd Posisi</th>
-                                                                                <th scope="col">Nama Posisi</th>
-
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody>
-                                                                            {{-- @foreach ($dataPosisi as $data)
-                                                                                <tr>
-
-                                                                                    <td>{{ $data->KD_Posisi }}</td>
-                                                                                    <td>{{ $data->Nm_Posisi }}</td>
-
-
-
-                                                                                </tr>
-                                                                            @endforeach
-             --}}
-                                                                        </tbody>
-                                                                    </table>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="row" style="margin-left:-100px;">
-                                        <div class="form-group col-md-3 d-flex justify-content-end">
-                                            <span class="aligned-text">Sub Kelompok:</span>
-                                        </div>
-                                        <div class="form-group col-md-9 mt-3 mt-md-0">
-
-                                            <input class="form-control" type="text" id="Kd_Posisi" disabled
-                                                style="resize: none; height: 40px; max-width: 100px;">
-                                            <input class="form-control" type="text" id="Nama_Posisi" disabled
-                                                style="resize: none; height: 40px; max-width: 450px;">
-                                            {{-- <select class="form-control" id="Nama_Div" readonly name="Nama_Div"
-                                                style="resize: none; height: 40px; max-width: 250px;">
-                                                <option value=""></option>
-                                                @foreach ($divisi as $data)
-                                                    <option value="{{ $data->Id_Div }}">{{ $data->Nama_Div }}</option>
-                                                @endforeach
-                                            </select> --}}
-                                            <button type="button" class="btn" style="margin-left: 10px; "
-                                                id="posisiButton" onclick="showModalPosisi()" disabled>...</button>
-
-                                            <div class="modal fade" id="modalPosisi" role="dialog"
-                                                arialabelledby="modalLabel" area-hidden="true" style="">
-                                                <div class="modal-dialog " role="document">
-                                                    <div class="modal-content" style="">
-                                                        <div class="modal-header" style="justify-content: center;">
-                                                            <div class="row" style=";">
-                                                                <div class="table-responsive" style="margin:30px;">
-                                                                    <table id="tabel_Posisi" class="table table-bordered">
-                                                                        <thead class="thead-dark">
-                                                                            <tr>
-                                                                                <th scope="col">Kd Posisi</th>
-                                                                                <th scope="col">Nama Posisi</th>
-
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody>
-                                                                            {{-- @foreach ($dataPosisi as $data)
-                                                                                <tr>
-
-                                                                                    <td>{{ $data->KD_Posisi }}</td>
-                                                                                    <td>{{ $data->Nm_Posisi }}</td>
-
-
-
-                                                                                </tr>
-                                                                            @endforeach
-             --}}
-                                                                        </tbody>
-                                                                    </table>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="row" style="margin-left:-100px;">
-                                        <div class="form-group col-md-3 d-flex justify-content-end">
-                                            <span class="aligned-text">Id&nbsp;Type:</span>
-                                        </div>
-                                        <div class="form-group col-md-9 mt-3 mt-md-0">
-                                            <input class="form-control" type="text" id="Nama_Posisi" disabled
-                                                style="resize: none; height: 40px; max-width: 550px;">
-                                            {{-- <select class="form-control" id="Nama_Div" readonly name="Nama_Div"
-                                                style="resize: none; height: 40px; max-width: 250px;">
-                                                <option value=""></option>
-                                                @foreach ($divisi as $data)
-                                                    <option value="{{ $data->Id_Div }}">{{ $data->Nama_Div }}</option>
-                                                @endforeach
-                                            </select> --}}
-                                            <button type="button" class="btn" style="margin-left: 10px; "
-                                                id="posisiButton" onclick="showModalPosisi()" disabled>...</button>
-
-                                            <div class="modal fade" id="modalPosisi" role="dialog"
-                                                arialabelledby="modalLabel" area-hidden="true" style="">
-                                                <div class="modal-dialog " role="document">
-                                                    <div class="modal-content" style="">
-                                                        <div class="modal-header" style="justify-content: center;">
-                                                            <div class="row" style=";">
-                                                                <div class="table-responsive" style="margin:30px;">
-                                                                    <table id="tabel_Posisi" class="table table-bordered">
-                                                                        <thead class="thead-dark">
-                                                                            <tr>
-                                                                                <th scope="col">Kd Posisi</th>
-                                                                                <th scope="col">Nama Posisi</th>
-
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody>
-                                                                            {{-- @foreach ($dataPosisi as $data)
-                                                                                <tr>
-
-                                                                                    <td>{{ $data->KD_Posisi }}</td>
-                                                                                    <td>{{ $data->Nm_Posisi }}</td>
-
-
-
-                                                                                </tr>
-                                                                            @endforeach
-             --}}
-                                                                        </tbody>
-                                                                    </table>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="row" style="margin-left:-100px;">
-                                        <div class="form-group col-md-3 d-flex justify-content-end">
-                                            <span class="aligned-text">Nama&nbsp;Type:</span>
-                                        </div>
-                                        <div class="form-group col-md-9 mt-3 mt-md-0">
-                                            <input class="form-control" type="text" id="Nama_Posisi" disabled
-                                                style="resize: none; height: 40px; max-width: 550px;">
-                                            {{-- <select class="form-control" id="Nama_Div" readonly name="Nama_Div"
-                                                style="resize: none; height: 40px; max-width: 250px;">
-                                                <option value=""></option>
-                                                @foreach ($divisi as $data)
-                                                    <option value="{{ $data->Id_Div }}">{{ $data->Nama_Div }}</option>
-                                                @endforeach
-                                            </select> --}}
-                                            <div class="modal fade" id="modalPosisi" role="dialog"
-                                                arialabelledby="modalLabel" area-hidden="true" style="">
-                                                <div class="modal-dialog " role="document">
-                                                    <div class="modal-content" style="">
-                                                        <div class="modal-header" style="justify-content: center;">
-                                                            <div class="row" style=";">
-                                                                <div class="table-responsive" style="margin:30px;">
-                                                                    <table id="tabel_Posisi" class="table table-bordered">
-                                                                        <thead class="thead-dark">
-                                                                            <tr>
-                                                                                <th scope="col">Kd Posisi</th>
-                                                                                <th scope="col">Nama Posisi</th>
-
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody>
-                                                                            {{-- @foreach ($dataPosisi as $data)
-                                                                                <tr>
-
-                                                                                    <td>{{ $data->KD_Posisi }}</td>
-                                                                                    <td>{{ $data->Nm_Posisi }}</td>
-
-
-
-                                                                                </tr>
-                                                                            @endforeach
-             --}}
-                                                                        </tbody>
-                                                                    </table>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="row" style="margin-left:-100px;">
-                                        <div class="form-group col-md-3 d-flex justify-content-end">
-                                            <span class="aligned-text">Nama&nbsp;Pemberi:</span>
-                                        </div>
-                                        <div class="form-group col-md-9 mt-3 mt-md-0">
-                                            <input class="form-control" type="text" id="Nama_Posisi" disabled
-                                                style="resize: none; height: 40px; max-width: 550px;">
-                                            {{-- <select class="form-control" id="Nama_Div" readonly name="Nama_Div"
-                                                style="resize: none; height: 40px; max-width: 250px;">
-                                                <option value=""></option>
-                                                @foreach ($divisi as $data)
-                                                    <option value="{{ $data->Id_Div }}">{{ $data->Nama_Div }}</option>
-                                                @endforeach
-                                            </select> --}}
-                                            <div class="modal fade" id="modalPosisi" role="dialog"
-                                                arialabelledby="modalLabel" area-hidden="true" style="">
-                                                <div class="modal-dialog " role="document">
-                                                    <div class="modal-content" style="">
-                                                        <div class="modal-header" style="justify-content: center;">
-                                                            <div class="row" style=";">
-                                                                <div class="table-responsive" style="margin:30px;">
-                                                                    <table id="tabel_Posisi" class="table table-bordered">
-                                                                        <thead class="thead-dark">
-                                                                            <tr>
-                                                                                <th scope="col">Kd Posisi</th>
-                                                                                <th scope="col">Nama Posisi</th>
-
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody>
-                                                                            {{-- @foreach ($dataPosisi as $data)
-                                                                                <tr>
-
-                                                                                    <td>{{ $data->KD_Posisi }}</td>
-                                                                                    <td>{{ $data->Nm_Posisi }}</td>
-
-
-
-                                                                                </tr>
-                                                                            @endforeach
-             --}}
-                                                                        </tbody>
-                                                                    </table>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div id="form-container"></div>
-                                    <div style="text-align: center; margin-top: 100px;">
-                                        <button type="button" class="btn " style="width:75px;"
-                                            id="isiButton">Isi</button>
-                                        <button type="button" class="btn " style="width:75px;" id="SimpanIsiButton"
-                                            hidden>SIMPAN</button>
-                                        <button type="button" class="btn " style="width:75px;"
-                                            id="SimpanKoreksiButton" hidden>SIMPAN</button>
-                                        <button type="button" class="btn " style="width:75px;"
-                                            id="KoreksiButton">Koreksi</button>
-                                        <button type="button" class="btn " style="width:75px;" id="BatalIsiButton"
-                                            hidden>BATAL</button>
-                                        <button type="button" class="btn " style="width:75px;"
-                                            id="BatalKoreksiButton" hidden>BATAL</button>
-                                        <button type="button" class="btn " style="width:75px;"
-                                            id="ProsesButton">Proses</button>
-                                        <button type="button" class="btn " style="width:75px;"
-                                            id="keluarButton">Keluar</button>
-                                    </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                </div>
-                            </div>
-                        </div>
-
-
                     </div>
-
-
-
-
-
-
-
-
-                    <br>
-
-
-
-
-
-
 
                 </div>
             </div>
-
         </div>
-        <br>
+    </div>
+</div>
 
-    </div>
-    </div>
-    </div>
+<link rel="stylesheet" href="{{ asset('css/Inventory/Informasi/LacakTransaksi.css') }}">
+<script src="{{ asset('js/Inventory/Informasi/LacakTransaksi.js') }}"></script>
 @endsection
