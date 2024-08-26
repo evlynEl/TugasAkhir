@@ -3,20 +3,18 @@
 namespace App\Http\Controllers\Inventory\Transaksi\Penghangusan;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\HakAksesController;
 
-class FormAccPenghangusanBarangController extends Controller
+class AccPenghangusanBarangController extends Controller
 {
     //Display a listing of the resource.
     public function index()
     {
-
-        $data = 'HAPPY HAPPY HAPPY';
-
-        // dd($dataDivisi);
-        return view('Inventory.Transaksi.Penghangusan.FormAccPenghangusanBarang', compact('data'));
+        $access = (new HakAksesController)->HakAksesFiturMaster('Inventory');
+        return view('Inventory.Transaksi.Penghangusan.AccPenghangusanBarang', compact('access'));
     }
 
     //Show the form for creating a new resource.

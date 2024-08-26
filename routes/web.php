@@ -57,12 +57,12 @@ use App\Http\Controllers\Inventory\Transaksi\Mutasi\FormPermohonanSatuDivisiCont
 use App\Http\Controllers\Inventory\Transaksi\PemakaianGelondonganController;
 use App\Http\Controllers\Inventory\Transaksi\Penyesuaian\FormPenyesuaianBarangController;
 use App\Http\Controllers\Inventory\Transaksi\Mutasi\FormPermohonanPenerimaBenangController;
-use App\Http\Controllers\Inventory\Transaksi\Penghangusan\FormPenghangusanBarangController;
+use App\Http\Controllers\Inventory\Transaksi\Penghangusan\PenghangusanBarangController;
 use App\Http\Controllers\Inventory\Transaksi\Penyesuaian\FormAccPenyesuaianBarangController;
 use App\Http\Controllers\Inventory\Transaksi\TerimaBenang\FormTerimaBenangGedungDController;
 use App\Http\Controllers\Inventory\Transaksi\TerimaBenang\FormTerimaBenangTropodoController;
 use App\Http\Controllers\Inventory\Transaksi\Mutasi\FormPengembalianPascaPenjualanController;
-use App\Http\Controllers\Inventory\Transaksi\Penghangusan\FormAccPenghangusanBarangController;
+use App\Http\Controllers\Inventory\Transaksi\Penghangusan\AccPenghangusanBarangController;
 
 /*
 |--------------------------------------------------------------------------
@@ -150,8 +150,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('PengembalianPascaPenjualan', FormPengembalianPascaPenjualanController::class);
     Route::resource('KonversiBarang', FormKonversiBarangController::class);
     Route::resource('AccKonversiBarang', FormAccKonversiBarangController::class);
-    Route::resource('PenghangusanBarang', FormPenghangusanBarangController::class);
-    Route::resource('AccPenghangusanBarang', FormAccPenghangusanBarangController::class);
+    Route::resource('PenghangusanBarang', PenghangusanBarangController::class);
+    Route::resource('AccPenghangusanBarang', AccPenghangusanBarangController::class);
     Route::resource('PenyesuaianBarang', FormPenyesuaianBarangController::class);
     Route::resource('AccPenyesuaianBarang', FormAccPenyesuaianBarangController::class);
     Route::resource('TerimaBenangTropodo', FormTerimaBenangTropodoController::class);

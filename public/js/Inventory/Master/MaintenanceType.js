@@ -816,7 +816,6 @@ btn_barang.addEventListener("click", function (e) {
     }
 });
 
-
 // fungsi unk bikin dropdown satuan umum dr kdBarang
 function populateDropdownFromValues(dropdownId, triterValue, sekunderValue, primerValue, noTritier, noSekunder, noPrimer) {
     var dropdown = document.getElementById(dropdownId);
