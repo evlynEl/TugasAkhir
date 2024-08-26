@@ -4,7 +4,7 @@
         <div class="row justify-content-center">
             <div class="col-md-10 RDZMobilePaddingLR0">
                 <div class="card">
-                    <div class="card-header">Informasi Lacak Transaksi</div>
+                    <div class="card-header">PerMohon Hibah</div>
                     <div class="card-body RDZOverflow RDZMobilePaddingLR0">
 
                         <div class="row" style="margin-top: 0%">
@@ -32,7 +32,7 @@
                             <div class="col-sm-6">
 
                                 <div class="col-sm-12">
-                                    <div class="table-responsive fixed-height" style="height: 300px">
+                                    <div class="table-responsive fixed-height" style="height: 500px">
                                         <table class="table table-bordered no-wrap-header" id="tableData">
                                             <thead>
                                             </thead>
@@ -58,7 +58,7 @@
                                             <input type="text" class="form-control" id="objekNama" name="objekNama"
                                                 readonly>
                                             <div class="input-group-append">
-                                                <button type="button" id="btn_objek" class="btn btn-info">...</button>
+                                                <button type="button" id="btn_objek" class="btn btn-info" disabled>...</button>
                                             </div>
                                         </div>
                                     </div>
@@ -76,7 +76,7 @@
                                             <input type="text" class="form-control" id="kelutNama" name="kelutNama"
                                                 readonly>
                                             <div class="input-group-append">
-                                                <button type="button" id="btn_kelut" class="btn btn-info">...</button>
+                                                <button type="button" id="btn_kelut" class="btn btn-info" disabled>...</button>
                                             </div>
                                         </div>
                                     </div>
@@ -95,7 +95,7 @@
                                             <input type="text" class="form-control" id="kelompokNama" name="kelompokNama"
                                                 readonly>
                                             <div class="input-group-append">
-                                                <button type="button" id="btn_kelompok" class="btn btn-info">...</button>
+                                                <button type="button" id="btn_kelompok" class="btn btn-info" disabled>...</button>
                                             </div>
                                         </div>
                                     </div>
@@ -113,7 +113,7 @@
                                             <input type="text" class="form-control" id="subkelNama" name="subkelNama"
                                                 readonly>
                                             <div class="input-group-append">
-                                                <button type="button" id="btn_subkel" class="btn btn-info">...</button>
+                                                <button type="button" id="btn_subkel" class="btn btn-info" disabled>...</button>
                                             </div>
                                         </div>
                                     </div>
@@ -128,7 +128,7 @@
                                             <input type="text" class="form-control" id="typeId" name="typeId"
                                                 readonly>
                                             <div class="input-group-append">
-                                                <button type="button" id="btn_type" class="btn btn-info">...</button>
+                                                <button type="button" id="btn_type" class="btn btn-info" disabled>...</button>
                                             </div>
                                         </div>
                                     </div>
@@ -199,8 +199,8 @@
                                                     readonly>
                                             </div>
                                             <div class="col-sm-3">
-                                                <input type="text" class="form-control" id="sattritier"
-                                                    name="sattritier" readonly>
+                                                <input type="text" class="form-control" id="satTritier"
+                                                    name="satTritier" readonly>
                                             </div>
                                         </div>
                                     </div>
@@ -208,11 +208,26 @@
 
 
                                 <div class="row mt-2">
-                                    <div class="col-sm-12">
-                                        <button type="button" id="btn_isi" class="btn btn-info">ISI</button>
-                                        <button type="button" id="btn_koreksi" class="btn btn-info">KOREKSI</button>
-                                        <button type="button" id="btn_hapus" class="btn btn-info">HAPUS</button>
-                                        <button type="button" id="btn_batal" class="btn btn-info">BATAL</button>
+                                    <div class="col-sm-2">
+                                        <button type="button" id="btn_isi" class="btn btn-info"
+                                            style="width: 125%" disabled>ISI</button>
+                                    </div>
+                                        <div class="col-sm-2">
+                                            <button type="button" id="btn_koreksi" class="btn btn-info"
+                                                style="width: 125%" disabled>KOREKSI</button>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <button type="button" id="btn_hapus" class="btn btn-info"
+                                                style="width: 125%" disabled>HAPUS</button>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <button type="button" id="btn_proses" class="btn btn-info"
+                                                style="width: 125%" disabled>PROSES</button>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <button type="button" id="btn_batal" class="btn btn-info"
+                                                style="width: 125%" disabled>BATAL</button>
+                                        </div>
                                     </div>
                                 </div>
 
