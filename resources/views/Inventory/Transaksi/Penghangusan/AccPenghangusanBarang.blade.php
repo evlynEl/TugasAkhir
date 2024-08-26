@@ -1,6 +1,5 @@
 @extends('layouts.AppInventory')
 @section('content')
-    {{-- <script type="text/javascript" src="{{ asset('js/Master/MaintenanceType.js') }}"></script> --}}
     <script>
         $(document).ready(function() {
             $("#tabel_Purchasing").DataTable({
