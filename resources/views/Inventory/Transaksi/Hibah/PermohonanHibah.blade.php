@@ -218,5 +218,5 @@
 </div>
 
 <link rel="stylesheet" href="{{ asset('css/Inventory/Informasi/LacakTransaksi.css') }}">
-<script src="{{ asset('js/Inventory/Informasi/LacakTransaksi.js') }}"></script>
+<script src="{{ asset('js/Inventory/Transaksi/Hibah/LacakTransaksi.js') }}"></script>
 @endsection
