@@ -8,7 +8,7 @@
                     <div class="card-body RDZOverflow RDZMobilePaddingLR0">
 
                         {{-- ATAS --}}
-                        <div class="baris-1 pl-1">
+                        <div class="baris-1 pl-1" id="baris-1">
                             <div class="row pt-2">
                                 <div class="col-2">
                                     <label for="divisiId">Divisi</label>

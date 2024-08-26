@@ -26,40 +26,7 @@ class MaintenanceTypeController extends Controller
     //Store a newly created resource in storage.
     public function store(Request $request)
     {
-        $data = $request->all();
-        // dd($data , " Masuk store");
-        DB::connection('ConnInventory')->statement('exec SP_1003_INV_insert_type @XIdType = ?, @XNamaType = ?, @XUraianType = ?
-        , @XIdSubkelompok_Type = ?, @XKodeBarang = ?, @XSaatStokAwal = ?, @XStokAwalPrimer = ?, @XTotalPemasukanPrimer = ?, @XSaldoPrimer = ?, @XUnitPrimer = ?, @XStokAwalSekunder = ?, XTotalPemasukanSekunder = ?
-        , @XSaldoSekunder = ?, @XUnitSekunder = ?, @XStokAwalTritier = ?, @XTotalPemasukanTritier = ?, @XSaldoTritier = ?, @XUnitTritier = ?, @XPakaiAturanKonversi = ?, @XKonvSekunderKePrimer = ?, @XKonvTritierKeSekunder = ?
-        , @XNonaktif = ?, @XMinimumStok = ?, @XNo_satuan_umum = ?, @userInput = ?', [
-            $data['IdType'],
-            $data['NamaType'],
-            $data['UraianType'],
-            $data['IdSubKel'],
-            $data['KodeBarang'],
-            $data['SaatStokAwal'],
-            $data['StokAwalPrimer'],
-            $data['TotalPemasukanPrimer'],
-            $data['SaldoPrimer'],
-            $data['UnitPrimer'],
-            $data['StokAwalSekunder'],
-            $data['TotalPemasukanSekunder'],
-            $data['SaldoSekunder'],
-            $data['UnitSekunder'],
-            $data['StokAwalTritier'],
-            $data['TotalPemasukanTritier'],
-            $data['SaldoTritier'],
-            $data['UnitTritier'],
-            $data['AturanKonversi'],
-            $data['KonvSekunderPrimer'],
-            $data['KonvTritierSekunder'],
-            $data['NonAktif'],
-            $data['MinimumStok'],
-            $data['NoSatuanUmum'],
-            $data['userInput']
-        ]);
-
-        return redirect()->route('MaintenanceType.index')->with('alert', 'Data berhasil ditambahkan!');
+        //
     }
 
     //Display the specified resource.
@@ -77,21 +44,16 @@ class MaintenanceTypeController extends Controller
         $subkelId = $request->input('subkelId');
         $konversi = $request->input('konversi');
         $divisiId = $request->input('divisiId');
-        $divisiNama = $request->input('divisiNama');
         $objekId = $request->input('objekId');
-        $objekNama = $request->input('objekNama');
         $kelompokId = $request->input('kelompokId');
-        $kelompokNama = $request->input('kelompokNama');
         $kelutId = $request->input('kelutId');
-        $kelutNama = $request->input('kelutNama');
-        $subkelNama = $request->input('subkelNama');
         $katUtama = $request->input('katUtama');
         $kategori = $request->input('kategori');
-        $jenis = $request->input('jenis');
-        $namaBarang = $request->input('namaBarang');
         $kodeType = $request->input('kodeType');
         $satuan = $request->input('satuan');
-        $satuanUmum = trim($satuan) === '' ? '' : trim($satuan);
+        $satuanChange = $request->input('satuanChange');
+        $satuanUmum = trim($satuanChange) === '' ? '' : trim($satuanChange);
+
         $primerSekunder = $request->input('primerSekunder');
         $sekunderTritier = $request->input('sekunderTritier');
 
@@ -204,6 +166,7 @@ class MaintenanceTypeController extends Controller
 
         } else if ($id === 'getBarang') {
             // mendapatkan daftar barang
+            // dd($no_subkategori);
             $barang = DB::connection('ConnPurchase')->select('exec SP_1003_INV_lihat_type @no_jns_1 = ?', [$no_subkategori]);
             // dd($no_subkategori);
             $data_barang = [];
@@ -214,8 +177,13 @@ class MaintenanceTypeController extends Controller
                 ];
             }
 
+            return datatables($data_barang)->make(true);
+
+        } else if ($id === 'getSatuanBarang') {
+            // auto fill satuan primer, sekunder, tritier dr kode barang
             // auto fill satuan primer, sekunder, tritier dr kode barang
             $satuanBarang = DB::connection('ConnPurchase')->select('exec SP_1003_INV_KdBrg_Satuan_YBarang @KodeBarang = ?', [$kdBarang]);
+            // dd($kdBarang, $satuanBarang);
 
             $data_satuanBarang = [];
             foreach ($satuanBarang as $detail_satuanBarang) {
@@ -228,35 +196,9 @@ class MaintenanceTypeController extends Controller
                     'ST_PRIM' => $detail_satuanBarang->ST_PRIM
                 ];
             }
+            // dd($data_satuanBarang);
 
-            $response_data = [
-                'data_barang' => $data_barang,
-                'data_satuanBarang' => $data_satuanBarang
-            ];
-
-            dd($response_data);
-
-            return datatables($response_data)->make(true);
-
-        } else if ($id === 'getFillSatuan') {
-            // auto fill satuan primer, sekunder, tritier dr kode barang
-            $namaSatuan = DB::connection('ConnInventory')->select('exec SP_1003_INV_Nama_Satuan @XNama_Satuan = ?', [$trotoer]);
-
-            $data_namaSatuan = [];
-            foreach ($namaSatuan as $detail_namaSatuan) {
-                $data_namaSatuan[] = [
-                    'NmSat_Tri' => $detail_namaSatuan->NmSat_Tri,
-                    'ST_TRI' => $detail_namaSatuan->ST_TRI,
-                    'NmSat_Sek' => $detail_namaSatuan->NmSat_Sek,
-                    'ST_SEK' => $detail_namaSatuan->ST_SEK,
-                    'NmSat_Prim' => $detail_namaSatuan->NmSat_Prim,
-                    'ST_PRIM' => $detail_namaSatuan->ST_PRIM
-                ];
-            }
-
-            dd($data_namaSatuan);
-
-            return response()->json($data_namaSatuan);
+            return response()->json(['data_satuanBarang' => $data_satuanBarang]);
 
         } else if ($id === 'getSatuan') {
             // daftar satuan primer, sekunder, tritier
@@ -294,6 +236,7 @@ class MaintenanceTypeController extends Controller
                     'UraianType' => $detail_unit->UraianType,
                     'KodeBarang' => $detail_unit->KodeBarang,
                     'PIB' => $detail_unit->PIB,
+                    'PEB' => $detail_unit->PEB,
                     'PakaiAturanKonversi' => $detail_unit->PakaiAturanKonversi,
                     'KonvSekunderKePrimer' => $detail_unit->KonvSekunderKePrimer,
                     'KonvTritierKeSekunder' => $detail_unit->KonvTritierKeSekunder,
@@ -332,12 +275,14 @@ class MaintenanceTypeController extends Controller
             // daftar kode barang untuk koreksi
             $cekSatuanType = DB::connection('ConnInventory')->select('exec SP_1003_INV_satumum_type @idtype = ?', [$idtype]);
             $satuan_umum = $cekSatuanType[0]->SatuanUmum;
-            // dd($satuan_umum, !empty($satuan_umum));
+            // dd($satuan_umum);
 
-            if (isset($satuan_umum) && $satuan_umum === "") {
+            if (isset($satuan_umum) && $satuan_umum !== "") {
                 // dd('masuk');
                 $satuanFinal = DB::connection('ConnInventory')->select('exec SP_1003_INV_nama_satumum @no_satumum = ?', [$satuan_umum]);
-                $satuan_final = $satuanFinal[0]->nama_satuan;
+                $satuan_final = trim($satuanFinal[0]->nama_satuan);
+                // dd($satuan_final);
+
 
                 return response()->json($satuan_final);
             } else {
@@ -364,7 +309,6 @@ class MaintenanceTypeController extends Controller
                         $idtype = $cekTabel[0]->IdType + 1;
                     }
                     $idtype = str_pad($idtype, 20, '0', STR_PAD_LEFT);
-                    // dd($idtype);
 
                     DB::connection('ConnInventory')->statement(
                         'exec SP_1003_INV_insert_type
@@ -382,6 +326,7 @@ class MaintenanceTypeController extends Controller
                         $konversi, $primerSekunder, $sekunderTritier, "Y",
                         0, $satuanUmum, $user, $PIB, $PEB
                     ]);
+                    // dd($request->all());
 
 
                     DB::connection('ConnInventory')->statement('exec SP_1003_INV_Update_IdType_Counter @XIdType = ?',[$idtype]);
@@ -399,9 +344,10 @@ class MaintenanceTypeController extends Controller
                     $no_primer, $no_sekunder, $no_tritier, $konversi,
                     $primerSekunder, $sekunderTritier, $satuanUmum, $user, $PIB, $PEB]
                 );
-                dd($request->all());
+                // dd($request->all());
 
                 return response()->json(['success' => 'Data updated successfully'], 200);
+
             }
         }
     }
@@ -415,36 +361,24 @@ class MaintenanceTypeController extends Controller
     //Update the specified resource in storage.
     public function update(Request $request)
     {
-        $data = $request->all();
-        // dd($data , " Masuk update");
-        DB::connection('ConnInventory')->statement('exec SP_1003_INV_update_type @XIdType = ?, @XNamaType = ?, @XUraianType = ?
-        , @XIdSubkelompok_Type = ?, @XKodeBarang = ?, @XUnitPrimer = ?, @XUnitSekunder = ?, @XUnitTritier = ?, @XPakaiAturanKonversi = ?, @XKonvSekunderKePrimer = ?, @XKonvTritierKeSekunder = ?,
-        @XNo_satuan_umum = ?', [
-            $data['IdType'],
-            $data['NamaType'],
-            $data['UraianType'],
-            $data['IdSubKel'],
-            $data['KodeBarang'],
-            $data['UnitPrimer'],
-            $data['UnitSekunder'],
-            $data['UnitTritier'],
-            $data['AturanKonversi'],
-            $data['KonvSekunderPrimer'],
-            $data['KonvTritierSekunder'],
-            $data['NoSatuanUmum']
-        ]);
-        return redirect()->route('MaintenanceType.index')->with('alert', 'Data berhasil diupdate!');
+        //
     }
 
     //Remove the specified resource from storage.
-    public function destroy(Request $request)
+    public function destroy(Request $request, $id)
     {
-        $data = $request->all();
-        // dd('Masuk Destroy', $data);
-        DB::connection('ConnInventory')->statement('exec SP_1003_INV_delete_type  @XIdType = ?', [
-            $data['IdType']
-        ]);
+        if ($id === 'hapusMaintenance') {
+            $idtype = $request->input('idtype');
 
-        return redirect()->route('MaintenanceType.index')->with('alert', 'Data berhasil dihapus!');
+            $jumlah = DB::connection('ConnInventory')->select('exec SP_1003_INV_CheckIdType_Transaksi @XIdType = ?', [$idtype]);
+
+            if (count($jumlah) > 0) {
+                DB::connection('ConnInventory')->statement('exec SP_1003_INV_delete_type @XIdType = ?', [$idtype]);
+            } else {
+                return response()->json(['error' => "Type : #{$idtype} Tidak Dapat Di Hapus. Karena Sudah Terjadi Transaksi."], 200);
+            }
+
+            return response()->json(['success' => 'Data deleted successfully'], 200);
+        }
     }
 }
