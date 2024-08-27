@@ -55,11 +55,12 @@ input[type="text"], input[type="date"] {
 
 #primer, #sekunder, #tritier {
     /* width: 30px; */
-    padding: 0;
+    padding: 5px;
 }
 
 #no_primer, #no_sekunder, #no_tritier {
     width: 50px;
+    padding: 5px;
 }
 
 .col-sm-3, .col-sm-4 {

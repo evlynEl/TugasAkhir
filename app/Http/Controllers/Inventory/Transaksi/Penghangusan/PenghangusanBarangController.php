@@ -51,6 +51,8 @@ class PenghangusanBarangController extends Controller
     public function show($id, Request $request)
     {
         $user = Auth::user()->NomorUser;
+        $a = (int)$request->input('a');
+
         $divisiId = $request->input('divisiId');
         $objekId = $request->input('objekId');
         $kelompokId = $request->input('kelompokId');
@@ -78,6 +80,10 @@ class PenghangusanBarangController extends Controller
         $primer2 = $request->input('primer2');
         $sekunder2 = $request->input('sekunder2');
         $tritier2 = $request->input('tritier2');
+
+        if ($id === 'getUserId') {
+            return response()->json(['user' => $user]);
+        }
 
         if ($id === 'getDivisi') {
             // mendapatkan daftar divisi
@@ -174,6 +180,7 @@ class PenghangusanBarangController extends Controller
                     'SaldoTritier' => $detail_saldo->SaldoTritier
                 ];
             }
+            // dd($data_saldo);
             return response()->json($saldo);
         } else if ($id === 'getTypeCIR') {
             // mendapatkan nama type & id type
@@ -203,6 +210,7 @@ class PenghangusanBarangController extends Controller
             $allData = DB::connection('ConnInventory')->select('
             exec SP_1003_INV_List_Mohon_TmpTransaksi @kode = 2, @XIdDivisi = ?, @XIdTypeTransaksi = ?', [$divisiId, '05']);
             $data_allData = [];
+            $data_pemasukan = [];
             foreach ($allData as $detail_allData) {
                 $formattedDate = date('m/d/Y', strtotime($detail_allData->SaatAwalTransaksi));
 
@@ -223,21 +231,50 @@ class PenghangusanBarangController extends Controller
                     'IdSubkelompok' => $detail_allData->IdSubkelompok
                 ];
             }
-            return response()->json($data_allData);
+            foreach ($allData as $detail_pemaskan) {
+                $data_pemasukan[] = [
+                    'JumlahPemasukanPrimer' => $detail_pemaskan->JumlahPemasukanPrimer,
+                    'JumlahPemasukanSekunder' => $detail_pemaskan->JumlahPemasukanSekunder,
+                    'JumlahPemasukanTritier' => $detail_pemaskan->JumlahPemasukanTritier
+                ];
+            }
+
+            $response_data = [
+                'data_allData' => $data_allData,
+                'data_pemasukan' => $data_pemasukan
+            ];
+
+            return response()->json($response_data);
+        } else if ($id === 'proses') {
+            // proses terjadi
+            if ($a === 1) { // ISI
+                // insert ke tmp transaksi unk di tampilkan di table
+                $tempTabel = DB::connection('ConnInventory')->select(
+                    'exec SP_1003_INV_Insert_05_TmpTransaksi
+                    @XIdTypeTransaksi = ?, @XIdType = ?,  @XIdPenerima = ?, @XIdPemberi = ?, @XSaatawalTransaksi = ?,
+                    @XJumlahPengeluaranPrimer = ?, @XJumlahPengeluaranSekunder = ?, @XJumlahPengeluaranTritier = ?,
+                    @XAsalIdSubKelompok = ?, @XTujuanIdSubKelompok = ?, @XUraianDetailTransaksi = ?, @kd = 1',
+                    ['05', $kodeType, $pemohon, $pemohon, $tanggal,
+                      $primer2, $sekunder2, $tritier2,
+                      $subkelId, $subkelId, $alasan]
+                );
+                dd($tempTabel);
+                return response()->json(['success' => 'Data inserted successfully'], 200);
+            } else if ($a === 2) { // KOREKSI
+                // update
+                $tempTabel = DB::connection('ConnInventory')->select(
+                    'exec SP_1003_INV_update_TmpTransaksi
+                     @XIdTransaksi = ?, @XUraianDetailTransaksi = ?, @XJumlahKeluarPrimer = ?,
+                     @XJumlahKeluarSekunder = ?, @XJumlahKeluarTritier = ?, @XTujuanIdSubkelompok = ?',
+                    [ $kodeTransaksi, $primer2, $sekunder2,
+                      $tritier2, $subkelId, $alasan]
+                );
+                dd($tempTabel);
+                return response()->json(['success' => 'Data updated successfully'], 200);
+            }
         }
-        // } else if ($id === 'getKode') {
-        //     // mendapatkan daftar kode type
-        //     $kodeType = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdSubKelompok_Type_ABM @XIdSubKelompok_Type = ?', [$subkelId]);
-        //     $data_kodeType = [];
-        //     foreach ($kodeType as $detail_kodeType) {
-        //         $data_kodeType[] = [
-        //             'IdSubkelompok' => $detail_kodeType->IdSubkelompok,
-        //             'NamaSubKelompok' => $detail_kodeType->NamaSubKelompok
-        //         ];
-        //     }
-        //     return datatables($kodeType)->make(true);
-        // }
     }
+
 
     // Show the form for editing the specified resource.
     public function edit($id)
@@ -262,14 +299,13 @@ class PenghangusanBarangController extends Controller
     }
 
     //Remove the specified resource from storage.
-    public function destroy(Request $request)
+    public function destroy(Request $request, $id)
     {
-        $data = $request->all();
-        // dd('Masuk Destroy', $data);
-        DB::connection('ConnInventory')->statement('exec SP_1003_INV_Delete_TmpTransaksi  @XIdTransaksi = ?', [
-            $data['IdTransaksi']
-        ]);
+        $kodeTransaksi = $request->input('kodeTransaksi');
+        if ($id === 'hapusBarang') {
+            DB::connection('ConnInventory')->statement('exec SP_1003_INV_Delete_TmpTransaksi  @XIdTransaksi = ?', [$kodeTransaksi]);
+            return response()->json(['success' => 'Data deleted successfully'], 200);
+        }
 
-        return redirect()->route('MaxMinStok.index')->with('alert', 'Data berhasil dihapus!');
     }
 }

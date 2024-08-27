@@ -190,7 +190,7 @@
                                     <input type="text" class="form-control" id="alasan" name="alasan">
                                 </div>
                                 <label style="padding: 0 10px">Jumlah Dihanguskan</label>
-                                <div class="col-sm-4" style="display: flex">
+                                <div class="col-sm-4" style="display: flex" id="satuan2">
                                     <input type="text" class="form-control" id="primer2" name="primer2"
                                         style="width: 100px; margin-right: 60px">
                                     <input type="text" class="form-control" id="sekunder2" name="sekunder2"

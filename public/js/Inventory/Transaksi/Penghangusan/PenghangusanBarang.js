@@ -26,13 +26,11 @@ var alasan = document.getElementById('alasan');
 var primer2 = document.getElementById('primer2');
 var sekunder2 = document.getElementById('sekunder2');
 var tritier2 = document.getElementById('tritier2');
-
 var divisiId = document.getElementById('divisiId');
 var objekId = document.getElementById('objekId');
 var kelompokId = document.getElementById('kelompokId');
 var kelutId = document.getElementById('kelutId');
 var subkelId = document.getElementById('subkelId');
-
 
 // button
 var btn_divisi = document.getElementById('btn_divisi');
@@ -50,15 +48,37 @@ var btn_koreksi = document.getElementById('btn_koreksi');
 var btn_hapus = document.getElementById('btn_hapus');
 
 var table;
+let a; // isi = 1, koreksi = 2, hapus = 3
 const inputs = Array.from(document.querySelectorAll('.card-body input[type="text"]:not([readonly]), .card-body input[type="date"]:not([readonly])'));
 
+tanggal.value = todayString;
+
+btn_divisi.addEventListener('focus', function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+});
 
 btn_objek.addEventListener('focus', function () {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
-btn_divisi.addEventListener('focus', function () {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+function getUserId() {
+    $.ajax({
+        type: 'GET',
+        url: 'PenghangusanBarang/getUserId',
+        data: {
+            _token: csrfToken
+        },
+        success: function (result) {
+            pemohon.value = result.user;
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
+}
+
+$(document).ready(function () {
+    getUserId();
 });
 
 // fungsi berhubungan dengan ENTER & oengecekkan yg kosong2
@@ -205,13 +225,19 @@ btn_divisi.addEventListener("click", function (e) {
             if (result.isConfirmed) {
                 divisiId.value = result.value.IdDivisi.trim();
                 divisiNama.value = decodeHtmlEntities(result.value.NamaDivisi.trim());
+
                 allData();
 
                 btn_isi.disabled = false;
                 btn_koreksi.disabled = false;
                 btn_hapus.disabled = false;
 
-                btn_isi.focus();
+                if (a === 1) {
+                    btn_objek.focus();
+                } else {
+                    btn_isi.focus();
+                }
+
             }
         });
     } catch (error) {
@@ -512,7 +538,9 @@ btn_subkel.addEventListener("click", function (e) {
                 subkelId.value = result.value.IdSubkelompok.trim();
                 subkelNama.value = result.value.NamaSubKelompok.trim();
 
-                btn_kodeType.focus;
+                if (subkelId.value !== '') {
+                    btn_kodeType.focus;
+                }
             }
         });
     } catch (error) {
@@ -520,8 +548,94 @@ btn_subkel.addEventListener("click", function (e) {
     }
 });
 
-// button list kode type
-btn_kodeType.addEventListener("click", function (e) {
+// fungsi unk yg ABM
+function loadABM() {
+    $.ajax({
+        url: "PenghangusanBarang/getABM",
+        type: "GET",
+        data: {
+            _token: csrfToken,
+            subkelId: subkelId.value
+        },
+        timeout: 30000,
+        success: function (response) {
+            if (response && response.length > 0) {
+                kodeType.value = response.value.idtype.trim();
+                namaBarang.value = response.value.BARU.trim();
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('AJAX Error:', error);
+        }
+    });
+}
+
+const formatNumber = (value) => {
+    const number = parseFloat(value);
+    return isNaN(number) ? '0.00' : number.toFixed(2);
+};
+
+// fungsi unk dapatkan saldo primer, sekunder, tritier
+function getSaldo(kodeType) {
+    $.ajax({
+        url: "PenghangusanBarang/getSaldo",
+        type: "GET",
+        data: {
+            _token: csrfToken,
+            kodeType: kodeType
+        },
+        timeout: 30000,
+        success: function (response) {
+            if (response && response.length > 0) {
+                primer.value = formatNumber(response[0].SaldoPrimer.trim());
+                sekunder.value = formatNumber(response[0].SaldoSekunder.trim());
+                tritier.value = formatNumber(response[0].SaldoTritier.trim());
+            }
+            alasan.focus();
+        },
+        error: function (xhr, status, error) {
+            console.error('AJAX Error:', error);
+        }
+    });
+
+}
+
+// fungsi unk dapatkan type dari kodetype
+function getType(kodeType) {
+    $.ajax({
+        url: "PenghangusanBarang/getSatuanType",
+        type: "GET",
+        data: {
+            _token: csrfToken,
+            kodeType: kodeType
+        },
+        timeout: 30000,
+        success: function (response) {
+            if (response && response.length > 0) {
+                kodeBarang.value = response[0].KodeBarang.trim();
+                no_primer.value = response[0].Satuan_Primer.trim();
+                no_sekunder.value = response[0].Satuan_Sekunder.trim();
+                no_tritier.value = response[0].Satuan_Tritier.trim();
+
+                if (no_primer.value === 'NULL' && no_sekunder.value === 'NULL') {
+                    primer2.disabled = true;
+                    sekunder2.disabled = true;
+                } else if (no_primer.value === 'NULL' && no_sekunder.value !== 'NULL') {
+                    primer2.disabled = true;
+                }
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('AJAX Error:', error);
+        }
+    });
+}
+
+// button kode type & nama type sama
+btn_kodeType.addEventListener("click", handleTypeSelection);
+btn_namaBarang.addEventListener("click", handleTypeSelection);
+
+function handleTypeSelection() {
     if ((divisiNama.value === 'ABM' && objekId === '022') || (divisiNama.value === 'CIR' && objekId === '043') ||
         (divisiNama.value === 'JBB' && objekId === '042') || (divisiNama.value === 'EXT' && ((objekId === '1259' || objekId === '1283')))) {
         if (divisiNama.value === 'ABM' && objekId === '022') {
@@ -554,6 +668,7 @@ btn_kodeType.addEventListener("click", function (e) {
         } else {
             if (subkelId.value !== '') {
                 getSaldo(kodeType.value);
+                getTypeCIR();
                 if (kodeType.value !== '') {
                     if (getType(kodeType.value)) {
                         getSaldo(kodeType.value);
@@ -636,9 +751,11 @@ btn_kodeType.addEventListener("click", function (e) {
                 }).then((result) => {
                     if (result.isConfirmed) {
                         kodeType.value = result.value.IdType.trim();
-                        namaBarang.value = result.value.NamaType.trim();
+                        namaBarang.value = decodeHtmlEntities(result.value.NamaType.trim());
 
-                        if (getType(kodeType.value)) {
+                        getType(kodeType.value);
+
+                        if (namaBarang.value !== '') {
                             getSaldo(kodeType.value);
                             alasan.focus();
                         }
@@ -649,90 +766,6 @@ btn_kodeType.addEventListener("click", function (e) {
             }
         }
     }
-});
-
-// fungsi unk yg ABM
-function loadABM() {
-    $.ajax({
-        url: "PenghangusanBarang/getABM",
-        type: "GET",
-        data: {
-            _token: csrfToken,
-            subkelId: subkelId.value
-        },
-        timeout: 30000,
-        success: function (response) {
-            if (response && response.length > 0) {
-                kodeType.value = response.value.idtype.trim();
-                namaBarang.value = response.value.BARU.trim();
-            }
-        },
-        error: function (xhr, status, error) {
-            console.error('AJAX Error:', error);
-        }
-    });
-}
-
-// fungsi unk dapatkan type dari kodetype
-function getType(kodeType) {
-    $.ajax({
-        url: "PenghangusanBarang/getSatuanType",
-        type: "GET",
-        data: {
-            _token: csrfToken,
-            kodeType: kodeType
-        },
-        timeout: 30000,
-        success: function (response) {
-            if (response && response.length > 0) {
-                console.log(response);
-
-                kodeBarang.value = response[0].KodeBarang.trim();
-                // namaBarang.value = response[0].NamaType.trim();
-                no_primer.value = response[0].Satuan_Primer.trim();
-                no_sekunder.value = response[0].Satuan_Sekunder.trim();
-                no_tritier.value = response[0].Satuan_Tritier.trim();
-
-                if (no_primer.value === 'NULL' && no_sekunder.value === 'NULL') {
-                    primer2.disabled = true;
-                    sekunder2.disabled = true;
-                } else if (no_primer.value === 'NULL' && no_sekunder.value !== 'NULL') {
-                    primer2.disabled = true;
-                }
-                return true;
-            } else {
-                return false;
-            }
-        },
-        error: function (xhr, status, error) {
-            console.error('AJAX Error:', error);
-        }
-    });
-}
-
-// fungsi unk dapatkan saldo primer, sekunder, tritier
-function getSaldo(kodeType) {
-    $.ajax({
-        url: "PenghangusanBarang/getSaldo",
-        type: "GET",
-        data: {
-            _token: csrfToken,
-            kodeType: kodeType
-        },
-        timeout: 30000,
-        success: function (response) {
-            if (response && response.length > 0) {
-                primer.value = response.value.SaldoPrimer.trim();
-                sekunder.value = response.value.SaldoSekunder.trim();
-                tritier.value = response.value.SaldoTritier.trim();
-            }
-            alasan.focus();
-        },
-        error: function (xhr, status, error) {
-            console.error('AJAX Error:', error);
-        }
-    });
-
 }
 
 // fungsi unk dpt nama type & kode type
@@ -756,79 +789,6 @@ function getTypeCIR() {
         }
     });
 }
-
-// fungsi unk swal fire daftar kode type
-// function loadType() {
-//     try {
-//         Swal.fire({
-//             title: 'Kode Type',
-//             html: `
-//                 <table id="table_list" class="table">
-//                     <thead>
-//                         <tr>
-//                             <th scope="col">ID Type</th>
-//                             <th scope="col">Nama Type</th>
-//                         </tr>
-//                     </thead>
-//                     <tbody></tbody>
-//                 </table>
-//             `,
-//             preConfirm: () => {
-//                 const selectedData = $("#table_list")
-//                     .DataTable()
-//                     .row(".selected")
-//                     .data();
-//                 if (!selectedData) {
-//                     Swal.showValidationMessage("Please select a row");
-//                     return false;
-//                 }
-//                 return selectedData;
-//             },
-//             returnFocus: false,
-//             showCloseButton: true,
-//             showConfirmButton: true,
-//             confirmButtonText: 'Select',
-//             didOpen: () => {
-//                 $(document).ready(function () {
-//                     const table = $("#table_list").DataTable({
-//                         responsive: true,
-//                         processing: true,
-//                         serverSide: true,
-//                         order: [1, "asc"],
-//                         ajax: {
-//                             url: "PenghangusanBarang/getType",
-//                             dataType: "json",
-//                             type: "GET",
-//                             data: {
-//                                 _token: csrfToken,
-//                                 subkelId: subkelId.value
-//                             }
-//                         },
-//                         columns: [
-//                             { data: "IdType" },
-//                             { data: "NamaType" }
-//                         ]
-//                     });
-
-//                     $("#table_list tbody").on("click", "tr", function () {
-//                         table.$("tr.selected").removeClass("selected");
-//                         $(this).addClass("selected");
-//                     });
-
-//                     currentIndex = null;
-//                     Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
-//                 });
-//             }
-//         }).then((result) => {
-//             if (result.isConfirmed) {
-//                 kodeType.value = result.value.IdType.trim();
-//                 namaBarang.value = result.value.NamaType.trim();
-//             }
-//         });
-//     } catch (error) {
-//         console.error(error);
-//     }
-// }
 
 $(document).ready(function () {
     table = $('#tableData').DataTable({
@@ -866,10 +826,11 @@ function allData() {
         },
         timeout: 30000,
         success: function (response) {
-            if (response && response.length > 0) {
+            if (response) {
                 var tableData = [];
 
-                response.forEach(function (item) {
+                // Handle data_allData
+                response.data_allData.forEach(function (item) {
                     tableData.push([
                         item.IdTransaksi,
                         item.NamaType,
@@ -887,6 +848,12 @@ function allData() {
                 });
 
                 table.rows.add(tableData).draw();
+
+                if (response.data_pemasukan.length > 0) {
+                    primer2.value = formatNumber(response.data_pemasukan[0].JumlahPemasukanPrimer.trim());
+                    sekunder2.value = formatNumber(response.data_pemasukan[0].JumlahPemasukanSekunder.trim());
+                    tritier2.value = formatNumber(response.data_pemasukan[0].JumlahPemasukanTritier.trim());
+                }
             }
         },
         error: function (xhr, status, error) {
@@ -895,193 +862,153 @@ function allData() {
     });
 }
 
+
+$('#tableData tbody').on('click', 'tr', function () {
+    table = $('#tableData').DataTable();
+    table.$('tr.selected').removeClass('selected');
+    $(this).addClass('selected');
+    var data = table.row(this).data();
+
+    kodeTransaksi.value = data[0];
+    namaBarang.value = decodeHtmlEntities(data[1]);
+    alasan.value = decodeHtmlEntities(data[2]);
+    pemohon.value = data[3];
+    tanggal.value = data[4];
+    divisiNama.value = decodeHtmlEntities(data[5]);
+    objekNama.value = decodeHtmlEntities(data[6]);
+    kelutNama.value = decodeHtmlEntities(data[7]);
+    kelompokNama.value = decodeHtmlEntities(data[8]);
+    subkelNama.value = decodeHtmlEntities(data[9]);
+    kodeType.value = data[10];
+    kodeBarang.value = data[11];
+    kodeTransaksi.value = data[0];
+
+    getType(kodeType.value);
+
+    // $.ajax({
+    //     type: 'GET',
+    //     url: 'PenghangusanBarang/getDetailData',
+    //     data: {
+    //         transaksiId: transaksiId.value,
+    //         _token: csrfToken
+    //     },
+    //     success: function (result) {
+    //         if (result) {
+    //             satuanPrimer.value = result[0].Satuan_Primer ?? '';
+    //             satuanSekunder.value = result[0].Satuan_Sekunder ?? '';
+    //             satuanTritier.value = result[0].Satuan_Tritier ?? '';
+    //         }
+    //         else {
+    //             triter.value = '';
+    //             primer.value = '';
+    //             sekunder.value = '';
+    //         }
+    //     },
+    //     error: function (xhr, status, error) {
+    //         console.error('Error:', error);
+    //     }
+    // });
+});
+
 // button proses
+function clearInputs() {
+    allInputs.forEach(function (input) {
+        let divBaris1 = input.closest('#baris-1') !== null;
+        let divSatuan2 = input.closest('#satuan2') !== null;
+        if (!divBaris1 && !divSatuan2) {
+            input.value = '';
+        }
+    });
+}
+
+function handleAJAXError(xhr, status, error) {
+    console.error('AJAX Error:', error);
+}
+
+function showAlert(icon, title, callback) {
+    Swal.fire({
+        icon: icon,
+        title: title,
+        returnFocus: false
+    }).then(callback);
+}
+
 btn_proses.addEventListener("click", function (e) {
-    if (tanggal.valueAsDate > today) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Tanggal Lebih Besar Dari Tanggal Sekarang',
-            returnFocus: false
-        }).then(() => {
-            tanggal.focus();
-        });
-        return;
-    }
+    if (a === 1) {
+        if (tanggal.valueAsDate > today) {
+            showAlert('warning', 'Tanggal Lebih Besar Dari Tanggal Sekarang', () => tanggal.focus());
+            return;
+        }
 
-    if (tritier.value < tritier2.value) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Perhatikan Tritier',
-            text: 'Penghangusan Jumlah Tritier tidak dapat dilakukan karena jumlah saldo tidak lebih dari ' + tritier2.value + '.',
-            returnFocus: false
-        }).then(() => {
-            tritier2.focus();
-        });
-        return;
+        if (tritier.value < tritier2.value) {
+            showAlert('warning', 'Perhatikan Tritier', () => tritier2.focus());
+            return;
+        }
+    } else if (a === 2) {
+        if (kodeTransaksi.value === '') {
+            showAlert('warning', 'Pilih dulu data yg akan diKOREKSI !', () => btn_kodeType.focus());
+            return;
+        }
     }
-
 
     if (a === 3) {
-        Swal.fire({
-            title: 'Konfirmasi',
-            text: `Hapus Type : ${namaType.value}?`,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Hapus',
-            cancelButtonText: 'Batal',
-            reverseButtons: true
-        }).then((result) => {
-            if (result.isConfirmed) {
-                console.log('Type deleted');
-
-                $.ajax({
-                    url: "MaintenanceType/hapusMaintenance",
-                    type: "DELETE",
-                    data: {
-                        _token: csrfToken,
-                        idtype: kodeType.value
-                    },
-                    timeout: 30000,
-                    success: function (response) {
-                        if (response.success) {
-                            const idtype = response.data && response.data[0] ? response.data[0].idtype : '';
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Data terHAPUS',
-                            }).then(() => {
-                                disableKetik();
-                                allInputs.forEach(function (input) {
-                                    input.value = '';
-                                });
-                                konversi.checked = false;
-                                satuan.value = '';
-                                divKonversiPS.style.display = 'none';
-                                divKonversiST.style.display = 'none';
-
-                                btn_isi.focus();
-                            });
-                        } else if (response.error) {
-                            Swal.fire({
-                                icon: 'warning',
-                                title: 'Data Tidak ter-HAPUS.',
-                            });
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.error('AJAX Error:', error);
-                    }
-                });
-            } else if (result.dismiss === Swal.DismissReason.cancel) {
-                console.log('Type deletion cancelled');
-            }
+        $.ajax({
+            url: "PenghangusanBarang/hapusBarang",
+            type: "DELETE",
+            data: {
+                _token: csrfToken,
+                idtype: kodeType.value
+            },
+            timeout: 30000,
+            success: function (response) {
+                if (response.success) {
+                    showAlert('success', 'Data terHAPUS', () => {
+                        disableKetik();
+                        clearInputs();
+                        btn_isi.focus();
+                    });
+                } else if (response.error) {
+                    showAlert('warning', 'Data Tidak ter-HAPUS.');
+                }
+            },
+            error: handleAJAXError
         });
     }
 
-    try {
-        if (kdBarang.value === '' || namaType.value === '') {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Data Belum Lengkap Terisi',
-                text: 'Kode Barang Tidak Boleh Kosong !',
-                returnFocus: false
-            }).then(() => {
-                kdBarang.focus();
-            });
-        } else {
-            $.ajax({
-                type: 'GET',
-                url: 'MaintenanceType/proses',
-                data: {
-                    _token: csrfToken,
-                    a: a,
-                    namaType: namaType.value,
-                    ketType: ketType.value,
-                    PIB: PIB.value,
-                    PEB: PEB.value,
-                    kdBarang: kdBarang.value,
-                    subkelId: subkelId.value,
-                    konversi: konversi.value,
-                    divisiId: divisiId.value,
-                    divisiNama: divisiNama.value,
-                    objekId: objekId.value,
-                    objekNama: objekNama.value,
-                    kelompokId: kelompokId.value,
-                    kelompokNama: kelompokNama.value,
-                    kelutId: kelutId.value,
-                    kelutNama: kelutNama.value,
-                    subkelNama: subkelNama.value,
-                    katUtama: katUtama.value,
-                    kategori: kategori.value,
-                    jenis: jenis.value,
-                    namaBarang: namaBarang.value,
-                    kodeType: kodeType.value,
-                    no_tritier: no_tritier,
-                    no_sekunder: no_sekunder,
-                    no_primer: no_primer,
-                    satuan: satuan.value,
-                    satuanChange: selectedNo,
-                    primerSekunder: primerSekunder.value,
-                    sekunderTritier: sekunderTritier.value
-                },
-                timeout: 30000,
-                success: function (response) {
-                    if (a === 1) {
-                        // ISI
-                        if (response.success) {
-                            idtype = response.data && response.data[0] ? response.data[0].idtype : '';
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Data terSIMPAN',
-                                text: `Kode type: ${idtype}`,
-                            }).then(() => {
-                                btn_isi.focus();
-                                kodeType.value = idtype;
-                                disableKetik();
-
-                                // hide button proses, tampilkan button isi
-                                btn_proses.style.display = 'none';
-                                btn_isi.style.display = 'inline-block';
-
-                                // hide button batal, tampilkan button koreksi
-                                btn_batal.style.display = 'none';
-                                btn_koreksi.style.display = 'inline-block';
-                            });
-                        } else if (response.error) {
-                            Swal.fire({
-                                icon: 'warning',
-                                title: 'Data Tidak ter-SIMPAN.',
-                                text: `Kode Barang: ${response.data[0].KodeBarang.trim()} yang terletak pada Sub Kelompok: ${response.data[0].IdSubkelompok_Type.trim()} Sudah ADA.`,
-                            });
-                        }
-                    } else if (a === 2) {
-                        // KOREKSI
-                        if (response.success) {
-                            idtype = response.data && response.data[0] ? response.data[0].idtype : '';
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Data terKOREKSI',
-                            }).then(() => {
-                                disableKetik();
-                                btn_isi.focus();
-                            });
-                        } else if (response.error) {
-                            Swal.fire({
-                                icon: 'warning',
-                                title: 'Data Tidak ter-KOREKSI.',
-                            });
-                        }
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error:', error);
-                }
-
-            });
-        }
-    } catch (error) {
-        console.error('Error:', error);
-    }
+    $.ajax({
+        type: 'GET',
+        url: 'PenghangusanBarang/proses',
+        data: {
+            _token: csrfToken,
+            a: a,
+            kodeType: kodeType.value,
+            pemohon: pemohon.value,
+            tanggal: tanggal.value,
+            primer2: primer2.value,
+            sekunder2: sekunder2.value,
+            tritier2: tritier2.value,
+            subkelId: subkelId.value,
+            alasan: alasan.value,
+            kodeTransaksi: kodeTransaksi.value
+        },
+        timeout: 30000,
+        success: function (response) {
+            if (a === 1 && response.success) {
+                showAlert('success', 'Data terSIMPAN', () => {
+                    allData();
+                    btn_kodeType.focus();
+                    clearInputs();
+                });
+            } else if (a === 2 && response.success) {
+                showAlert('success', 'Data terKOREKSI', () => btn_isi.focus());
+            } else if (response.error) {
+                showAlert('warning', 'Data Gagal ter-SIMPAN.');
+            }
+        },
+        error: handleAJAXError
+    });
 });
+
 
 var allInputs = document.querySelectorAll('input');
 const buttons = document.querySelectorAll('.btn-info');
@@ -1098,14 +1025,14 @@ btn_hapus.disabled = true;
 function enableKetik() {
     allInputs.forEach(function (input) {
         // kecuali divisi nama & id valuenya jangan di kosongin
-        let divisi_nama = input.closest('#divisiNama') !== null;
-        let divisi_id = input.closest('#divisiId') !== null;
-
-        if (!divisi_nama && !divisi_id) {
+        let divBaris1 = input.closest('#baris-1') !== null;
+        let divSatuan2 = input.closest('#satuan2') !== null;
+        if (!divBaris1 && !divSatuan2) {
             input.value = '';
             input.disabled = false;
         }
     });
+    // divSatuan2.disabled = false;
 
     // disable semua button
     buttons.forEach(button => {
@@ -1152,8 +1079,7 @@ btn_isi.addEventListener('click', function () {
     enableKetik();
     btn_objek.focus();
     btn_hapus.disabled = true;
-
-    tanggal.value = todayString;
+    btn_koreksi.disabled = true;
 });
 
 // button batal event listener
@@ -1167,13 +1093,8 @@ btn_koreksi.addEventListener('click', function () {
     a = 2;
     enableKetik();
     btn_hapus.disabled = true;
-    kdBarang.readOnly = true;
-    btn_katUtama.disabled = true;
-    btn_kategori.disabled = true;
-    btn_jenis.disabled = true;
-    btn_barang.disabled = true;
 
-    btn_divisi.focus();
+    alasan.focus();
 });
 
 // button hapus event listener
@@ -1188,9 +1109,4 @@ btn_hapus.addEventListener('click', function () {
     btn_batal.style.display = 'inline-block';
 
     btn_hapus.disabled = true;
-    if (divisiNama.value === '') {
-        btn_divisi.focus();
-    } else {
-        btn_kodeType.focus();
-    }
 });
