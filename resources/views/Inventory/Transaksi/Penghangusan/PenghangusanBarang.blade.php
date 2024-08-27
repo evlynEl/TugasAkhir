@@ -88,15 +88,19 @@
                             </div>
                         </div>
 
-                        <input type="text" id="divisiId" name="divisiId" class="form-control" readonly>
-                        <input type="text" id="objekId" name="objekId" class="form-control" readonly>
-                        <input type="text" id="kelompokId" name="kelompokId" class="form-control" readonly>
-                        <input type="text" id="kelutId" name="kelutId" class="form-control" readonly>
-                        <input type="text" id="subkelId" name="subkelId" class="form-control" readonly>
+                        <div class="row">
+                            <div class="col-md-5 d-flex">
+                                <input type="text" id="divisiId" name="divisiId" class="form-control" readonly>
+                                <input type="text" id="objekId" name="objekId" class="form-control" readonly>
+                                <input type="text" id="kelompokId" name="kelompokId" class="form-control" readonly>
+                                <input type="text" id="kelutId" name="kelutId" class="form-control" readonly>
+                                <input type="text" id="subkelId" name="subkelId" class="form-control" readonly>
+                            </div>
+                        </div>
 
 
                         <div class="col-sm-12">
-                            <div class="col-sm-12">
+                            <div class="col-sm-12 mb-2">
                                 <div class="table-responsive fixed-height" style="height: 300px">
                                     <table class="table table-bordered no-wrap-header" id="tableData">
                                         <thead>
@@ -115,7 +119,8 @@
                                     <label for="kodeTransaksi">Kode Transaksi</label>
                                 </div>
                                 <div class="col-sm-3 mr-3">
-                                    <input type="text" class="form-control" id="kodeTransaksi" name="kodeTransaksi" readonly>
+                                    <input type="text" class="form-control" id="kodeTransaksi" name="kodeTransaksi"
+                                        readonly>
                                 </div>
                             </div>
                             <div class="row">
@@ -132,7 +137,8 @@
                                 </div>
                                 <div class="col-sm-3">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="kodeType" name="kodeType" readonly>
+                                        <input type="text" class="form-control" id="kodeType" name="kodeType"
+                                            readonly>
                                         <div class="input-group-append">
                                             <button type="button" id="btn_kodeType" class="btn btn-info">...</button>
                                         </div>
@@ -149,7 +155,8 @@
                                 </div>
                                 <div class="col-sm-3">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="namaBarang" name="namaBarang" readonly>
+                                        <input type="text" class="form-control" id="namaBarang" name="namaBarang"
+                                            readonly>
                                         <div class="input-group-append">
                                             <button type="button" id="btn_namaBarang" class="btn btn-info">...</button>
                                         </div>
@@ -157,22 +164,22 @@
                                 </div>
                                 <label style="padding-left: 15px; padding-right: 10px">Stok Akhir</label>
                                 <div class="col-sm-1 p-0">
-                                    <input type="text" class="form-control" id="primer" name="primer">
+                                    <input type="text" class="form-control" id="primer" name="primer" readonly>
                                 </div>
                                 <div class="col-sm-1 p-0">
-                                    <input type="text" class="form-control" id="no_primer" name="no_primer">
+                                    <input type="text" class="form-control" id="no_primer" name="no_primer" readonly>
                                 </div>
                                 <div class="col-sm-1 p-0">
-                                    <input type="text" class="form-control" id="sekunder" name="sekunder">
+                                    <input type="text" class="form-control" id="sekunder" name="sekunder" readonly>
                                 </div>
                                 <div class="col-sm-1 p-0">
-                                    <input type="text" class="form-control" id="no_sekunder" name="no_sekunder">
+                                    <input type="text" class="form-control" id="no_sekunder" name="no_sekunder" readonly>
                                 </div>
                                 <div class="col-sm-1 p-0">
-                                    <input type="text" class="form-control" id="tritier" name="tritier">
+                                    <input type="text" class="form-control" id="tritier" name="tritier" readonly>
                                 </div>
                                 <div class="col-sm-1 p-0">
-                                    <input type="text" class="form-control" id="no_tritier" name="no_tritier">
+                                    <input type="text" class="form-control" id="no_tritier" name="no_tritier" readonly>
                                 </div>
                             </div>
                             <div class="row">
@@ -184,18 +191,23 @@
                                 </div>
                                 <label style="padding: 0 10px">Jumlah Dihanguskan</label>
                                 <div class="col-sm-4" style="display: flex">
-                                    <input type="text" class="form-control" id="primer2" name="primer2" style="width: 100px; margin-right: 60px">
-                                    <input type="text" class="form-control" id="sekunder2" name="sekunder2" style="width: 100px; margin-right: 80px">
-                                    <input type="text" class="form-control" id="tritier2" name="tritier2" style="width: 100px">
+                                    <input type="text" class="form-control" id="primer2" name="primer2"
+                                        style="width: 100px; margin-right: 60px">
+                                    <input type="text" class="form-control" id="sekunder2" name="sekunder2"
+                                        style="width: 100px; margin-right: 80px">
+                                    <input type="text" class="form-control" id="tritier2" name="tritier2"
+                                        style="width: 100px">
                                 </div>
                             </div>
                         </div>
 
-                        <button type="button" id="btn_isi" class="btn btn-outline-secondary">Isi</button>
-                        <button type="button" id="btn_proses" class="btn btn-outline-secondary">Proses</button>
-                        <button type="button" id="btn_batal" class="btn btn-outline-secondary">Batal</button>
-                        <button type="button" id="btn_koreksi" class="btn btn-outline-secondary">Koreksi</button>
-                        <button type="button" id="btn_hapus" class="btn btn-outline-secondary">Hapus</button>
+                        <div style="text-align: right">
+                            <button type="button" id="btn_isi" class="btn btn-outline-secondary">Isi</button>
+                            <button type="button" id="btn_proses" class="btn btn-outline-secondary">Proses</button>
+                            <button type="button" id="btn_batal" class="btn btn-outline-secondary">Batal</button>
+                            <button type="button" id="btn_koreksi" class="btn btn-outline-secondary">Koreksi</button>
+                            <button type="button" id="btn_hapus" class="btn btn-outline-secondary">Hapus</button>
+                        </div>
                     </div>
                 </div>
             </div>

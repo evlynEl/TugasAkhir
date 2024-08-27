@@ -55,7 +55,7 @@ class PenghangusanBarangController extends Controller
         $objekId = $request->input('objekId');
         $kelompokId = $request->input('kelompokId');
         $kelutId = $request->input('kelutId');
-        $subkelId = $request->input('subkelId')
+        $subkelId = $request->input('subkelId');
 
         $divisiNama = $request->input('divisiNama');
         $tanggal = $request->input('tanggal');
@@ -144,9 +144,9 @@ class PenghangusanBarangController extends Controller
                     'BARU' => $detail_listABM->BARU
                 ];
             }
-            return datatables($listABM)->make(true);
-        } else if ($id === 'getType') {
-            // mendapatkan daftar type ABM
+            return response()->json($listABM);
+        } else if ($id === 'getSatuanType') {
+            // mendapatkan satuan type
             $type = DB::connection('ConnInventory')->select('exec SP_1003_INV_AsalSubKelompok_Type @XIdType = ?', [$kodeType]);
             $data_type = [];
             if (count($type) > 0) {
@@ -156,53 +156,87 @@ class PenghangusanBarangController extends Controller
                         'NamaType' => $detail_type->NamaType,
                         'Satuan_Primer' => $detail_type->Satuan_Primer,
                         'Satuan_Sekunder' => $detail_type->Satuan_Sekunder,
-                        'Satuan_Tritier' => $detail_type->Satuan_Tritier,
-                        'BARU' => $detail_type->BARU,
-                        'BARU' => $detail_type->BARU,
+                        'Satuan_Tritier' => $detail_type->Satuan_Tritier
                     ];
                 }
-                return datatables($type)->make(true);
+                // dd($data_type);
+                return response()->json($data_type);
             }
             return response()->json([]);
-
-        } else if ($id === 'getKode') {
-            // mendapatkan daftar kode type
-            $kodeType = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdSubKelompok_Type_ABM @XIdSubKelompok_Type = ?', [$subkelId]);
-            $data_kodeType = [];
-            foreach ($kodeType as $detail_kodeType) {
-                $data_kodeType[] = [
-                    'IdSubkelompok' => $detail_kodeType->IdSubkelompok,
-                    'NamaSubKelompok' => $detail_kodeType->NamaSubKelompok
+        } else if ($id === 'getSaldo') {
+            // mendapatkan saldo
+            $saldo = DB::connection('ConnInventory')->select('exec SP_1003_INV_Saldo_Barang @IdType = ?', [$kodeType]);
+            $data_saldo = [];
+            foreach ($saldo as $detail_saldo) {
+                $data_saldo[] = [
+                    'SaldoPrimer' => $detail_saldo->SaldoPrimer,
+                    'SaldoSekunder' => $detail_saldo->SaldoSekunder,
+                    'SaldoTritier' => $detail_saldo->SaldoTritier
                 ];
             }
-            return datatables($kodeType)->make(true);
-        }
+            return response()->json($saldo);
+        } else if ($id === 'getTypeCIR') {
+            // mendapatkan nama type & id type
+            $typeCIR = DB::connection('ConnInventory')->select('exec SP_1003_INV_List_Type_PerUkuran @IdType = ?', [$kodeType]);
+            $data_typeCIR = [];
+            foreach ($typeCIR as $detail_typeCIR) {
+                $data_typeCIR[] = [
+                    'Id_Type' => $detail_typeCIR->Id_Type,
+                    'Nm_Type' => $detail_typeCIR->Nm_Type
+                ];
+            }
+            return response()->json($data_typeCIR);
+        } else if ($id === 'getType') {
+            // mendapatkan nama type & id type
+            $type = DB::connection('ConnInventory')->select('exec SP_1003_INV_Idsubkelompok_type @XIdSubKelompok_Type = ?', [$subkelId]);
+            $data_type = [];
+            foreach ($type as $detail_type) {
+                $data_type[] = [
+                    'IdType' => $detail_type->IdType,
+                    'NamaType' => $detail_type->NamaType
+                ];
+            }
+            // dd($data_type);
+            return datatables($data_type)->make(true);
+        } else if ($id === 'getAllData') {
+            // mendapatkan nama type & id type
+            $allData = DB::connection('ConnInventory')->select('
+            exec SP_1003_INV_List_Mohon_TmpTransaksi @kode = 2, @XIdDivisi = ?, @XIdTypeTransaksi = ?', [$divisiId, '05']);
+            $data_allData = [];
+            foreach ($allData as $detail_allData) {
+                $formattedDate = date('m/d/Y', strtotime($detail_allData->SaatAwalTransaksi));
 
-        $crExplode = explode(".", $cr);
-        $lastIndex = count($crExplode) - 1;
-        //getListPerkiraan
-        if ($crExplode[$lastIndex] == "getDivisi") {
-            $dataDivisi = DB::connection('ConnInventory')->select('exec SP_1003_INV_userdivisi @XKdUser = ?', [$crExplode[0]]);
-            return response()->json($dataDivisi);
-        } else if ($crExplode[$lastIndex] == "getObjek") {
-            $dataObjek = DB::connection('ConnInventory')->select('exec SP_1003_INV_User_Objek @XKdUser = ?, @XIdDivisi = ?', [$crExplode[0], $crExplode[1]]);
-            return response()->json($dataObjek);
-        } else if ($crExplode[$lastIndex] == "getKelompokUtama") {
-            $dataKelut = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdObjek_KelompokUtama @XIdObjek_KelompokUtama = ?', [$crExplode[0]]);
-            return response()->json($dataKelut);
-        } else if ($crExplode[$lastIndex] == "getKelompok") {
-            $dataKelompok = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdKelompokUtama_Kelompok @XIdKelompokUtama_Kelompok = ?', [$crExplode[0]]);
-            return response()->json($dataKelompok);
-        } else if ($crExplode[$lastIndex] == "getSubKelompok") {
-            $dataSubKelompok = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdKelompok_SubKelompok @XIdKelompok_SubKelompok = ?', [$crExplode[0]]);
-            return response()->json($dataSubKelompok);
-        } else if ($crExplode[$lastIndex] == "getListMohon") {
-            $dataMohon = DB::connection('ConnInventory')->select('exec SP_1003_INV_List_Mohon_TmpTransaksi @Kode = ?, @XIdTypeTransaksi = ?, @XIdDivisi = ?', [$crExplode[0], $crExplode[1], $crExplode[2]]);
-            return response()->json($dataMohon);
-        } else if ($crExplode[$lastIndex] == "getDataPemohon") {
-            $dataPemohon = DB::connection('ConnInventory')->select('exec SP_1003_INV_List_Mohon_TmpTransaksi @Kode = ?, @XIdTypeTransaksi = ?, @XIdDivisi = ?, @XUser = ?', [$crExplode[0], $crExplode[1]]);
-            return response()->json($dataPemohon);
+                $data_allData[] = [
+                    'IdTransaksi' => $detail_allData->IdTransaksi,
+                    'NamaType' => $detail_allData->NamaType,
+                    'UraianDetailTransaksi' => $detail_allData->UraianDetailTransaksi,
+                    'IdPenerima' => $detail_allData->IdPenerima,
+                    'SaatAwalTransaksi' => $formattedDate,
+                    'NamaDivisi' => $detail_allData->NamaDivisi,
+                    'NamaObjek' => $detail_allData->NamaObjek,
+                    'NamaKelompokUtama' => $detail_allData->NamaKelompokUtama,
+                    'NamaKelompok' => $detail_allData->NamaKelompok,
+                    'NamaSubKelompok' => $detail_allData->NamaSubKelompok,
+                    'IdPenerima1' => $detail_allData->IdPenerima1,
+                    'IdType' => $detail_allData->IdType,
+                    'KodeBarang' => $detail_allData->KodeBarang,
+                    'IdSubkelompok' => $detail_allData->IdSubkelompok
+                ];
+            }
+            return response()->json($data_allData);
         }
+        // } else if ($id === 'getKode') {
+        //     // mendapatkan daftar kode type
+        //     $kodeType = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdSubKelompok_Type_ABM @XIdSubKelompok_Type = ?', [$subkelId]);
+        //     $data_kodeType = [];
+        //     foreach ($kodeType as $detail_kodeType) {
+        //         $data_kodeType[] = [
+        //             'IdSubkelompok' => $detail_kodeType->IdSubkelompok,
+        //             'NamaSubKelompok' => $detail_kodeType->NamaSubKelompok
+        //         ];
+        //     }
+        //     return datatables($kodeType)->make(true);
+        // }
     }
 
     // Show the form for editing the specified resource.
