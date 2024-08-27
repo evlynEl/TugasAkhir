@@ -24,10 +24,9 @@ use App\Http\Controllers\COA\COA\Master\MasterTypeController;
 use App\Http\Controllers\QC\Afalan\QCKoreksiAfalanController;
 use App\Http\Controllers\COA\FIBC\Input\InputDetailController;
 use App\Http\Controllers\Inventory\Master\StokBarangController;
-use App\Http\Controllers\Inventory\Transaksi\Hibah\AccHibahController;
-
-
 use App\Http\Controllers\COA\COA\Master\MasterMaterialController;
+
+
 use App\Http\Controllers\Inventory\Informasi\KartuStokController;
 use App\Http\Controllers\QC\Circular\QCCircularTropodoController;
 use App\Http\Controllers\QC\Extruder\QCExtruderTropodoController;
@@ -35,14 +34,16 @@ use App\Http\Controllers\Inventory\Master\KodePerkiraanController;
 use App\Http\Controllers\QC\Circular\QCCircularMojosariController;
 use App\Http\Controllers\Inventory\Master\MaintenanceTypeController;
 use App\Http\Controllers\Inventory\Master\MaintenanceObjekController;
-use App\Http\Controllers\Inventory\Transaksi\Hibah\PenerimaHibahController;
 use App\Http\Controllers\Inventory\Informasi\CariKodeBarangController;
 use App\Http\Controllers\Inventory\Informasi\LacakTransaksiController;
+use App\Http\Controllers\Inventory\Transaksi\Hibah\AccHibahController;
 use App\Http\Controllers\Inventory\Informasi\TransaksiHarianController;
-use App\Http\Controllers\Inventory\Transaksi\Hibah\PermohonanHibahController;
 use App\Http\Controllers\Inventory\Informasi\TransaksiBulananController;
 use App\Http\Controllers\Inventory\Transaksi\TerimaPurchasingController;
 use App\Http\Controllers\Inventory\Informasi\ListDetailTransaksiController;
+use App\Http\Controllers\Inventory\Transaksi\Hibah\PenerimaHibahController;
+use App\Http\Controllers\Inventory\Transaksi\PemakaianGelondonganController;
+use App\Http\Controllers\Inventory\Transaksi\Hibah\PermohonanHibahController;
 use App\Http\Controllers\Inventory\Transaksi\Mutasi\FormMhnPemberiController;
 use App\Http\Controllers\Inventory\Transaksi\Mutasi\FormMhnPenerimaController;
 use App\Http\Controllers\Inventory\Transaksi\Mutasi\FormAccSatuDivisiController;
@@ -54,15 +55,14 @@ use App\Http\Controllers\Inventory\Transaksi\Mutasi\FormAccPemberiBarangControll
 use App\Http\Controllers\Inventory\Transaksi\Mutasi\FormPermohonanPenerimaController;
 use App\Http\Controllers\Inventory\Transaksi\Konversi\FormAccKonversiBarangController;
 use App\Http\Controllers\Inventory\Transaksi\Mutasi\FormPermohonanSatuDivisiController;
-use App\Http\Controllers\Inventory\Transaksi\PemakaianGelondonganController;
-use App\Http\Controllers\Inventory\Transaksi\Penyesuaian\FormPenyesuaianBarangController;
-use App\Http\Controllers\Inventory\Transaksi\Mutasi\FormPermohonanPenerimaBenangController;
 use App\Http\Controllers\Inventory\Transaksi\Penghangusan\PenghangusanBarangController;
-use App\Http\Controllers\Inventory\Transaksi\Penyesuaian\FormAccPenyesuaianBarangController;
-use App\Http\Controllers\Inventory\Transaksi\TerimaBenang\FormTerimaBenangGedungDController;
-use App\Http\Controllers\Inventory\Transaksi\TerimaBenang\FormTerimaBenangTropodoController;
-use App\Http\Controllers\Inventory\Transaksi\Mutasi\FormPengembalianPascaPenjualanController;
+use App\Http\Controllers\Inventory\Transaksi\TerimaBenang\TerimaBenangGedungDController;
+use App\Http\Controllers\Inventory\Transaksi\TerimaBenang\TerimaBenangTropodoController;
+use App\Http\Controllers\Inventory\Transaksi\Penyesuaian\FormPenyesuaianBarangController;
 use App\Http\Controllers\Inventory\Transaksi\Penghangusan\AccPenghangusanBarangController;
+use App\Http\Controllers\Inventory\Transaksi\Mutasi\FormPermohonanPenerimaBenangController;
+use App\Http\Controllers\Inventory\Transaksi\Penyesuaian\FormAccPenyesuaianBarangController;
+use App\Http\Controllers\Inventory\Transaksi\Mutasi\FormPengembalianPascaPenjualanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -154,8 +154,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('AccPenghangusanBarang', AccPenghangusanBarangController::class);
     Route::resource('PenyesuaianBarang', FormPenyesuaianBarangController::class);
     Route::resource('AccPenyesuaianBarang', FormAccPenyesuaianBarangController::class);
-    Route::resource('TerimaBenangTropodo', FormTerimaBenangTropodoController::class);
-    Route::resource('TerimaBenangGedungD', FormTerimaBenangGedungDController::class);
+    Route::resource('TerimaBenangTropodo', TerimaBenangTropodoController::class);
+    Route::resource('TerimaBenangGedungD', TerimaBenangGedungDController::class);
     Route::resource('PemakaianGelondongan', PemakaianGelondonganController::class);
     Route::resource('KartuStok', KartuStokController::class);
     Route::resource('ListDetailTransaksi', ListDetailTransaksiController::class);
