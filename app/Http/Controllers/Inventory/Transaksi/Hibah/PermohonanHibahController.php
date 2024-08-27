@@ -139,7 +139,7 @@ class PermohonanHibahController extends Controller
             $subkel = DB::connection('ConnInventory')->select('exec SP_1003_INV_List_Mohon_TmpTransaksi
              @Kode = ?, @XIdTypeTransaksi = ?, @XIdDivisi = ?'
                 ,
-                [4, 13, $XIdDivisi]
+                [4, '13', $XIdDivisi]
             );
             $data_subkel = [];
             foreach ($subkel as $detail_subkel) {
@@ -253,7 +253,7 @@ class PermohonanHibahController extends Controller
 
         // update
         else if ($id === 'updateData') {
-            $XIdTransaksi = $request->input('XSaatAwalTransaksi');
+            $XIdTransaksi = $request->input('XIdTransaksi');
             $XJumlahKeluarPrimer = $request->input('XJumlahKeluarPrimer');
             $XJumlahKeluarSekunder = $request->input('XJumlahKeluarSekunder');
             $XJumlahKeluarTritier = $request->input('XJumlahKeluarTritier');
@@ -287,8 +287,23 @@ class PermohonanHibahController extends Controller
     }
 
     //Remove the specified resource from storage.
-    public function destroy(Request $request)
+    public function destroy(Request $request, $id)
     {
-        // 
+        if ($id == 'deleteData') {
+            $XIdTransaksi = $request->input('XIdTransaksi');
+
+            try {
+                DB::connection('ConnInventory')
+                    ->statement('exec [SP_1003_INV_Delete_TmpTransaksi]
+                        @XIdTransaksi = ?',
+                        [
+                            $XIdTransaksi,
+                        ]
+                    );
+                return response()->json(['success' => 'Data sudah diHAPUS'], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Data gagal diHAPUS: ' . $e->getMessage()], 500);
+            }
+        }
     }
 }

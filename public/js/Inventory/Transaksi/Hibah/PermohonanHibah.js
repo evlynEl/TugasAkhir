@@ -134,9 +134,9 @@ $('#tableData tbody').on('click', 'tr', function () {
                 typeId.value = decodeHtmlEntities(result[0].IdType.trim());
                 typeNama.value = decodeHtmlEntities(result[0].NamaType.trim());
                 namaPemberi.value = decodeHtmlEntities(result[0].UraianDetailTransaksi.trim());
-                primer.value = formatNumber(result[0].SaldoPrimer.trim());
-                sekunder.value = formatNumber(result[0].SaldoSekunder.trim());
-                tritier.value = formatNumber(result[0].SaldoTritier.trim());
+                primer.value = formatNumber(result[0].JumlahPemasukanPrimer);
+                sekunder.value = formatNumber(result[0].JumlahPemasukanSekunder)
+                tritier.value = formatNumber(result[0].JumlahPemasukanTritier);
                 satPrimer.value = decodeHtmlEntities(result[0].Satuan_Primer.trim());
                 satSekunder.value = decodeHtmlEntities(result[0].Satuan_Sekunder.trim());
                 satTritier.value = decodeHtmlEntities(result[0].Satuan_Tritier.trim());
@@ -772,6 +772,9 @@ btn_isi.addEventListener("click", function (e) {
 
     pil = 1;
 
+    var table = $('#tableData').DataTable();
+    table.$('tr.selected').removeClass('selected');
+
     enableButton();
     clearInputs();
 
@@ -822,8 +825,49 @@ btn_koreksi.addEventListener("click", function (e) {
     }
 });
 
+btn_hapus.addEventListener("click", function (e) {
+    pil = 3;
+
+    var table = $('#tableData').DataTable();
+
+    if (table.$('tr.selected').length > 0) {
+        btn_proses.disabled = false;
+        btn_batal.disabled = false;
+        disable3Button();
+
+        btn_proses.focus();
+    }
+    else {
+        Swal.fire({
+            icon: 'error',
+            title: 'Pilih Dulu data Yang akan di hapus',
+            returnFocus: false
+        });
+        return;
+    }
+});
+
 
 btn_proses.addEventListener("click", function (e) {
+
+    var table = $('#tableData').DataTable();
+
+    function reloadTable(){
+        $.ajax({
+            type: 'GET',
+            url: 'PermohonanHibah/listMohon',
+            data: {
+                _token: csrfToken,
+                XIdDivisi: divisiId.value,
+            },
+            success: function (result) {
+                updateDataTable(result)
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+    }
 
     if (tanggal.value > today) {
         Swal.fire({
@@ -907,6 +951,8 @@ btn_proses.addEventListener("click", function (e) {
                         disableButton();
                         enableButtonBawah();
 
+                        reloadTable();
+
                         btn_proses.disabled = true;
                         btn_batal.disabled = true;
 
@@ -923,8 +969,6 @@ btn_proses.addEventListener("click", function (e) {
     }
 
     else if (pil == 2) {
-        console.log(XIdTransaksi);
-        
         $.ajax({
             type: 'PUT',
             url: 'PermohonanHibah/updateData',
@@ -949,14 +993,55 @@ btn_proses.addEventListener("click", function (e) {
                         disableButton();
                         enableButtonBawah();
 
+                        reloadTable();
+                        
                         btn_proses.disabled = true;
                         btn_batal.disabled = true;
 
-                        btn_isi.focus();
+                        table.$('tr.selected').removeClass('selected');
+
+                        btn_koreksi.focus();
                     });
                 }
 
 
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+    }
+
+    else if (pil === 3) {
+        $.ajax({
+            type: 'DELETE',
+            url: 'PermohonanHibah/deleteData',
+            data: {
+                _token: csrfToken,
+                XIdTransaksi: XIdTransaksi,
+            },
+            success: function (result) {
+                if (result.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: result.success,
+                        returnFocus: false,
+                    }).then(() => {
+                        clearInputs();
+                        disableButton();
+                        enableButtonBawah();
+
+                        reloadTable();
+                        
+                        btn_proses.disabled = true;
+                        btn_batal.disabled = true;
+
+                        table.$('tr.selected').removeClass('selected');
+
+                        btn_hapus.focus();
+                    });
+                }
             },
             error: function (xhr, status, error) {
                 console.error('Error:', error);
