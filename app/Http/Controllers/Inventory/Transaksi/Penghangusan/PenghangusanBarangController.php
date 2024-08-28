@@ -27,24 +27,7 @@ class PenghangusanBarangController extends Controller
     //Store a newly created resource in storage.
     public function store(Request $request)
     {
-        $data = $request->all();
-        // dd($data , " Masuk store");
-        DB::connection('ConnInventory')->statement('exec SP_1273_INV_Insert_02_TmpTransaksi @XIdTypeTransaksi = ?, @XUraianDetailTransaksi = ?, @XSaatawalTransaksi = ?
-        , @XIdType = ?, @XIdPenerima = ?, @XJumlahKeluarPrimer = ?, @XJumlahKeluarSekunder = ?, @XJumlahKeluarTritier = ?, @XAsalIdSubKelompok = ?, @XTujuanIdSubkelompok = ?, @Harga = ?', [
-            $data['IdTypeTransaksi'],
-            $data['UraianDetailTransaksi'],
-            $data['SaatAwalTransaksi'],
-            $data['IdType'],
-            $data['IdPenerima'],
-            $data['JumlahKeluarPrimer'],
-            $data['JumlahKeluarSekunder'],
-            $data['JumlahKeluarTritier'],
-            $data['AsalIdSubKel'],
-            $data['TujuanIdSubKel'],
-            $data['Harga']
-        ]);
-
-        return redirect()->route('FormMhnPenerima.index')->with('alert', 'Data berhasil ditambahkan!');
+        //
     }
 
     //Display the specified resource.
@@ -59,24 +42,12 @@ class PenghangusanBarangController extends Controller
         $kelutId = $request->input('kelutId');
         $subkelId = $request->input('subkelId');
 
-        $divisiNama = $request->input('divisiNama');
         $tanggal = $request->input('tanggal');
         $pemohon = $request->input('pemohon');
-        $objekNama = $request->input('objekNama');
-        $kelompokNama = $request->input('kelompokNama');
-        $kelutNama = $request->input('kelutNama');
-        $subkelNama = $request->input('subkelNama');
         $kodeTransaksi = $request->input('kodeTransaksi');
-        $kodeBarang = $request->input('kodeBarang');
         $kodeType = $request->input('kodeType');
-        $namaBarang = $request->input('namaBarang');
-        $primer = $request->input('primer');
-        $no_primer = $request->input('no_primer');
-        $sekunder = $request->input('sekunder');
-        $no_sekunder = $request->input('no_sekunder');
-        $tritier = $request->input('tritier');
-        $no_tritier = $request->input('no_tritier');
         $alasan = $request->input('alasan');
+        $uraian = trim($alasan) === null ? '' : trim($alasan);
         $primer2 = $request->input('primer2');
         $sekunder2 = $request->input('sekunder2');
         $tritier2 = $request->input('tritier2');
@@ -106,6 +77,7 @@ class PenghangusanBarangController extends Controller
                     'IdObjek' => $detail_objek->IdObjek
                 ];
             }
+            // dd($objek, $request->all());
             return datatables($objek)->make(true);
         } else if ($id === 'getKelUt') {
             // mendapatkan daftar kelompok utama
@@ -244,33 +216,43 @@ class PenghangusanBarangController extends Controller
                 'data_pemasukan' => $data_pemasukan
             ];
 
+            // dd($data_allData);
+
             return response()->json($response_data);
         } else if ($id === 'proses') {
             // proses terjadi
             if ($a === 1) { // ISI
-                // insert ke tmp transaksi unk di tampilkan di table
-                $tempTabel = DB::connection('ConnInventory')->select(
-                    'exec SP_1003_INV_Insert_05_TmpTransaksi
-                    @XIdTypeTransaksi = ?, @XIdType = ?,  @XIdPenerima = ?, @XIdPemberi = ?, @XSaatawalTransaksi = ?,
-                    @XJumlahPengeluaranPrimer = ?, @XJumlahPengeluaranSekunder = ?, @XJumlahPengeluaranTritier = ?,
-                    @XAsalIdSubKelompok = ?, @XTujuanIdSubKelompok = ?, @XUraianDetailTransaksi = ?, @kd = 1',
-                    ['05', $kodeType, $pemohon, $pemohon, $tanggal,
-                      $primer2, $sekunder2, $tritier2,
-                      $subkelId, $subkelId, $alasan]
-                );
-                dd($tempTabel);
-                return response()->json(['success' => 'Data inserted successfully'], 200);
+                try{
+                    // insert ke tmp transaksi unk di tampilkan di table
+                    DB::connection('ConnInventory')->statement(
+                        'exec SP_1003_INV_Insert_05_TmpTransaksi
+                        @XIdTypeTransaksi = ?, @XIdType = ?,  @XIdPenerima = ?, @XIdPemberi = ?, @XSaatawalTransaksi = ?,
+                        @XJumlahPengeluaranPrimer = ?, @XJumlahPengeluaranSekunder = ?, @XJumlahPengeluaranTritier = ?,
+                        @XAsalIdSubKelompok = ?, @XTujuanIdSubKelompok = ?, @XUraianDetailTransaksi = ?, @kd = 1',
+                        ['05', $kodeType, $pemohon, $pemohon, $tanggal,
+                        $primer2, $sekunder2, $tritier2,
+                        $subkelId, $subkelId, $uraian]
+                    );
+                    // dd($request->all());
+                    return response()->json(['success' => 'Data inserted successfully'], 200);
+                } catch (\Exception $e) {
+                    return response()->json(['error' => 'Data insert failed' . $e->getMessage()], 500);
+                }
             } else if ($a === 2) { // KOREKSI
-                // update
-                $tempTabel = DB::connection('ConnInventory')->select(
-                    'exec SP_1003_INV_update_TmpTransaksi
-                     @XIdTransaksi = ?, @XUraianDetailTransaksi = ?, @XJumlahKeluarPrimer = ?,
-                     @XJumlahKeluarSekunder = ?, @XJumlahKeluarTritier = ?, @XTujuanIdSubkelompok = ?',
-                    [ $kodeTransaksi, $primer2, $sekunder2,
-                      $tritier2, $subkelId, $alasan]
-                );
-                dd($tempTabel);
-                return response()->json(['success' => 'Data updated successfully'], 200);
+                try {
+                    // update
+                    DB::connection('ConnInventory')->statement(
+                        'exec SP_1003_INV_update_TmpTransaksi
+                        @XIdTransaksi = ?, @XUraianDetailTransaksi = ?, @XJumlahKeluarPrimer = ?,
+                        @XJumlahKeluarSekunder = ?, @XJumlahKeluarTritier = ?, @XTujuanSubKelompok = ?',
+                        [ $kodeTransaksi, $alasan, $primer2,
+                        $sekunder2, $tritier2, $subkelId]
+                    );
+                    // dd($request->all());
+                    return response()->json(['success' => 'Data updated successfully'], 200);
+                } catch (\Exception $e) {
+                    return response()->json(['error' => 'Data update failed' . $e->getMessage()], 500);
+                }
             }
         }
     }
@@ -285,17 +267,7 @@ class PenghangusanBarangController extends Controller
     //Update the specified resource in storage.
     public function update(Request $request)
     {
-        $data = $request->all();
-        // dd($data , " Masuk update");
-        DB::connection('ConnInventory')->statement('exec SP_1003_INV_Update_TmpTransaksi @XIdTransaksi = ?, @XUraianDetailTransaksi = ?, @XJumlahKeluarPrimer = ?, @XJumlahKeluarSekunder = ?, @XJumlahKeluarTritier = ?, @XTujuanIdSubkelompok = ?', [
-            $data['IdTransaksi'],
-            $data['UraianDetailTransaksi'],
-            $data['JumlahKeluarPrimer'],
-            $data['JumlahKeluarSekunder'],
-            $data['JumlahKeluarTritier'],
-            $data['TujuanIdSubKel'],
-        ]);
-        return redirect()->route('FormMhnPenerima.index')->with('alert', 'Data berhasil diupdate!');
+        //
     }
 
     //Remove the specified resource from storage.
@@ -303,8 +275,13 @@ class PenghangusanBarangController extends Controller
     {
         $kodeTransaksi = $request->input('kodeTransaksi');
         if ($id === 'hapusBarang') {
-            DB::connection('ConnInventory')->statement('exec SP_1003_INV_Delete_TmpTransaksi  @XIdTransaksi = ?', [$kodeTransaksi]);
-            return response()->json(['success' => 'Data deleted successfully'], 200);
+            try {
+                DB::connection('ConnInventory')->statement('exec SP_1003_INV_Delete_TmpTransaksi  @XIdTransaksi = ?', [$kodeTransaksi]);
+
+                return response()->json(['success' => 'Data sudah diHAPUS'], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Data gagal diHAPUS: ' . $e->getMessage()], 500);
+            }
         }
 
     }

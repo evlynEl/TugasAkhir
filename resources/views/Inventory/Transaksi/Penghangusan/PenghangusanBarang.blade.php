@@ -88,7 +88,7 @@
                             </div>
                         </div>
 
-                        <div class="row">
+                        <div class="row" id="ids" style="display:none;">
                             <div class="col-md-5 d-flex">
                                 <input type="text" id="divisiId" name="divisiId" class="form-control" readonly>
                                 <input type="text" id="objekId" name="objekId" class="form-control" readonly>
@@ -182,7 +182,7 @@
                                     <input type="text" class="form-control" id="no_tritier" name="no_tritier" readonly>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row pb-2">
                                 <div class="col-sm-2">
                                     <label for="alasan">Alasan</label>
                                 </div>
