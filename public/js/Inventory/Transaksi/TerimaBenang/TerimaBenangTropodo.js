@@ -15,6 +15,7 @@ var subkelNama = document.getElementById('subkelNama');
 var kodeType = document.getElementById('kodeType');
 var pib = document.getElementById('pib');
 var namaType = document.getElementById('namaType');
+var kodeBarang = document.getElementById('kodeBarang');
 
 // Penerima Benang Section
 var sekunder = document.getElementById('sekunder');
@@ -39,15 +40,74 @@ var btn_kelompok = document.getElementById('btn_kelompok');
 var btn_kelut = document.getElementById('btn_kelut');
 var btn_subkel = document.getElementById('btn_subkel');
 var btn_namatype = document.getElementById('btn_namatype');
-var btn_divisiPenerima = document.getElementById('btn_divisiPenerima');
-var btn_objekPenerima = document.getElementById('btn_objekPenerima');
-var btn_kelompokPenerima = document.getElementById('btn_kelompokPenerima');
-var btn_kelutPenerima = document.getElementById('btn_kelutPenerima');
 var btn_subkelPenerima = document.getElementById('btn_subkelPenerima');
 var btn_isi = document.getElementById('btn_isi');
 var btn_proses = document.getElementById('btn_proses');
 var btn_batal = document.getElementById('btn_batal');
 
+alasanTransfer.addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+        let alasanValue = alasanTransfer.value;
+
+        if (alasanValue !== "") {
+            let shift = alasanValue.charAt(0);
+            if (shift !== "P" && shift !== "S" && shift !== "M" && shift !== "p" && shift !== "s" && shift !== "m") {
+                Swal.fire({
+                    icon: 'error',
+                    text: "Penulisan Shift Salah, Tolong Dicek",
+                    returnFocus: false
+                }).then(() => {
+                    alasanTransfer.focus();
+                });
+            } else {
+                let tgl = alasanValue.substring(2, 10);
+
+                let tglInput = document.getElementById('tanggal').value;
+
+                let dateObj = new Date(tglInput);
+
+                let day = String(dateObj.getDate()).padStart(2, '0');
+                let month = String(dateObj.getMonth() + 1).padStart(2, '0');
+                let year = String(dateObj.getFullYear()).slice(-2);
+
+                let tgl1 = `${day}-${month}-${year}`;
+
+                if (tgl === tgl1) {
+                    let ktrg = alasanValue.slice(-3);
+                    if (ktrg !== "EXP" && ktrg !== "exp") {
+                        Swal.fire({
+                            icon: 'error',
+                            text: "Penulisan 'EXP' masih salah, Tolong Dicek",
+                            returnFocus: false
+                        }).then(() => {
+                            alasanTransfer.focus();
+                        });
+                    } else {
+                        alasanTransfer.value = alasanValue.toUpperCase();
+                        btn_subkelPenerima.disabled = false;
+                        btn_subkelPenerima.focus();
+                    }
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        text: "Penulisan Alasan Transfer Salah!!\nCek Tanggal Mohon & Tanggal Alasan Transfer. Tanggal Harus Sama!!\nCek Juga Penulisan Yang Lainnya. FORMAT : 'Shift,DD-MM-YY,EXP'",
+                        returnFocus: false
+                    }).then(() => {
+                        alasanTransfer.focus();
+                    });
+                }
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                text: "Alasan Transfer Harus DiISI",
+                returnFocus: false
+            }).then(() => {
+                alasanTransfer.focus();
+            });
+        }
+    }
+});
 
 // fungsi swal select pake arrow
 function handleTableKeydown(e, tableId) {
@@ -102,15 +162,84 @@ function handleTableKeydown(e, tableId) {
     }
 }
 
-$(document).ready(function () {
+
+function tglServerFunction() {
+    $.ajax({
+        type: 'GET',
+        url: 'TerimaBenangTropodo/getTglServer',
+        data: {
+            _token: csrfToken
+        },
+        success: function (result) {
+            tgl4 = result[0].tgl_server;
+
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
+}
+
+var jamNow;
+
+function jamServerFunction() {
+    $.ajax({
+        type: 'GET',
+        url: 'TerimaBenangTropodo/getJamServer',
+        data: {
+            _token: csrfToken
+        },
+        success: function (result) {
+            jamNow = result[0].jam_server;
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
+}
+
+var tabelApa;
+document.addEventListener('DOMContentLoaded', function () {
+    // Mengatur nilai default
     divisiId.value = 'EXT';
     divisiNama.value = 'EXTRUDER';
     objekId.value = '032';
     objekNama.value = 'Bahan & Hasil Produksi';
 
+    sekunder.value = 0;
+
+    divisiIdPenerima.value = 'EXP';
+    divisiNamaPenerima.value = 'EXPEDISI';
+    objekIdPenerima.value = '147';
+    objekNamaPenerima.value = 'Hasil Produksi Extruder';
+    kelutIdPenerima.value = '0713';
+    kelutNamaPenerima.value = 'Benang';
+    kelompokIdPenerima.value = '002586';
+    kelompokNamaPenerima.value = 'Stok Benang Ekspedisi';
+
+    tglServerFunction();
+
     var today = new Date().toISOString().split('T')[0];
     tanggal.value = today;
+
+    Swal.fire({
+        title: 'Tampilkan semua data?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Ya',
+        cancelButtonText: 'Tidak'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            tabelApa = 1;
+            showAllTable();
+        }
+        else {
+            tabelApa = 0;
+            showTable();
+        }
+    });
 });
+
 
 $(document).ready(function () {
     $('#tableData').DataTable({
@@ -153,17 +282,13 @@ function updateDataTable(data) {
 
     data.forEach(function (item) {
         table.row.add([
-            escapeHtml(item.AwalTrans),
-            escapeHtml(item.IdTransaksi),
-            escapeHtml(item.IdType),
-            escapeHtml(item.TypeTransaksi),
+            escapeHtml(item.IdHutExt),
             escapeHtml(item.NamaType),
-            formatNumber(item.JumlahPemasukanPrimer),
-            formatNumber(item.JumlahPemasukanSekunder),
-            formatNumber(item.JumlahPemasukanTritier),
-            formatNumber(item.JumlahPengeluaranPrimer),
-            formatNumber(item.JumlahPengeluaranSekunder),
-            formatNumber(item.JumlahPengeluaranTritier),
+            escapeHtml(item.NamaKelompok),
+            escapeHtml(item.NamaSubKelompok),
+            escapeHtml(item.NamaUser),
+            escapeHtml(item.SaatAwalTransaksi),
+            escapeHtml(item.IdTransINV),
         ]);
     });
 
@@ -183,33 +308,47 @@ $('#tableData tbody').on('click', 'tr', function () {
     table.$('tr.selected').removeClass('selected');
     $(this).addClass('selected');
     var data = table.row(this).data();
-    let IdType = data[2];
-
-    console.log(IdType);
+    let IdHut = data[0];
+    let IdTrans = data[6];
 
     $.ajax({
         type: 'GET',
-        url: 'TerimaBenangTropodo/getSaldo',
+        url: 'TerimaBenangTropodo/getDetailData1',
         data: {
-            IdType: IdType,
+            XIdTransaksi: IdTrans,
             _token: csrfToken
         },
         success: function (result) {
             if (result) {
-                triter.value = formatNumber(result[0].SaldoTritier);
-                primer.value = formatNumber(result[0].SaldoPrimer);
-                sekunder.value = formatNumber(result[0].SaldoSekunder);
-                satuanPrimer.value = result[0].SatPrimer ?? '';
-                satuanSekunder.value = result[0].SatSekunder ?? '';
-                satuanTritier.value = result[0].SatTritier ?? '';
+                subkelIdPenerima.value = decodeHtmlEntities(result[0].IdSubkelompok);
+                subkelNamaPenerima.value = decodeHtmlEntities(result[0].NamaSubKelompok);
+                sekunder.value = formatNumber(result[0].jumlahSekunder) ?? formatNumber(0);
+                satuanSekunder.value = decodeHtmlEntities(result[0].Satuan_Sekunder);
+                tritier.value = formatNumber(result[0].jumlahTritier) ?? formatNumber(0);
+                satuanTritier.value = decodeHtmlEntities(result[0].Satuan_Tritier);
+                alasanTransfer.value = decodeHtmlEntities(result[0].UraianDetailTransaksi);
             }
-            else {
-                triter.value = '';
-                primer.value = '';
-                sekunder.value = '';
-                satuanPrimer.value = '';
-                satuanSekunder.value = '';
-                satuanTritier.value = '';
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
+
+    $.ajax({
+        type: 'GET',
+        url: 'TerimaBenangTropodo/getDetailData2',
+        data: {
+            XIdTransaksi: IdHut,
+            _token: csrfToken
+        },
+        success: function (result) {
+            if (result) {
+                kelutId.value = decodeHtmlEntities(result[0].IdKelompokUtama);
+                kelompokId.value = decodeHtmlEntities(result[0].IdKelompok);
+                subkelId.value = decodeHtmlEntities(result[0].IdSubkelompok);
+                kelutNama.value = decodeHtmlEntities(result[0].NamaKelompokUtama);
+                kelompokNama.value = decodeHtmlEntities(result[0].NamaKelompok);
+                subkelNama.value = decodeHtmlEntities(result[0].NamaSubKelompok);
             }
         },
         error: function (xhr, status, error) {
@@ -301,6 +440,8 @@ btn_kelut.addEventListener("click", function (e) {
                     kelompokIdPenerima.value = '002586';
                     kelompokNamaPenerima.value = 'Stok Benang Expedisi';
                 }
+
+                btn_kelompok.disabled = false;
                 btn_kelompok.focus();
             }
         });
@@ -380,6 +521,7 @@ btn_kelompok.addEventListener("click", function (e) {
                 subkelId.value = '';
                 subkelNama.value = '';
 
+                btn_subkel.disabled = false;
                 btn_subkel.focus();
             }
         });
@@ -393,7 +535,7 @@ btn_subkel.addEventListener("click", function (e) {
 
     try {
         Swal.fire({
-            title: '',
+            title: 'Sub Kelompok',
             html: `
                 <table id="table_list" class="table">
                     <thead>
@@ -458,7 +600,7 @@ btn_subkel.addEventListener("click", function (e) {
 
                 namaType.value = '';
                 kodeType.value = '';
-                
+
                 btn_namatype.focus();
             }
         });
@@ -467,6 +609,31 @@ btn_subkel.addEventListener("click", function (e) {
     }
 });
 
+$('#tritier').on('keydown', function (e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        if (tritier.value == 0) {
+            Swal.fire({
+                icon: 'error',
+                text: 'Jumlah Benang Tidak boleh Nol.',
+                returnFocus: false
+            }).then(() => {
+                tritier.focus();
+            });
+        }
+        else {
+            alasanTransfer.readOnly = false;
+            alasanTransfer.focus();
+        }
+    }
+});
+
+var p;
+var s;
+var t;
+var pl;
+var sl;
+var tl;
 
 // button list Kode Type
 btn_namatype.addEventListener("click", function (e) {
@@ -534,7 +701,7 @@ btn_namatype.addEventListener("click", function (e) {
             if (result.isConfirmed) {
                 kodeType.value = decodeHtmlEntities(result.value.IdType.trim());
                 namaType.value = decodeHtmlEntities(result.value.NamaType.trim());
-                
+
                 $.ajax({
                     type: 'GET',
                     url: 'TerimaBenangTropodo/getType',
@@ -546,13 +713,91 @@ btn_namatype.addEventListener("click", function (e) {
                     success: function (result) {
                         if (result.length !== 0) {
                             namaType.value = decodeHtmlEntities(result[0].NamaType.trim());
-                            kodeType.value = decodeHtmlEntities(result[0].IdType.trim());
+                            kodeBarang.value = decodeHtmlEntities(result[0].KodeBarang.trim());
                             pib.value = result[0].PIB ? decodeHtmlEntities(result[0].PIB.trim()) : '';
+
+                            $.ajax({
+                                type: 'GET',
+                                url: 'TerimaBenangTropodo/getSatuanPemohon',
+                                data: {
+                                    XKodeBarang: kodeBarang.value,
+                                    XIdSubKelompok: subkelId.value,
+                                    _token: csrfToken
+                                },
+                                success: function (result) {
+                                    if (result.length !== 0) {
+                                        p = result[0].satuan_primer ?? 'Null';
+                                        s = result[0].satuan_sekunder ?? 'Null';
+                                        t = result[0].satuan_tritier ?? 'Null';
+
+                                        tritier.readOnly = false;
+                                        satuanTritier.readOnly = false;
+                                        tritier.focus();
+
+                                        if (p.trim() == 'Null' && s.trim() == 'Null' && t.trim() == 'Null') {
+                                            $.ajax({
+                                                type: 'GET',
+                                                url: 'TerimaBenangTropodo/getKodeBarangPenerima',
+                                                data: {
+                                                    XKodeBarang: kodeBarang.value,
+                                                    XIdSubKelompok: subkelId.value,
+                                                    _token: csrfToken
+                                                },
+                                                success: function (result) {
+                                                    if (result.length !== 0) {
+                                                        pl = result[0].satuan_primer ?? 'Null';
+                                                        sl = result[0].satuan_sekunder ?? 'Null';
+                                                        tl = result[0].satuan_tritier ?? 'Null';
+                                                        satuanTritier.value = tl;
+
+                                                        if (pl.trim() === p.trim()) {
+                                                            if (sl.trim() === s.trim()) {
+                                                                if (tl.trim() === t.trim()) {
+
+                                                                    tritier.readOnly = false;
+                                                                    satuanTritier.readOnly = false;
+                                                                    tritier.focus();
+                                                                }
+                                                                else {
+                                                                    Swal.fire({
+                                                                        icon: 'error',
+                                                                        text: 'Satuan harus terisi, jika ingin transaksi!!....Koreksi pada Maintenance Type Barang per Divisi, untuk Divisi ' + divisiNama.value,
+                                                                    });
+                                                                }
+                                                            } else {
+                                                                Swal.fire({
+                                                                    icon: 'error',
+                                                                    text: 'Satuan harus terisi, jika ingin transaksi!!....Koreksi pada Maintenance Type Barang per Divisi, untuk Divisi ' + divisiNama.value,
+                                                                });
+                                                                tritier.readOnly = true;
+                                                                satuanTritier.readOnly = true;
+                                                            }
+                                                        } else {
+                                                            Swal.fire({
+                                                                icon: 'error',
+                                                                text: 'Satuan harus terisi, jika ingin transaksi!!....Koreksi pada Maintenance Type Barang per Divisi, untuk Divisi ' + divisiNama.value,
+                                                            });
+                                                            tritier.readOnly = true;
+                                                            satuanTritier.readOnly = true;
+                                                        }
+                                                    }
+                                                },
+                                                error: function (xhr, status, error) {
+                                                    console.error('Error:', error);
+                                                }
+                                            });
+                                        }
+                                    }
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error('Error:', error);
+                                }
+                            });
                         }
-                        else{
+                        else {
                             Swal.fire({
                                 icon: 'error',
-                                text: 'Tidak ada barang: ' + kodeType.value + ' pada sub kelompok ' + subkelId.value +'.',
+                                text: 'Tidak ada barang: ' + kodeType.value + ' pada sub kelompok ' + subkelId.value + '.',
                             });
                         }
                     },
@@ -566,3 +811,911 @@ btn_namatype.addEventListener("click", function (e) {
         console.error(error);
     }
 });
+
+// btn subkel bawah
+btn_subkelPenerima.addEventListener("click", function (e) {
+    try {
+        Swal.fire({
+            title: 'Sub Kelompok',
+            html: `
+                <table id="table_list" class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID Sub Kelompok</th>
+                            <th scope="col">Nama Sub Kelompok</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            `,
+            preConfirm: () => {
+                const selectedData = $("#table_list")
+                    .DataTable()
+                    .row(".selected")
+                    .data();
+                if (!selectedData) {
+                    Swal.showValidationMessage("Please select a row");
+                    return false;
+                }
+                return selectedData;
+            },
+            returnFocus: false,
+            showCloseButton: true,
+            showConfirmButton: true,
+            confirmButtonText: 'Select',
+            didOpen: () => {
+                $(document).ready(function () {
+                    const table = $("#table_list").DataTable({
+                        responsive: true,
+                        processing: true,
+                        serverSide: true,
+                        order: [1, "asc"],
+                        ajax: {
+                            url: "TerimaBenangTropodo/getSubkel",
+                            dataType: "json",
+                            type: "GET",
+                            data: {
+                                _token: csrfToken,
+                                kelompokId: kelompokIdPenerima.value
+                            }
+                        },
+                        columns: [
+                            { data: "IdSubkelompok" },
+                            { data: "NamaSubKelompok" }
+                        ]
+                    });
+
+                    $("#table_list tbody").on("click", "tr", function () {
+                        table.$("tr.selected").removeClass("selected");
+                        $(this).addClass("selected");
+                    });
+
+                    currentIndex = null;
+                    Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
+                });
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                subkelIdPenerima.value = decodeHtmlEntities(result.value.IdSubkelompok.trim());
+                subkelNamaPenerima.value = decodeHtmlEntities(result.value.NamaSubKelompok.trim());
+
+                if (subkelIdPenerima.value) {
+                    $.ajax({
+                        type: 'GET',
+                        url: 'TerimaBenangTropodo/cekKodeBarangType',
+                        data: {
+                            XKodeBarang: kodeBarang.value.trim(),
+                            XIdSubKelompok: subkelIdPenerima.value,
+                            _token: csrfToken
+                        },
+                        success: function (result) {
+                            if (result[0].Jumlah == 0) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    text: "Tidak ada barang : " + (namaType.value.trim()) + ' pada Divisi/SubKelompok : '
+                                        + (divisiNamaPenerima.value.trim()) + '/' + (subkelNamaPenerima.value.trim()),
+                                    returnFocus: false
+                                }).then(() => {
+                                    btn_subkelPenerima.focus();
+                                });
+                            }
+                            else {
+                                $.ajax({
+                                    type: 'GET',
+                                    url: 'TerimaBenangTropodo/getKodeBarangPenerima',
+                                    data: {
+                                        XKodeBarang: kodeBarang.value,
+                                        XIdSubKelompok: subkelIdPenerima.value,
+                                        _token: csrfToken
+                                    },
+                                    success: function (result) {
+                                        if (result.length !== 0) {
+                                            pl = result[0].satuan_primer ?? 'Null';
+                                            sl = result[0].satuan_sekunder ?? 'Null';
+                                            tl = result[0].satuan_tritier ?? 'Null';
+                                            satuanTritier.value = tl;
+
+                                            if (pl.trim() === p.trim()) {
+                                                if (sl.trim() === s.trim()) {
+                                                    if (tl.trim() === t.trim()) {
+
+                                                        btn_proses.disabled = false;
+                                                        btn_proses.focus();
+                                                    }
+                                                    else {
+                                                        Swal.fire({
+                                                            icon: 'error',
+                                                            text: 'Divisi PENERIMA dan Divisi PEMBERI tidak terdapat aturan konversi!!.., maka Satuan Primer,Satuan Sekunder,Satuan Tritier kedua divisi HARUS SAMA!!.., untuk Divisi PENERIMA koreksi dulu pada menu Maintenance Type Barang per Divisi',
+                                                        });
+                                                    }
+                                                } else {
+                                                    Swal.fire({
+                                                        icon: 'error',
+                                                        text: 'Divisi PENERIMA dan Divisi PEMBERI tidak terdapat aturan konversi!!.., maka Satuan Primer,Satuan Sekunder,Satuan Tritier kedua divisi HARUS SAMA!!.., untuk Divisi PENERIMA koreksi dulu pada menu Maintenance Type Barang per Divisi',
+                                                    });
+                                                    btn_proses.disabled = true;
+                                                }
+                                            } else {
+                                                Swal.fire({
+                                                    icon: 'error',
+                                                    text: 'Divisi PENERIMA dan Divisi PEMBERI tidak terdapat aturan konversi!!.., maka Satuan Primer,Satuan Sekunder,Satuan Tritier kedua divisi HARUS SAMA!!.., untuk Divisi PENERIMA koreksi dulu pada menu Maintenance Type Barang per Divisi',
+                                                });
+                                                btn_proses.disabled = true;
+                                            }
+                                        }
+                                    },
+                                    error: function (xhr, status, error) {
+                                        console.error('Error:', error);
+                                    }
+                                });
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error:', error);
+                        }
+                    });
+                }
+                else {
+                    btn_subkelPenerima.focus();
+                }
+            }
+        });
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+var pil;
+
+var j;
+var jam, jam1;
+var tgl, tgl3, tgl4;
+
+btn_isi.addEventListener("click", function (e) {
+    btn_batal.disabled = false;
+    
+    tgl3 = tanggal.value;
+    tglServerFunction();
+    jamServerFunction();
+
+    $.ajax({
+        type: 'GET',
+        url: 'TerimaBenangTropodo/getListAdaHutang',
+        data: {
+            _token: csrfToken
+        },
+        success: function (result) {
+            if (result[0].ada == 0) {
+                pil = 1;
+                btn_isi.disabled = true;
+                btn_proses.disabled = true;
+                $('.divTable').hide();
+                clearText();
+                btn_kelut.disabled = false;
+                btn_kelut.focus();
+            }
+
+            else {
+                $.ajax({
+                    type: 'GET',
+                    url: 'TerimaBenangTropodo/getTglHutang',
+                    data: {
+                        _token: csrfToken
+                    },
+                    success: function (result) {
+                        tgl = result[0].tgl;
+                        jam1 = result[0].jam;
+
+                        let tglDate = new Date(tgl);
+                        let tglDate3 = new Date(tgl3);
+                        let tglDate4 = new Date(tgl4);
+
+                        let year = tglDate.getFullYear();
+                        let month = String(tglDate.getMonth() + 1).padStart(2, '0'); // Month (01-12)
+                        let day = String(tglDate.getDate()).padStart(2, '0'); // Day (01-31)
+
+                        let formattedDate = `${year}-${month}-${day}`;
+
+                        let year3 = tglDate3.getFullYear();
+                        let month3 = String(tglDate3.getMonth() + 1).padStart(2, '0'); // Month (01-12)
+                        let day3 = String(tglDate3.getDate()).padStart(2, '0'); // Day (01-31)
+
+                        let monthInt = parseInt(month);
+                        let monthInt3 = parseInt(month3);
+
+                        let dayInt = parseInt(day);
+                        let dayInt3 = parseInt(day3);
+
+                        let jamDate = new Date(jamNow);
+
+                        let jamHH = String(jamDate.getHours()).padStart(2, '0'); // Hour (00-23)
+                        let menitMM = String(jamDate.getMinutes()).padStart(2, '0'); // Minutes (00-59)
+
+                        let timeServer = `${jamHH}:${menitMM}`;
+
+                        if ((monthInt < monthInt3) || (year < year3)) {
+                            if (monthInt === 1 || monthInt === 3 || monthInt === 5
+                                || monthInt === 7 || monthInt === 8 || monthInt === 10 || monthInt === 12) {
+                                if (dayInt3 === 1 && dayInt === 31) {
+                                    pil = 1;
+                                    btn_isi.disabled = true;
+                                    btn_proses.disabled = true;
+                                    $('.divTable').hide();
+                                    clearText();
+                                    btn_kelut.disabled = false;
+                                    btn_kelut.focus();
+                                }
+                                else if (dayInt3 === 1 && dayInt === 30 && timeServer < "15:01" && tglDate3 === tglDate4) {
+                                    pil = 1;
+                                    btn_isi.disabled = true;
+                                    btn_proses.disabled = true;
+                                    $('.divTable').hide();
+                                    clearText();
+                                    btn_kelut.disabled = false;
+                                    btn_kelut.focus();
+                                }
+                                else if (dayInt3 === 1 && dayInt === 30 && timeServer < "15:01" && tglDate3 !== tglDate4) {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Tidak Bisa Terima Benang, Masih Ada Hutang',
+                                    });
+                                    showAllTable();
+                                    btn_isi.disabled = false;
+                                    btn_proses.disabled = false;
+                                }
+                                else if (dayInt3 === 2 && dayInt === 31 && timeServer < "15:01" && tglDate3 === tglDate4) {
+                                    pil = 1;
+                                    btn_isi.disabled = true;
+                                    btn_proses.disabled = true;
+                                    $('.divTable').hide();
+                                    clearText();
+                                    btn_kelut.disabled = false;
+                                    btn_kelut.focus();
+                                }
+                                else if (dayInt3 === 2 && dayInt === 31 && timeServer < "15:01" && tglDate3 !== tglDate4) {
+                                    pil = 1;
+                                    btn_isi.disabled = true;
+                                    btn_proses.disabled = true;
+                                    $('.divTable').hide();
+                                    clearText();
+                                    btn_kelut.disabled = false;
+                                    btn_kelut.focus();
+                                }
+                                else if ((dayInt3 === 1 && dayInt === 30 && timeServer >= "15:01" && tglDate3 === tglDate4)
+                                    || (dayInt3 === 1 && dayInt === 30 && timeServer >= "15:01" && tglDate3 !== tglDate4)
+                                ) {
+                                    pil = 1;
+                                    btn_isi.disabled = true;
+                                    btn_proses.disabled = true;
+                                    $('.divTable').hide();
+                                    clearText();
+                                    btn_kelut.disabled = false;
+                                    btn_kelut.focus();
+                                }
+                                else if ((dayInt3 === 2 && dayInt === 31 && timeServer >= "15:01" && tglDate3 === tglDate4)
+                                    || (dayInt3 === 2 && dayInt === 31 && timeServer >= "15:01" && tglDate3 !== tglDate4)
+                                ) {
+                                    pil = 1;
+                                    btn_isi.disabled = true;
+                                    btn_proses.disabled = true;
+                                    $('.divTable').hide();
+                                    clearText();
+                                    btn_kelut.disabled = false;
+                                    btn_kelut.focus();
+                                }
+                                else if (dayInt3 === 1 && dayInt < 30) {
+                                    pil = 1;
+                                    btn_isi.disabled = true;
+                                    btn_proses.disabled = true;
+                                    $('.divTable').hide();
+                                    clearText();
+                                    btn_kelut.disabled = false;
+                                    btn_kelut.focus();
+                                }
+                                else if (dayInt3 === 2 && dayInt < 31) {
+                                    pil = 1;
+                                    btn_isi.disabled = true;
+                                    btn_proses.disabled = true;
+                                    $('.divTable').hide();
+                                    clearText();
+                                    btn_kelut.disabled = false;
+                                    btn_kelut.focus();
+                                }
+                                else if (dayInt3 > 2 && dayInt <= 31) {
+                                    pil = 1;
+                                    btn_isi.disabled = true;
+                                    btn_proses.disabled = true;
+                                    $('.divTable').hide();
+                                    clearText();
+                                    btn_kelut.disabled = false;
+                                    btn_kelut.focus();
+                                }
+                            }
+                            else if (monthInt === 4 || monthInt === 6 || monthInt === 9 || monthInt === 11) {
+                                if (dayInt3 === 1 && dayInt === 30) {
+                                    pil = 1;
+                                    btn_isi.disabled = true;
+                                    btn_proses.disabled = true;
+                                    $('.divTable').hide();
+                                    clearText();
+                                    btn_kelut.disabled = false;
+                                    btn_kelut.focus();
+                                }
+                                else if (dayInt3 === 1 && dayInt === 29 && timeServer < "15:01" && tglDate3 === tglDate4) {
+                                    pil = 1;
+                                    btn_isi.disabled = true;
+                                    btn_proses.disabled = true;
+                                    $('.divTable').hide();
+                                    clearText();
+                                    btn_kelut.disabled = false;
+                                    btn_kelut.focus();
+                                }
+                                else if (dayInt3 === 1 && dayInt === 29 && timeServer < "15:01" && tglDate3 !== tglDate4) {
+                                    pil = 1;
+                                    btn_isi.disabled = true;
+                                    btn_proses.disabled = true;
+                                    $('.divTable').hide();
+                                    clearText();
+                                    btn_kelut.disabled = false;
+                                    btn_kelut.focus();
+                                }
+                                else if (dayInt3 === 2 && dayInt === 30 && timeServer < "15:01" && tglDate3 === tglDate4) {
+                                    pil = 1;
+                                    btn_isi.disabled = true;
+                                    btn_proses.disabled = true;
+                                    $('.divTable').hide();
+                                    clearText();
+                                    btn_kelut.disabled = false;
+                                    btn_kelut.focus();
+                                }
+                                else if (dayInt3 === 2 && dayInt === 30 && timeServer < "15:01" && tglDate3 !== tglDate4) {
+                                    pil = 1;
+                                    btn_isi.disabled = true;
+                                    btn_proses.disabled = true;
+                                    $('.divTable').hide();
+                                    clearText();
+                                    btn_kelut.disabled = false;
+                                    btn_kelut.focus();
+                                }
+                                else if ((dayInt3 === 1 && dayInt === 29 && timeServer >= "15:01" && tglDate3 === tglDate4)
+                                    || (dayInt3 === 1 && dayInt === 29 && timeServer >= "15:01" && tglDate3 !== tglDate4)
+                                ) {
+                                    pil = 1;
+                                    btn_isi.disabled = true;
+                                    btn_proses.disabled = true;
+                                    $('.divTable').hide();
+                                    clearText();
+                                    btn_kelut.disabled = false;
+                                    btn_kelut.focus();
+                                }
+                                else if ((dayInt3 === 2 && dayInt === 30 && timeServer >= "15:01" && tglDate3 === tglDate4)
+                                    || (dayInt3 === 2 && dayInt === 30 && timeServer >= "15:01" && tglDate3 !== tglDate4)
+                                ) {
+                                    pil = 1;
+                                    btn_isi.disabled = true;
+                                    btn_proses.disabled = true;
+                                    $('.divTable').hide();
+                                    clearText();
+                                    btn_kelut.disabled = false;
+                                    btn_kelut.focus();
+                                }
+                                else if (dayInt3 === 1 && dayInt < 29) {
+                                    pil = 1;
+                                    btn_isi.disabled = true;
+                                    btn_proses.disabled = true;
+                                    $('.divTable').hide();
+                                    clearText();
+                                    btn_kelut.disabled = false;
+                                    btn_kelut.focus();
+                                }
+                                else if (dayInt3 === 2 && dayInt < 30) {
+                                    pil = 1;
+                                    btn_isi.disabled = true;
+                                    btn_proses.disabled = true;
+                                    $('.divTable').hide();
+                                    clearText();
+                                    btn_kelut.disabled = false;
+                                    btn_kelut.focus();
+                                }
+                                else if (dayInt3 > 2 && dayInt <= 30) {
+                                    pil = 1;
+                                    btn_isi.disabled = true;
+                                    btn_proses.disabled = true;
+                                    $('.divTable').hide();
+                                    clearText();
+                                    btn_kelut.disabled = false;
+                                    btn_kelut.focus();
+                                }
+                            }
+                            else if (monthInt === 2) {
+                                function formatNumber(num) {
+                                    let formatted = num.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                                    return formatted;
+                                }
+                                let a = new Date(tglDate3).getFullYear() / 4;
+                                let a1 = formatNumber(a);
+                                a1 = a1.slice(-2);
+
+                                if (a1 === '00') {
+                                    if (dayInt3 === 1 && dayInt === 29) {
+                                        pil = 1;
+                                        btn_isi.disabled = true;
+                                        btn_proses.disabled = true;
+                                        $('.divTable').hide();
+                                        clearText();
+                                        btn_kelut.disabled = false;
+                                        btn_kelut.focus();
+                                    }
+                                    else if (dayInt3 === 1 && dayInt === 28 && timeServer < "15:01" && tglDate3 === tglDate4) {
+                                        pil = 1;
+                                        btn_isi.disabled = true;
+                                        btn_proses.disabled = true;
+                                        $('.divTable').hide();
+                                        clearText();
+                                        btn_kelut.disabled = false;
+                                        btn_kelut.focus();
+                                    }
+                                    else if (dayInt3 === 1 && dayInt === 28 && timeServer < "15:01" && tglDate3 !== tglDate4) {
+                                        pil = 1;
+                                        btn_isi.disabled = true;
+                                        btn_proses.disabled = true;
+                                        $('.divTable').hide();
+                                        clearText();
+                                        btn_kelut.disabled = false;
+                                        btn_kelut.focus();
+                                    }
+                                    else if (dayInt3 === 2 && dayInt === 29 && timeServer < "15:01" && tglDate3 === tglDate4) {
+                                        pil = 1;
+                                        btn_isi.disabled = true;
+                                        btn_proses.disabled = true;
+                                        $('.divTable').hide();
+                                        clearText();
+                                        btn_kelut.disabled = false;
+                                        btn_kelut.focus();
+                                    }
+                                    else if (dayInt3 === 2 && dayInt === 29 && timeServer < "15:01" && tglDate3 !== tglDate4) {
+                                        pil = 1;
+                                        btn_isi.disabled = true;
+                                        btn_proses.disabled = true;
+                                        $('.divTable').hide();
+                                        clearText();
+                                        btn_kelut.disabled = false;
+                                        btn_kelut.focus();
+                                    }
+                                    else if ((dayInt3 === 1 && dayInt === 28 && timeServer >= "15:01" && tglDate3 === tglDate4)
+                                        || (dayInt3 === 1 && dayInt === 28 && timeServer >= "15:01" && tglDate3 !== tglDate4)
+                                    ) {
+                                        pil = 1;
+                                        btn_isi.disabled = true;
+                                        btn_proses.disabled = true;
+                                        $('.divTable').hide();
+                                        clearText();
+                                        btn_kelut.disabled = false;
+                                        btn_kelut.focus();
+                                    }
+                                    else if ((dayInt3 === 2 && dayInt === 29 && timeServer >= "15:01" && tglDate3 === tglDate4)
+                                        || (dayInt3 === 2 && dayInt === 29 && timeServer >= "15:01" && tglDate3 !== tglDate4)
+                                    ) {
+                                        pil = 1;
+                                        btn_isi.disabled = true;
+                                        btn_proses.disabled = true;
+                                        $('.divTable').hide();
+                                        clearText();
+                                        btn_kelut.disabled = false;
+                                        btn_kelut.focus();
+                                    }
+                                    else if (dayInt3 === 1 && dayInt < 28) {
+                                        pil = 1;
+                                        btn_isi.disabled = true;
+                                        btn_proses.disabled = true;
+                                        $('.divTable').hide();
+                                        clearText();
+                                        btn_kelut.disabled = false;
+                                        btn_kelut.focus();
+                                    }
+                                    else if (dayInt3 === 2 && dayInt < 29) {
+                                        pil = 1;
+                                        btn_isi.disabled = true;
+                                        btn_proses.disabled = true;
+                                        $('.divTable').hide();
+                                        clearText();
+                                        btn_kelut.disabled = false;
+                                        btn_kelut.focus();
+                                    }
+                                    else if (dayInt3 > 2 && dayInt <= 29) {
+                                        pil = 1;
+                                        btn_isi.disabled = true;
+                                        btn_proses.disabled = true;
+                                        $('.divTable').hide();
+                                        clearText();
+                                        btn_kelut.disabled = false;
+                                        btn_kelut.focus();
+                                    }
+                                }
+                                else {
+                                    if (dayInt3 === 1 && dayInt === 28) {
+                                        pil = 1;
+                                        btn_isi.disabled = true;
+                                        btn_proses.disabled = true;
+                                        $('.divTable').hide();
+                                        clearText();
+                                        btn_kelut.disabled = false;
+                                        btn_kelut.focus();
+                                    }
+                                    else if (dayInt3 === 1 && dayInt === 27 && timeServer < "15:01" && tglDate3 === tglDate4) {
+                                        pil = 1;
+                                        btn_isi.disabled = true;
+                                        btn_proses.disabled = true;
+                                        $('.divTable').hide();
+                                        clearText();
+                                        btn_kelut.disabled = false;
+                                        btn_kelut.focus();
+                                    }
+                                    else if (dayInt3 === 1 && dayInt === 27 && timeServer < "15:01" && tglDate3 !== tglDate4) {
+                                        pil = 1;
+                                        btn_isi.disabled = true;
+                                        btn_proses.disabled = true;
+                                        $('.divTable').hide();
+                                        clearText();
+                                        btn_kelut.disabled = false;
+                                        btn_kelut.focus();
+                                    }
+                                    else if (dayInt3 === 2 && dayInt === 28 && timeServer < "15:01" && tglDate3 === tglDate4) {
+                                        pil = 1;
+                                        btn_isi.disabled = true;
+                                        btn_proses.disabled = true;
+                                        $('.divTable').hide();
+                                        clearText();
+                                        btn_kelut.disabled = false;
+                                        btn_kelut.focus();
+                                    }
+                                    else if (dayInt3 === 2 && dayInt === 28 && timeServer < "15:01" && tglDate3 !== tglDate4) {
+                                        pil = 1;
+                                        btn_isi.disabled = true;
+                                        btn_proses.disabled = true;
+                                        $('.divTable').hide();
+                                        clearText();
+                                        btn_kelut.disabled = false;
+                                        btn_kelut.focus();
+                                    }
+                                    else if ((dayInt3 === 1 && dayInt === 27 && timeServer >= "15:01" && tglDate3 === tglDate4)
+                                        || (dayInt3 === 1 && dayInt === 27 && timeServer >= "15:01" && tglDate3 !== tglDate4)
+                                    ) {
+                                        pil = 1;
+                                        btn_isi.disabled = true;
+                                        btn_proses.disabled = true;
+                                        $('.divTable').hide();
+                                        clearText();
+                                        btn_kelut.disabled = false;
+                                        btn_kelut.focus();
+                                    }
+                                    else if ((dayInt3 === 2 && dayInt === 28 && timeServer >= "15:01" && tglDate3 === tglDate4)
+                                        || (dayInt3 === 2 && dayInt === 28 && timeServer >= "15:01" && tglDate3 !== tglDate4)
+                                    ) {
+                                        pil = 1;
+                                        btn_isi.disabled = true;
+                                        btn_proses.disabled = true;
+                                        $('.divTable').hide();
+                                        clearText();
+                                        btn_kelut.disabled = false;
+                                        btn_kelut.focus();
+                                    }
+                                    else if (dayInt3 === 1 && dayInt < 27) {
+                                        pil = 1;
+                                        btn_isi.disabled = true;
+                                        btn_proses.disabled = true;
+                                        $('.divTable').hide();
+                                        clearText();
+                                        btn_kelut.disabled = false;
+                                        btn_kelut.focus();
+                                    }
+                                    else if (dayInt3 === 2 && dayInt < 28) {
+                                        pil = 1;
+                                        btn_isi.disabled = true;
+                                        btn_proses.disabled = true;
+                                        $('.divTable').hide();
+                                        clearText();
+                                        btn_kelut.disabled = false;
+                                        btn_kelut.focus();
+                                    }
+                                    else if (dayInt3 > 2 && dayInt <= 28) {
+                                        pil = 1;
+                                        btn_isi.disabled = true;
+                                        btn_proses.disabled = true;
+                                        $('.divTable').hide();
+                                        clearText();
+                                        btn_kelut.disabled = false;
+                                        btn_kelut.focus();
+                                    }
+                                }
+                            }
+                        }
+                        else if (monthInt === monthInt3 && year === year3) {
+                            let s = dayInt3 - dayInt;
+
+                            if (formattedDate === tgl3) {
+                                pil = 1;
+                                btn_isi.disabled = true;
+                                btn_proses.disabled = true;
+                                $('.divTable').hide();
+                                clearText();
+                                btn_kelut.disabled = false;
+                                btn_kelut.focus();
+                            }
+                            else if (formattedDate < tgl3 && s === 2 && timeServer >= "15:01" && tglDate3 === tglDate4) {
+                                pil = 1;
+                                btn_isi.disabled = true;
+                                btn_proses.disabled = true;
+                                $('.divTable').hide();
+                                clearText();
+                                btn_kelut.disabled = false;
+                                btn_kelut.focus();
+                            }
+                            else if (formattedDate < tgl3 && s === 2 && timeServer < "15:01" && tglDate3 === tglDate4) {
+                                pil = 1;
+                                btn_isi.disabled = true;
+                                btn_proses.disabled = true;
+                                $('.divTable').hide();
+                                clearText();
+                                btn_kelut.disabled = false;
+                                btn_kelut.focus();
+                            }
+                            else if (formattedDate < tgl3 && s > 2) {
+                                pil = 1;
+                                btn_isi.disabled = true;
+                                btn_proses.disabled = true;
+                                $('.divTable').hide();
+                                clearText();
+                                btn_kelut.disabled = false;
+                                btn_kelut.focus();
+                            }
+                            else if (formattedDate < tgl3 && s === 1) {
+                                pil = 1;
+                                btn_isi.disabled = true;
+                                btn_proses.disabled = true;
+                                $('.divTable').hide();
+                                clearText();
+                                btn_kelut.disabled = false;
+                                btn_kelut.focus();
+                            }
+                            else if (formattedDate > tgl3) {
+                                pil = 1;
+                                btn_isi.disabled = true;
+                                btn_proses.disabled = true;
+                                $('.divTable').hide();
+                                clearText();
+                                btn_kelut.disabled = false;
+                                btn_kelut.focus();
+                            }
+                            else if (formattedDate < tgl3 && s === 2 && tglDate3 !== tglDate4) {
+                                pil = 1;
+                                btn_isi.disabled = true;
+                                btn_proses.disabled = true;
+                                $('.divTable').hide();
+                                clearText();
+                                btn_kelut.disabled = false;
+                                btn_kelut.focus();
+                            }
+                        }
+                        else if (monthInt > monthInt3 && year === year3) {
+                            pil = 1;
+                            btn_isi.disabled = true;
+                            btn_proses.disabled = true;
+                            $('.divTable').hide();
+                            clearText();
+                            btn_kelut.disabled = false;
+                            btn_kelut.focus();
+                        }
+
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+
+            }
+
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
+
+});
+
+btn_proses.addEventListener("click", function (e) {
+    $.ajax({
+        type: 'GET',
+        url: 'TerimaBenangTropodo/cekPenyesuaianTransaksi',
+        data: {
+            kodeBarang: kodeBarang.value,
+            idSubKel: subkelIdPenerima.value,
+            PIB: pib.value,
+            _token: csrfToken
+        },
+        success: function (result) {
+            if (result[0].jumlah >= 1) {
+                Swal.fire({
+                    icon: 'error',
+                    text: 'Tidak Bisa Input!!! Karena Ada Transaksi Penyesuaian yang Belum diACC untuk type : '
+                        + (result[0].IdType.trim()) + ', Nama Type: ' + (decodeHtmlEntities(namaType.value.trim()))
+                        + ' Pada divisi ' + (decodeHtmlEntities(divisiNamaPenerima.value.trim())),
+                }).then(() => {
+                    showAllTable();
+                    return;
+                });
+            }
+            else {
+                $.ajax({
+                    type: 'GET',
+                    url: 'TerimaBenangTropodo/cekHutang',
+                    data: {
+                        awal: tanggal.value,
+                        jmlS: sekunder.value,
+                        jumlah: tritier.value,
+                        asal: subkelId.value.trim(),
+                        tujuan: subkelIdPenerima.value.trim(),
+                        Detail: alasanTransfer.value.trim(),
+                        kodeBarang: kodeBarang.value.trim(),
+                        PIB: pib.value.trim(),
+                        _token: csrfToken
+                    },
+                    success: function (result) {
+                        if (result[0].ada > 0) {
+                            Swal.fire({
+                                title: 'PESAN!!!!',
+                                html: "Data Terima Benang Utk Tgl " + tanggal.value + ", Spek Benang: " + namaType.value + "<br>" +
+                                    "Asal: " + kelompokNama.value + ", " + subkelNama.value +
+                                    ". Tujuan: " + kelompokNamaPenerima.value + ", " + subkelNamaPenerima.value + "<br><br>" +
+                                    "Sudah Ada. Tolong DiCEK Dulu!!!<br><br>" +
+                                    "Apa Anda Yakin Mau di Input Lagi????",
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonText: 'Ya',
+                                cancelButtonText: 'Tidak'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    insertHutang();
+                                }
+                                else {
+                                    // 
+                                }
+                            });
+                        }
+                        else {
+                            insertHutang();
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
+});
+
+function insertHutang() {
+    $.ajax({
+        type: 'PUT',
+        url: 'TerimaBenangTropodo/insertHutangExt',
+        data: {
+            idType: kodeType.value,
+            awal: tanggal.value,
+            jmlS: sekunder.value,
+            jumlah: tritier.value,
+            asal: subkelId.value,
+            tujuan: subkelIdPenerima.value,
+            Detail: alasanTransfer.value,
+            kodeBarang: kodeBarang.value,
+            saatawal: tanggal.value,
+            JumlahSekunder: sekunder.value,
+            JumlahTritier: tritier.value,
+            AsalSubKel: subkelId.value,
+            TujSubkel: subkelIdPenerima.value,
+            _token: csrfToken
+        },
+        success: function (response) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: response.success,
+            }).then(() => {
+                if (tabelApa === 1) {
+                    showAllTable();
+                    clearText();
+                    btn_isi.disabled = false;
+                    btn_proses.disabled = true;
+                    btn_batal.disabled = true;
+                    tanggal.focus();
+                } else if (tabelApa === 0) {
+                    showTable();
+                    clearText();
+                    btn_isi.disabled = false;
+                    btn_proses.disabled = true;
+                    btn_batal.disabled = true;
+                    tanggal.focus();
+                }
+            });
+
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
+}
+
+btn_batal.addEventListener("click", function (e) {
+    clearText();
+    btn_proses.disabled = true;
+    btn_isi.disabled = false;
+    btn_batal.disabled = true;
+    if (tabelApa === 1){
+        showAllTable();
+    }
+    else if (tabelApa === 0){
+        showTable();
+    }
+});
+
+function clearText() {
+    kelompokId.value = '';
+    subkelId.value = '';
+    kelutNama.value = '';
+    subkelNama.value = '';
+    subkelIdPenerima.value = '';
+    subkelNamaPenerima.value = '';
+    kodeType.value = '';
+    kodeBarang.value = '';
+    namaType.value = '';
+    tritier.value = 0;
+    sekunder.value = 0;
+    alasanTransfer.value = '';
+    alasanTransfer.readOnly = true;
+    satuanTritier.value = '';
+    satuanSekunder.value = '';
+
+    btn_kelut.disabled = true;
+    btn_kelompok.disabled = true;
+    btn_subkel.disabled = true;
+    btn_subkelPenerima.disabled = true;
+}
+
+function showAllTable() {
+    $.ajax({
+        type: 'GET',
+        url: 'TerimaBenangTropodo/getAllListHutangExt',
+        data: {
+            XIdDivisi: divisiId.value,
+            _token: csrfToken
+        },
+        success: function (result) {
+            updateDataTable(result);
+            $('.divTable').show();
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
+}
+
+function showTable() {
+    $.ajax({
+        type: 'GET',
+        url: 'TerimaBenangTropodo/getListHutangExt',
+        data: {
+            XIdDivisi: divisiId.value,
+            _token: csrfToken
+        },
+        success: function (result) {
+            updateDataTable(result);
+            $('.divTable').show();
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
+}

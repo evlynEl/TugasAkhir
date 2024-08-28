@@ -4,7 +4,7 @@
         <div class="row justify-content-center">
             <div class="col-md-10 RDZMobilePaddingLR0">
                 <div class="card">
-                    <div class="card-header" style="">Terima Benang Tropodo</div>
+                    <div class="card-header" style="">Terima Benang EXTRUDER</div>
                     <div class="card-body RDZOverflow RDZMobilePaddingLR0">
                         {{-- ATAS --}}
                         <div class="bordered pl-3">
@@ -50,7 +50,7 @@
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="kelompokNama" name="kelompokNama">
                                         <div class="input-group-append">
-                                            <button type="button" id="btn_kelompok" class="btn btn-info">...</button>
+                                            <button type="button" id="btn_kelompok" class="btn btn-info" disabled>...</button>
                                         </div>
                                     </div>
                                 </div>
@@ -67,7 +67,7 @@
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="kelutNama" name="kelutNama">
                                         <div class="input-group-append">
-                                            <button type="button" id="btn_kelut" class="btn btn-info">...</button>
+                                            <button type="button" id="btn_kelut" class="btn btn-info" disabled>...</button>
                                         </div>
                                     </div>
                                 </div>
@@ -81,7 +81,7 @@
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="subkelNama" name="subkelNama">
                                         <div class="input-group-append">
-                                            <button type="button" id="btn_subkel" class="btn btn-info">...</button>
+                                            <button type="button" id="btn_subkel" class="btn btn-info" disabled>...</button>
                                         </div>
                                     </div>
                                 </div>
@@ -164,12 +164,12 @@
 
                                 <div class="col-sm-2" style="margin-left: 3%">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="tritier" name="tritier">
+                                        <input type="text" class="form-control" id="tritier" name="tritier" readonly value=0>
                                     </div>
                                 </div>
                                 <div class="col-sm-1" style="margin-left: -2%">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="satuanTritier"
+                                        <input type="text" class="form-control" id="satuanTritier" readonly
                                             name="satuanTritier">
                                     </div>
                                 </div>
@@ -180,7 +180,7 @@
                                     <label>Alasan Transfer: </label>
                                 </div>
                                 <div class="col-sm-2">
-                                    <input type="text" id="alasanTransfer" name="alasanTransfer"
+                                    <input type="text" id="alasanTransfer" name="alasanTransfer" readonly
                                         class="form-control">
                                 </div>
                                 <div class="col-sm-2">
@@ -251,8 +251,8 @@
                                         <input type="text" class="form-control" id="subkelNamaPenerima"
                                             name="subkelNamaPenerima">
                                         <div class="input-group-append">
-                                            <button type="button" id="btn_subkelPenerima"
-                                                class="btn btn-info">...</button>
+                                            <button type="button" id="btn_subkelPenerima" disabled
+                                                class="btn btn-info" >...</button>
                                         </div>
                                     </div>
                                 </div>
@@ -266,16 +266,16 @@
                                     class="btn btn-info">ISI</button>
                             </div>
                             <div class="col-sm-2 offset-sm-6">
-                                <button type="button" id="btn_proses" style="width: 75%"
+                                <button type="button" id="btn_proses" style="width: 75%" disabled
                                     class="btn btn-info">PROSES</button>
                             </div>
                             <div class="col-sm-2">
-                                <button type="button" id="btn_batal" style="width: 75%"
+                                <button type="button" id="btn_batal" style="width: 75%" disabled
                                     class="btn btn-info">BATAL</button>
                             </div>
                         </div>
 
-                        <div class="row" style="margin-top: 0.5%">
+                        <div class="row divTable" style="margin-top: 0.5%">
                             <div class="col-sm-12">
                                 <div class="table-responsive fixed-height" style="height: 300px">
                                     <table class="table table-bordered no-wrap-header" id="tableData">
