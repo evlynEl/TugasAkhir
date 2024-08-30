@@ -929,7 +929,7 @@ btn_subkel2.addEventListener("click", function (e) {
                 subkelId2.value = result.value.IdSubkelompok.trim();
                 subkelNama2.value = result.value.NamaSubKelompok.trim();
 
-                // LOADPENERIMA DI SINI
+                LoadPenerima();
             }
         });
     } catch (error) {
@@ -937,6 +937,16 @@ btn_subkel2.addEventListener("click", function (e) {
     }
 });
 
+$('#uraian').on('keydown', function (e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        btn_hitung.focus();
+    }
+});
+
+btn_namabarang.addEventListener("click", function (e) {
+
+});
 
 var PIdType;
 // button list nama barang
@@ -949,7 +959,7 @@ btn_namabarang.addEventListener("click", function (e) {
         if (divisiId.value === 'ABM' && objekId.value === '022' && kelompokId.value !== '0292') {
             Load_Type_ABM();
         }
-        else{
+        else {
             $.ajax({
                 type: 'PUT',
                 url: 'PemakaianGelondongan/insertTempType',
@@ -969,7 +979,7 @@ btn_namabarang.addEventListener("click", function (e) {
             });
         }
     }
-    else{
+    else {
         Load_Type();
     }
 });
@@ -987,7 +997,7 @@ btn_isi.addEventListener("click", function (e) {
 
 var PKdBrg;
 
-function Load_Saldo(IdType){
+function Load_Saldo(IdType) {
     $.ajax({
         type: 'GET',
         url: 'PemakaianGelondongan/getSaldo',
@@ -1015,7 +1025,7 @@ function Load_Saldo(IdType){
     });
 }
 
-function Load_Type(){
+function Load_Type() {
     try {
         Swal.fire({
             title: 'Barang',
@@ -1092,7 +1102,7 @@ function Load_Type(){
     }
 }
 
-function Load_Type_CIR(){
+function Load_Type_CIR() {
     try {
         Swal.fire({
             title: 'Barang',
@@ -1246,7 +1256,9 @@ function Load_Type_ABM() {
     }
 }
 
-function LoadPenerima(){
+var loadPenerima;
+
+function LoadPenerima() {
     $.ajax({
         type: 'GET',
         url: 'PemakaianGelondongan/loadPenerima',
@@ -1257,24 +1269,60 @@ function LoadPenerima(){
         },
         success: function (result) {
             if (result.length !== 0) {
-                updateDataTable(result);
+                satuanPrimer2 = result[0].satuan_primer ? decodeHtmlEntities(result[0].satuan_primer.trim()) : 'Null';
+                satuanSekunder2 = result[0].satuan_sekunder ? decodeHtmlEntities(result[0].satuan_sekunder.trim()) : 'Null';
+                satuanTritier2 = result[0].satuan_tritier ? decodeHtmlEntities(result[0].satuan_primer.trim()) : 'Null';
 
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: 'Data di tabel sudah diupdate.',
-                });
+                if (satuanPrimer.value === satuanPrimer2) {
+                    if (satuanSekunder.value === satuanSekunder2) {
+                        if (satuanTritier === satuanTritier2) {
+                            loadPenerima = true;
+                        }
+                        else {
+                            if (satuanPrimer.value.trim() === 'Null') {
+                                loadPenerima = true;
+                            }
+                            else {
+                                loadPenerima = false;
+                            }
+                        }
+                    }
+                    else {
+                        if (satuanSekunder.value === 'Null') {
+                            loadPenerima = true;
+                        }
+                        else {
+                            loadPenerima = false;
+                        }
+                    }
+                }
+                else {
+                    loadPenerima = true;
+                }
+
+                console.log(loadPenerima);
+                
+
+                if (loadPenerima === false) {
+                    Swal.fire({
+                        icon: 'info',
+                        text: 'Satuan Tritier,Sekunder,Primer pada Divisi ' + (decodeHtmlEntities(divisiNama.value)) +
+                            ' ADA yang TIDAK SAMA dengan Divisi Penerima Barang !!!....Koreksi di Maitenance Type Barang per Divisi',
+                    });
+                }
+                else {
+                    btn_hitung.disabled = false;
+                    uraian.disabled = false;
+                    uraian.focus();
+                }
             }
             else {
-                var table = $('#tableData').DataTable();
-                table.clear().draw();
-
                 Swal.fire({
                     icon: 'info',
-                    text: 'Tidak Ada Data.',
+                    text: 'Tidak Ada Type Barang ' + (decodeHtmlEntities(namaBarang.value)) + ' Pada Divisi Penerima',
                 });
+                return;
             }
-            tombol(1);
         },
         error: function (xhr, status, error) {
             console.error('Error:', error);

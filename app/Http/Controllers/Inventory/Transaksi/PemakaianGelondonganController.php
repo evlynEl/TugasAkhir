@@ -181,7 +181,7 @@ class PemakaianGelondonganController extends Controller
             return datatables($subkel)->make(true);
         }
 
-        // mendapatkan kelompok 2
+        // mendapatkan load penerima
         else if ($id === 'loadPenerima') {
             $XKodeBarang = $request->input('XKodeBarang');
             $XIdSubKelompok = $request->input('XIdSubKelompok') ?? '0';
@@ -191,8 +191,9 @@ class PemakaianGelondonganController extends Controller
             $data_kelompok = [];
             foreach ($kelompok as $detail_kelompok) {
                 $data_kelompok[] = [
-                    'idkelompok' => $detail_kelompok->idkelompok,
-                    'namakelompok' => $detail_kelompok->namakelompok
+                    'satuan_primer' => $detail_kelompok->satuan_primer,
+                    'satuan_sekunder' => $detail_kelompok->satuan_sekunder,
+                    'satuan_tritier' => $detail_kelompok->satuan_tritier,
                 ];
             }
             return response()->json($data_kelompok);
