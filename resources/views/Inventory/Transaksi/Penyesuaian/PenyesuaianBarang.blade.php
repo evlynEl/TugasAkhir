@@ -14,7 +14,7 @@
         <div class="row justify-content-center">
             <div class="col-md-10 RDZMobilePaddingLR0">
 
-                <div class="card" style="width:1200px;">
+                <div class="card">
                     <div class="card-header" style="">Permohonan Penyesuaian Barang</div>
 
                     <div class="card-body" style="">

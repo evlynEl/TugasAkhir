@@ -6,17 +6,16 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\HakAksesController;
 
-class FormPenyesuaianBarangController extends Controller
+
+class AccPenyesuaianBarangController extends Controller
 {
     //Display a listing of the resource.
     public function index()
     {
-
-        $data = 'HAPPY HAPPY HAPPY';
-
-        // dd($dataDivisi);
-        return view('Inventory.Transaksi.Penyesuaian.FormPenyesuaianBarang', compact('data'));
+        $access = (new HakAksesController)->HakAksesFiturMaster('Inventory');
+        return view('Inventory.Transaksi.Penyesuaian.AccPenyesuaianBarang', compact('access'));
     }
 
     //Show the form for creating a new resource.
@@ -49,33 +48,9 @@ class FormPenyesuaianBarangController extends Controller
     }
 
     //Display the specified resource.
-    public function show($cr)
+    public function show($id, Request $request)
     {
-        $crExplode = explode(".", $cr);
-        $lastIndex = count($crExplode) - 1;
-        //getListPerkiraan
-        if ($crExplode[$lastIndex] == "getDivisi") {
-            $dataDivisi = DB::connection('ConnInventory')->select('exec SP_1003_INV_userdivisi @XKdUser = ?', [$crExplode[0]]);
-            return response()->json($dataDivisi);
-        } else if ($crExplode[$lastIndex] == "getObjek") {
-            $dataObjek = DB::connection('ConnInventory')->select('exec SP_1003_INV_User_Objek @XKdUser = ?, @XIdDivisi = ?', [$crExplode[0], $crExplode[1]]);
-            return response()->json($dataObjek);
-        } else if ($crExplode[$lastIndex] == "getKelompokUtama") {
-            $dataKelut = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdObjek_KelompokUtama @XIdObjek_KelompokUtama = ?', [$crExplode[0]]);
-            return response()->json($dataKelut);
-        } else if ($crExplode[$lastIndex] == "getKelompok") {
-            $dataKelompok = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdKelompokUtama_Kelompok @XIdKelompokUtama_Kelompok = ?', [$crExplode[0]]);
-            return response()->json($dataKelompok);
-        } else if ($crExplode[$lastIndex] == "getSubKelompok") {
-            $dataSubKelompok = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdKelompok_SubKelompok @XIdKelompok_SubKelompok = ?', [$crExplode[0]]);
-            return response()->json($dataSubKelompok);
-        } else if ($crExplode[$lastIndex] == "getListMohon") {
-            $dataMohon = DB::connection('ConnInventory')->select('exec SP_1003_INV_List_Mohon_TmpTransaksi @Kode = ?, @XIdTypeTransaksi = ?, @XIdDivisi = ?', [$crExplode[0],$crExplode[1],$crExplode[2]]);
-            return response()->json($dataMohon);
-        } else if ($crExplode[$lastIndex] == "getDataPemohon") {
-            $dataPemohon = DB::connection('ConnInventory')->select('exec SP_1003_INV_List_Mohon_TmpTransaksi @Kode = ?, @XIdTypeTransaksi = ?, @XIdDivisi = ?, @XUser = ?', [$crExplode[0], $crExplode[1]]);
-            return response()->json($dataPemohon);
-        }
+
     }
 
     // Show the form for editing the specified resource.
