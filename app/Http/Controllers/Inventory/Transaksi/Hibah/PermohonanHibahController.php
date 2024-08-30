@@ -26,7 +26,7 @@ class PermohonanHibahController extends Controller
     //Store a newly created resource in storage.
     public function store(Request $request)
     {
-        //    
+        //
     }
 
     //Display the specified resource.
@@ -222,15 +222,15 @@ class PermohonanHibahController extends Controller
 
             try {
                 DB::connection('ConnInventory')
-                    ->statement('exec [SP_1003_INV_INSERT_13_TMPTRANSAKSI] 
-        @XIdTypeTransaksi = ?, 
-        @XIdType = ?, 
-        @XIdPemberi = ?, 
-        @XSaatAwalTransaksi = ?, 
-        @XJumlahMasukPrimer = ?, 
-        @XJumlahMasukSekunder = ?, 
-        @XJumlahMasukTritier = ?, 
-        @XAsalIdSubKelompok = ?, 
+                    ->statement('exec [SP_1003_INV_INSERT_13_TMPTRANSAKSI]
+        @XIdTypeTransaksi = ?,
+        @XIdType = ?,
+        @XIdPemberi = ?,
+        @XSaatAwalTransaksi = ?,
+        @XJumlahMasukPrimer = ?,
+        @XJumlahMasukSekunder = ?,
+        @XJumlahMasukTritier = ?,
+        @XAsalIdSubKelompok = ?,
         @XUraianDetailTransaksi = ?',
                         [
                             $XIdTypeTransaksi,
@@ -262,12 +262,12 @@ class PermohonanHibahController extends Controller
 
             try {
                 DB::connection('ConnInventory')
-                    ->statement('exec [SP_1003_INV_Update_TmpTransaksi] 
-        @XIdTransaksi = ?, 
-        @XJumlahKeluarPrimer = ?, 
-        @XJumlahKeluarSekunder = ?, 
-        @XJumlahKeluarTritier = ?, 
-        @XTujuanSubkelompok = ?, 
+                    ->statement('exec [SP_1003_INV_Update_TmpTransaksi]
+        @XIdTransaksi = ?,
+        @XJumlahKeluarPrimer = ?,
+        @XJumlahKeluarSekunder = ?,
+        @XJumlahKeluarTritier = ?,
+        @XTujuanSubkelompok = ?,
         @XUraianDetailTransaksi = ?',
                         [
                             $XIdTransaksi,

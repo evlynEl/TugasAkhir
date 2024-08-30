@@ -34,7 +34,6 @@ class PenghangusanBarangController extends Controller
     public function show($id, Request $request)
     {
         $user = Auth::user()->NomorUser;
-        $a = (int)$request->input('a');
 
         $divisiId = $request->input('divisiId');
         $objekId = $request->input('objekId');
@@ -42,15 +41,8 @@ class PenghangusanBarangController extends Controller
         $kelutId = $request->input('kelutId');
         $subkelId = $request->input('subkelId');
 
-        $tanggal = $request->input('tanggal');
-        $pemohon = $request->input('pemohon');
         $kodeTransaksi = $request->input('kodeTransaksi');
         $kodeType = $request->input('kodeType');
-        $alasan = $request->input('alasan');
-        $uraian = trim($alasan) === null ? '' : trim($alasan);
-        $primer2 = $request->input('primer2');
-        $sekunder2 = $request->input('sekunder2');
-        $tritier2 = $request->input('tritier2');
 
         if ($id === 'getUserId') {
             return response()->json(['user' => $user]);
@@ -122,7 +114,8 @@ class PenghangusanBarangController extends Controller
                     'BARU' => $detail_listABM->BARU
                 ];
             }
-            return response()->json($listABM);
+            return datatables($listABM)->make(true);
+
         } else if ($id === 'getSatuanType') {
             // mendapatkan satuan type
             $type = DB::connection('ConnInventory')->select('exec SP_1003_INV_AsalSubKelompok_Type @XIdType = ?', [$kodeType]);
@@ -154,9 +147,10 @@ class PenghangusanBarangController extends Controller
             }
             // dd($data_saldo);
             return response()->json($saldo);
+
         } else if ($id === 'getTypeCIR') {
             // mendapatkan nama type & id type
-            $typeCIR = DB::connection('ConnInventory')->select('exec SP_1003_INV_List_Type_PerUkuran @IdType = ?', [$kodeType]);
+            $typeCIR = DB::connection('ConnInventory')->select('exec SP_1003_INV_List_Type_PerUkuran');
             $data_typeCIR = [];
             foreach ($typeCIR as $detail_typeCIR) {
                 $data_typeCIR[] = [
@@ -164,7 +158,8 @@ class PenghangusanBarangController extends Controller
                     'Nm_Type' => $detail_typeCIR->Nm_Type
                 ];
             }
-            return response()->json($data_typeCIR);
+            return datatables($data_typeCIR)->make(true);
+
         } else if ($id === 'getType') {
             // mendapatkan nama type & id type
             $type = DB::connection('ConnInventory')->select('exec SP_1003_INV_Idsubkelompok_type @XIdSubKelompok_Type = ?', [$subkelId]);
@@ -175,14 +170,30 @@ class PenghangusanBarangController extends Controller
                     'NamaType' => $detail_type->NamaType
                 ];
             }
-            // dd($data_type);
+            // dd($subkelId, $data_type);
+            // dd($request->all());
             return datatables($data_type)->make(true);
+
+        } else if ($id === 'getType2') {
+            // mendapatkan jumlah dihanguskan
+            $type = DB::connection('ConnInventory')->select('exec SP_1003_INV_AsalSubKelompok_TmpTransaksi @XIdTransaksi = ?', [$kodeTransaksi]);
+            $data_type = [];
+            foreach ($type as $detail_type) {
+                $data_type[] = [
+                    'JumlahPengeluaranPrimer' => $detail_type->JumlahPengeluaranPrimer,
+                    'JumlahPengeluaranSekunder' => $detail_type->JumlahPengeluaranSekunder,
+                    'JumlahPengeluaranTritier' => $detail_type->JumlahPengeluaranTritier
+                ];
+            }
+            // dd($request->all(), $data_type);
+            return response()->json($data_type);
+
+
         } else if ($id === 'getAllData') {
             // mendapatkan nama type & id type
             $allData = DB::connection('ConnInventory')->select('
             exec SP_1003_INV_List_Mohon_TmpTransaksi @kode = 2, @XIdDivisi = ?, @XIdTypeTransaksi = ?', [$divisiId, '05']);
             $data_allData = [];
-            $data_pemasukan = [];
             foreach ($allData as $detail_allData) {
                 $formattedDate = date('m/d/Y', strtotime($detail_allData->SaatAwalTransaksi));
 
@@ -203,23 +214,34 @@ class PenghangusanBarangController extends Controller
                     'IdSubkelompok' => $detail_allData->IdSubkelompok
                 ];
             }
-            foreach ($allData as $detail_pemaskan) {
-                $data_pemasukan[] = [
-                    'JumlahPemasukanPrimer' => $detail_pemaskan->JumlahPemasukanPrimer,
-                    'JumlahPemasukanSekunder' => $detail_pemaskan->JumlahPemasukanSekunder,
-                    'JumlahPemasukanTritier' => $detail_pemaskan->JumlahPemasukanTritier
-                ];
-            }
-
-            $response_data = [
-                'data_allData' => $data_allData,
-                'data_pemasukan' => $data_pemasukan
-            ];
-
             // dd($data_allData);
+            return response()->json($data_allData);
+        }
+    }
 
-            return response()->json($response_data);
-        } else if ($id === 'proses') {
+
+    // Show the form for editing the specified resource.
+    public function edit($id)
+    {
+        //
+    }
+
+    //Update the specified resource in storage.
+    public function update(Request $request, $id)
+    {
+        $a = (int)$request->input('a');
+        $subkelId = $request->input('subkelId');
+        $tanggal = $request->input('tanggal');
+        $pemohon = $request->input('pemohon');
+        $kodeTransaksi = $request->input('kodeTransaksi');
+        $kodeType = $request->input('kodeType');
+        $alasan = $request->input('alasan');
+        $uraian = trim($alasan) === null ? '' : trim($alasan);
+        $primer2 = $request->input('primer2');
+        $sekunder2 = $request->input('sekunder2');
+        $tritier2 = $request->input('tritier2');
+
+        if ($id === 'proses') {
             // proses terjadi
             if ($a === 1) { // ISI
                 try{
@@ -257,19 +279,6 @@ class PenghangusanBarangController extends Controller
         }
     }
 
-
-    // Show the form for editing the specified resource.
-    public function edit($id)
-    {
-        //
-    }
-
-    //Update the specified resource in storage.
-    public function update(Request $request)
-    {
-        //
-    }
-
     //Remove the specified resource from storage.
     public function destroy(Request $request, $id)
     {
@@ -283,6 +292,5 @@ class PenghangusanBarangController extends Controller
                 return response()->json(['error' => 'Data gagal diHAPUS: ' . $e->getMessage()], 500);
             }
         }
-
     }
 }

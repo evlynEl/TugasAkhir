@@ -93,11 +93,6 @@ class KodePerkiraanController extends Controller
     //Remove the specified resource from storage.
     public function destroy(Request $request)
     {
-        $data = $request->all();
-        // dd('Masuk Destroy', $data);
-        DB::connection('ConnInventory')->statement('exec SP_5409_PAY_MAINT_KELUARGA @XNoKodePerkiraan = ?', [
-            $data['Kode'],
-        ]);
-        return redirect()->route('KodePerkiraan.index')->with('alert', 'Data berhasil dihapus!');
+        //
     }
 }

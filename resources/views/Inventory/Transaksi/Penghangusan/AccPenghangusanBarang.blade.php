@@ -47,8 +47,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-2">
-                                    <label for="kelompokId">&nbsp;&nbsp;Kelompok</label>
+                                <div class="col-sm-2 pl-5">
+                                    <label for="kelompokId">&nbsp;Kelompok</label>
                                 </div>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="kelompokNama" name="kelompokNama" readonly>
@@ -62,8 +62,8 @@
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="kelutNama" name="kelutNama" readonly>
                                 </div>
-                                <div class="col-sm-2">
-                                    <label for="subkelId">&nbsp; Sub Kelompok</label>
+                                <div class="col-sm-2 pl-5">
+                                    <label for="subkelId">&nbsp;Sub Kelompok</label>
                                 </div>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="subkelNama" name="subkelNama" readonly>
@@ -71,7 +71,7 @@
                             </div>
                         </div>
 
-                        <div class="row" id="ids" {{--style="display:none;"--}} >
+                        <div class="row" id="ids" style="display:none;">
                             <div class="col-md-5 d-flex">
                                 <input type="text" id="divisiId" name="divisiId" class="form-control" readonly>
                                 <input type="text" id="objekId" name="objekId" class="form-control" readonly>

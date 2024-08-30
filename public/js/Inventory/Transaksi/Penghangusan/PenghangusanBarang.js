@@ -97,6 +97,8 @@ inputs.forEach((masuk, index) => {
                     tritier2.select();
                 } else if (masuk.id === 'alasan') {
                     btn_proses.focus();
+                } else if (masuk.id === 'tritier2') {
+                    btn_proses.focus();
                 } else {
                     inputs[index + 1].focus();
                 }
@@ -244,6 +246,10 @@ btn_divisi.addEventListener("click", function (e) {
                 btn_isi.disabled = false;
                 btn_koreksi.disabled = false;
                 btn_hapus.disabled = false;
+
+                primer2.value = 0;
+                sekunder2.value = 0;
+                tritier2.value = 0;
 
                 if (a === 1) {
                     btn_objek.focus();
@@ -558,27 +564,6 @@ btn_subkel.addEventListener("click", function (e) {
     }
 });
 
-// fungsi unk yg ABM
-function loadABM() {
-    $.ajax({
-        url: "PenghangusanBarang/getABM",
-        type: "GET",
-        data: {
-            _token: csrfToken,
-            subkelId: subkelId.value
-        },
-        timeout: 30000,
-        success: function (response) {
-            if (response && response.length > 0) {
-                kodeType.value = response.value.idtype.trim();
-                namaBarang.value = response.value.BARU.trim();
-            }
-        },
-        error: function (xhr, status, error) {
-            console.error('AJAX Error:', error);
-        }
-    });
-}
 
 const formatNumber = (value) => {
     const number = parseFloat(value);
@@ -640,6 +625,28 @@ function getType(kodeType) {
     });
 }
 
+// fungsi unk dapatkan type dari kodetype
+function getType2(kodeTransaksi) {
+    $.ajax({
+        url: "PenghangusanBarang/getType2",
+        type: "GET",
+        data: {
+            _token: csrfToken,
+            kodeTransaksi: kodeTransaksi
+        },
+        timeout: 30000,
+        success: function (response) {
+            console.log(response);
+            primer2.value = formatNumber(response[0].JumlahPengeluaranPrimer.trim());
+            sekunder2.value = formatNumber(response[0].JumlahPengeluaranSekunder.trim());
+            tritier2.value = formatNumber(response[0].JumlahPengeluaranTritier.trim());
+        },
+        error: function (xhr, status, error) {
+            console.error('AJAX Error:', error);
+        }
+    });
+}
+
 function handleChange() {
     primerValue = no_primer.value.trim();
     sekunderValue = no_sekunder.value.trim();
@@ -650,7 +657,6 @@ function handleChange() {
         sekunder2.disabled = true;
     } else if (primerValue === 'NULL' && sekunderValue !== 'NULL') {
         primer2.disabled = true;
-        sekunder2.disabled = false;
     }
 }
 
@@ -659,24 +665,94 @@ btn_kodeType.addEventListener("click", handleTypeSelection);
 btn_namaBarang.addEventListener("click", handleTypeSelection);
 
 function handleTypeSelection() {
-    if ((divisiNama.value === 'ABM' && objekId === '022') || (divisiNama.value === 'CIR' && objekId === '043') ||
-        (divisiNama.value === 'JBB' && objekId === '042') || (divisiNama.value === 'EXT' && ((objekId === '1259' || objekId === '1283')))) {
-        if (divisiNama.value === 'ABM' && objekId === '022') {
-            if (subkelId !== '') {
-                loadABM();
-                if (kodeType.value !== '') {
-                    if (getType(kodeType.value)) {
-                        getSaldo(kodeType.value);
-                    }
-                } else {
+    console.log(divisiNama.value, objekId.value, subkelId.value);
+
+    if ((divisiId.value === 'ABM' && objekId.value === '022') || (divisiId.value === 'CIR' && objekId.value === '043') ||
+        (divisiId.value === 'JBB' && objekId.value === '042') || (divisiId.value === 'EXT' && ((objekId.value === '1259' || objekId.value === '1283')))) {
+        if (divisiId.value === 'ABM' && objekId.value === '022') {
+            if (subkelId.value !== '') {
+                try {
                     Swal.fire({
-                        icon: 'warning',
-                        title: 'Data Belum Lengkap Terisi',
-                        text: 'Pilih dulu Type Barangnya !',
-                        returnFocus: false
-                    }).then(() => {
-                        kdBarang.focus();
+                        title: 'Kode Type',
+                        html: `
+                            <table id="table_list" class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">ID Type</th>
+                                        <th scope="col">Nama</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        `,
+                        preConfirm: () => {
+                            const selectedData = $("#table_list")
+                                .DataTable()
+                                .row(".selected")
+                                .data();
+                            if (!selectedData) {
+                                Swal.showValidationMessage("Please select a row");
+                                return false;
+                            }
+                            return selectedData;
+                        },
+                        returnFocus: false,
+                        showCloseButton: true,
+                        showConfirmButton: true,
+                        confirmButtonText: 'Select',
+                        didOpen: () => {
+                            $(document).ready(function () {
+                                const table = $("#table_list").DataTable({
+                                    responsive: true,
+                                    processing: true,
+                                    serverSide: true,
+                                    order: [1, "asc"],
+                                    ajax: {
+                                        url: "PenghangusanBarang/getABM",
+                                        dataType: "json",
+                                        type: "GET",
+                                        data: {
+                                            _token: csrfToken,
+                                            subkelId: subkelId.value
+                                        }
+                                    },
+                                    columns: [
+                                        { data: "idtype" },
+                                        { data: "BARU" }
+                                    ]
+                                });
+
+                                $("#table_list tbody").on("click", "tr", function () {
+                                    table.$("tr.selected").removeClass("selected");
+                                    $(this).addClass("selected");
+                                });
+
+                                currentIndex = null;
+                                Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
+                            });
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            kodeType.value = result.value.idtype.trim();
+                            namaBarang.value = result.value.BARU.trim();
+
+                            if (kodeType.value !== '') {
+                                getType(kodeType.value)
+                                getSaldo(kodeType.value);
+                            } else {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'Data Belum Lengkap Terisi',
+                                    text: 'Pilih dulu Type Barangnya !',
+                                    returnFocus: false
+                                }).then(() => {
+                                    kodeBarang.focus();
+                                });
+                            }
+                        }
                     });
+                } catch (error) {
+                    console.error(error);
                 }
             } else {
                 Swal.fire({
@@ -690,23 +766,89 @@ function handleTypeSelection() {
             }
         } else {
             if (subkelId.value !== '') {
-                getSaldo(kodeType.value);
-                getTypeCIR();
-                if (kodeType.value !== '') {
-                    if (getType(kodeType.value)) {
-                        // getSaldo(kodeType.value);
-                        alasan.focus();
-                    }
+                try {
+                    Swal.fire({
+                        title: 'Kode Type',
+                        html: `
+                            <table id="table_list" class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">ID Type</th>
+                                        <th scope="col">Nama</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        `,
+                        preConfirm: () => {
+                            const selectedData = $("#table_list")
+                                .DataTable()
+                                .row(".selected")
+                                .data();
+                            if (!selectedData) {
+                                Swal.showValidationMessage("Please select a row");
+                                return false;
+                            }
+                            return selectedData;
+                        },
+                        returnFocus: false,
+                        showCloseButton: true,
+                        showConfirmButton: true,
+                        confirmButtonText: 'Select',
+                        didOpen: () => {
+                            $(document).ready(function () {
+                                const table = $("#table_list").DataTable({
+                                    responsive: true,
+                                    processing: true,
+                                    serverSide: true,
+                                    order: [1, "asc"],
+                                    ajax: {
+                                        url: "PenghangusanBarang/getTypeCIR",
+                                        dataType: "json",
+                                        type: "GET",
+                                        data: {
+                                            _token: csrfToken
+                                        }
+                                    },
+                                    columns: [
+                                        { data: "Id_Type" },
+                                        { data: "Nm_Type" }
+                                    ]
+                                });
+
+                                $("#table_list tbody").on("click", "tr", function () {
+                                    table.$("tr.selected").removeClass("selected");
+                                    $(this).addClass("selected");
+                                });
+
+                                currentIndex = null;
+                                Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
+                            });
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            kodeType.value = result.value.Id_Type.trim();
+                            namaBarang.value = result.value.Nm_Type.trim();
+
+                            if (kodeType.value !== '') {
+                                getType(kodeType.value)
+                                getSaldo(kodeType.value);
+                                // alasan.focus();
+                            } else {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'Data Belum Lengkap Terisi',
+                                    text: 'Pilih dulu Type Barangnya !',
+                                    returnFocus: false
+                                }).then(() => {
+                                    kodeBarang.focus();
+                                });
+                            }
+                        }
+                    });
+                } catch (error) {
+                    console.error(error);
                 }
-            } else {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Data Belum Lengkap Terisi',
-                    text: 'Pilih dulu Type Barangnya !',
-                    returnFocus: false
-                }).then(() => {
-                    kdBarang.focus();
-                });
             }
         }
     } else {
@@ -791,28 +933,6 @@ function handleTypeSelection() {
     }
 }
 
-// fungsi unk dpt nama type & kode type
-function getTypeCIR() {
-    $.ajax({
-        url: "PenghangusanBarang/getTypeCIR",
-        type: "GET",
-        data: {
-            _token: csrfToken
-        },
-        timeout: 30000,
-        success: function (response) {
-            if (response && response.length > 0) {
-                kodeType.value = response.value.Id_Type.trim();
-                namaBarang.value = response.value.Nm_Type.trim();
-            }
-            alasan.focus();
-        },
-        error: function (xhr, status, error) {
-            console.error('AJAX Error:', error);
-        }
-    });
-}
-
 $(document).ready(function () {
     table = $('#tableData').DataTable({
         paging: false,
@@ -851,8 +971,13 @@ function allData() {
         timeout: 30000,
         success: function (response) {
             if (response) {
+                console.log(response);
+
+                var firstSubkelId = response[0].IdSubkelompok.trim();
+                var allSameSubkelId = response.every(item => item.IdSubkelompok.trim() === firstSubkelId);
+
                 var tableData = [];
-                response.data_allData.forEach(function (item) {
+                response.forEach(function (item) {
                     tableData.push([
                         item.IdTransaksi,
                         item.NamaType,
@@ -865,18 +990,15 @@ function allData() {
                         item.NamaKelompok,
                         item.NamaSubKelompok,
                         item.IdType,
-                        item.KodeBarang
+                        item.KodeBarang,
+                        item.IdSubkelompok
                     ]);
                 });
 
                 table.rows.add(tableData).draw();
 
-                subkelId.value = response.data_allData[0].IdSubkelompok.trim();
-
-                if (response.data_pemasukan.length > 0) {
-                    primer2.value = formatNumber(response.data_pemasukan[0].JumlahPemasukanPrimer.trim());
-                    sekunder2.value = formatNumber(response.data_pemasukan[0].JumlahPemasukanSekunder.trim());
-                    tritier2.value = formatNumber(response.data_pemasukan[0].JumlahPemasukanTritier.trim());
+                if (allSameSubkelId) {
+                    subkelId.value = firstSubkelId;
                 }
             }
         },
@@ -911,6 +1033,9 @@ $('#tableData tbody').on('click', 'tr', function () {
     kodeBarang.value = data[11];
     kodeTransaksi.value = data[0];
 
+    subkelId.value = data[12];
+
+    getType2(kodeTransaksi.value);
     getType(kodeType.value);
     getSaldo(kodeType.value);
 
@@ -982,7 +1107,7 @@ btn_proses.addEventListener("click", function (e) {
     }
 
     $.ajax({
-        type: 'GET',
+        type: 'PUT',
         url: 'PenghangusanBarang/proses',
         data: {
             _token: csrfToken,
@@ -996,7 +1121,6 @@ btn_proses.addEventListener("click", function (e) {
             subkelId: subkelId.value,
             alasan: alasan.value,
             kodeTransaksi: kodeTransaksi.value,
-
         },
         timeout: 30000,
         success: function (response) {

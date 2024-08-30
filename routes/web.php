@@ -152,7 +152,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('AccKonversiBarang', AccKonversiBarangController::class);
     Route::resource('PenghangusanBarang', PenghangusanBarangController::class);
     Route::resource('AccPenghangusanBarang', AccPenghangusanBarangController::class);
-    Route::resource('PenyesuaianBarang',PenyesuaianBarangController::class);
+    Route::resource('PenyesuaianBarang', PenyesuaianBarangController::class);
     Route::resource('AccPenyesuaianBarang', AccPenyesuaianBarangController::class);
     Route::resource('TerimaBenangTropodo', TerimaBenangTropodoController::class);
     Route::resource('TerimaBenangGedungD', TerimaBenangGedungDController::class);

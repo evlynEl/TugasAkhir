@@ -36,13 +36,13 @@ class AccPenghangusanBarangController extends Controller
 
         $divisiId = $request->input('divisiId');
         $objekId = $request->input('objekId');
-        $kodeTransaksi = $request->input('kodeTransaksi');
+        $idTransaksi = $request->input('idTransaksi');
 
         if ($id === 'getUserId') {
             return response()->json(['user' => $user]);
-        }
 
-        if ($id === 'getDivisi') {
+
+        } else if ($id === 'getDivisi') {
             // mendapatkan daftar divisi
             $divisi = DB::connection('ConnInventory')->select('exec SP_1003_INV_userdivisi @XKdUser = ?', [$user]);
             $data_divisi = [];
@@ -53,6 +53,21 @@ class AccPenghangusanBarangController extends Controller
                 ];
             }
             return datatables($divisi)->make(true);
+
+
+        } else if ($id === 'getObjek') {
+            // mendapatkan daftar objek
+            $objek = DB::connection('ConnInventory')->select('exec SP_1003_INV_user_Objek @XKdUser = ?, @XIdDivisi = ?', [$user, $divisiId]);
+            $data_objek = [];
+            foreach ($objek as $detail_objek) {
+                $data_objek[] = [
+                    'NamaObjek' => $detail_objek->NamaObjek,
+                    'IdObjek' => $detail_objek->IdObjek
+                ];
+            }
+            // dd($objek, $request->all());
+            return datatables($objek)->make(true);
+
         } else if ($id === 'getAllData') {
             // mendapatkan nama type & id type
 
@@ -94,7 +109,7 @@ class AccPenghangusanBarangController extends Controller
             return response()->json($data_allData);
         } else if ($id === 'getType') {
             // mendapatkan nama type & id type
-            $type = DB::connection('ConnInventory')->select('exec SP_1003_INV_AsalSubKelompok_TmpTransaksi @XIdTransaksi = ?', [$kodeTransaksi]);
+            $type = DB::connection('ConnInventory')->select('exec SP_1003_INV_AsalSubKelompok_TmpTransaksi @XIdTransaksi = ?', [$idTransaksi]);
             $data_type = [];
             foreach ($type as $detail_type) {
                 $data_type[] = [
@@ -124,33 +139,44 @@ class AccPenghangusanBarangController extends Controller
     //Update the specified resource in storage.
     public function update(Request $request, $id)
     {
-        $user = trim(Auth::user()->NomorUser);
-        $idTransaksi = $request->input('idTransaksi');
-        $idType = $request->input('idType');
-        $keluarPrimer = $request->input('keluarPrimer');
-        $keluarSekunder = $request->input('keluarSekunder');
-        $keluarTritier = $request->input('keluarTritier');
-
         if ($id === 'proses') {
-            try{
-                // proses
-                $proses = DB::connection('ConnInventory')->select('exec SP_1003_INV_check_penyesuaian_transaksi
-                    @IdTypeTransaksi = ?, @IdType = ?', ['06', $idType]);
+            $user = trim(Auth::user()->NomorUser);
+            $idTransaksi = $request->input('idTransaksi');
+            $idType = $request->input('idType');
+            $keluarPrimer = $request->input('keluarPrimer');
+            $keluarSekunder = $request->input('keluarSekunder');
+            $keluarTritier = $request->input('keluarTritier');
+            // dd($request->all());
 
-                $jumlah = (int)$proses[0]->jumlah;
+            try {
+                foreach ($idTransaksi as $index => $transaksi) {
+                    $type = $idType[$index];
+                    $primer = $keluarPrimer[$index];
+                    $sekunder = $keluarSekunder[$index];
+                    $tritier = $keluarTritier[$index];
 
-                if ($jumlah > 0) {
-                    return response()->json(['warning' => 'Ada Transaksi Penyesuaian yang Belum Diacc untuk type ' .$idTransaksi], 200);
-                } else {
-                    DB::connection('ConnInventory')->statement('exec SP_1003_INV_Proses_ACC_Hangus
-                    @IdTransaksi = ?, @idpenerima = ?, @JumlahKeluarPrimer = ?, @JumlahKeluarSekunder = ?, @JumlahKeluarTritier=?',
-                    [$idTransaksi, $user, $keluarPrimer, $keluarSekunder, $keluarTritier]);
+                    // Proses
+                    $proses = DB::connection('ConnInventory')->select(
+                        'exec SP_1003_INV_check_penyesuaian_transaksi @IdTypeTransaksi = ?, @IdType = ?',
+                        ['06', $type]
+                    );
+
+                    $jumlah = (int)$proses[0]->jumlah;
+
+                    if ($jumlah > 0) {
+                        return response()->json(['warning' => 'Ada Transaksi Penyesuaian yang Belum Diacc untuk type ' . $transaksi], 200);
+                    } else {
+                        DB::connection('ConnInventory')->statement(
+                            'exec SP_1003_INV_Proses_ACC_Hangus @IdTransaksi = ?, @idpenerima = ?, @JumlahKeluarPrimer = ?, @JumlahKeluarSekunder = ?, @JumlahKeluarTritier = ?',
+                            [$transaksi, $user, $primer, $sekunder, $tritier]
+                        );
+                    }
+                    // dd($request->all());
                 }
 
-                // dd($request->all(), $user);
                 return response()->json(['success' => 'Data Sudah Tersimpan'], 200);
             } catch (\Exception $e) {
-                return response()->json(['error' => 'Data insert failed' . $e->getMessage()], 500);
+                return response()->json(['error' => 'Data Gagal Tersimpan ' . $e->getMessage()], 500);
             }
         }
     }
@@ -158,15 +184,6 @@ class AccPenghangusanBarangController extends Controller
     //Remove the specified resource from storage.
     public function destroy(Request $request, $id)
     {
-        $kodeTransaksi = $request->input('kodeTransaksi');
-        if ($id === 'hapusBarang') {
-            try {
-                DB::connection('ConnInventory')->statement('exec SP_1003_INV_Delete_TmpTransaksi  @XIdTransaksi = ?', [$kodeTransaksi]);
-
-                return response()->json(['success' => 'Data sudah diHAPUS'], 200);
-            } catch (\Exception $e) {
-                return response()->json(['error' => 'Data gagal diHAPUS: ' . $e->getMessage()], 500);
-            }
-        }
+        //
     }
 }

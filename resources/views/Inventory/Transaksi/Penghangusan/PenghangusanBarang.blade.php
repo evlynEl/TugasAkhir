@@ -5,7 +5,7 @@
         <div class="row justify-content-center">
             <div class="col-md-10 RDZMobilePaddingLR0">
                 <div class="card">
-                    <div class="card-header" style="">Permohonan Penghangusan Barang</div>
+                    <div class="card-header">Permohonan Penghangusan Barang</div>
                     <div class="card-body RDZOverflow RDZMobilePaddingLR0">
 
                         <div class="baris-1 pl-3" id="baris-1">
@@ -13,7 +13,7 @@
                                 <div class="col-2">
                                     <label for="divisiId">Divisi</label>
                                 </div>
-                                <div class="col-sm-3 mr-3">
+                                <div class="col-sm-3 pl-2">
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="divisiNama" name="divisiNama">
                                         <div class="input-group-append">
@@ -47,8 +47,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-2">
-                                    <label for="kelompokId">&nbsp;&nbsp;Kelompok</label>
+                                <div class="col-sm-2 pl-5">
+                                    <label for="kelompokId">&nbsp;Kelompok</label>
                                 </div>
                                 <div class="col-sm-3">
                                     <div class="input-group">
@@ -73,8 +73,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-2">
-                                    <label for="subkelId">&nbsp; Sub Kelompok</label>
+                                <div class="col-sm-2 pl-5">
+                                    <label for="subkelId">&nbsp;Sub Kelompok</label>
                                 </div>
                                 <div class="col-sm-3">
                                     <div class="input-group">
@@ -110,7 +110,6 @@
                                     </table>
                                 </div>
                             </div>
-
                         </div>
 
                         <div class="baris-2 pl-3">

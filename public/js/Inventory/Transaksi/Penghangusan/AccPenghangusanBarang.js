@@ -14,8 +14,14 @@ var kelutNama = document.getElementById('kelutNama');
 var subkelNama = document.getElementById('subkelNama');
 
 var alasan = document.getElementById('alasan');
+var primer = document.getElementById('primer');
+var no_primer = document.getElementById('no_primer');
 var primer2 = document.getElementById('primer2');
+var sekunder = document.getElementById('sekunder');
+var no_sekunder = document.getElementById('no_sekunder');
 var sekunder2 = document.getElementById('sekunder2');
+var tritier = document.getElementById('tritier');
+var no_tritier = document.getElementById('no_tritier');
 var tritier2 = document.getElementById('tritier2');
 var divisiId = document.getElementById('divisiId');
 var objekId = document.getElementById('objekId');
@@ -43,6 +49,7 @@ btn_divisi.addEventListener('focus', function () {
 });
 
 btn_divisi.focus();
+btn_objek.disabled = true;
 
 // fungsi dapetin user id unk pemohon
 function getUserId() {
@@ -65,34 +72,6 @@ $(document).ready(function () {
     getUserId();
 });
 
-// fungsi berhubungan dengan ENTER & oengecekkan yg kosong2
-inputs.forEach((masuk, index) => {
-    masuk.addEventListener('keypress', function (event) {
-        if (event.key === 'Enter') {
-            if (masuk.value.trim() !== '') {
-                if (masuk.id === 'ketType') {
-                    btn_triter.focus();
-                } else if (masuk.id === 'primerSekunder') {
-                    sekunderTritier.select();
-                } else if (masuk.id === 'primer2') {
-                    sekunder2.select();
-                } else if (masuk.id === 'sekunder2') {
-                    tritier2.select();
-                } else if (masuk.id === 'alasan') {
-                    btn_proses.focus();
-                } else {
-                    inputs[index + 1].focus();
-                }
-            } else {
-                if (masuk.id === 'alasan') {
-                    btn_proses.focus();
-                } else {
-                    inputs[index + 1].focus();
-                }
-            }
-        }
-    })
-});
 
 // fungsi swal select pake arrow
 function handleTableKeydown(e, tableId) {
@@ -162,6 +141,17 @@ function formatNumber(value) {
     return value;
 }
 
+function escapeHtml(text) {
+    var map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, function (m) { return map[m]; });
+}
+
 // button list divisi
 btn_divisi.addEventListener("click", function (e) {
     try {
@@ -229,11 +219,13 @@ btn_divisi.addEventListener("click", function (e) {
                 divisiId.value = result.value.IdDivisi.trim();
                 divisiNama.value = decodeHtmlEntities(result.value.NamaDivisi.trim());
 
-                allData();
 
                 if (divisiId.value === 'INV' || divisiId.value === 'MNV' || divisiId.value === 'MWH') {
                     btn_objek.disabled = false;
                     btn_objek.focus();
+                } else {
+                    allData();
+                    btn_proses.focus();
                 }
             }
         });
@@ -246,14 +238,99 @@ divisiId.addEventListener('input', function () {
     allData();
 });
 
+// button list objek
+btn_objek.addEventListener("click", function (e) {
+    try {
+        Swal.fire({
+            title: 'Objek',
+            html: `
+                <table id="table_list" class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID Objek</th>
+                            <th scope="col">Nama Objek</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            `,
+            preConfirm: () => {
+                const selectedData = $("#table_list")
+                    .DataTable()
+                    .row(".selected")
+                    .data();
+                if (!selectedData) {
+                    Swal.showValidationMessage("Please select a row");
+                    return false;
+                }
+                return selectedData;
+            },
+            returnFocus: false,
+            showCloseButton: true,
+            showConfirmButton: true,
+            confirmButtonText: 'Select',
+            didOpen: () => {
+                $(document).ready(function () {
+                    const table = $("#table_list").DataTable({
+                        responsive: true,
+                        processing: true,
+                        serverSide: true,
+                        order: [1, "asc"],
+                        ajax: {
+                            url: "AccPenghangusanBarang/getObjek",
+                            dataType: "json",
+                            type: "GET",
+                            data: {
+                                _token: csrfToken,
+                                divisiId: divisiId.value
+                            }
+                        },
+                        columns: [
+                            { data: "IdObjek" },
+                            { data: "NamaObjek" }
+                        ]
+                    });
+
+                    $("#table_list tbody").on("click", "tr", function () {
+                        table.$("tr.selected").removeClass("selected");
+                        $(this).addClass("selected");
+                    });
+
+                    currentIndex = null;
+                    Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
+                });
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                objekId.value = result.value.IdObjek.trim();
+                objekNama.value = decodeHtmlEntities(result.value.NamaObjek.trim());
+                allData();
+
+            }
+        });
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+var selectedData;
+
 $(document).ready(function () {
+    selectedData = {
+        idTransaksi: [],
+        idType: [],
+        keluarPrimer: [],
+        keluarSekunder: [],
+        keluarTritier: []
+    };
+
     table = $('#tableData').DataTable({
         paging: false,
         searching: false,
         info: false,
         ordering: false,
         columns: [
-            { title: '', orderable: false, className: 'select-checkbox', defaultContent: '' }, // Checkbox column
+            { title: '', orderable: false, className: 'select-checkbox', data: null, defaultContent: '' }, // Checkbox
             { title: 'Kd. Transaksi' },
             { title: 'Nama Barang' },
             { title: 'Alasan Mutasi' },
@@ -273,33 +350,51 @@ $(document).ready(function () {
         columnDefs: [
             {
                 targets: 0,
-                data: null,
-                defaultContent: '<input type="checkbox" class="row-checkbox">',
+                orderable: false,
+                className: 'select-checkbox',
+                render: function (data, type, row, meta) {
+                    return `<input type="checkbox" class="row-checkbox"
+                                data-id="${row[1]}"
+                                data-type="${row[11]}"
+                                data-primer="${row[13]}"
+                                data-sekunder="${row[14]}"
+                                data-tritier="${row[15]}">`;
+                }
             }
         ],
         order: [[1, 'asc']]
     });
 
-    // Handle "Centang All" checkbox
-    $('#centang').on('change', function () {
-        var checked = this.checked;
-        $('#tableData tbody .row-checkbox').prop('checked', checked);
+    // update array unk centang
+    $('#tableData').on('change', '.row-checkbox', function () {
+        var id = $(this).data('id');
+        var type = $(this).data('type');
+        var primer = formatNumber($(this).data('primer'));
+        var sekunder = formatNumber($(this).data('sekunder'));
+        var tritier = formatNumber($(this).data('tritier'));
 
-        if (checked) {
-            $('#tableData tbody tr').addClass('selected');
+        if ($(this).is(':checked')) {
+            selectedData.idTransaksi.push(id);
+            selectedData.idType.push(type);
+            selectedData.keluarPrimer.push(primer);
+            selectedData.keluarSekunder.push(sekunder);
+            selectedData.keluarTritier.push(tritier);
         } else {
-            $('#tableData tbody tr').removeClass('selected');
+            var index = selectedData.idTransaksi.indexOf(id);
+            if (index !== -1) {
+                selectedData.idTransaksi.splice(index, 1);
+                selectedData.idType.splice(index, 1);
+                selectedData.keluarPrimer.splice(index, 1);
+                selectedData.keluarSekunder.splice(index, 1);
+                selectedData.keluarTritier.splice(index, 1);
+            }
         }
     });
 
-    $('#tableData tbody').on('change', '.row-checkbox', function () {
-        if (!this.checked) {
-            $('#centang').prop('checked', false);
-        } else {
-            if ($('#tableData tbody .row-checkbox:checked').length === $('#tableData tbody .row-checkbox').length) {
-                $('#centang').prop('checked', true);
-            }
-        }
+    // Select All
+    $('#centang').on('change', function () {
+        var isChecked = $(this).prop('checked');
+        $('.row-checkbox').prop('checked', isChecked).trigger('change');
     });
 });
 
@@ -307,7 +402,6 @@ $(document).ready(function () {
 
 // ngisi input kalo select table
 $('#tableData tbody').on('click', 'tr', function (event) {
-    // Prevent triggering the row selection if the checkbox is clicked
     if ($(event.target).is('.row-checkbox')) {
         return;
     }
@@ -331,11 +425,12 @@ $('#tableData tbody').on('click', 'tr', function (event) {
     kelutNama.value = decodeHtmlEntities(data[8]);
     kelompokNama.value = decodeHtmlEntities(data[9]);
     subkelNama.value = decodeHtmlEntities(data[10]);
+    idType = data[11];
+    keluarPrimer = formatNumber(data[13]);
+    keluarSekunder = formatNumber(data[14]);
+    keluarTritier = formatNumber(data[15]);
+    subkelId.value = data[16];
 
-    idType = formatNumber(data[11]);
-    keluarPrimer = formatNumber(data[12]);
-    keluarSekunder = formatNumber(data[13]);
-    keluarTritier = formatNumber(data[14]);
 
     $.ajax({
         type: 'GET',
@@ -383,29 +478,36 @@ function allData() {
         success: function (response) {
             if (response) {
                 console.log(response);
+                var firstSubkelId = response[0].IdSubkelompok.trim();
+                var allSameSubkelId = response.every(item => item.IdSubkelompok.trim() === firstSubkelId);
+
                 var tableData = [];
                 response.forEach(function (item) {
                     tableData.push([
-                        '<input type="checkbox" class="row-checkbox">',
-                        item.IdTransaksi,
-                        item.NamaType,
-                        item.UraianDetailTransaksi,
-                        item.IdPenerima,
-                        item.SaatAwalTransaksi,
-                        item.NamaDivisi,
-                        item.NamaObjek,
-                        item.NamaKelompokUtama,
-                        item.NamaKelompok,
-                        item.NamaSubKelompok,
-                        item.IdType,
-                        item.KodeBarang,
-                        item.JumlahPengeluaranPrimer,
-                        item.JumlahPengeluaranSekunder,
-                        item.JumlahPengeluaranTritier
+                        '', // Add checkbox to each row
+                        escapeHtml(item.IdTransaksi),
+                        escapeHtml(item.NamaType),
+                        escapeHtml(item.UraianDetailTransaksi),
+                        escapeHtml(item.IdPenerima),
+                        escapeHtml(item.SaatAwalTransaksi),
+                        escapeHtml(item.NamaDivisi),
+                        escapeHtml(item.NamaObjek),
+                        escapeHtml(item.NamaKelompokUtama),
+                        escapeHtml(item.NamaKelompok),
+                        escapeHtml(item.NamaSubKelompok),
+                        escapeHtml(item.IdType),
+                        escapeHtml(item.KodeBarang),
+                        formatNumber(item.JumlahPengeluaranPrimer),
+                        formatNumber(item.JumlahPengeluaranSekunder),
+                        formatNumber(item.JumlahPengeluaranTritier),
+                        item.IdSubkelompok
                     ]);
                 });
                 table.rows.add(tableData).draw();
-                subkelId.value = response[0].IdSubkelompok.trim();
+
+                if (allSameSubkelId) {
+                    subkelId.value = firstSubkelId;
+                }
             }
         },
         error: function (xhr, status, error) {
@@ -414,24 +516,21 @@ function allData() {
     });
 }
 
-
-var allInputs = document.querySelectorAll('input');
-const buttons = document.querySelectorAll('.btn-info');
-
 // button proses event listener
 btn_proses.addEventListener('click', function () {
-    btn_objek.disabled = true;
+    // btn_objek.disabled = true;
+    console.log(selectedData);
 
     $.ajax({
         type: 'PUT',
         url: 'AccPenghangusanBarang/proses',
         data: {
             _token: csrfToken,
-            idTransaksi: idTransaksi,
-            idType: idType,
-            keluarPrimer: keluarPrimer,
-            keluarSekunder: keluarSekunder,
-            keluarTritier: keluarTritier
+            idTransaksi: selectedData.idTransaksi,
+            idType: selectedData.idType,
+            keluarPrimer: selectedData.keluarPrimer,
+            keluarSekunder: selectedData.keluarSekunder,
+            keluarTritier: selectedData.keluarTritier
         },
         success: function (response) {
             if (response.success) {
@@ -442,6 +541,7 @@ btn_proses.addEventListener('click', function () {
                     returnFocus: false,
                 }).then(() => {
                     allData();
+                    $('#centang').checked = false;
                     btn_divisi.focus();
                 });
             } else if (response.warning) {
@@ -449,6 +549,15 @@ btn_proses.addEventListener('click', function () {
                     icon: 'warning',
                     title: 'Tidak Bisa Di Acc !',
                     text: response.warning,
+                    returnFocus: false,
+                }).then(() => {
+                    btn_divisi.focus();
+                });
+            } else if (response.error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Tidak Bisa Di Acc !',
+                    text: response.error,
                     returnFocus: false,
                 }).then(() => {
                     btn_divisi.focus();

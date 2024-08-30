@@ -10,7 +10,7 @@
                         {{-- ATAS --}}
                         <div class="baris-1 pl-1" id="baris-1">
                             <div class="row pt-2">
-                                <div class="col-2">
+                                <div class="col-2 pr-0">
                                     <label for="divisiId">Divisi</label>
                                 </div>
                                 <div class="col-md-1">
@@ -42,8 +42,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-2">
-                                    <label for="kelompokId">&nbsp;&nbsp;Kelompok</label>
+                                <div class="col-sm-2 pl-5">
+                                    <label for="kelompokId">&nbsp;Kelompok</label>
                                 </div>
                                 <div class="col-md-2">
                                     <input type="text" id="kelompokId" name="kelompokId" class="form-control" readonly>
@@ -74,8 +74,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-2">
-                                    <label for="subkelId">&nbsp; Sub Kelompok</label>
+                                <div class="col-sm-2 pl-5">
+                                    <label for="subkelId">&nbsp;Sub Kelompok</label>
                                 </div>
                                 <div class="col-md-2">
                                     <input type="text" id="subkelId" name="subkelId" class="form-control" readonly>
