@@ -18,7 +18,23 @@ var btnIsiTujuan = document.getElementById('btn_isiTujuan');
 var btnKoreksiTujuan = document.getElementById('btn_koreksiTujuan');
 var btnHapusTujuan = document.getElementById('btn_hapusTujuan');
 
+var btnNamaType = document.getElementById('btn_namatype');
+
 var btnBatal = document.getElementById('btn_batal');
+
+var btn_objek = document.getElementById('btn_objek');
+var btn_kelut = document.getElementById('btn_kelut');
+var btn_kelompok = document.getElementById('btn_kelompok');
+var btn_subkel = document.getElementById('btn_subkel');
+var btn_prosesAsal = document.getElementById('btn_prosesAsal');
+var btn_prosesTujuan = document.getElementById('btn_prosesTujuan');
+
+var asalP = document.getElementById('asalP');
+var asalS = document.getElementById('asalS');
+var asalT = document.getElementById('asalT');
+var tujuanP = document.getElementById('tujuanP');
+var tujuanS = document.getElementById('tujuanS');
+var tujuanT = document.getElementById('tujuanT');
 
 // asal
 var tanggalAsal = document.getElementById('tanggalAsal');
@@ -114,6 +130,13 @@ $(document).ready(function () {
             { title: 'Pemohon' },
         ]
     });
+
+    primerKonversiAsal.value = 0;
+    sekunderKonversiAsal.value = 0;
+    triterKonversiAsal.value = 0;
+    primerKonversiTujuan.value = 0;
+    sekunderKonversiTujuan.value = 0;
+    triterKonversiTujuan.value = 0;
 });
 
 function decodeHtmlEntities(text) {
@@ -319,6 +342,9 @@ btnIsiAsal.addEventListener("click", function (e) {
             tanggalAsal.value = tanggal.value;
             $('#modalAsalKonversi').modal('show');
         }
+        else if (result.dismiss === Swal.DismissReason.backdrop) {
+            return;
+        }
         else {
             if (kodeKonversi.value === '') {
                 Swal.fire({
@@ -354,7 +380,7 @@ btnIsiAsal.addEventListener("click", function (e) {
 });
 
 // button list divisi
-btn_divisi.addEventListener("click", function (e) {
+btnDivisi.addEventListener("click", function (e) {
 
     try {
         Swal.fire({
@@ -471,7 +497,7 @@ btn_objek.addEventListener("click", function (e) {
                         serverSide: true,
                         order: [0, "asc"],
                         ajax: {
-                            url: "KartuStok/getObjek",
+                            url: "KonversiBarang/getObjek",
                             dataType: "json",
                             type: "GET",
                             data: {
@@ -546,12 +572,12 @@ btn_kelut.addEventListener("click", function (e) {
                         serverSide: true,
                         order: [0, "asc"],
                         ajax: {
-                            url: "KartuStok/getKelUt",
+                            url: "KonversiBarang/getKelUt",
                             dataType: "json",
                             type: "GET",
                             data: {
                                 _token: csrfToken,
-                                objekId: objekId.value
+                                objekId: objekIdAsal.value
                             }
                         },
                         columns: [
@@ -571,8 +597,8 @@ btn_kelut.addEventListener("click", function (e) {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                kelutId.value = result.value.IdKelompokUtama.trim();
-                kelutNama.value = result.value.NamaKelompokUtama.trim();
+                kelutIdAsal.value = result.value.IdKelompokUtama.trim();
+                kelutNamaAsal.value = result.value.NamaKelompokUtama.trim();
                 btn_kelompok.focus();
             }
         });
@@ -621,12 +647,12 @@ btn_kelompok.addEventListener("click", function (e) {
                         serverSide: true,
                         order: [1, "asc"],
                         ajax: {
-                            url: "KartuStok/getKelompok",
+                            url: "KonversiBarang/getKelompok",
                             dataType: "json",
                             type: "GET",
                             data: {
                                 _token: csrfToken,
-                                kelutId: kelutId.value
+                                kelutId: kelutIdAsal.value
                             }
                         },
                         columns: [
@@ -646,8 +672,8 @@ btn_kelompok.addEventListener("click", function (e) {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                kelompokId.value = result.value.idkelompok.trim();
-                kelompokNama.value = result.value.namakelompok.trim();
+                kelompokIdAsal.value = result.value.idkelompok.trim();
+                kelompokNamaAsal.value = result.value.namakelompok.trim();
                 btn_subkel.focus();
             }
         });
@@ -696,12 +722,12 @@ btn_subkel.addEventListener("click", function (e) {
                         serverSide: true,
                         order: [1, "asc"],
                         ajax: {
-                            url: "KartuStok/getSubkel",
+                            url: "KonversiBarang/getSubkel",
                             dataType: "json",
                             type: "GET",
                             data: {
                                 _token: csrfToken,
-                                kelompokId: kelompokId.value
+                                kelompokId: kelompokIdAsal.value
                             }
                         },
                         columns: [
@@ -721,9 +747,9 @@ btn_subkel.addEventListener("click", function (e) {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                subkelId.value = result.value.IdSubkelompok.trim();
-                subkelNama.value = result.value.NamaSubKelompok.trim();
-                btn_ok.focus();
+                subkelIdAsal.value = result.value.IdSubkelompok.trim();
+                subkelNamaAsal.value = result.value.NamaSubKelompok.trim();
+                btnNamaType.focus();
             }
         });
     } catch (error) {
@@ -731,6 +757,285 @@ btn_subkel.addEventListener("click", function (e) {
     }
 });
 
+
+// button list Kode Type
+btnNamaType.addEventListener("click", function (e) {
+    try {
+        Swal.fire({
+            title: 'Kode Type',
+            html: `
+                <table id="table_list" class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID Type</th>
+                            <th scope="col">Nama Type</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            `,
+            preConfirm: () => {
+                const selectedData = $("#table_list")
+                    .DataTable()
+                    .row(".selected")
+                    .data();
+                if (!selectedData) {
+                    Swal.showValidationMessage("Please select a row");
+                    return false;
+                }
+                return selectedData;
+            },
+            returnFocus: false,
+            showCloseButton: true,
+            showConfirmButton: true,
+            confirmButtonText: 'Select',
+            didOpen: () => {
+                $(document).ready(function () {
+                    const table = $("#table_list").DataTable({
+                        responsive: true,
+                        processing: true,
+                        serverSide: true,
+                        order: [1, "asc"],
+                        ajax: {
+                            url: "KonversiBarang/getIdType",
+                            dataType: "json",
+                            type: "GET",
+                            data: {
+                                _token: csrfToken,
+                                XIdSubKelompok_Type: subkelIdAsal.value
+                            }
+                        },
+                        columns: [
+                            { data: "IdType" },
+                            { data: "NamaType" },
+                        ]
+                    });
+
+                    $("#table_list tbody").on("click", "tr", function () {
+                        table.$("tr.selected").removeClass("selected");
+                        $(this).addClass("selected");
+                    });
+
+                    currentIndex = null;
+                    Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
+                });
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                kodeTypeAsal.value = decodeHtmlEntities(result.value.IdType.trim());
+                namaTypeAsal.value = decodeHtmlEntities(result.value.NamaType.trim());
+
+                $.ajax({
+                    type: 'GET',
+                    url: 'KonversiBarang/getSaldo',
+                    data: {
+                        IdType: kodeTypeAsal.value,
+                        _token: csrfToken
+                    },
+                    success: function (result) {
+                        if (result.length !== 0) {
+                            primerAkhirAsal.value = formatNumber(result[0].SaldoPrimer) ?? '';
+                            sekunderAkhirAsal.value = formatNumber(result[0].SaldoSekunder) ?? '';
+                            triterAkhirAsal.value = formatNumber(result[0].SaldoTritier) ?? '';
+                            asalP.innerText = decodeHtmlEntities(result[0].SatPrimer.trim()) ?? '';
+                            asalS.innerText = decodeHtmlEntities(result[0].SatSekunder.trim()) ?? '';
+                            asalT.innerText = decodeHtmlEntities(result[0].SatTritier.trim()) ?? '';
+                        }
+                        else {
+                            primerAkhirAsal.value = '';
+                            sekunderAkhirAsal.value = '';
+                            triterAkhirAsal.value = '';
+                            asalP.innerText = '';
+                            asalS.innerText = '';
+                            asalT.innerText = '';
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+
+                primerKonversiAsal.focus();
+            }
+        });
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+var keluar = 0;
+
+$('#primerKonversiAsal').on('keydown', function (e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+
+        if (StKonversi === 1 || StKonversi === 2) {
+            $.ajax({
+                type: 'GET',
+                url: 'KonversiBarang/getJumlahAntrian',
+                data: {
+                    IdType: kodeTypeAsal.value,
+                    _token: csrfToken
+                },
+                success: function (result) {
+                    if (result[0]) {
+                        keluar = (result[0].OutPrimer) ?? 0;
+                    }
+
+                    if ((parseFloat(primerAkhirAsal.value) - (keluar + parseFloat(primerKonversiAsal.value))) < 0) {
+                        Swal.fire({
+                            icon: 'error',
+                            text: 'Saldo primer = ' + String(parseInt(primerAkhirAsal.value))
+                                + '  Jumlah primer pada transaksi yang belum diacc = '
+                                + String(keluar) + '  Jadi Saldo primer tinggal = ' +
+                                String(parseInt(primerAkhirAsal.value) - keluar),
+                        }).then(() => {
+                            primerKonversiAsal.value = 0;
+                            primerKonversiAsal.focus();
+                        });
+                    }
+                    else {
+                        sekunderKonversiAsal.focus();
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+    }
+});
+
+$('#sekunderKonversiAsal').on('keydown', function (e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+
+        if (StKonversi === 1 || StKonversi === 2) {
+            $.ajax({
+                type: 'GET',
+                url: 'KonversiBarang/getJumlahAntrian',
+                data: {
+                    IdType: kodeTypeAsal.value,
+                    _token: csrfToken
+                },
+                success: function (result) {
+                    if (result[0]) {
+                        keluar = (result[0].OutSekunder) ?? 0; 
+                    }
+                    
+                    if ((parseFloat(sekunderAkhirAsal.value) - (keluar + parseFloat(sekunderKonversiAsal.value))) < 0) {
+                        Swal.fire({
+                            icon: 'error',
+                            text: 'Saldo sekunder = ' + String(parseInt(sekunderAkhirAsal.value))
+                                + '  Jumlah sekunder pada transaksi yang belum diacc = '
+                                + String(keluar) + '  Jadi Saldo sekunder tinggal = ' +
+                                String(parseInt(sekunderAkhirAsal.value) - keluar),
+                        }).then(() => {
+                            sekunderKonversiAsal.value = 0;
+                            sekunderKonversiAsal.focus();
+                        });
+                    }
+                    else {
+                        btn_prosesAsal.disabled = false;
+                        triterKonversiAsal.focus();
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+    }
+});
+
+$('#triterKonversiAsal').on('keydown', function (e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+
+        if (StKonversi === 1 || StKonversi === 2) {
+            $.ajax({
+                type: 'GET',
+                url: 'KonversiBarang/getJumlahAntrian',
+                data: {
+                    IdType: kodeTypeAsal.value,
+                    _token: csrfToken
+                },
+                success: function (result) {
+                    if (result[0]) {
+                        keluar = (result[0].OutTritier) ?? 0;
+                    }
+
+                    if ((parseFloat(triterAkhirAsal.value) - (keluar + parseFloat(triterKonversiAsal.value))) < 0) {
+                        Swal.fire({
+                            icon: 'error',
+                            text: 'Saldo tritier = ' + String(parseInt(triterAkhirAsal.value))
+                                + '  Jumlah tritier pada transaksi yang belum diacc = '
+                                + String(keluar) + '  Jadi Saldo tritier tinggal = ' +
+                                String(parseInt(triterAkhirAsal.value) - keluar),
+                        }).then(() => {
+                            triterKonversiAsal.value = 0;
+                            triterKonversiAsal.focus();
+                        });
+                    }
+                    else {
+                        if ((divisiIdAsal.value === 'ABM' && objekIdAsal.value === '022'
+                            && (subkelIdAsal.value !== '006193' && subkelIdAsal.value !== '006634' && kelompokIdAsal !== '2543'))
+                            || (divisiIdAsal.value === 'JBB' && objekIdAsal.value === '042' && kelompokIdAsal.value !== '2432')
+                            || (divisiIdAsal.value === 'EXT' && (kelompokIdAsal.value === '1259' && kelutIdAsal.value === '1283'))
+                        ) {
+                            console.log(triterKonversiAsal.value);
+                            
+                            Hitung_Hsl_Mtr();
+                        }
+                        if (divisiIdAsal.value === 'CIR' && objekIdAsal.value === '043') {
+                            if (triterKonversiAsal.value > 0) {
+                                Hitung_Hsl_Mtr();
+                            }
+                        }
+                        btn_prosesAsal.focus();
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+    }
+});
+
+function Hitung_Hsl_Mtr() {
+    let Lebar = 0, waft = 0, weft = 0, denier = 0, jum = 0;
+
+    for (let i = 0; i < namaTypeAsal.value.trim().length; i++) {
+        if (namaTypeAsal.value.charAt(i) === "/") {
+            jum += 1;
+            switch (jum) {
+                case 1:
+                    Lebar = parseFloat(namaTypeAsal.value.substr(i + 1, 6));
+                    break;
+                case 2:
+                    waft = parseFloat(namaTypeAsal.value.substr(i + 1, 5));
+                    weft = parseFloat(namaTypeAsal.value.substr(i + 9, 5));
+                    break;
+                case 3:
+                    denier = parseFloat(namaTypeAsal.value.substr(i + 1, 5));
+                    break;
+            }
+        }
+    }
+
+    let Hitung_Hsl_Mtr;
+
+    if (subkelIdAsal.value === "0629" || subkelNamaAsal.value.startsWith("KAIN") || subkelNamaAsal.value.startsWith("Kain No Lami")) {
+        Hitung_Hsl_Mtr = (10 / (Lebar / 2)) / ((waft + weft) / 20) / (denier * 2 / 2000) / 0.0175;
+    } else {
+        Hitung_Hsl_Mtr = (10 / Lebar) / ((waft + weft) / 20) / (denier * 2 / 2000) / 0.0175;
+    }
+
+    Hitung_Hsl_Mtr = Math.round(Hitung_Hsl_Mtr * 10) / 10;
+
+    console.log("Hitung_Hsl_Mtr:", Hitung_Hsl_Mtr);
+}
 
 function clearText() {
     kodeKonversi.value = '';

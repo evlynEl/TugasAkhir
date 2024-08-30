@@ -271,7 +271,7 @@
                                                     <input type="text" class="form-control" id="kodeTypeAsal"
                                                         name="kodeTypeAsal">
                                                     <div class="input-group-append">
-                                                        <button type="button" id="btn_subkel"
+                                                        <button type="button" id="btn_namatype"
                                                             class="btn btn-info">...</button>
                                                     </div>
                                                 </div>
@@ -314,7 +314,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-1" style="margin-left: -3%">
-                                                    <label>P</label>
+                                                    <span id="asalP">P</span>
                                                 </div>
 
                                                 <div class="col-sm-1">
@@ -327,7 +327,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-1" style="margin-left: -3%">
-                                                    <label>S</label>
+                                                    <span id="asalS">S</span >
                                                 </div>
 
                                                 <div class="col-sm-1">
@@ -340,7 +340,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-1" style="margin-left: -3%">
-                                                    <label>T</label>
+                                                    <span id="asalT">T</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -521,7 +521,7 @@
                                                     <input type="text" class="form-control" id="kodeTypeTujuan"
                                                         name="kodeTypeTujuan">
                                                     <div class="input-group-append">
-                                                        <button type="button" id="btn_subkel"
+                                                        <button type="button" id="btn_namatype"
                                                             class="btn btn-info">...</button>
                                                     </div>
                                                 </div>
@@ -564,7 +564,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-1" style="margin-left: -3%">
-                                                    <label>P</label>
+                                                    <span id="tujuanP">P</span>
                                                 </div>
 
                                                 <div class="col-sm-1">
@@ -577,7 +577,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-1" style="margin-left: -3%">
-                                                    <label>S</label>
+                                                    <span id="tujuanS">S</span>
                                                 </div>
 
                                                 <div class="col-sm-1">
@@ -590,7 +590,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-1" style="margin-left: -3%">
-                                                    <label>T</label>
+                                                    <span id="tujuanT">T</span>
                                                 </div>
                                             </div>
                                         </div>

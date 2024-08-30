@@ -52,6 +52,120 @@ class KonversiBarangController extends Controller
             return datatables($divisi)->make(true);
         }
 
+        // objek
+        else if ($id === 'getObjek') {
+            $objek = DB::connection('ConnInventory')->select('exec SP_1003_INV_User_Objek @XKdUser = ?, @XIdDivisi = ?', [$user, $request->input('divisi')]);
+            $data_objek = [];
+            foreach ($objek as $detail_objek) {
+                $data_objek[] = [
+                    'NamaObjek' => $detail_objek->NamaObjek,
+                    'IdObjek' => $detail_objek->IdObjek,
+                    'IdDivisi' => $detail_objek->IdDivisi
+                ];
+            }
+            return datatables($objek)->make(true);
+
+            // mendapatkan daftar kelompok utama
+        } else if ($id === 'getKelUt') {
+            $kelut = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdObjek_KelompokUtama @XIdObjek_KelompokUtama = ?', [$request->input('objekId')]);
+            $data_kelut = [];
+            foreach ($kelut as $detail_kelut) {
+                $data_kelut[] = [
+                    'NamaKelompokUtama' => $detail_kelut->NamaKelompokUtama,
+                    'IdKelompokUtama' => $detail_kelut->IdKelompokUtama
+                ];
+            }
+            return datatables($kelut)->make(true);
+
+            // mendapatkan daftar kelompok
+        } else if ($id === 'getKelompok') {
+            $kelompok = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdKelompokUtama_Kelompok @XIdKelompokUtama_Kelompok = ?', [$request->input('kelutId')]);
+            $data_kelompok = [];
+            foreach ($kelompok as $detail_kelompok) {
+                $data_kelompok[] = [
+                    'idkelompok' => $detail_kelompok->idkelompok,
+                    'namakelompok' => $detail_kelompok->namakelompok
+                ];
+            }
+            return datatables($kelompok)->make(true);
+
+            // mendapatkan daftar sub kelompok
+        } else if ($id === 'getSubkel') {
+            $XIdKelompok_SubKelompok = $request->input('kelompokId');
+
+            $XIdKelompok_SubKelompok = $XIdKelompok_SubKelompok ?? '0';
+
+            $subkel = DB::connection('ConnInventory')->select('exec SP_1003_INV_IDKELOMPOK_SUBKELOMPOK @XIdKelompok_SubKelompok = ?', [$XIdKelompok_SubKelompok]);
+            $data_subkel = [];
+            foreach ($subkel as $detail_subkel) {
+                $data_subkel[] = [
+                    'IdSubkelompok' => $detail_subkel->IdSubkelompok,
+                    'NamaSubKelompok' => $detail_subkel->NamaSubKelompok
+                ];
+            }
+            return datatables($subkel)->make(true);
+        }
+
+        // ambil kode type
+        else if ($id === 'getIdType') {
+            $XIdSubKelompok_Type = $request->input('XIdSubKelompok_Type');
+
+            $subkel = DB::connection('ConnInventory')->select('exec SP_1003_INV_idsubkelompok_type
+            @XIdSubKelompok_Type = ?'
+                ,
+                [$XIdSubKelompok_Type]
+            );
+            $data_subkel = [];
+            foreach ($subkel as $detail_subkel) {
+                $data_subkel[] = [
+                    'NamaType' => $detail_subkel->NamaType,
+                    'IdType' => $detail_subkel->IdType
+                ];
+            }
+            return datatables($subkel)->make(true);
+        }
+
+        // saldo
+        else if ($id === 'getSaldo') {
+            $IdType = $request->input('IdType');
+
+            $divisi = DB::connection('ConnInventory')->select('exec [SP_1003_INV_Saldo_Barang]
+           @IdType = ?', [$IdType]);
+
+            $data_divisi = [];
+            foreach ($divisi as $detail_divisi) {
+                $data_divisi[] = [
+                    'SaldoPrimer' => $detail_divisi->SaldoPrimer,
+                    'SaldoSekunder' => $detail_divisi->SaldoSekunder,
+                    'SaldoTritier' => $detail_divisi->SaldoTritier,
+                    'SatPrimer' => $detail_divisi->SatPrimer,
+                    'SatSekunder' => $detail_divisi->SatSekunder,
+                    'SatTritier' => $detail_divisi->SatTritier,
+                ];
+            }
+
+            return response()->json($data_divisi);
+        }
+
+        // saldo
+        else if ($id === 'getJumlahAntrian') {
+            $IdType = $request->input('IdType');
+
+            $divisi = DB::connection('ConnInventory')->select('exec [SP_1003_INV_List_JmlAntrian_TmpTransaksi]
+           @kode = ?, @IdType = ?', [1, $IdType]);
+
+            $data_divisi = [];
+            foreach ($divisi as $detail_divisi) {
+                $data_divisi[] = [
+                    'OutPrimer' => $detail_divisi->OutPrimer,
+                    'OutSekunder' => $detail_divisi->OutSekunder,
+                    'OutTritier' => $detail_divisi->OutTritier,
+                ];
+            }
+
+            return response()->json($data_divisi);
+        }
+
         // get kode konversi
         else if ($id === 'loadDataKonversi') {
             $XIdDivisi = $request->input('XIdDivisi');
