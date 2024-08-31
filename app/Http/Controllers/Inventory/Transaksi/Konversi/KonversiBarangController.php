@@ -284,9 +284,47 @@ class KonversiBarangController extends Controller
     }
 
     //Update the specified resource in storage.
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
-        // 
+        // update isi, kalau proses button ISI
+        if ($id == 'prosesIsiAsal') {
+            $XUraianDetailTransaksi = $request->input('XUraianDetailTransaksi');
+            $XIdType = $request->input('XIdType');
+            $XSaatAwalTransaksi = $request->input('XSaatAwalTransaksi');
+            $XJumlahKeluarPrimer = $request->input('XJumlahKeluarPrimer');
+            $XJumlahKeluarSekunder = $request->input('XJumlahKeluarSekunder');
+            $XJumlahKeluarTritier = $request->input('XJumlahKeluarTritier');
+            $XAsalSubKel = $request->input('XAsalSubKel');
+            $UserInput = Auth::user()->NomorUser;
+            $UserInput = trim($UserInput);
+
+            try {
+                DB::connection('ConnInventory')
+                    ->statement('exec [SP_1003_INV_Proses_AsalKonvTmpTransaksi]
+                @XIdTypeTransaksi = ?,
+                @XUraianDetailTransaksi = ?,
+                @XIdType = ?,
+                @XIdPemohon = ?,
+                @XSaatAwalTransaksi = ?,
+                @XJumlahKeluarPrimer = ?,
+                @XJumlahKeluarSekunder = ?,
+                @XJumlahKeluarTritier = ?,
+                @XAsalSubKel = ?', [
+                        '04',
+                        $XUraianDetailTransaksi,
+                        $XIdType,
+                        $UserInput,
+                        $XSaatAwalTransaksi,
+                        $XJumlahKeluarPrimer,
+                        $XJumlahKeluarSekunder,
+                        $XJumlahKeluarTritier,
+                        $XAsalSubKel,
+                    ]);
+                return response()->json(['success' => 'Data sudah diSIMPAN'], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Data gagal diSIMPAN: ' . $e->getMessage()], 500);
+            }
+        }
     }
 
     //Remove the specified resource from storage.

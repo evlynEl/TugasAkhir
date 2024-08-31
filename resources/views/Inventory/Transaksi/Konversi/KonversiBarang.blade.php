@@ -89,9 +89,9 @@
                                         </div>
                                     </div>
                                     <div class="row ml-5 mb-2 mt-1">
-                                        <button type="button" id="btn_isiAsal" class="btn btn-info">Isi</button>
-                                        <button type="button" id="btn_koreksiAsal" class="btn btn-info">Koreksi</button>
-                                        <button type="button" id="btn_hapusAsal" class="btn btn-info">Hapus</button>
+                                        <button type="button" id="btn_isiAsal" class="btn btn-info" disabled>Isi</button>
+                                        <button type="button" id="btn_koreksiAsal" class="btn btn-info" disabled>Koreksi</button>
+                                        <button type="button" id="btn_hapusAsal" class="btn btn-info" disabled>Hapus</button>
                                     </div>
                                 </div>
 
@@ -129,10 +129,10 @@
                                         </div>
                                     </div>
                                     <div class="row ml-5 mb-2 mt-1">
-                                        <button type="button" id="btn_isiTujuan" class="btn btn-info">Isi</button>
-                                        <button type="button" id="btn_koreksiTujuan"
+                                        <button type="button" id="btn_isiTujuan" class="btn btn-info" disabled>Isi</button>
+                                        <button type="button" id="btn_koreksiTujuan" disabled
                                             class="btn btn-info">Koreksi</button>
-                                        <button type="button" id="btn_hapusTujuan" class="btn btn-info">Hapus</button>
+                                        <button type="button" id="btn_hapusTujuan" disabled class="btn btn-info">Hapus</button>
                                     </div>
                                 </div>
 
@@ -143,7 +143,7 @@
                         <div class="row">
                             <div class="col-sm-1 offset-sm-10 pt-1">
                                 <button style="width: 100%; margin-left: 50%" type="button" id="btn_batal"
-                                    class="btn btn-info">BATAL</button>
+                                    class="btn btn-info" disabled>BATAL</button>
                             </div>
                         </div>
 
@@ -386,7 +386,7 @@
 
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" id="btn_prosesAsal"
+                                        <button type="button" id="btn_prosesAsal" disabled
                                             class="btn btn-primary">PROSES</button>
                                         <button type="button" class="btn btn-secondary"
                                             data-dismiss="modal">TUTUP</button>

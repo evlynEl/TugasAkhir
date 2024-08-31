@@ -447,6 +447,7 @@ btnDivisi.addEventListener("click", function (e) {
                 divisiId.value = result.value.IdDivisi.trim();
                 divisiNama.value = result.value.NamaDivisi.trim();
                 clearText();
+                enableButton();
                 Load_DataKonversi();
                 Load_Data_All_Asal();
                 Load_Data_All_Tujuan();
@@ -457,6 +458,15 @@ btnDivisi.addEventListener("click", function (e) {
     }
 });
 
+function enableButton(){
+    btnIsiAsal.disabled = false;
+    btnKoreksiAsal.disabled = false;
+    btnHapusAsal.disabled = false;
+    btnIsiTujuan.disabled = false;
+    btnKoreksiTujuan.disabled = false;
+    btnHapusTujuan.disabled = false;
+    btnBatal.disabled = false;
+}
 
 // button list objek
 btn_objek.addEventListener("click", function (e) {
@@ -869,6 +879,60 @@ btnNamaType.addEventListener("click", function (e) {
     }
 });
 
+btn_prosesAsal.addEventListener("click", function (e) {
+    if (tanggalAsal.value > today) {
+        Swal.fire({
+            icon: 'error',
+            text: 'Tanggal Tidak Boleh Lebih Besar Dari Tanggal Sekarang',
+        });
+        return;
+    }
+
+    if (parseInt(triterKonversiAsal.value) === 0 && divisiIdAsal.value !== 'CIR') {
+        Swal.fire({
+            icon: 'error',
+            text: 'Jumlah Tritier tidak boleh Nol!!!...',
+        });
+        return;
+    }
+    else {
+        if (StKonversi === 1) {
+            if (IsiAsal === 1) {
+                console.log(uraianAsal.value, kodeTypeAsal.value, tanggalAsal.value, primerKonversiAsal.value, sekunderKonversiAsal.value, triterKonversiAsal.value, subkelIdAsal.value);
+                
+                $.ajax({
+                    type: 'PUT',
+                    url: 'KonversiBarang/prosesIsiAsal',
+                    data: {
+                        IdTypeXUraianDetailTransaksi: uraianAsal.value,
+                        XIdType: kodeTypeAsal.value,
+                        XSaatAwalTransaksi: tanggalAsal.value,
+                        XJumlahKeluarPrimer: primerKonversiAsal.value,
+                        XJumlahKeluarSekunder: sekunderKonversiAsal.value,
+                        XJumlahKeluarTritier: triterKonversiAsal.value,
+                        XAsalSubKel: subkelIdAsal.value,
+                        _token: csrfToken
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: response.success,
+                            });
+
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+            }
+        }
+    }
+
+});
+
 var keluar = 0;
 
 $('#primerKonversiAsal').on('keydown', function (e) {
@@ -989,15 +1053,22 @@ $('#triterKonversiAsal').on('keydown', function (e) {
                             || (divisiIdAsal.value === 'JBB' && objekIdAsal.value === '042' && kelompokIdAsal.value !== '2432')
                             || (divisiIdAsal.value === 'EXT' && (kelompokIdAsal.value === '1259' && kelutIdAsal.value === '1283'))
                         ) {
-                            console.log(triterKonversiAsal.value);
-
-                            Hitung_Hsl_Mtr();
+                            Hitung_Hsl_Mtr_Asal();
+                            sekunderKonversiAsal.value = Hitung_Hsl_Mtr * parseFloat(triterKonversiAsal.value);
+                            if (sekunderKonversiAsal.value !== 0) {
+                                formatNumber(sekunderAkhirAsal.value);
+                            }
                         }
                         if (divisiIdAsal.value === 'CIR' && objekIdAsal.value === '043') {
                             if (triterKonversiAsal.value > 0) {
-                                Hitung_Hsl_Mtr();
+                                Hitung_Hsl_Mtr_Asal();
+                                sekunderKonversiAsal.value = Hitung_Hsl_Mtr * parseFloat(triterKonversiAsal.value);
+                                if (sekunderKonversiAsal.value !== 0) {
+                                    formatNumber(sekunderAkhirAsal.value);
+                                }
                             }
                         }
+                        btn_prosesAsal.disabled = false;
                         btn_prosesAsal.focus();
                     }
                 },
@@ -1009,7 +1080,10 @@ $('#triterKonversiAsal').on('keydown', function (e) {
     }
 });
 
-function Hitung_Hsl_Mtr() {
+
+var Hitung_Hsl_Mtr;
+
+function Hitung_Hsl_Mtr_Asal() {
     let Lebar = 0, waft = 0, weft = 0, denier = 0, jum = 0;
 
     for (let i = 0; i < namaTypeAsal.value.trim().length; i++) {
@@ -1030,8 +1104,6 @@ function Hitung_Hsl_Mtr() {
         }
     }
 
-    let Hitung_Hsl_Mtr;
-
     if (subkelIdAsal.value === "0629" || subkelNamaAsal.value.startsWith("KAIN") || subkelNamaAsal.value.startsWith("Kain No Lami")) {
         Hitung_Hsl_Mtr = (10 / (Lebar / 2)) / ((waft + weft) / 20) / (denier * 2 / 2000) / 0.0175;
     } else {
@@ -1039,8 +1111,6 @@ function Hitung_Hsl_Mtr() {
     }
 
     Hitung_Hsl_Mtr = Math.round(Hitung_Hsl_Mtr * 10) / 10;
-
-    console.log("Hitung_Hsl_Mtr:", Hitung_Hsl_Mtr);
 }
 
 function clearText() {
