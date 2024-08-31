@@ -217,13 +217,14 @@ class MaintenanceTypeController extends Controller
             $getKoreksi = DB::connection('ConnInventory')->select('exec SP_1003_INV_idsubkelompok_type @kd = 1, @XIdSubKelompok_Type = ?', [$subkelId]);
             $data_getKoreksi = [];
             foreach ($getKoreksi as $detail_getKoreksi) {
+                $namaType = explode('[', $detail_getKoreksi->NamaType)[0];
                 $data_getKoreksi[] = [
                     'IdType' => $detail_getKoreksi->IdType,
-                    'NamaType' => $detail_getKoreksi->NamaType
+                    'namaType' => trim($namaType)
                 ];
             }
-            // dd($subkelId, $getKoreksi);
-            return datatables($getKoreksi)->make(true);
+            // dd($data_getKoreksi);
+            return datatables($data_getKoreksi)->make(true);
 
         } else if ($id === 'getSatuanKodeBarang') {
             // get beberapa data untuk koreksi

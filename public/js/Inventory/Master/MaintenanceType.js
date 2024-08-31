@@ -1354,7 +1354,7 @@ function handleTypeSelection() {
                         },
                         columns: [
                             { data: "IdType" },
-                            { data: "NamaType" }
+                            { data: "namaType" }
                         ]
                     });
 
@@ -1370,7 +1370,7 @@ function handleTypeSelection() {
         }).then((result) => {
             if (result.isConfirmed) {
                 kodeType.value = decodeHtmlEntities(result.value.IdType.trim());
-                namaType.value = result.value.NamaType?.trim() || '-';
+                namaType.value = decodeHtmlEntities(result.value.namaType?.trim()) || '-';
 
                 // First AJAX call
                 $.ajax({
