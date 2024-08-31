@@ -44,6 +44,7 @@ btn_noRoll.addEventListener("click", function (e) {
                         </thead>
                         <tbody></tbody>
                     </table>`,
+                    width: '40%',
             showCancelButton: true,
             confirmButtonText: 'Pilih',
             cancelButtonText: 'Close',

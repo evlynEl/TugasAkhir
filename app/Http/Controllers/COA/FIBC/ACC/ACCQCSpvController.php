@@ -71,6 +71,8 @@ class ACCQCSpvController extends Controller
                     return $item;
                 });
 
+            // dd($detailResult, $data);
+
 
             return response()->json([
                 'result' => $data,

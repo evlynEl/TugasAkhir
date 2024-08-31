@@ -163,6 +163,7 @@ btn_divisi.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '40%',
             returnFocus: false,
             showCloseButton: true,
             showConfirmButton: true,
@@ -237,6 +238,7 @@ btn_objek.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '40%',
             returnFocus: false,
             showCloseButton: true,
             showConfirmButton: true,
@@ -312,6 +314,7 @@ btn_kelut.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '40%',
             returnFocus: false,
             showCloseButton: true,
             showConfirmButton: true,
@@ -387,6 +390,7 @@ btn_kelompok.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '40%',
             returnFocus: false,
             showCloseButton: true,
             showConfirmButton: true,
@@ -462,6 +466,7 @@ btn_subkel.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '40%',
             returnFocus: false,
             showCloseButton: true,
             showConfirmButton: true,

@@ -194,6 +194,7 @@ buttonCustomer.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '40%',
             showCloseButton: true,
             showConfirmButton: true,
             confirmButtonText: 'Select',
@@ -266,6 +267,7 @@ buttonType.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '40%',
             showCloseButton: true,
             showConfirmButton: true,
             confirmButtonText: 'Select',
@@ -353,6 +355,7 @@ buttonPartSection.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '40%',
             showCloseButton: true,
             showConfirmButton: true,
             confirmButtonText: 'Select',
@@ -424,6 +427,7 @@ buttonMaterial.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '40%',
             showCloseButton: true,
             showConfirmButton: true,
             confirmButtonText: 'Select',
@@ -497,6 +501,7 @@ buttonItem.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '40%',
             showCloseButton: true,
             showConfirmButton: true,
             confirmButtonText: 'Select',

@@ -299,6 +299,7 @@ btn_divisi.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '40%',
             returnFocus: false,
             showCloseButton: true,
             showConfirmButton: true,
@@ -373,6 +374,7 @@ btn_objek.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '40%',
             returnFocus: false,
             showCloseButton: true,
             showConfirmButton: true,
@@ -450,6 +452,7 @@ btn_kelut.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '40%',
             returnFocus: false,
             showCloseButton: true,
             showConfirmButton: true,
@@ -534,6 +537,7 @@ btn_kelompok.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '40%',
             returnFocus: false,
             showCloseButton: true,
             showConfirmButton: true,
@@ -617,6 +621,7 @@ btn_subkel.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '40%',
             returnFocus: false,
             showCloseButton: true,
             showConfirmButton: true,
@@ -737,11 +742,11 @@ btn_proses.addEventListener("click", function (e) {
 
                                         btn_kelut.disabled = true;
                                         btn_subkel.disabled = true;
-                                        
+
                                         $('#btn_kelompok').hide();
                                         $('#btn_kelut').hide();
                                         $('#btn_subkel').hide();
-                                    
+
                                     });
 
                                 }

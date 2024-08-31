@@ -386,6 +386,7 @@ btn_kelut.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '40%',
             returnFocus: false,
             showCloseButton: true,
             showConfirmButton: true,
@@ -478,6 +479,7 @@ btn_kelompok.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '40%',
             returnFocus: false,
             showCloseButton: true,
             showConfirmButton: true,
@@ -558,6 +560,7 @@ btn_subkel.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '40%',
             returnFocus: false,
             showCloseButton: true,
             showConfirmButton: true,
@@ -662,6 +665,7 @@ btn_namatype.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '55%',
             returnFocus: false,
             showCloseButton: true,
             showConfirmButton: true,
@@ -839,6 +843,7 @@ btn_subkelPenerima.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '40%',
             returnFocus: false,
             showCloseButton: true,
             showConfirmButton: true,
@@ -973,7 +978,7 @@ var tgl, tgl3, tgl4;
 
 btn_isi.addEventListener("click", function (e) {
     btn_batal.disabled = false;
-    
+
     tgl3 = tanggal.value;
     tglServerFunction();
     jamServerFunction();
@@ -1578,7 +1583,7 @@ btn_proses.addEventListener("click", function (e) {
                                     insertHutang();
                                 }
                                 else {
-                                    // 
+                                    //
                                 }
                             });
                         }

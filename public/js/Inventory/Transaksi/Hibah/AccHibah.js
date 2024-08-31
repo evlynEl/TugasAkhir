@@ -237,6 +237,7 @@ btn_divisi.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '40%',
             returnFocus: false,
             showCloseButton: true,
             showConfirmButton: true,
@@ -448,7 +449,7 @@ btn_proses.addEventListener("click", function (e) {
         });
     }
 
-    
+
 
     else if (batalAcc.checked === true && transaksiId.value) {
         $.ajax({

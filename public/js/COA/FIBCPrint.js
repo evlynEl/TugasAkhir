@@ -811,7 +811,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                 if (result[0].Dia > 0) {
                                     diaPressureCheckbox.checked = true;
                                     diaPressureCheckbox.disabled = false;
-                                    testDia.textContent = formatDecimal(result[0].Dia) + ' cm';
+                                    testDia.textContent = formatNumber(result[0].Dia) + ' cm';
                                 } else {
                                     diaPressureCheckbox.checked = false;
                                 }
@@ -819,7 +819,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                 if (result[0].Square) {
                                     squarePressureCheckbox.checked = true;
                                     squarePressureCheckbox.disabled = false;
-                                    testSquare.textContent = formatDecimal(result[0].Square) + ' cm';
+                                    testSquare.textContent = formatNumber(result[0].Square) + ' cm';
                                 } else {
                                     squarePressureCheckbox.checked = false;
                                 }

@@ -235,6 +235,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                     return selectedData;
                 },
+                width: '40%',
                 showCloseButton: true,
                 showConfirmButton: true,
                 confirmButtonText: 'Select',

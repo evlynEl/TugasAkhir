@@ -456,6 +456,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             </thead>
                             <tbody></tbody>
                         </table>`,
+                        width: '40%',
                 showCancelButton: true,
                 confirmButtonText: 'Pilih',
                 cancelButtonText: 'Close',
@@ -650,6 +651,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     </thead>
                     <tbody></tbody>
                 </table>`,
+                width: '40%',
                 showCancelButton: true,
                 confirmButtonText: 'Pilih',
                 cancelButtonText: 'Close',
@@ -758,6 +760,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     </thead>
                     <tbody></tbody>
                 </table>`,
+                width: '40%',
                 showCancelButton: true,
                 confirmButtonText: 'Pilih',
                 cancelButtonText: 'Close',
@@ -856,6 +859,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             </thead>
                             <tbody></tbody>
                         </table>`,
+                        width: '40%',
                 showCancelButton: true,
                 confirmButtonText: 'Pilih',
                 cancelButtonText: 'Close',
@@ -996,6 +1000,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         </thead>
                         <tbody></tbody>
                     </table>`,
+                    width: '40%',
                 showCancelButton: true,
                 confirmButtonText: 'Pilih',
                 cancelButtonText: 'Close',

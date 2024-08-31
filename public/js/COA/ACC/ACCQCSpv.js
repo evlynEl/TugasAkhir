@@ -288,6 +288,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                     return selectedData;
                 },
+                width: '40%',   
                 showCloseButton: true,
                 showConfirmButton: true,
                 confirmButtonText: 'Select',
@@ -799,7 +800,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                 if (result[0].Dia > 0) {
                                     diaPressureCheckbox.checked = true;
                                     diaPressureCheckbox.disabled = false;
-                                    testDia.textContent = formatDecimal(result[0].Dia) + ' cm';
+                                    testDia.textContent = formatNumber(result[0].Dia) + ' cm';
                                 } else {
                                     diaPressureCheckbox.checked = false;
                                     testDia.textContent = '0.00 cm';

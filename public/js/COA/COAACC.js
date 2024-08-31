@@ -109,6 +109,7 @@ btn_cust.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '40%',
             showCloseButton: true,
             showConfirmButton: true,
             confirmButtonText: 'Select',
@@ -187,6 +188,7 @@ btn_type.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '40%',
             showCloseButton: true,
             showConfirmButton: true,
             returnFocus: false,
@@ -266,6 +268,7 @@ btn_noCOA.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '40%',
             showCloseButton: true,
             showConfirmButton: true,
             returnFocus: false,

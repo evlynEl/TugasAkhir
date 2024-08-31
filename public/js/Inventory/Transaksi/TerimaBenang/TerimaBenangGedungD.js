@@ -359,99 +359,6 @@ $('#tableData tbody').on('click', 'tr', function () {
     });
 });
 
-
-// // button list kelompok utama
-// btn_kelut.addEventListener("click", function (e) {
-
-//     try {
-//         Swal.fire({
-//             title: 'Kelompok Utama',
-//             html: `
-//                 <table id="table_list" class="table">
-//                     <thead>
-//                         <tr>
-//                             <th scope="col">ID</th>
-//                             <th scope="col">Nama Kelompok Utama</th>
-//                         </tr>
-//                     </thead>
-//                     <tbody></tbody>
-//                 </table>
-//             `,
-//             preConfirm: () => {
-//                 const selectedData = $("#table_list")
-//                     .DataTable()
-//                     .row(".selected")
-//                     .data();
-//                 if (!selectedData) {
-//                     Swal.showValidationMessage("Please select a row");
-//                     return false;
-//                 }
-//                 return selectedData;
-//             },
-//             returnFocus: false,
-//             showCloseButton: true,
-//             showConfirmButton: true,
-//             confirmButtonText: 'Select',
-//             didOpen: () => {
-//                 $(document).ready(function () {
-//                     const table = $("#table_list").DataTable({
-//                         responsive: true,
-//                         processing: true,
-//                         serverSide: true,
-//                         order: [1, "asc"],
-//                         ajax: {
-//                             url: "TerimaBenangGedungD/getKelUt",
-//                             dataType: "json",
-//                             type: "GET",
-//                             data: {
-//                                 _token: csrfToken,
-//                             }
-//                         },
-//                         columns: [
-//                             { data: "IdKelompokUtama" },
-//                             { data: "NamaKelompokUtama" }
-//                         ]
-//                     });
-
-//                     $("#table_list tbody").on("click", "tr", function () {
-//                         table.$("tr.selected").removeClass("selected");
-//                         $(this).addClass("selected");
-//                     });
-
-//                     currentIndex = null;
-//                     Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
-//                 });
-//             }
-//         }).then((result) => {
-//             if (result.isConfirmed) {
-//                 kelutId.value = decodeHtmlEntities(result.value.IdKelompokUtama.trim());
-//                 kelutNama.value = decodeHtmlEntities(result.value.NamaKelompokUtama.trim());
-
-//                 kelompokId.value = '';
-//                 kelompokNama.value = '';
-
-//                 if (kelutId.value == '2481') {
-//                     kelutIdPenerima.value = '2486';
-//                     kelutNamaPenerima.value = 'Benang <Fas>';
-//                     kelompokIdPenerima.value = '009675';
-//                     kelompokNamaPenerima.value = 'Stok Benang Expedisi';
-//                 }
-//                 else if (kelutId.value == '0121') {
-//                     kelutIdPenerima.value = '0713';
-//                     kelutNamaPenerima.value = 'Benang <Lokal, ASEAN, dan Non Fas>';
-//                     kelompokIdPenerima.value = '002586';
-//                     kelompokNamaPenerima.value = 'Stok Benang Expedisi';
-//                 }
-
-//                 btn_kelompok.disabled = false;
-//                 btn_kelompok.focus();
-//             }
-//         });
-//     } catch (error) {
-//         console.error(error);
-//     }
-// });
-
 // button list kelompok
 btn_kelompok.addEventListener("click", function (e) {
 
@@ -480,6 +387,7 @@ btn_kelompok.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '40%',
             returnFocus: false,
             showCloseButton: true,
             showConfirmButton: true,
@@ -560,6 +468,7 @@ btn_subkel.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '40%',
             returnFocus: false,
             showCloseButton: true,
             showConfirmButton: true,
@@ -664,6 +573,7 @@ btn_namatype.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '55%',
             returnFocus: false,
             showCloseButton: true,
             showConfirmButton: true,
@@ -841,6 +751,7 @@ btn_subkelPenerima.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '40%',
             returnFocus: false,
             showCloseButton: true,
             showConfirmButton: true,
@@ -1580,7 +1491,7 @@ btn_proses.addEventListener("click", function (e) {
                                     insertHutang();
                                 }
                                 else {
-                                    // 
+                                    //
                                 }
                             });
                         }

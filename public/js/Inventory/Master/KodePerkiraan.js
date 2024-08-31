@@ -53,6 +53,7 @@ btn_lihat.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '55%',
             returnFocus: false,
             showCloseButton: true,
             showConfirmButton: true,

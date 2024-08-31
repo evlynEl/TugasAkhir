@@ -457,6 +457,7 @@ btn_BagCode.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '40%',
             timeout: 30000,
             showCloseButton: true,
             showConfirmButton: true,

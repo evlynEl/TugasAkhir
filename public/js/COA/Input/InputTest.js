@@ -443,6 +443,7 @@ btn_info.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '40%',
             showCloseButton: true,
             showConfirmButton: true,
             confirmButtonText: 'Select',

@@ -33,6 +33,7 @@ btn_lihat.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '40%',
             showCloseButton: true,
             showConfirmButton: true,
             confirmButtonText: 'Select',
@@ -69,7 +70,7 @@ btn_lihat.addEventListener("click", function (e) {
         }).then((result) => {
             if (result.isConfirmed) {
                 const materialSection = decodeHtmlEntities(result.value.Material.trim());
-                id.value = result.value.Id; 
+                id.value = result.value.Id;
                 material.value = materialSection;
                 btn_proses.disabled = true;
             }
@@ -132,7 +133,7 @@ function handleTableKeydown(e, tableId) {
     }
 }
 
-// fungsi unk menampilkan '&' 
+// fungsi unk menampilkan '&'
 function decodeHtmlEntities(str) {
     var textArea = document.createElement('textarea');
     textArea.innerHTML = str;

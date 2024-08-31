@@ -407,6 +407,7 @@ btnDivisi.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '40%',
             returnFocus: false,
             showCloseButton: true,
             showConfirmButton: true,
@@ -485,6 +486,7 @@ btn_objek.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '40%',
             returnFocus: false,
             showCloseButton: true,
             showConfirmButton: true,
@@ -560,6 +562,7 @@ btn_kelut.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '40%',
             returnFocus: false,
             showCloseButton: true,
             showConfirmButton: true,
@@ -635,6 +638,7 @@ btn_kelompok.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '40%',
             returnFocus: false,
             showCloseButton: true,
             showConfirmButton: true,
@@ -710,6 +714,7 @@ btn_subkel.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '40%',
             returnFocus: false,
             showCloseButton: true,
             showConfirmButton: true,
@@ -785,6 +790,7 @@ btnNamaType.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '55%',
             returnFocus: false,
             showCloseButton: true,
             showConfirmButton: true,
@@ -920,9 +926,9 @@ $('#sekunderKonversiAsal').on('keydown', function (e) {
                 },
                 success: function (result) {
                     if (result[0]) {
-                        keluar = (result[0].OutSekunder) ?? 0; 
+                        keluar = (result[0].OutSekunder) ?? 0;
                     }
-                    
+
                     if ((parseFloat(sekunderAkhirAsal.value) - (keluar + parseFloat(sekunderKonversiAsal.value))) < 0) {
                         Swal.fire({
                             icon: 'error',
@@ -984,7 +990,7 @@ $('#triterKonversiAsal').on('keydown', function (e) {
                             || (divisiIdAsal.value === 'EXT' && (kelompokIdAsal.value === '1259' && kelutIdAsal.value === '1283'))
                         ) {
                             console.log(triterKonversiAsal.value);
-                            
+
                             Hitung_Hsl_Mtr();
                         }
                         if (divisiIdAsal.value === 'CIR' && objekIdAsal.value === '043') {

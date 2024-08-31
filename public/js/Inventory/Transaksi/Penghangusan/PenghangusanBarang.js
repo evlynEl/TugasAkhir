@@ -200,6 +200,7 @@ btn_divisi.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '40%',
             returnFocus: false,
             showCloseButton: true,
             showConfirmButton: true,
@@ -295,6 +296,7 @@ btn_objek.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '40%',
             returnFocus: false,
             showCloseButton: true,
             showConfirmButton: true,
@@ -369,6 +371,7 @@ btn_kelut.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '40%',
             returnFocus: false,
             showCloseButton: true,
             showConfirmButton: true,
@@ -443,6 +446,7 @@ btn_kelompok.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '40%',
             returnFocus: false,
             showCloseButton: true,
             showConfirmButton: true,
@@ -517,6 +521,7 @@ btn_subkel.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
+            width: '40%',
             returnFocus: false,
             showCloseButton: true,
             showConfirmButton: true,
@@ -696,6 +701,7 @@ function handleTypeSelection() {
                             }
                             return selectedData;
                         },
+                        width: '55%',
                         returnFocus: false,
                         showCloseButton: true,
                         showConfirmButton: true,
@@ -791,6 +797,7 @@ function handleTypeSelection() {
                             }
                             return selectedData;
                         },
+                        width: '55%',
                         returnFocus: false,
                         showCloseButton: true,
                         showConfirmButton: true,
@@ -878,6 +885,7 @@ function handleTypeSelection() {
                         }
                         return selectedData;
                     },
+                    width: '55%',
                     returnFocus: false,
                     showCloseButton: true,
                     showConfirmButton: true,
@@ -956,6 +964,17 @@ $(document).ready(function () {
     });
 });
 
+function escapeHtml(text) {
+    var map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, function (m) { return map[m]; });
+}
+
 // update table
 function allData() {
     table = $('#tableData').DataTable();
@@ -979,19 +998,19 @@ function allData() {
                 var tableData = [];
                 response.forEach(function (item) {
                     tableData.push([
-                        item.IdTransaksi,
-                        item.NamaType,
-                        item.UraianDetailTransaksi,
-                        item.IdPenerima,
-                        item.SaatAwalTransaksi,
-                        item.NamaDivisi,
-                        item.NamaObjek,
-                        item.NamaKelompokUtama,
-                        item.NamaKelompok,
-                        item.NamaSubKelompok,
-                        item.IdType,
-                        item.KodeBarang,
-                        item.IdSubkelompok
+                        escapeHtml(item.IdTransaksi),
+                        escapeHtml(item.NamaType),
+                        escapeHtml(item.UraianDetailTransaksi),
+                        escapeHtml(item.IdPenerima),
+                        escapeHtml(item.SaatAwalTransaksi),
+                        escapeHtml(item.NamaDivisi),
+                        escapeHtml(item.NamaObjek),
+                        escapeHtml(item.NamaKelompokUtama),
+                        escapeHtml(item.NamaKelompok),
+                        escapeHtml(item.NamaSubKelompok),
+                        escapeHtml(item.IdType),
+                        escapeHtml(item.KodeBarang),
+                        escapeHtml(item.IdSubkelompok)
                     ]);
                 });
 
