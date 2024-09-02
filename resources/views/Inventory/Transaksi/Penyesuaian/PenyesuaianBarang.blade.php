@@ -17,7 +17,7 @@
                     <div class="card-header" style="">Permohonan Penyesuaian Barang</div>
                     <div class="card-body RDZOverflow RDZMobilePaddingLR0">
                         <div class="baris-1 pl-3" id="baris-1">
-                            <div class="row pt-2">
+                            <div class="row pt-2" id="perlu">
                                 <div class="col-2">
                                     <label for="divisiId">Divisi</label>
                                 </div>
@@ -117,7 +117,7 @@
                                 <div class="col-1">
                                     <label for="PIB">PIB</label>
                                 </div>
-                                <div class="col-sm-2 mr-3">
+                                <div class="col-sm-3 mr-3">
                                     <input type="text" class="form-control" id="PIB" name="PIB">
                                 </div>
                             </div>
@@ -139,7 +139,7 @@
                                 <div class="col-sm-2">
                                     <label for="namaBarang">Nama Barang</label>
                                 </div>
-                                <div class="col-sm-3">
+                                <div class="col-sm-6">
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="namaBarang" name="namaBarang"
                                             readonly>
@@ -196,7 +196,7 @@
                                         readonly>
                                 </div>
                             </div>
-                            <div class="row" id="">
+                            <div class="row" id="satuan">
                                 <div class="col-12">
                                     <label>Stok di SESUAIKAN menjadi</label>
                                 </div>

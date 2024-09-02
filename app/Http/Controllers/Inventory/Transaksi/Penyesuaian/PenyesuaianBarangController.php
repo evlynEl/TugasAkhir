@@ -40,12 +40,14 @@ class PenyesuaianBarangController extends Controller
         $kelutId = $request->input('kelutId');
         $subkelId = $request->input('subkelId');
 
-        $tanggal = $request->input('tanggal');
         $pemohon = $request->input('pemohon');
         $kodeTransaksi = $request->input('kodeTransaksi');
         $kodeType = $request->input('kodeType');
         $alasan = $request->input('alasan');
         $uraian = trim($alasan) === null ? '' : trim($alasan);
+        $kodeBarang = $request->input('kodeBarang');
+        $PIB = $request->input('PIB');
+
 
         if ($id === 'getUserId') {
             return response()->json(['user' => $user]);
@@ -141,7 +143,8 @@ class PenyesuaianBarangController extends Controller
                         'NamaType' => $detail_type->NamaType,
                         'Satuan_Primer' => $detail_type->Satuan_Primer,
                         'Satuan_Sekunder' => $detail_type->Satuan_Sekunder,
-                        'Satuan_Tritier' => $detail_type->Satuan_Tritier
+                        'Satuan_Tritier' => $detail_type->Satuan_Tritier,
+                        'PIB' => $detail_type->PIB,
                     ];
                 }
                 // dd($data_type);
@@ -158,11 +161,12 @@ class PenyesuaianBarangController extends Controller
                 $data_saldo[] = [
                     'SaldoPrimer' => $detail_saldo->SaldoPrimer,
                     'SaldoSekunder' => $detail_saldo->SaldoSekunder,
-                    'SaldoTritier' => $detail_saldo->SaldoTritier
+                    'SaldoTritier' => $detail_saldo->SaldoTritier,
+
                 ];
             }
             // dd($data_saldo);
-            return response()->json($saldo);
+            return response()->json($data_saldo);
         }
 
         else if ($id === 'getTypeCIR') {
@@ -211,10 +215,84 @@ class PenyesuaianBarangController extends Controller
             return response()->json($data_type);
         }
 
+        else if ($id === 'getSelect') {
+            // mendapatkan saldo, satuan, pemasukan unk selected data table
+            $selectData = DB::connection('ConnInventory')->select('exec SP_1003_INV_AsalSubKelompok_Transaksi @XIdTransaksi = ?', [$kodeTransaksi]);
+            $data_selectData = [];
+            foreach ($selectData as $detail_selectData) {
+                $data_selectData[] = [
+                    'SaldoPrimer' => $detail_selectData->SaldoPrimer,
+                    'SaldoSekunder' => $detail_selectData->SaldoSekunder,
+                    'SaldoTritier' => $detail_selectData->SaldoTritier,
+                    'Satuan_Primer' => $detail_selectData->Satuan_Primer,
+                    'Satuan_Sekunder' => $detail_selectData->Satuan_Sekunder,
+                    'Satuan_Tritier' => $detail_selectData->Satuan_Tritier,
+                    'JumlahPemasukanPrimer' => $detail_selectData->JumlahPemasukanPrimer,
+                    'JumlahPemasukanSekunder' => $detail_selectData->JumlahPemasukanSekunder,
+                    'JumlahPemasukanTritier' => $detail_selectData->JumlahPemasukanTritier,
+                    'JumlahPengeluaranPrimer' => $detail_selectData->JumlahPengeluaranPrimer,
+                    'JumlahPengeluaranSekunder' => $detail_selectData->JumlahPengeluaranSekunder,
+                    'JumlahPengeluaranTritier' => $detail_selectData->JumlahPengeluaranTritier,
+                    'IdSubkelompok' => $detail_selectData->IdSubkelompok
+
+                ];
+            }
+
+            foreach ($data_selectData as $key => $data) {
+                // PRIMER
+                if ($data['JumlahPemasukanPrimer'] > 0) {
+                    $primer2 = $data['JumlahPemasukanPrimer'] + $data['SaldoPrimer'];
+                } else {
+                    $primer2 = $data['JumlahPemasukanPrimer'] + $data['SaldoPrimer'];
+                }
+
+                if ($data['JumlahPengeluaranPrimer'] > 0) {
+                    $primer2 -= $data['JumlahPengeluaranPrimer'];
+                } else {
+                    $primer2 += $data['JumlahPengeluaranPrimer'];
+                }
+
+                $data_selectData[$key]['SaldoPrimer2'] = $primer2;
+
+                // SEKUNDER
+                if ($data['JumlahPemasukanSekunder'] > 0) {
+                    $sekunder2 = $data['JumlahPemasukanSekunder'] + $data['SaldoSekunder'];
+                } else {
+                    $sekunder2 = $data['JumlahPemasukanSekunder'] + $data['SaldoSekunder'];
+                }
+
+                if ($data['JumlahPengeluaranSekunder'] > 0) {
+                    $sekunder2 -= $data['JumlahPengeluaranSekunder'];
+                } else {
+                    $sekunder2 += $data['JumlahPengeluaranSekunder'];
+                }
+
+                $data_selectData[$key]['SaldoSekunder2'] = $sekunder2;
+
+                // TRITIER
+                if ($data['JumlahPemasukanTritier'] > 0) {
+                    $tritier2 = $data['JumlahPemasukanTritier'] + $data['SaldoTritier'];
+                } else {
+                    $tritier2 = $data['JumlahPemasukanTritier'] + $data['SaldoTritier'];
+                }
+
+                if ($data['JumlahPengeluaranTritier'] > 0) {
+                    $tritier2 -= $data['JumlahPengeluaranTritier'];
+                } else {
+                    $tritier2 += $data['JumlahPengeluaranTritier'];
+                }
+
+                $data_selectData[$key]['SaldoTritier2'] = round($tritier2, 2);
+            }
+
+            // dd($request->all(), $data_selectData);
+            return response()->json($data_selectData);
+        }
+
         else if ($id === 'getAllData') {
-            // mendapatkan nama type & id type
+            // menampilkan semua data di data table
             $allData = DB::connection('ConnInventory')->select('
-            exec SP_1003_INV_List_Mohon_TmpTransaksi @kode = 2, @XIdDivisi = ?, @XIdTypeTransaksi = ?', [$divisiId, '05']);
+            exec SP_1003_INV_AllPenerima_BlmACC_Transaksi @XIdDivisi = ?, @XIdTypeTransaksi = ?', [$divisiId, '06']);
             $data_allData = [];
             foreach ($allData as $detail_allData) {
                 $formattedDate = date('m/d/Y', strtotime($detail_allData->SaatAwalTransaksi));
@@ -223,24 +301,90 @@ class PenyesuaianBarangController extends Controller
                     'IdTransaksi' => $detail_allData->IdTransaksi,
                     'NamaType' => $detail_allData->NamaType,
                     'UraianDetailTransaksi' => $detail_allData->UraianDetailTransaksi,
-                    'IdPenerima' => $detail_allData->IdPenerima,
+                    'NamaUser' => $detail_allData->NamaUser,
                     'SaatAwalTransaksi' => $formattedDate,
                     'NamaDivisi' => $detail_allData->NamaDivisi,
                     'NamaObjek' => $detail_allData->NamaObjek,
                     'NamaKelompokUtama' => $detail_allData->NamaKelompokUtama,
                     'NamaKelompok' => $detail_allData->NamaKelompok,
                     'NamaSubKelompok' => $detail_allData->NamaSubKelompok,
-                    'IdPenerima1' => $detail_allData->IdPenerima1,
-                    'IdType' => $detail_allData->IdType,
-                    'KodeBarang' => $detail_allData->KodeBarang,
-                    'IdSubkelompok' => $detail_allData->IdSubkelompok
+                    'IdPenerima' => $detail_allData->IdPenerima,
+                    'IdObjek' => $detail_allData->IdObjek
                 ];
             }
-            // dd($data_allData);
+            // dd($request->all(), $data_allData);
             return response()->json($data_allData);
         }
 
 
+        else if ($id === 'getData') {
+            // menampilkan pemohon data di data table
+            $justData = DB::connection('ConnInventory')->select('
+            exec SP_1003_INV_IdPenerima_BlmACC_Transaksi @XIdDivisi = ?, @XIdTypeTransaksi = ?, @XIdPenerima = ?', [$divisiId, '06', $pemohon]);
+            $data_justData = [];
+            foreach ($justData as $detail_justData) {
+                $formattedDate = date('m/d/Y', strtotime($detail_justData->SaatAwalTransaksi));
+
+                $data_justData[] = [
+                    'IdTransaksi' => $detail_justData->IdTransaksi,
+                    'NamaType' => $detail_justData->NamaType,
+                    'UraianDetailTransaksi' => $detail_justData->UraianDetailTransaksi,
+                    'NamaUser' => $detail_justData->NamaUser,
+                    'SaatAwalTransaksi' => $formattedDate,
+                    'NamaDivisi' => $detail_justData->NamaDivisi,
+                    'NamaObjek' => $detail_justData->NamaObjek,
+                    'NamaKelompokUtama' => $detail_justData->NamaKelompokUtama,
+                    'NamaKelompok' => $detail_justData->NamaKelompok,
+                    'NamaSubKelompok' => $detail_justData->NamaSubKelompok,
+                    'IdPenerima' => $detail_justData->IdPenerima
+                ];
+            }
+            // dd($data_justData);
+            return response()->json($data_justData);
+        }
+
+        else if ($id === 'getSubkelId') {
+            // mendapatkan subkel id
+            $subkelId = DB::connection('ConnInventory')->select('exec SP_1003_INV_Cek_SubKel @IdType = ?', [$kodeType]);
+            $data_subkelId = [];
+            foreach ($subkelId as $detail_subkelId) {
+                $data_subkelId[] = [
+                    'idsubkel' => $detail_subkelId->idsubkel
+                ];
+            }
+            return response()->json($data_subkelId);
+        }
+
+        else if ($id === 'cekKodeBarang') {
+            // cek kode barang dari input
+            $kode = DB::connection('ConnInventory')->select('exec SP_1003_INV_cekkodebarang_type @XKodeBarang = ?, @XIdSubKelompok = ?', [$kodeBarang, $subkelId]);
+
+            $jumlah = (int)$kode[0]->jumlah;
+
+            if ($jumlah > 0) {
+                return response()->json(['warning' => 'Tidak Ada Kode Barang : ' . $kodeBarang. 'Pada sub kel : '.$subkelId], 200);
+            } else {
+                $barang = DB::connection('ConnInventory')->select(
+                'exec SP_1273_INV_kodebarang_type1 @XKodeBarang = ?, @XIdSubKelompok = ?, @XPIB = ?', [$kodeBarang, $subkelId, $PIB]);
+            }
+
+            $data_barang = [];
+            foreach ($barang as $detail_barang) {
+                $data_barang[] = [
+                    'IdType' => $detail_barang->IdType,
+                    'NamaType' => $detail_barang->NamaType,
+                    'KodeBarang' => $detail_barang->KodeBarang,
+                    'SaldoPrimer' => $detail_barang->SaldoPrimer,
+                    'SaldoSekunder' => $detail_barang->SaldoSekunder,
+                    'SaldoTritier' => $detail_barang->SaldoTritier,
+                    'Satuan_Primer' => $detail_barang->Satuan_Primer,
+                    'Satuan_Sekunder' => $detail_barang->Satuan_Sekunder,
+                    'Satuan_Tritier' => $detail_barang->Satuan_Tritier,
+                ];
+            }
+            // dd($request->all(), $data_barang);
+            return response()->json($data_barang);
+        }
     }
 
     // Show the form for editing the specified resource.
@@ -253,37 +397,53 @@ class PenyesuaianBarangController extends Controller
     public function update(Request $request, $id)
     {
         $a = (int)$request->input('a');
+        $subkelId = $request->input('subkelId');
+        $tanggal = $request->input('tanggal');
+        $pemohon = $request->input('pemohon');
+        $kodeTransaksi = $request->input('kodeTransaksi');
+        $kodeType = $request->input('kodeType');
+        $alasan = $request->input('alasan');
+        $uraian = trim($alasan) === null ? '' : trim($alasan);
+        $primer3 = $request->input('primer3');
+        $sekunder3 = $request->input('sekunder3');
+        $tritier3 = $request->input('tritier3');
+
 
         if ($id === 'proses') {
             // proses terjadi
             if ($a === 1) { // ISI
                 try{
-                    // insert ke tmp transaksi unk di tampilkan di table
+                    // insert
                     DB::connection('ConnInventory')->statement(
-                        'exec SP_1003_INV_Insert_05_TmpTransaksi
-                        @XIdTypeTransaksi = ?, @XIdType = ?,  @XIdPenerima = ?, @XIdPemberi = ?, @XSaatawalTransaksi = ?,
-                        @XJumlahPengeluaranPrimer = ?, @XJumlahPengeluaranSekunder = ?, @XJumlahPengeluaranTritier = ?,
-                        @XAsalIdSubKelompok = ?, @XTujuanIdSubKelompok = ?, @XUraianDetailTransaksi = ?, @kd = 1',
-                        []
+                        'exec SP_1003_INV_Insert_06_Transaksi
+                        @XIdTypeTransaksi = ?, @XUraianDetailTransaksi = ?, @XIdType = ?,  @XIdPenerima = ?, @XSaatawalTransaksi = ?,
+                        @XPrimer = ?, @XSekunder = ?, @XTritier = ?, @XAsalIdSubKelompok = ?, @XTujuanIdSubKelompok = ?',
+                        ['06', $uraian, $kodeType, $pemohon, $tanggal,
+                         $primer3, $sekunder3, $tritier3, $subkelId, $subkelId]
                     );
+
                     // dd($request->all());
-                    return response()->json(['success' => 'Data inserted successfully'], 200);
+
+                    return response()->json(['success' => 'Data sudah diSIMPAN'], 200);
                 } catch (\Exception $e) {
-                    return response()->json(['error' => 'Data insert failed' . $e->getMessage()], 500);
+                    return response()->json(['error' => 'Data Gagal ter-SIMPAN' . $e->getMessage()], 500);
                 }
-            } else if ($a === 2) { // KOREKSI
+            }
+
+            else if ($a === 2) { // KOREKSI
                 try {
                     // update
                     DB::connection('ConnInventory')->statement(
-                        'exec SP_1003_INV_update_TmpTransaksi
-                        @XIdTransaksi = ?, @XUraianDetailTransaksi = ?, @XJumlahKeluarPrimer = ?,
-                        @XJumlahKeluarSekunder = ?, @XJumlahKeluarTritier = ?, @XTujuanSubKelompok = ?',
-                        []
+                        'exec SP_1003_INV_update_Penyesuaian_Transaksi
+                        @XIdTransaksi = ?, @Xuraian = ?, @XPrimer = ?, @XSekunder = ?, @XTritier = ?',
+                        [$kodeTransaksi, $uraian, $primer3, $sekunder3, $tritier3 ]
                     );
+
                     // dd($request->all());
-                    return response()->json(['success' => 'Data updated successfully'], 200);
+
+                    return response()->json(['success' => 'Data terKOREKSI'], 200);
                 } catch (\Exception $e) {
-                    return response()->json(['error' => 'Data update failed' . $e->getMessage()], 500);
+                    return response()->json(['error' => 'Data Gagal ter-KOREKSI' . $e->getMessage()], 500);
                 }
             }
         }
