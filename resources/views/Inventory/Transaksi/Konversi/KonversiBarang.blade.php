@@ -90,8 +90,10 @@
                                     </div>
                                     <div class="row ml-5 mb-2 mt-1">
                                         <button type="button" id="btn_isiAsal" class="btn btn-info" disabled>Isi</button>
-                                        <button type="button" id="btn_koreksiAsal" class="btn btn-info" disabled>Koreksi</button>
-                                        <button type="button" id="btn_hapusAsal" class="btn btn-info" disabled>Hapus</button>
+                                        <button type="button" id="btn_koreksiAsal" class="btn btn-info"
+                                            disabled>Koreksi</button>
+                                        <button type="button" id="btn_hapusAsal" class="btn btn-info"
+                                            disabled>Hapus</button>
                                     </div>
                                 </div>
 
@@ -129,10 +131,12 @@
                                         </div>
                                     </div>
                                     <div class="row ml-5 mb-2 mt-1">
-                                        <button type="button" id="btn_isiTujuan" class="btn btn-info" disabled>Isi</button>
+                                        <button type="button" id="btn_isiTujuan" class="btn btn-info"
+                                            disabled>Isi</button>
                                         <button type="button" id="btn_koreksiTujuan" disabled
                                             class="btn btn-info">Koreksi</button>
-                                        <button type="button" id="btn_hapusTujuan" disabled class="btn btn-info">Hapus</button>
+                                        <button type="button" id="btn_hapusTujuan" disabled
+                                            class="btn btn-info">Hapus</button>
                                     </div>
                                 </div>
 
@@ -258,7 +262,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="row pt-1">
+                                        <div class="row pt-1 kodeAsal">
                                             <div class="col-sm-3">
                                                 <label for="kodeBarangAsal">Kd Barang/Type</label>
                                             </div>
@@ -271,7 +275,23 @@
                                                     <input type="text" class="form-control" id="kodeTypeAsal"
                                                         name="kodeTypeAsal">
                                                     <div class="input-group-append">
-                                                        <button type="button" id="btn_namatype"
+                                                        <button type="button" id="btn_idtype"
+                                                            class="btn btn-info">...</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row pt-1 kodeTujuan">
+                                            <div class="col-sm-3">
+                                                <label for="kodeBarangAsal">Kode Type</label>
+                                            </div>
+                                            <div class="col-sm-8">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" id="kodeTypeAsal"
+                                                        name="kodeTypeAsal">
+                                                    <div class="input-group-append">
+                                                        <button type="button" id="btn_idtype"
                                                             class="btn btn-info">...</button>
                                                     </div>
                                                 </div>
@@ -283,8 +303,14 @@
                                                 <label for="namaTypeAsal">Nama Type</label>
                                             </div>
                                             <div class="col-sm-8">
-                                                <input type="text" id="namaTypeAsal" name="namaTypeAsal"
-                                                    class="form-control">
+                                                <div class="input-group">
+                                                    <input type="text" id="namaTypeAsal" name="namaTypeAsal"
+                                                        class="form-control">
+                                                    <div class="input-group-append">
+                                                        <button type="button" id="btn_namatype"
+                                                            class="btn btn-info">...</button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
 
@@ -327,7 +353,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-1" style="margin-left: -3%">
-                                                    <span id="asalS">S</span >
+                                                    <span id="asalS">S</span>
                                                 </div>
 
                                                 <div class="col-sm-1">
@@ -367,8 +393,7 @@
                                                 <div class="col-sm-2" style="margin-left: 3%">
                                                     <div class="input-group">
                                                         <input type="text" class="form-control"
-                                                            id="sekunderKonversiAsal" name="sekunderKonversiAsal"
-                                                        >
+                                                            id="sekunderKonversiAsal" name="sekunderKonversiAsal">
                                                     </div>
                                                 </div>
 
@@ -521,7 +546,7 @@
                                                     <input type="text" class="form-control" id="kodeTypeTujuan"
                                                         name="kodeTypeTujuan">
                                                     <div class="input-group-append">
-                                                        <button type="button" id="btn_namatype"
+                                                        <button type="button" id="btn_idtype"
                                                             class="btn btn-info">...</button>
                                                     </div>
                                                 </div>
@@ -533,8 +558,14 @@
                                                 <label for="namaTypeTujuan">Nama Type</label>
                                             </div>
                                             <div class="col-sm-8">
-                                                <input type="text" id="namaTypeTujuan" name="namaTypeTujuan"
-                                                    class="form-control">
+                                                <div class="input-group">
+                                                    <input type="text" id="namaTypeTujuan" name="namaTypeTujuan"
+                                                        class="form-control">
+                                                    <div class="input-group-append">
+                                                        <button type="button" id="btn_namatype"
+                                                            class="btn btn-info">...</button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
 
@@ -607,8 +638,7 @@
                                                 <div class="col-sm-2">
                                                     <div class="input-group">
                                                         <input type="text" class="form-control"
-                                                            id="primerKonversiTujuan" name="primerKonversiTujuan"
-                                                        >
+                                                            id="primerKonversiTujuan" name="primerKonversiTujuan">
                                                     </div>
                                                 </div>
 
@@ -618,8 +648,7 @@
                                                 <div class="col-sm-2" style="margin-left: 3%">
                                                     <div class="input-group">
                                                         <input type="text" class="form-control"
-                                                            id="sekunderKonversiTujuan" name="sekunderKonversiTujuan"
-                                                        >
+                                                            id="sekunderKonversiTujuan" name="sekunderKonversiTujuan">
                                                     </div>
                                                 </div>
 
@@ -629,8 +658,7 @@
                                                 <div class="col-sm-2" style="margin-left: 3%">
                                                     <div class="input-group">
                                                         <input type="text" class="form-control"
-                                                            id="triterKonversiTujuan" name="triterKonversiTujuan"
-                                                        >
+                                                            id="triterKonversiTujuan" name="triterKonversiTujuan">
                                                     </div>
                                                 </div>
                                             </div>
