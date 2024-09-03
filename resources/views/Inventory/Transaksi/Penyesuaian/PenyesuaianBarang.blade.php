@@ -1,15 +1,5 @@
 @extends('layouts.AppInventory')
 @section('content')
-    {{-- <script type="text/javascript" src="{{ asset('js/Master/MaintenanceType.js') }}"></script> --}}
-    <script>
-        $(document).ready(function() {
-            $("#tabel_Purchasing").DataTable({
-                order: [
-                    [0, "asc"]
-                ],
-            });
-        });
-    </script>
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-md-10 RDZMobilePaddingLR0">
@@ -96,7 +86,7 @@
                             </div>
                         </div>
 
-                        <div class="row" id="ids" {{--style="display:none;"--}}>
+                        <div class="row" id="ids" style="display:none;">
                             <div class="col-md-5 d-flex">
                                 <input type="text" id="divisiId" name="divisiId" class="form-control" readonly>
                                 <input type="text" id="objekId" name="objekId" class="form-control" readonly>

@@ -129,7 +129,8 @@ class PenyesuaianBarangController extends Controller
                     'BARU' => $detail_listABM->BARU
                 ];
             }
-            return datatables($listABM)->make(true);
+            // dd($detail_listABM);
+            return datatables($detail_listABM)->make(true);
         }
 
         else if ($id === 'getSatuanType') {
@@ -173,7 +174,6 @@ class PenyesuaianBarangController extends Controller
             // mendapatkan nama type & id type
             DB::connection('ConnInventory')->statement('exec SP_1003_INV_idnamasubkelompok_type @XIdDivisi = ?, @XIdSubKelompok = ?', [$divisiId, $subkelId]);
 
-
             $typeCIR = DB::connection('ConnInventory')->select('exec SP_1003_INV_List_Type_PerUkuran');
             $data_typeCIR = [];
             foreach ($typeCIR as $detail_typeCIR) {
@@ -182,6 +182,8 @@ class PenyesuaianBarangController extends Controller
                     'Nm_Type' => $detail_typeCIR->Nm_Type
                 ];
             }
+
+            // dd($data_typeCIR);
             return datatables($data_typeCIR)->make(true);
         }
 
@@ -336,7 +338,7 @@ class PenyesuaianBarangController extends Controller
                     'NamaKelompokUtama' => $detail_justData->NamaKelompokUtama,
                     'NamaKelompok' => $detail_justData->NamaKelompok,
                     'NamaSubKelompok' => $detail_justData->NamaSubKelompok,
-                    'IdPenerima' => $detail_justData->IdPenerima
+                    'IdPenerima' => $detail_justData->IdPenerima,
                 ];
             }
             // dd($data_justData);
@@ -352,6 +354,7 @@ class PenyesuaianBarangController extends Controller
                     'idsubkel' => $detail_subkelId->idsubkel
                 ];
             }
+            // dd($data_subkelId, $request->all());
             return response()->json($data_subkelId);
         }
 
@@ -452,18 +455,10 @@ class PenyesuaianBarangController extends Controller
     //Remove the specified resource from storage.
     public function destroy(Request $request, $id)
     {
-        $data = $request->all();
-        // dd('Masuk Destroy', $data);
-            DB::connection('ConnInventory')->statement('exec SP_1003_INV_Delete_TmpTransaksi  @XIdTransaksi = ?', [
-                $data['IdTransaksi']
-            ]);
-
-        return redirect()->route('MaxMinStok.index')->with('alert', 'Data berhasil dihapus!');
-
         $kodeTransaksi = $request->input('kodeTransaksi');
         if ($id === 'hapusBarang') {
             try {
-                DB::connection('ConnInventory')->statement('exec SP_1003_INV_Delete_TmpTransaksi  @XIdTransaksi = ?', [$kodeTransaksi]);
+                DB::connection('ConnInventory')->statement('exec SP_1003_INV_Delete_Transaksi  @XIdTransaksi = ?', [$kodeTransaksi]);
 
                 return response()->json(['success' => 'Data sudah diHAPUS'], 200);
             } catch (\Exception $e) {
