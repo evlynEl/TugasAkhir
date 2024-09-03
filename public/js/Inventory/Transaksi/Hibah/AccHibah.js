@@ -28,7 +28,7 @@ $(document).ready(function () {
         info: false,
         ordering: false,
         columns: [
-            { title: 'Status' },
+            // { title: 'Status' },
             { title: 'Kode Trans' },
             { title: 'Nama Brg' },
             { title: 'Pemberi Hibah' },

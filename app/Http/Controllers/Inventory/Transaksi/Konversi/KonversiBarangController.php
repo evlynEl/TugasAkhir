@@ -119,7 +119,8 @@ class KonversiBarangController extends Controller
             foreach ($subkel as $detail_subkel) {
                 $data_subkel[] = [
                     'NamaType' => $detail_subkel->NamaType,
-                    'IdType' => $detail_subkel->IdType
+                    'IdType' => $detail_subkel->IdType,
+                    'KodeBarang' => $detail_subkel->KodeBarang,
                 ];
             }
             return datatables($subkel)->make(true);
@@ -385,6 +386,43 @@ class KonversiBarangController extends Controller
             }
             return response()->json($data_divisi);
         }
+
+        // get data tujuan
+        else if ($id === 'getStatusKonversiTujuan') {
+            $XIdTransaksi = $request->input('XIdTransaksi');
+
+            $divisi = DB::connection('ConnInventory')->select('exec SP_1003_INV_List_TujuanKonversi_TmpTransaksi
+            @XIdTransaksi = ?', [$XIdTransaksi]);
+            $data_divisi = [];
+            foreach ($divisi as $detail_divisi) {
+                $data_divisi[] = [
+                    'IdDivisi' => $detail_divisi->IdDivisi,
+                    'SaatAwalTransaksi' => $detail_divisi->SaatAwalTransaksi,
+                    'IdTypeTransaksi' => $detail_divisi->IdTypeTransaksi,
+                    'UraianDetailTransaksi' => $detail_divisi->UraianDetailTransaksi,
+                    'IdKonversi' => $detail_divisi->IdKonversi,
+                    'IdTransaksi' => $detail_divisi->IdTransaksi,
+                    'IdType' => $detail_divisi->IdType,
+                    'NamaType' => $detail_divisi->NamaType,
+                    'IdPenerima' => $detail_divisi->IdPenerima,
+                    'NamaSubKelompok' => $detail_divisi->NamaSubKelompok,
+                    'IdSubkelompok' => $detail_divisi->IdSubkelompok,
+                    'NamaKelompok' => $detail_divisi->NamaKelompok,
+                    'IdKelompok' => $detail_divisi->IdKelompok,
+                    'NamaKelompokUtama' => $detail_divisi->NamaKelompokUtama,
+                    'IdKelompokUtama' => $detail_divisi->IdKelompokUtama,
+                    'NamaObjek' => $detail_divisi->NamaObjek,
+                    'IdObjek' => $detail_divisi->IdObjek,
+                    'NamaDivisi' => $detail_divisi->NamaDivisi,
+                    'JumlahPemasukanPrimer' => $detail_divisi->JumlahPemasukanPrimer,
+                    'JumlahPemasukanSekunder' => $detail_divisi->JumlahPemasukanSekunder,
+                    'JumlahPemasukanTritier' => $detail_divisi->JumlahPemasukanTritier,
+                    'KodeBarang' => $detail_divisi->KodeBarang,
+                ];
+
+            }
+            return response()->json($data_divisi);
+        }
     }
 
     // Show the form for editing the specified resource.
@@ -471,6 +509,50 @@ class KonversiBarangController extends Controller
             } catch (\Exception $e) {
                 return response()->json(['error' => 'Data gagal diSIMPAN: ' . $e->getMessage()], 500);
             }
+        } 
+        
+        // proses isi tujuan
+        else if ($id == 'prosesIsiTujuan') {
+            $XUraianDetailTransaksi = $request->input('XUraianDetailTransaksi');
+            $XIdType = $request->input('XIdType');
+            $XSaatAwalTransaksi = $request->input('XSaatAwalTransaksi');
+            $XJumlahMasukPrimer = $request->input('XJumlahMasukPrimer');
+            $XJumlahMasukSekunder = $request->input('XJumlahMasukSekunder');
+            $XJumlahMasukTritier = $request->input('XJumlahMasukTritier');
+            $XTujuanSubKel = $request->input('XTujuanSubKel');
+            $XIdKonversi = $request->input('XIdKonversi');
+            $UserInput = Auth::user()->NomorUser;
+            $UserInput = trim($UserInput);
+
+            try {
+                DB::connection('ConnInventory')
+                    ->statement('exec [SP_1003_INV_Insert_04_TujuanTmpTransaksi]
+                @XIdTypeTransaksi = ?,
+                @XUraianDetailTransaksi = ?,
+                @XIdType = ?,
+                @XIdPemohon = ?,
+                @XSaatAwalTransaksi = ?,
+                @XJumlahMasukPrimer = ?,
+                @XJumlahMasukSekunder = ?,
+                @XJumlahMasukTritier = ?,
+                @XTujuanSubKel = ?,
+                @XIdKonversi = ?', [
+                        '04',
+                        $XUraianDetailTransaksi,
+                        $XIdType,
+                        $UserInput,
+                        $XSaatAwalTransaksi,
+                        $XJumlahMasukPrimer,
+                        $XJumlahMasukSekunder,
+                        $XJumlahMasukTritier,
+                        $XTujuanSubKel,
+                        $XIdKonversi,
+                    ]);
+
+                return response()->json(['success' => 'Data sudah diSIMPAN'], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Data gagal diSIMPAN: ' . $e->getMessage()], 500);
+            }
         }
 
         // update isi, kalau proses button ISI
@@ -544,12 +626,55 @@ class KonversiBarangController extends Controller
                 return response()->json(['error' => 'Data gagal diKOREKSI: ' . $e->getMessage()], 500);
             }
         }
+        // update isi, kalau proses button ISI
+        else if ($id == 'prosesUpdateTujuan') {
+            $XIdTransaksi = $request->input('XIdTransaksi');
+            $XUraianDetaiLTransaksi = $request->input('XUraianDetaiLTransaksi');
+            $XJumlahKeluarPrimer = $request->input('XJumlahKeluarPrimer');
+            $XJumlahKeluarSekunder = $request->input('XJumlahKeluarSekunder');
+            $XJumlahKeluarTritier = $request->input('XJumlahKeluarTritier');
+
+            try {
+                DB::connection('ConnInventory')
+                    ->statement('exec [SP_1003_INV_Update_TmpTransaksi]
+                    @XIdTransaksi = ?,
+                    @XUraianDetaiLTransaksi = ?,
+                    @XJumlahKeluarPrimer = ?,
+                    @XJumlahKeluarSekunder = ?,
+                    @XJumlahKeluarTritier = ?', [
+                        $XIdTransaksi,
+                        $XUraianDetaiLTransaksi,
+                        $XJumlahKeluarPrimer,
+                        $XJumlahKeluarSekunder,
+                        $XJumlahKeluarTritier,
+                    ]);
+                return response()->json(['success' => 'Data sudah diKOREKSI'], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Data gagal diKOREKSI: ' . $e->getMessage()], 500);
+            }
+        }
     }
 
     //Remove the specified resource from storage.
     public function destroy(Request $request, $id)
     {
         if ($id == 'prosesDeleteAsal') {
+            $XIdTransaksi = $request->input('XIdTransaksi');
+
+            try {
+                DB::connection('ConnInventory')
+                    ->statement('exec [SP_1003_INV_Delete_TmpTransaksi]
+                    @XIdTransaksi = ?', [
+                        $XIdTransaksi,
+                    ]);
+                return response()->json(['success' => 'Data sudah diHAPUS'], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Data gagal diHAPUS: ' . $e->getMessage()], 500);
+            }
+        }
+
+        // delete tujuan
+        else if ($id == 'prosesDeleteTujuan') {
             $XIdTransaksi = $request->input('XIdTransaksi');
 
             try {

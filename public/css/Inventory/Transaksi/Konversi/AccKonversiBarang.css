@@ -54,6 +54,12 @@ input {
     width: 8%;
 }
 
+.table-disabled {
+    pointer-events: none;
+    opacity: 0.8; /* Optional: makes the table appear disabled */
+}
+
+
 input[type="text"] {
     height: 30px;
     font-size: 14px;

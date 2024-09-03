@@ -20,6 +20,7 @@ var btnHapusTujuan = document.getElementById('btn_hapusTujuan');
 
 var btnNamaType = document.getElementById('btn_namatype');
 var btnIdType = document.getElementById('btn_idtype');
+var btnIdType2 = document.getElementById('btn_idtype2');
 
 var btnBatal = document.getElementById('btn_batal');
 
@@ -88,10 +89,12 @@ var StKonversi;
 var IsiAsal;
 var KodeKonversiAsal;
 var KodeKonversiTujuan;
+var IdTranTujuan;
 var IdTranAsal;
 var keluar = 0;
 var Hitung_Hsl_Mtr;
 var result3, result4, result5, result6, result7;
+var jml, i;
 
 var today = new Date().toISOString().slice(0, 10);
 tanggal.value = today;
@@ -712,7 +715,13 @@ btn_subkel.addEventListener("click", function (e) {
             if (result.isConfirmed) {
                 subkelIdAsal.value = decodeHtmlEntities(result.value.IdSubkelompok.trim());
                 subkelNamaAsal.value = decodeHtmlEntities(result.value.NamaSubKelompok.trim());
-                btnIdType.focus();
+
+                if (StKonversi === 1 || StKonversi === 2 || StKonversi === 3) {
+                    btnIdType.focus();
+                }
+                else {
+                    btnIdType2.focus();
+                }
             }
         });
     } catch (error) {
@@ -788,6 +797,7 @@ function Load_Type_ABM(sFld_1, sFld_2) {
                 result5 = decodeHtmlEntities(result.value.BARU.trim());
 
                 kodeTypeAsal.value = decodeHtmlEntities(result3);
+                kodeTypeTujuan.value = decodeHtmlEntities(result3);
                 namaTypeAsal.value = decodeHtmlEntities(result5);
 
                 Get_Type(kodeTypeAsal.value, subkelIdAsal.value);
@@ -871,6 +881,7 @@ function Load_Type_CIR(sFld_1, sFld_2) {
                 result6 = result.value.Nm_Type ? decodeHtmlEntities(result.value.Nm_Type) : '';
 
                 kodeTypeAsal.value = decodeHtmlEntities(result7);
+                kodeTypeTujuan.value = decodeHtmlEntities(result7);
                 namaTypeAsal.value = decodeHtmlEntities(result6);
 
                 Get_Type(kodeTypeAsal.value, subkelIdAsal.value);
@@ -934,7 +945,12 @@ function Get_Saldo(kd_Type) {
                 asalT.innerText = '';
             }
 
-            primerKonversiAsal.focus();
+            if (StKonversi === 3 || StKonversi === 6) {
+                btn_prosesAsal.focus();
+            }
+            else {
+                primerKonversiAsal.focus();
+            }
         },
         error: function (xhr, status, error) {
             console.error('Error:', error);
@@ -942,7 +958,10 @@ function Get_Saldo(kd_Type) {
     });
 }
 
-btnIdType.addEventListener("click", function (e) {
+btnIdType.addEventListener("click", buttonIdTypeClick);
+btnIdType2.addEventListener("click", buttonIdTypeClick2);
+
+function buttonIdTypeClick() {
     if ((divisiIdAsal.value === 'ABM' && objekIdAsal.value === '022') || (divisiIdAsal.value === 'CIR' && objekIdAsal.value === '043')
         || (divisiIdAsal.value === 'JBB' && objekIdAsal.value === '042')
         || ((divisiIdAsal.value === 'EXT') && (kelompokIdAsal.value === '1259' || kelompokIdAsal.value === '1283'))) {
@@ -1046,8 +1065,192 @@ btnIdType.addEventListener("click", function (e) {
         }
     }
     primerKonversiAsal.focus();
+}
 
-});
+function buttonIdTypeClick2() {
+    if ((divisiIdAsal.value === 'ABM' && objekIdAsal.value === '022') || (divisiIdAsal.value === 'CIR' && objekIdAsal.value === '043')
+        || (divisiIdAsal.value === 'JBB' && objekIdAsal.value === '042')
+        || ((divisiIdAsal.value === 'EXT') && (kelompokIdAsal.value === '1259' || kelompokIdAsal.value === '1283'))) {
+        if ((divisiIdAsal.value === 'ABM' && objekIdAsal.value === '022')) {
+            if (divisiIdAsal.value !== '') {
+                result3 = "idType";
+                result4 = "NamaType";
+                result5 = "Baru";
+                Load_Type_ABM(result5, result3);
+            }
+        }
+        else {
+            result7 = "id_type";
+            result6 = "nm_type";
+
+            $.ajax({
+                type: 'GET',
+                url: 'KonversiBarang/insertTempType',
+                data: {
+                    XIdDivisi: divisiIdAsal.value,
+                    XIdSubKelompok: subkelIdAsal.value,
+                    _token: csrfToken
+                },
+            });
+
+            Load_Type_CIR(result6, result7);
+        }
+    }
+    else if (divisiIdAsal.value === 'BKL') {
+        only_BKL();
+    }
+    else {
+        try {
+            Swal.fire({
+                title: 'Kode Type',
+                html: `
+                    <table id="table_list" class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID Type</th>
+                                <th scope="col">Nama Type</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                `,
+                preConfirm: () => {
+                    const selectedData = $("#table_list")
+                        .DataTable()
+                        .row(".selected")
+                        .data();
+                    if (!selectedData) {
+                        Swal.showValidationMessage("Please select a row");
+                        return false;
+                    }
+                    return selectedData;
+                },
+                width: '55%',
+                returnFocus: false,
+                showCloseButton: true,
+                showConfirmButton: true,
+                confirmButtonText: 'Select',
+                didOpen: () => {
+                    $(document).ready(function () {
+                        const table = $("#table_list").DataTable({
+                            responsive: true,
+                            processing: true,
+                            serverSide: true,
+                            order: [1, "asc"],
+                            ajax: {
+                                url: "KonversiBarang/getIdType",
+                                dataType: "json",
+                                type: "GET",
+                                data: {
+                                    _token: csrfToken,
+                                    XIdSubKelompok_Type: subkelIdAsal.value
+                                }
+                            },
+                            columns: [
+                                { data: "IdType" },
+                                { data: "NamaType" },
+                            ]
+                        });
+
+                        $("#table_list tbody").on("click", "tr", function () {
+                            table.$("tr.selected").removeClass("selected");
+                            $(this).addClass("selected");
+                        });
+
+                        currentIndex = null;
+                        Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
+                    });
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    kodeTypeTujuan.value = decodeHtmlEntities(result.value.IdType.trim());
+                    namaTypeAsal.value = decodeHtmlEntities(result.value.NamaType.trim());
+
+                    Get_Saldo(kodeTypeTujuan.value);
+                }
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    primerKonversiAsal.focus();
+}
+
+function only_BKL() {
+    try {
+        Swal.fire({
+            title: 'Kode Type',
+            html: `
+                <table id="table_list" class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nama Type</th>
+                            <th scope="col">ID Type</th>
+                            <th scope="col">Kode Barang</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            `,
+            preConfirm: () => {
+                const selectedData = $("#table_list")
+                    .DataTable()
+                    .row(".selected")
+                    .data();
+                if (!selectedData) {
+                    Swal.showValidationMessage("Please select a row");
+                    return false;
+                }
+                return selectedData;
+            },
+            width: '55%',
+            returnFocus: false,
+            showCloseButton: true,
+            showConfirmButton: true,
+            confirmButtonText: 'Select',
+            didOpen: () => {
+                $(document).ready(function () {
+                    const table = $("#table_list").DataTable({
+                        responsive: true,
+                        processing: true,
+                        serverSide: true,
+                        order: [1, "asc"],
+                        ajax: {
+                            url: "KonversiBarang/getIdType",
+                            dataType: "json",
+                            type: "GET",
+                            data: {
+                                _token: csrfToken,
+                                XIdSubKelompok_Type: subkelIdAsal.value
+                            }
+                        },
+                        columns: [
+                            { data: "IdType" },
+                            { data: "NamaType" },
+                            { data: "KodeBarang" },
+                        ]
+                    });
+
+                    $("#table_list tbody").on("click", "tr", function () {
+                        table.$("tr.selected").removeClass("selected");
+                        $(this).addClass("selected");
+                    });
+
+                    currentIndex = null;
+                    Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
+                });
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                kodeTypeTujuan.value = decodeHtmlEntities(result.value.IdType.trim());
+                namaTypeAsal.value = decodeHtmlEntities(result.value.NamaType.trim());
+                primerKonversiAsal.focus();
+            }
+        });
+    } catch (error) {
+        console.error(error);
+    }
+}
 
 // button list Kode Type
 btnNamaType.addEventListener("click", function (e) {
@@ -1115,10 +1318,10 @@ btnNamaType.addEventListener("click", function (e) {
         }).then((result) => {
             if (result.isConfirmed) {
                 kodeTypeAsal.value = decodeHtmlEntities(result.value.IdType.trim());
+                kodeTypeTujuan.value = decodeHtmlEntities(result.value.IdType.trim());
                 namaTypeAsal.value = decodeHtmlEntities(result.value.NamaType.trim());
 
                 Get_Saldo(kodeTypeAsal.value);
-
             }
         });
     } catch (error) {
@@ -1197,6 +1400,68 @@ btnIsiAsal.addEventListener("click", function (e) {
 
     $('#modalAsalKonversi').on('hidden.bs.modal', function () {
         $(this).find('input').val('');
+        primerKonversiAsal.value = 0;
+        sekunderKonversiAsal.value = 0;
+        triterKonversiAsal.value = 0;
+    });
+
+});
+
+var KdKonvArr = [];
+var IdTypeArr = [];
+
+// isi tujuan
+btnIsiTujuan.addEventListener("click", function (e) {
+
+    StKonversi = 4;
+
+    if (kodeKonversi.value === '') {
+        Swal.fire({
+            icon: 'error',
+            text: 'Pilih dulu Kd.Konversinya!!!..',
+        });
+    }
+    else {
+        var tableAsal = $('#tableAsal').DataTable();
+        Swal.fire({
+            icon: 'info',
+            text: 'Isi Data Tujuan Konversi, dng Kd.Konversi:  ' + kodeKonversi.value,
+        }).then(() => {
+            var tgl = new Date(Tgl);
+
+            var year = tgl.getFullYear();
+            var month = (tgl.getMonth() + 1).toString().padStart(2, '0');
+            var day = tgl.getDate().toString().padStart(2, '0');
+
+            var formattedDate = `${year}-${month}-${day}`;
+
+            tanggalAsal.value = formattedDate;
+            jml = 0;
+            divisiIdAsal.value = divisiId.value;
+            divisiNamaAsal.value = divisiNama.value;
+            uraianAsal.value = 'Tujuan Konversi';
+            KodeKonversiAsal = kodeKonversi.value;
+
+            tableAsal.rows().data().each(function (value, index) {
+                KdKonvArr[jml] = value[0];
+                IdTypeArr[jml] = value[8];
+                jml += 1;
+            });
+
+            $('#modalAsalKonversi').modal('show');
+            $('#modalAsalKonversi').on('shown.bs.modal', function () {
+                btn_objek.focus();
+                $('.kodeTujuan').show();
+                $('.kodeAsal').hide();
+            });
+        });
+    }
+
+    $('#modalAsalKonversi').on('hidden.bs.modal', function () {
+        $(this).find('input').val('');
+        primerKonversiAsal.value = 0;
+        sekunderKonversiAsal.value = 0;
+        triterKonversiAsal.value = 0;
     });
 
 });
@@ -1271,6 +1536,86 @@ btnKoreksiAsal.addEventListener("click", function (e) {
 
         $('#modalAsalKonversi').on('hidden.bs.modal', function () {
             $(this).find('input').val('');
+            primerKonversiAsal.value = 0;
+            sekunderKonversiAsal.value = 0;
+            triterKonversiAsal.value = 0;
+        });
+    }
+});
+
+btnKoreksiTujuan.addEventListener("click", function (e) {
+    StKonversi = 5;
+
+    if (kodeTujuan.value === '') {
+        Swal.fire({
+            icon: 'error',
+            text: 'Pilih dulu data yg dikoreksi!!.. tandai dng klik salah satu data di tabel!!..',
+        });
+        return;
+    }
+    else {
+        divisiIdAsal.value = divisiId.value;
+        divisiNamaAsal.value = divisiNama.value;
+        uraianAsal.value = 'Tujuan Konversi';
+        IdTranTujuan = kodeTujuan.value;
+
+        $.ajax({
+            type: 'GET',
+            url: 'KonversiBarang/getStatusKonversiTujuan',
+            data: {
+                XIdTransaksi: IdTranTujuan,
+                _token: csrfToken
+            },
+            success: function (result) {
+                if (result.length !== 0) {
+                    const saatawal = new Date(result[0].SaatAwalTransaksi);
+
+                    const yyyy = saatawal.getFullYear();
+                    const mm = String(saatawal.getMonth() + 1).padStart(2, '0');
+                    const dd = String(saatawal.getDate()).padStart(2, '0');
+
+                    tanggalAsal.value = `${yyyy}-${mm}-${dd}`;
+
+                    divisiIdAsal.value = decodeHtmlEntities(result[0].IdDivisi);
+                    divisiNamaAsal.value = decodeHtmlEntities(result[0].NamaDivisi);
+                    objekIdAsal.value = decodeHtmlEntities(result[0].IdObjek);
+                    objekNamaAsal.value = decodeHtmlEntities(result[0].NamaObjek);
+                    kelutIdAsal.value = decodeHtmlEntities(result[0].IdKelompokUtama);
+                    kelutNamaAsal.value = decodeHtmlEntities(result[0].NamaKelompokUtama);
+                    kelompokIdAsal.value = decodeHtmlEntities(result[0].IdKelompok);
+                    kelompokNamaAsal.value = decodeHtmlEntities(result[0].NamaKelompok);
+                    subkelIdAsal.value = decodeHtmlEntities(result[0].IdSubkelompok);
+                    subkelNamaAsal.value = decodeHtmlEntities(result[0].NamaSubKelompok);
+                    kodeTypeAsal.value = decodeHtmlEntities(result[0].IdType);
+                    namaTypeAsal.value = decodeHtmlEntities(result[0].NamaType);
+                    uraianAsal.value = decodeHtmlEntities(result[0].UraianDetailTransaksi);
+                    // primerAkhirAsal.value = 0;
+                    // sekunderAkhirAsal.value = 0;
+                    // triterAkhirAsal.value = 0;
+                    primerKonversiAsal.value = formatNumber(result[0].JumlahPemasukanPrimer);
+                    sekunderKonversiAsal.value = formatNumber(result[0].JumlahPemasukanSekunder);
+                    triterKonversiAsal.value = formatNumber(result[0].JumlahPemasukanTritier);
+
+                    Get_Saldo(kodeTypeAsal.value);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+
+        $('#modalAsalKonversi').modal('show');
+
+        $('#modalAsalKonversi').on('shown.bs.modal', function () {
+            $('.kodeTujuan').hide();
+            $('#primerKonversiAsal').focus();
+        });
+
+        $('#modalAsalKonversi').on('hidden.bs.modal', function () {
+            $(this).find('input').val('');
+            primerKonversiAsal.value = 0;
+            sekunderKonversiAsal.value = 0;
+            triterKonversiAsal.value = 0;
         });
     }
 });
@@ -1346,6 +1691,89 @@ btnHapusAsal.addEventListener("click", function (e) {
 
         $('#modalAsalKonversi').on('hidden.bs.modal', function () {
             $(this).find('input').val('');
+            primerKonversiAsal.value = 0;
+            sekunderKonversiAsal.value = 0;
+            triterKonversiAsal.value = 0;
+        });
+
+
+    }
+});
+
+btnHapusTujuan.addEventListener("click", function (e) {
+    StKonversi = 6;
+
+    if (kodeTujuan.value === '') {
+        Swal.fire({
+            icon: 'error',
+            text: 'Pilih dulu data yg dihapus!!.. tandai dng klik salah satu data di tabel!!..',
+        });
+        return;
+    }
+
+    else {
+        divisiIdAsal.value = divisiId.value;
+        divisiNamaAsal.value = divisiNama.value;
+        uraianAsal.value = 'Tujuan Konversi';
+        IdTranTujuan = kodeTujuan.value;
+        $.ajax({
+            type: 'GET',
+            url: 'KonversiBarang/getStatusKonversiTujuan',
+            data: {
+                XIdTransaksi: IdTranTujuan,
+                _token: csrfToken
+            },
+            success: function (result) {
+                if (result.length !== 0) {
+                    const saatawal = new Date(result[0].SaatAwalTransaksi);
+
+                    const yyyy = saatawal.getFullYear();
+                    const mm = String(saatawal.getMonth() + 1).padStart(2, '0');
+                    const dd = String(saatawal.getDate()).padStart(2, '0');
+
+                    tanggalAsal.value = `${yyyy}-${mm}-${dd}`;
+
+                    divisiIdAsal.value = decodeHtmlEntities(result[0].IdDivisi);
+                    divisiNamaAsal.value = decodeHtmlEntities(result[0].NamaDivisi);
+                    objekIdAsal.value = decodeHtmlEntities(result[0].IdObjek);
+                    objekNamaAsal.value = decodeHtmlEntities(result[0].NamaObjek);
+                    kelutIdAsal.value = decodeHtmlEntities(result[0].IdKelompokUtama);
+                    kelutNamaAsal.value = decodeHtmlEntities(result[0].NamaKelompokUtama);
+                    kelompokIdAsal.value = decodeHtmlEntities(result[0].IdKelompok);
+                    kelompokNamaAsal.value = decodeHtmlEntities(result[0].NamaKelompok);
+                    subkelIdAsal.value = decodeHtmlEntities(result[0].IdSubkelompok);
+                    subkelNamaAsal.value = decodeHtmlEntities(result[0].NamaSubKelompok);
+                    kodeTypeAsal.value = decodeHtmlEntities(result[0].IdType);
+                    namaTypeAsal.value = decodeHtmlEntities(result[0].NamaType);
+                    uraianAsal.value = decodeHtmlEntities(result[0].UraianDetailTransaksi);
+                    // primerAkhirAsal.value = 0;
+                    // sekunderAkhirAsal.value = 0;
+                    // triterAkhirAsal.value = 0;
+                    primerKonversiAsal.value = formatNumber(result[0].JumlahPemasukanPrimer);
+                    sekunderKonversiAsal.value = formatNumber(result[0].JumlahPemasukanSekunder);
+                    triterKonversiAsal.value = formatNumber(result[0].JumlahPemasukanTritier);
+
+                    Get_Saldo(kodeTypeAsal.value);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+
+        $('#modalAsalKonversi').modal('show');
+
+        $('#modalAsalKonversi').on('shown.bs.modal', function () {
+            $('.kodeTujuan').hide();
+            btn_prosesAsal.disabled = false;
+            btn_prosesAsal.focus();
+        });
+
+        $('#modalAsalKonversi').on('hidden.bs.modal', function () {
+            $(this).find('input').val('');
+            primerKonversiAsal.value = 0;
+            sekunderKonversiAsal.value = 0;
+            triterKonversiAsal.value = 0;
         });
 
 
@@ -1399,6 +1827,9 @@ btn_prosesAsal.addEventListener("click", function (e) {
 
                             $('#modalAsalKonversi').on('hidden.bs.modal', function () {
                                 $(this).find('input').val('');
+                                primerKonversiAsal.value = 0;
+                                sekunderKonversiAsal.value = 0;
+                                triterKonversiAsal.value = 0;
                             });
                             btn_prosesAsal.disabled = true;
 
@@ -1438,8 +1869,13 @@ btn_prosesAsal.addEventListener("click", function (e) {
 
                             $('#modalAsalKonversi').on('hidden.bs.modal', function () {
                                 $(this).find('input').val('');
+                                primerKonversiAsal.value = 0;
+                                sekunderKonversiAsal.value = 0;
+                                triterKonversiAsal.value = 0;
                             });
                             btn_prosesAsal.disabled = true;
+
+                            clearText();
                             if (kodeKonversi.value === '') {
                                 Load_DataKonversi();
                                 Load_Data_All_Asal();
@@ -1480,10 +1916,14 @@ btn_prosesAsal.addEventListener("click", function (e) {
 
                         $('#modalAsalKonversi').on('hidden.bs.modal', function () {
                             $(this).find('input').val('');
+                            primerKonversiAsal.value = 0;
+                            sekunderKonversiAsal.value = 0;
+                            triterKonversiAsal.value = 0;
                         });
 
                         btn_prosesAsal.disabled = true;
-
+                       
+                        clearText();
                         if (kodeKonversi.value === '') {
                             Load_DataKonversi();
                             Load_Data_All_Asal();
@@ -1519,6 +1959,161 @@ btn_prosesAsal.addEventListener("click", function (e) {
 
                         $('#modalAsalKonversi').on('hidden.bs.modal', function () {
                             $(this).find('input').val('');
+                            primerKonversiAsal.value = 0;
+                            sekunderKonversiAsal.value = 0;
+                            triterKonversiAsal.value = 0;
+                        });
+
+                        btn_prosesAsal.disabled = true;
+
+                        clearText();
+                        Load_DataKonversi();
+                        Load_Data_All_Asal();
+                        Load_Data_All_Tujuan();
+
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+        else if (StKonversi === 4) {
+
+            let belom = 0;
+
+            for (let i = 0; i < jml; i++) {
+                if (KdKonvArr[i] === kodeKonversi && IdTypeArr[i] === kodeTypeAsal.value) {
+                    Swal.fire({
+                        icon: 'error',
+                        text: 'Type Yang Dimasukkan Sudah Ada Pada Asal Konversi !!',
+                    });
+                    belom = 1;
+                    return;
+                }
+            }
+
+            if (belom !== 1) {
+                $.ajax({
+                    type: 'PUT',
+                    url: 'KonversiBarang/prosesIsiTujuan',
+                    data: {
+                        XUraianDetailTransaksi: uraianAsal.value,
+                        XIdType: kodeTypeTujuan.value,
+                        XSaatAwalTransaksi: tanggalAsal.value,
+                        XJumlahMasukPrimer: primerKonversiAsal.value,
+                        XJumlahMasukSekunder: sekunderKonversiAsal.value,
+                        XJumlahMasukTritier: triterKonversiAsal.value,
+                        XTujuanSubKel: subkelIdAsal.value,
+                        XIdKonversi: kodeKonversi.value,
+                        _token: csrfToken
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: response.success,
+                            });
+                            $('#modalAsalKonversi').modal('hide');
+
+                            $('#modalAsalKonversi').on('hidden.bs.modal', function () {
+                                $(this).find('input').val('');
+                                primerKonversiAsal.value = 0;
+                                sekunderKonversiAsal.value = 0;
+                                triterKonversiAsal.value = 0;
+                            });
+
+                            btn_prosesAsal.disabled = true;
+
+                            clearText();
+                            if (kodeKonversi.value === '') {
+                                Load_DataKonversi();
+                                Load_Data_All_Asal();
+                                Load_Data_All_Tujuan();
+                            }
+                            else {
+                                Load_DataAsal();
+                                Load_DataTujuan();
+                            }
+
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+            }
+        }
+        else if (StKonversi === 5) {
+            $.ajax({
+                type: 'PUT',
+                url: 'KonversiBarang/prosesUpdateTujuan',
+                data: {
+                    XIdTransaksi: IdTranTujuan,
+                    XUraianDetaiLTransaksi: uraianAsal.value,
+                    XJumlahKeluarPrimer: primerKonversiAsal.value,
+                    XJumlahKeluarSekunder: sekunderKonversiAsal.value,
+                    XJumlahKeluarTritier: triterKonversiAsal.value,
+                    _token: csrfToken
+                },
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.success,
+                        });
+                        $('#modalAsalKonversi').modal('hide');
+
+                        $('#modalAsalKonversi').on('hidden.bs.modal', function () {
+                            $(this).find('input').val('');
+                            primerKonversiAsal.value = 0;
+                            sekunderKonversiAsal.value = 0;
+                            triterKonversiAsal.value = 0;
+                        });
+
+                        btn_prosesAsal.disabled = true;
+
+                        clearText();
+                        if (kodeKonversi.value === '') {
+                            Load_DataKonversi();
+                            Load_Data_All_Asal();
+                            Load_Data_All_Tujuan();
+                        }
+                        else {
+                            Load_DataAsal();
+                            Load_DataTujuan();
+                        }
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+        else if (StKonversi === 6) {
+            $.ajax({
+                type: 'DELETE',
+                url: 'KonversiBarang/prosesDeleteTujuan',
+                data: {
+                    XIdTransaksi: IdTranTujuan,
+                    _token: csrfToken
+                },
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.success,
+                        });
+                        $('#modalAsalKonversi').modal('hide');
+
+                        $('#modalAsalKonversi').on('hidden.bs.modal', function () {
+                            $(this).find('input').val('');
+                            primerKonversiAsal.value = 0;
+                            sekunderKonversiAsal.value = 0;
+                            triterKonversiAsal.value = 0;
                         });
 
                         btn_prosesAsal.disabled = true;
@@ -1577,6 +2172,10 @@ $('#primerKonversiAsal').on('keydown', function (e) {
                 }
             });
         }
+
+        else {
+            sekunderKonversiAsal.focus();
+        }
     }
 });
 
@@ -1619,6 +2218,11 @@ $('#sekunderKonversiAsal').on('keydown', function (e) {
                 }
             });
         }
+
+        else {
+            triterKonversiAsal.focus();
+            btn_prosesAsal.disabled = false;
+        }
     }
 });
 
@@ -1660,7 +2264,7 @@ $('#triterKonversiAsal').on('keydown', function (e) {
                             Hitung_Hsl_Mtr_Asal();
                             sekunderKonversiAsal.value = Hitung_Hsl_Mtr * parseFloat(triterKonversiAsal.value);
                             if (sekunderKonversiAsal.value !== 0) {
-                                formatNumber(sekunderAkhirAsal.value);
+                                sekunderKonversiAsal.value = formatNumber(sekunderKonversiAsal.value);
                             }
                         }
                         if (divisiIdAsal.value === 'CIR' && objekIdAsal.value === '043') {
@@ -1668,7 +2272,8 @@ $('#triterKonversiAsal').on('keydown', function (e) {
                                 Hitung_Hsl_Mtr_Asal();
                                 sekunderKonversiAsal.value = Hitung_Hsl_Mtr * parseFloat(triterKonversiAsal.value);
                                 if (sekunderKonversiAsal.value !== 0) {
-                                    formatNumber(sekunderAkhirAsal.value);
+                                    sekunderKonversiAsal.value = formatNumber(sekunderKonversiAsal.value);
+
                                 }
                             }
                         }
@@ -1680,6 +2285,31 @@ $('#triterKonversiAsal').on('keydown', function (e) {
                     console.error('Error:', error);
                 }
             });
+        }
+        else {
+            if ((divisiIdAsal.value === 'ABM' && objekIdAsal.value === '022'
+                && (subkelIdAsal.value !== '006193' && subkelIdAsal.value !== '006634' && kelompokIdAsal !== '2543'))
+                || (divisiIdAsal.value === 'JBB' && objekIdAsal.value === '042' && kelompokIdAsal.value !== '2432')
+                || (divisiIdAsal.value === 'EXT' && (kelompokIdAsal.value === '1259' && kelutIdAsal.value === '1283'))
+            ) {
+                Hitung_Hsl_Mtr_Asal();
+                sekunderKonversiAsal.value = Hitung_Hsl_Mtr * parseFloat(triterKonversiAsal.value);
+                if (sekunderKonversiAsal.value !== 0) {
+                    sekunderKonversiAsal.value = formatNumber(sekunderKonversiAsal.value);
+                }
+            }
+            if (divisiIdAsal.value === 'CIR' && objekIdAsal.value === '043') {
+                if (triterKonversiAsal.value > 0) {
+                    Hitung_Hsl_Mtr_Asal();
+                    sekunderKonversiAsal.value = Hitung_Hsl_Mtr * parseFloat(triterKonversiAsal.value);
+                    if (sekunderKonversiAsal.value !== 0) {
+                        sekunderKonversiAsal.value = formatNumber(sekunderKonversiAsal.value);
+
+                    }
+                }
+            }
+            btn_prosesAsal.disabled = false;
+            btn_prosesAsal.focus();
         }
     }
 });

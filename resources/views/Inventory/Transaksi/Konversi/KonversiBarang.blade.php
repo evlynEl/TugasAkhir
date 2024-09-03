@@ -284,14 +284,14 @@
 
                                         <div class="row pt-1 kodeTujuan">
                                             <div class="col-sm-3">
-                                                <label for="kodeBarangAsal">Kode Type</label>
+                                                <label for="kodeBarangTujuan">Kode Type</label>
                                             </div>
                                             <div class="col-sm-8">
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control" id="kodeTypeAsal"
-                                                        name="kodeTypeAsal">
+                                                    <input type="text" class="form-control" id="kodeTypeTujuan"
+                                                        name="kodeTypeTujuan">
                                                     <div class="input-group-append">
-                                                        <button type="button" id="btn_idtype"
+                                                        <button type="button" id="btn_idtype2"
                                                             class="btn btn-info">...</button>
                                                     </div>
                                                 </div>

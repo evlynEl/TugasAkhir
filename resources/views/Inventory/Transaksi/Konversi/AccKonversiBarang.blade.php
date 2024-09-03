@@ -1,475 +1,90 @@
 @extends('layouts.AppInventory')
 @section('content')
-    {{-- <script type="text/javascript" src="{{ asset('js/Master/MaintenanceType.js') }}"></script> --}}
-    <script>
-        $(document).ready(function() {
-            $("#tabel_Konversi").DataTable({
-                order: [
-                    [0, "asc"],
-                ],
-                searching: false,
-                lengthChange: false,
-                pageLength: 10,
-            });
-            $("#tabel_AsalKonversi").DataTable({
-                order: [
-                    [0, "asc"],
-                ],
-                searching: false,
-                lengthChange: false,
-                pageLength: 10,
-                scrollX: true,
-            });
-            $("#tabel_TujuanKonversi").DataTable({
-                order: [
-                    [0, "asc"],
-                ],
-                searching: false,
-                lengthChange: false,
-                pageLength: 10,
-                scrollX: true,
-            });
-        });
-    </script>
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-md-10 RDZMobilePaddingLR0">
+                <div class="card">
+                    <div class="card-header">Permohonan Konversi Barang</div>
+                    <div class="card-body RDZOverflow RDZMobilePaddingLR0">
 
-                <div class="card" style="width:1200px;">
-                    <div class="card-header" style="">Acc Permohonan Konversi</div>
-
-                    <div class="card-body" style="">
-                        <div class="card-body-container" style="display: flex; flex-wrap: wrap; margin: 10px;">
-                            <div class="card-body" style="flex: 0 0 50%; max-width: 50%;">
-                                {{-- <div class="row" style="">
-                                    <div class="form-group col-md-3 d-flex justify-content-end">
-                                        <input type="radio" id="opsiKerja1" name="opsiKerja" value="Harian" checked
-                                            style="vertical-align: middle;">&nbsp;Harian
+                        <div class="row">
+                            <div class="col-sm-1 offset-sm-2">
+                                <label for="divisiId">Divisi</label>
+                            </div>
+                            <div class="col-sm-1">
+                                <input type="text" id="divisiId" name="divisiId" class="form-control">
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="divisiNama" name="divisiNama">
+                                    <div class="input-group-append">
+                                        <button type="button" id="btn_divisi" class="btn btn-info">...</button>
                                     </div>
-                                    <div class="form-group col-md-9 mt-3 mt-md-0">
-                                        <input type="radio" id="opsiKerja2" name="opsiKerja" value="Staff"
-                                            style="vertical-align: middle;">&nbsp;Staff
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row pt-2">
+                            <div class="col-sm-2">
+                                <div class="row mb-2" style="margin-top: 0.5%">
+                                    <div class="col-sm-12">
+                                        <div class="table-responsive fixed-height" style="height: 600px">
+                                            <table class="table table-bordered no-wrap-header" id="tableKonv">
+                                                <thead>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
-                                </div> --}}
-                                <div class="row" style="margin-left:-55px;">
-                                    <div class="form-group col-md-3 d-flex justify-content-end">
-                                        <span class="aligned-text">Divisi:</span>
-                                    </div>
-                                    <div class="form-group col-md-9 mt-3 mt-md-0">
+                                </div>
+                            </div>
 
-                                        <input class="form-control" type="text" id="Id_Div" readonly
-                                            style="resize: none; height: 40px; max-width: 100px;">
-                                        <input class="form-control" type="text" id="Nama_Div" readonly
-                                            style="resize: none; height: 40px; max-width: 450px;">
-                                        {{-- <select class="form-control" id="Nama_Div" readonly name="Nama_Div"
-                                        style="resize: none; height: 40px; max-width: 250px;">
-                                        <option value=""></option>
-                                        @foreach ($divisi as $data)
-                                            <option value="{{ $data->Id_Div }}">{{ $data->Nama_Div }}</option>
-                                        @endforeach
-                                    </select> --}}
-                                        <button type="button" class="btn" style="margin-left: 10px; " id="divisiButton"
-                                            data-toggle="modal" data-target="#modalDivPeg">...</button>
-
-                                        <div class="modal fade" id="modalDivPeg" role="dialog" arialabelledby="modalLabel"
-                                            area-hidden="true" style="">
-                                            <div class="modal-dialog " role="document">
-                                                <div class="modal-content" style="">
-                                                    <div class="modal-header" style="justify-content: center;">
-
-                                                        <div class="row" style=";">
-                                                            <div class="table-responsive" style="margin:30px;">
-                                                                <table id="tabel_Divisi" class="table table-bordered">
-                                                                    <thead class="thead-dark">
-                                                                        <tr>
-                                                                            <th scope="col">Id Divisi</th>
-                                                                            <th scope="col">Nama Divisi</th>
-
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody>
-
-
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                            <div class="col-sm-10">
+                                <div class="row">
+                                    <div class="col-sm-3 ml-3">
+                                        <div class="row" style="margin-top: 0.5%">
+                                            <div class="col-sm-12">
+                                                <div class="table-responsive fixed-height"
+                                                    style="height: 600px; width: 425%">
+                                                    <table class="table table-bordered no-wrap-header" id="tableData">
+                                                        <thead>
+                                                        </thead>
+                                                        <tbody>
+                                                        </tbody>
+                                                    </table>
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
 
-
                             </div>
-
-                            <div class="card-body" style="flex: 0 0 50%; max-width: 50%;">
-
-
-
-                            </div>
-
-
-
-
-
-                        </div>
-                        <div class="card-body-container" style="display: flex; flex-wrap: wrap; margin: 10px;">
-
-                            <div class="card-body" style="flex: 0 0 30%; max-width: 30%; margin-bottom:35px; ">
-                                {{-- <div class="row" style="">
-                                    <div class="form-group col-md-3 d-flex justify-content-end">
-                                        <input type="radio" id="opsiKerja1" name="opsiKerja" value="Harian" checked
-                                            style="vertical-align: middle;">&nbsp;Harian
-                                    </div>
-                                    <div class="form-group col-md-9 mt-3 mt-md-0">
-                                        <input type="radio" id="opsiKerja2" name="opsiKerja" value="Staff"
-                                            style="vertical-align: middle;">&nbsp;Staff
-                                    </div>
-                                </div> --}}
-                                <div class="row" style="">
-                                    <div class="table-responsive">
-                                        <table class="table table-striped table-bordered" id="tabel_Konversi">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col">Kode Konversi</th>
-                                                    <th scope="col">Tgl.Transaksi</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody class="table-group-divider">
-                                                <tr>
-                                                    <td> Tes </td>
-                                                    <td> Tes </td>
-                                                </tr>
-                                                <tr>
-                                                    <td> Tes </td>
-                                                    <td> Tes </td>
-                                                </tr>
-
-                                                <tr>
-                                                    <td> Tes </td>
-                                                    <td> Tes </td>
-                                                </tr>
-                                                <tr>
-                                                    <td> Tes </td>
-                                                    <td> Tes </td>
-                                                </tr>
-                                                <tr>
-                                                    <td> Tes </td>
-                                                    <td> Tes </td>
-                                                </tr>
-                                                <tr>
-                                                    <td> Tes </td>
-                                                    <td> Tes </td>
-                                                </tr>
-                                                <tr>
-                                                    <td> Tes </td>
-                                                    <td> Tes </td>
-                                                </tr>
-                                                <tr>
-                                                    <td> Tes </td>
-                                                    <td> Tes </td>
-                                                </tr>
-                                                <tr>
-                                                    <td> Tes </td>
-                                                    <td> Tes </td>
-                                                </tr>
-                                                <tr>
-                                                    <td> Tes </td>
-                                                    <td> Tes </td>
-                                                </tr>
-                                                <tr>
-                                                    <td> Tes </td>
-                                                    <td> Tes </td>
-                                                </tr>
-                                                <tr>
-                                                    <td> Tes </td>
-                                                    <td> Tes </td>
-                                                </tr>
-                                                <tr>
-                                                    <td> Tes </td>
-                                                    <td> Tes </td>
-                                                </tr>
-                                                <tr>
-                                                    <td> Tes </td>
-                                                    <td> Tes </td>
-                                                </tr>
-                                                <tr>
-                                                    <td> Tes </td>
-                                                    <td> Tes </td>
-                                                </tr>
-                                                <tr>
-                                                    <td> Tes </td>
-                                                    <td> Tes </td>
-                                                </tr>
-                                                {{-- <td>
-                                                    <a href="" title="Edit Employee">
-                                                        <button class="btn btn-primary btn-sm">
-                                                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit
-                                                        </button>
-                                                    </a>
-                                                    <form method="POST" action="" accept-charset="UTF-8" style="display:inline">
-                                                        <button type="submit" class="btn btn-danger btn-sm" title="Delete Employee" onclick='return confirm("Confirm delete?")'>
-                                                            <i class="fa fa-trash-o" aria-hidden="true"></i> Delete
-                                                        </button>
-                                                    </form>
-                                                </td> --}}
-
-                                                {{-- </tr> --}}
-                                                {{-- @foreach ($employees as $data)
-                                            <tr>
-                                                <td>{{ $data->id }}</td>
-                                                <td>{{ $data->name }}</td>
-                                                <td>{{ $data->gender }}</td>
-                                                <td>{{ $data->email }}</td>
-                                                <td>{{ $data->address }}</td>
-                                                <td>
-                                                    <a href="{{ route('employees.edit', $data->id) }}" title="Edit Employee">
-                                                        <button class="btn btn-primary btn-sm">
-                                                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit
-                                                        </button>
-                                                    </a>
-                                                    <form method="POST" action="{{route('employees.destroy', $data->id)}}" accept-charset="UTF-8" style="display:inline">
-                                                    @csrf
-                                                    @method('delete')
-                                                        <button type="submit" class="btn btn-danger btn-sm" title="Delete Employee" onclick='return confirm("Confirm delete?")'>
-                                                            <i class="fa fa-trash-o" aria-hidden="true"></i> Delete
-                                                        </button>
-                                                    </form>
-                                                </td>
-                                            </tr>
-                                            @endforeach --}}
-                                            </tbody>
-
-                                        </table>
-                                    </div>
-
-
-                                </div>
-                            </div>
-
-                            <div class="card-body" style="flex: 0 0 70%; max-width: 70%;">
-                                <div class="table-responsive">
-                                    <table class="table table-striped table-bordered" id="tabel_AsalKonversi">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">Kd.Konversi</th>
-                                                <th scope="col">Kd.Transaksi</th>
-                                                <th scope="col">Nm.Barang</th>
-                                                <th scope="col">Objek</th>
-                                                <th scope="col">Kel.Utama</th>
-                                                <th scope="col">Kelompok</th>
-                                                <th scope="col">SubKelompok</th>
-                                                <th scope="col">Pemohon</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="table-group-divider">
-                                            <tr>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                            </tr>
-                                            <tr>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                            </tr>
-                                            <tr>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                            </tr>
-                                            <tr>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                            </tr>
-                                            <tr>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                            </tr>
-                                            <tr>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                            </tr>
-                                            <tr>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                            </tr>
-                                            <tr>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                            </tr>
-                                            <tr>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                            </tr>
-                                            <tr>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                                <td> Tes </td>
-                                            </tr>
-
-                                            {{-- <td>
-                                                <a href="" title="Edit Employee">
-                                                    <button class="btn btn-primary btn-sm">
-                                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit
-                                                    </button>
-                                                </a>
-                                                <form method="POST" action="" accept-charset="UTF-8" style="display:inline">
-                                                    <button type="submit" class="btn btn-danger btn-sm" title="Delete Employee" onclick='return confirm("Confirm delete?")'>
-                                                        <i class="fa fa-trash-o" aria-hidden="true"></i> Delete
-                                                    </button>
-                                                </form>
-                                            </td> --}}
-
-                                            {{-- </tr> --}}
-                                            {{-- @foreach ($employees as $data)
-                                        <tr>
-                                            <td>{{ $data->id }}</td>
-                                            <td>{{ $data->name }}</td>
-                                            <td>{{ $data->gender }}</td>
-                                            <td>{{ $data->email }}</td>
-                                            <td>{{ $data->address }}</td>
-                                            <td>
-                                                <a href="{{ route('employees.edit', $data->id) }}" title="Edit Employee">
-                                                    <button class="btn btn-primary btn-sm">
-                                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit
-                                                    </button>
-                                                </a>
-                                                <form method="POST" action="{{route('employees.destroy', $data->id)}}" accept-charset="UTF-8" style="display:inline">
-                                                @csrf
-                                                @method('delete')
-                                                    <button type="submit" class="btn btn-danger btn-sm" title="Delete Employee" onclick='return confirm("Confirm delete?")'>
-                                                        <i class="fa fa-trash-o" aria-hidden="true"></i> Delete
-                                                    </button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                        @endforeach --}}
-                                        </tbody>
-
-                                    </table>
-                                </div>
-
-                                <div style="text-align: right;margin: 5px; ">
-
-                                    <button type="button" class="btn " style="width: 100px"
-                                        id="buttonKoreksi">Proses</button>
-                                    <button type="button" class="btn " style="width: 100px" id="buttonHapus">Keluar</button>
-                                </div>
-                            </div>
-
-                            <div id="form-container"></div>
-                            <div class="col-6" style="text-align: left;">
-
-                            </div>
-
-
-
 
                         </div>
 
-
-
-
-
-
-
-
-
-
+                        <div class="row">
+                            <div class="col-sm-1 pt-1">
+                                <button style="width: 200%; margin-left: 50%" type="button" id="semua"
+                                    class="btn btn-info" >Pilih Semua</button>
+                            </div>
+                            <div class="col-sm-6 offset-sm-1 pt-1" style="margin-left: 10%">
+                                <label style="color: blue">Untuk memilih lebih dari 1 Kd Konversi yg akan di-ACC : cawang kotak
+                                     beberapa kotak Kd Konversi yg akan di-ACC.
+                                </label>
+                            </div>
+                            <div class="col-sm-1 offset-sm-2 pt-1">
+                                <button style="width: 120%" type="button" id="btn_proses" class="btn btn-info"
+                                    >PROSES</button>
+                            </div>
+                        </div>
 
                     </div>
-
-
-
-
-
-
-
-
-
-
-
                 </div>
-
-
-
-
-
-
-
             </div>
-
-
-
-
-
-
         </div>
-
-
-
-
-
-
     </div>
+
+    <link rel="stylesheet" href="{{ asset('css/Inventory/Transaksi/Konversi/AccKonversiBarang.css') }}">
+    <script src="{{ asset('js/Inventory/Transaksi/Konversi/AccKonversiBarang.js') }}"></script>
 @endsection
