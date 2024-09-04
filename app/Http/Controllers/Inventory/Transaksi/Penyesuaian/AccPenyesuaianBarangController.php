@@ -52,7 +52,9 @@ class AccPenyesuaianBarangController extends Controller
                 ];
             }
             return datatables($divisi)->make(true);
-        } else if ($id === 'getSelect') {
+        }
+
+        else if ($id === 'getSelect') {
             // mendapatkan saldo, satuan, pemasukan unk selected data table
             $selectData = DB::connection('ConnInventory')->select('exec SP_1003_INV_AsalSubKelompok_Transaksi @XIdTransaksi = ?', [$kodeTransaksi]);
             $data_selectData = [];
@@ -123,7 +125,9 @@ class AccPenyesuaianBarangController extends Controller
 
             // dd($request->all(), $data_selectData);
             return response()->json($data_selectData);
-        } else if ($id === 'getData') {
+        }
+
+        else if ($id === 'getData') {
             // menampilkan pemohon data di data table
             $justData = DB::connection('ConnInventory')->select('
             exec SP_1003_INV_BelumACC_Sesuai_Transaksi @XIdDivisi = ?, @XIdTypeTransaksi = ?', [$divisiId, '06']);
@@ -145,7 +149,7 @@ class AccPenyesuaianBarangController extends Controller
                     'IdPenerima' => $detail_justData->IdPenerima
                 ];
             }
-            // dd($data_justData);
+            // dd($data_justData, $request->all());
             return response()->json($data_justData);
         }
 

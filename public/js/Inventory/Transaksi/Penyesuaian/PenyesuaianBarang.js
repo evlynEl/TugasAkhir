@@ -632,6 +632,10 @@ btn_namaBarang.addEventListener("click", handleTypeSelection);
 function handleTypeSelection() {
     console.log(divisiNama.value, objekId.value, subkelId.value);
 
+    primer2.value = 0;
+    sekunder2.value = 0;
+    tritier2.value = 0;
+
     if ((divisiId.value === 'ABM' && objekId.value === '022') || (divisiId.value === 'CIR' && objekId.value === '043') ||
         (divisiId.value === 'JBB' && objekId.value === '042') || (divisiId.value === 'EXT' && ((objekId.value === '1259' || objekId.value === '1283')))) {
         if (divisiId.value === 'ABM' && objekId.value === '022') {
@@ -954,7 +958,7 @@ function getType(kodeType) {
                 no_primer2.value = response[0].Satuan_Primer.trim();
                 no_sekunder2.value = response[0].Satuan_Sekunder.trim();
                 no_tritier2.value = response[0].Satuan_Tritier.trim();
-                PIB.value = response[0].PIB !== null ? response[0].PIB.trim() : console.log('tidak ada PIB unk ', kodeBarang.value);
+                PIB.value = response[0].PIB !== null ? response[0].PIB.trim() : '';
                 handleChange();
                 no_primer.addEventListener('change', handleChange);
                 no_sekunder.addEventListener('change', handleChange);
@@ -1211,14 +1215,16 @@ btn_proses.addEventListener("click", function (e) {
             return;
         }
 
-        if (primer3 === undefined) {
+        if (formatNumber(primer.value) > formatNumber(primer2.value)) {
+            primer3 = formatNumber(primer.value) - formatNumber(primer2.value)
+        } else {
             primer3 = formatNumber(primer.value) - formatNumber(primer2.value)
         }
-        if (sekunder3 === undefined) {
+        if (formatNumber(sekunder.value) - formatNumber(sekunder2.value)) {
+            sekunder3 = formatNumber(sekunder.value) - formatNumber(sekunder2.value)
+        } else {
             sekunder3 = formatNumber(sekunder.value) - formatNumber(sekunder2.value)
         }
-
-
         if (formatNumber(tritier.value) > formatNumber(tritier2.value)) {
             tritier3 = formatNumber(tritier.value) - formatNumber(tritier2.value)
         } else {
@@ -1337,7 +1343,7 @@ btn_proses.addEventListener("click", function (e) {
 disableKetik();
 var allInputs = document.querySelectorAll('input');
 
-// kosongin input 
+// kosongin input
 function clearInputs() {
     allInputs.forEach(function (input) {
         let divPenting = input.closest('#perlu') !== null;
