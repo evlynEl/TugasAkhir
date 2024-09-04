@@ -104,7 +104,7 @@ btn_all.addEventListener("click", function () {
     var rows = table.rows().data();
 
     rows.each(function (data, index) {
-        var kodeTransaksiValue = data[0];
+        var kodeTransaksiValue = data[1];
 
         $.ajax({
             type: 'GET',
@@ -117,7 +117,7 @@ btn_all.addEventListener("click", function () {
                 if (result) {
                     var combinedData = {
                         tableData: data,
-                        ajaxResult: result[0]
+                        ajaxResult: result
                     };
 
                     completeDataArray.push(combinedData);
@@ -142,6 +142,8 @@ btn_notAll.addEventListener("click", function () {
     // tampil Select All, hide Unselect All
     btn_notAll.style.display = 'none';
     btn_all.style.display = 'inline-block';
+
+    completeDataArray = [];
 });
 
 // fungsi swal select pake arrow
@@ -325,6 +327,7 @@ function updateDataTable(data) {
 
     data.forEach(function (item) {
         table.row.add([
+            '',
             escapeHtml(item.IdTransaksi.trim()),
             escapeHtml(item.NamaType.trim()),
             escapeHtml(item.UraianDetailTransaksi.trim()),
@@ -339,31 +342,27 @@ function updateDataTable(data) {
         ]);
     });
     table.draw();
-    console.log(data);
-
 }
 
-var idType;
 
 $('#tableData tbody').on('click', 'tr', function () {
     var table = $('#tableData').DataTable();
     table.$('tr.selected').removeClass('selected');
     $(this).addClass('selected');
     var data = table.row(this).data();
-    // console.log(data);
+    var checkbox = $(this).find('input.row-checkbox');
 
-    kodeTransaksi.value = data[0];
-    namaBarang.value = decodeHtmlEntities(data[1]);
-    var originalDate = data[4];
-    var parts = originalDate.split('/');
-    var formattedDate = parts[2] + '-' + parts[0].padStart(2, '0') + '-' + parts[1].padStart(2, '0');
-    tanggalTransaksi.value = formattedDate;
-    divisiNama.value = decodeHtmlEntities(data[5]);
-    objekNama.value = decodeHtmlEntities(data[6]);
-    kelutNama.value = decodeHtmlEntities(data[7]);
-    kelompokNama.value = decodeHtmlEntities(data[8]);
-    subkelNama.value = decodeHtmlEntities(data[9]);
-    pemohon.value = data[10];
+    console.log(data);
+
+    kodeTransaksi.value = data[1];
+    namaBarang.value = decodeHtmlEntities(data[2]);
+    tanggalTransaksi.value = data[5];
+    divisiNama.value = decodeHtmlEntities(data[6]);
+    objekNama.value = decodeHtmlEntities(data[7]);
+    kelutNama.value = decodeHtmlEntities(data[8]);
+    kelompokNama.value = decodeHtmlEntities(data[9]);
+    subkelNama.value = decodeHtmlEntities(data[10]);
+    pemohon.value = data[11];
 
     $.ajax({
         type: 'GET',
@@ -374,32 +373,44 @@ $('#tableData tbody').on('click', 'tr', function () {
         },
         success: function (result) {
             if (result) {
+                console.log(result);
+
                 primer.value = formatNumber(result[0].SaldoPrimer) ?? formatNumber(0);
                 sekunder.value = formatNumber(result[0].SaldoSekunder) ?? formatNumber(0);
                 tritier.value = formatNumber(result[0].SaldoTritier) ?? formatNumber(0);
 
-                no_primer.value = result[0].Satuan_Primer;
-                no_sekunder.value = result[0].Satuan_Sekunder;
-                no_tritier.value = result[0].Satuan_Tritier;
+                no_primer.value = result[0].Satuan_Primer.trim();
+                no_sekunder.value = result[0].Satuan_Sekunder.trim();
+                no_tritier.value = result[0].Satuan_Tritier.trim();
 
                 primer2.value = formatNumber(result[0].SaldoPrimer2) ?? formatNumber(0);
                 sekunder2.value = formatNumber(result[0].SaldoSekunder2) ?? formatNumber(0);
                 tritier2.value = formatNumber(result[0].SaldoTritier2) ?? formatNumber(0);
 
-                var combinedData = {
-                    tableData: data,
-                    ajaxResult: result[0]
-                };
+                if (checkbox.is(':checked')) {
+                    const index = completeDataArray.findIndex(item => item.tableData[1] === data[1]);
+                    if (index === -1) {
+                        completeDataArray.push({
+                            tableData: data,
+                            ajaxResult: result
+                        });
+                    }
+                    console.log('data lengkap: ', completeDataArray);
 
-                completeDataArray.push(combinedData);
+                } else {
+                    const index = completeDataArray.findIndex(item => item.tableData[1] === data[1]);
+                    if (index !== -1) {
+                        completeDataArray.splice(index, 1);
+                    }
+                    console.log('data lengkap: ', completeDataArray);
+                }
             }
+
         },
         error: function (xhr, status, error) {
             console.error('Error:', error);
         }
     });
-
-    // console.log('data lengkap: ', completeDataArray);
 });
 
 // menampilkan data berdasarkan pemohon
@@ -409,8 +420,7 @@ function showTable() {
         url: 'AccPenyesuaianBarang/getData',
         data: {
             _token: csrfToken,
-            divisiId: divisiId.value,
-            pemohon: pemohon.value
+            divisiId: divisiId.value
         },
         success: function (result) {
             updateDataTable(result);
@@ -425,15 +435,18 @@ btn_proses.addEventListener("click", function (e) {
     if (completeDataArray.length === 0) {
         Swal.fire({
             icon: 'warning',
-            title: 'No Data',
-            text: 'There is no data to process. Please select items first.',
+            title: 'Tidak Ada Data',
+            text: 'Tidak ada Data yg diACC, Pilih dulu Datanya!',
         });
         return;
     }
     let processedCount = 0;
 
+    console.log(completeDataArray);
+
+
     completeDataArray.forEach(function (item) {
-        let YIdTrans = item.tableData[0];
+        let YIdTrans = item.tableData[1];
 
         $.ajax({
             type: 'GET',
@@ -471,6 +484,7 @@ btn_proses.addEventListener("click", function (e) {
                                         returnFocus: false,
                                     }).then(() => {
                                         clearInputs();
+                                        showTable();
                                     });
                                 }
 

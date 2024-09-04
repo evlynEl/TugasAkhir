@@ -213,7 +213,7 @@ class PenyesuaianBarangController extends Controller
                     'JumlahPengeluaranTritier' => $detail_type->JumlahPengeluaranTritier
                 ];
             }
-            // dd($request->all(), $data_type);
+            dd($request->all(), $data_type);
             return response()->json($data_type);
         }
 
@@ -411,6 +411,7 @@ class PenyesuaianBarangController extends Controller
         $sekunder3 = $request->input('sekunder3');
         $tritier3 = $request->input('tritier3');
 
+        // dd($request->all());
 
         if ($id === 'proses') {
             // proses terjadi
@@ -425,7 +426,6 @@ class PenyesuaianBarangController extends Controller
                          $primer3, $sekunder3, $tritier3, $subkelId, $subkelId]
                     );
 
-                    // dd($request->all());
 
                     return response()->json(['success' => 'Data sudah diSIMPAN'], 200);
                 } catch (\Exception $e) {
