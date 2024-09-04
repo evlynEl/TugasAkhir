@@ -129,20 +129,75 @@
                                     </li>
                                 @endif
                             @endforeach
+                            @foreach ($access['AccessMenu'] as $thirdMenuItem)
+                                @php
+                                    $printThird = 0;
+                                @endphp
+                                @if (
+                                    $thirdMenuItem->Parent_IdMenu !== null &&
+                                        $thirdMenuItem->Parent_IdMenu == $secondMenuItem->IdMenu &&
+                                        $secondMenuItem->Parent_IdMenu == $menuItem->IdMenu)
+                                    @php
+                                        $printThird = 1;
+                                    @endphp
+                                    <li class="dropdown-submenu">
+                                        <a class="dropdown-item" tabindex="-1" href="#" id="dropdownMenuButton"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                            style="margin: 10px;cursor: default;">
+                                            {{ $thirdMenuItem->NamaMenu }} &raquo;
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            @foreach ($access['AccessFitur'] as $thirdSubMenuItem)
+                                                @if ($thirdSubMenuItem->Id_Menu === $thirdMenuItem->IdMenu && $printThird == 1)
+                                                    <li class="dropdown-submenu">
+                                                        <a class="dropdown-item" tabindex="-1" href="#"
+                                                            id="dropdownMenuButton" data-toggle="dropdown"
+                                                            aria-haspopup="true" aria-expanded="false">
+                                                            {{ $thirdSubMenuItem->NamaFitur }} &raquo;
+                                                        </a>
+                                                        <ul class="dropdown-menu">
+                                                            @foreach ($access['AccessMenu'] as $fourthMenuItem)
+                                                                @php
+                                                                    $printFourth = 0;
+                                                                @endphp
+                                                                @if ($fourthMenuItem->Parent_IdMenu !== null && $fourthMenuItem->Parent_IdMenu == $thirdMenuItem->IdMenu)
+                                                                    @php
+                                                                        $printFourth = 1;
+                                                                    @endphp
+                                                                    <li>
+                                                                        <a class="dropdown-item" tabindex="-1"
+                                                                            href="{{ url($fourthMenuItem->Route) }}">
+                                                                            {{ $fourthMenuItem->NamaFitur }}
+                                                                        </a>
+                                                                    </li>
+                                                                @endif
+                                                            @endforeach
+                                                        </ul>
+                                                    </li>
+                                                @endif
+                                            @endforeach
+                                        </ul>
+                                    </li>
+                                @endif
+                            @endforeach
+
                             @if ($cekSubMenuPrint == 1)
                                 @foreach ($access['AccessFitur'] as $subMenuItem)
                                     @if ($subMenuItem->Id_Menu === $menuItem->IdMenu)
                                         <li>
                                             <a style="color: black;font-size: 15px;display: block" class="dropdown-item"
-                                                tabindex="-1"
-                                                href="{{ url($subMenuItem->Route) }}">{{ $subMenuItem->NamaFitur }}
+                                                tabindex="-1" href="{{ url($subMenuItem->Route) }}">
+                                                {{ $subMenuItem->NamaFitur }}
                                             </a>
                                         </li>
                                     @endif
                                 @endforeach
+                                {{-- @endif --}}
+
+                                {{-- @endforeach --}}
                     </ul>
                     @endif
-                    @if ($print == 1 && $printSecond == 0 && $cekSubMenuPrint == 0)
+                    @if ($print == 1 && $printSecond == 0 && $printThird == 0 && $cekSubMenuPrint == 0)
                         <ul class="dropdown-menu">
                             @foreach ($access['AccessFitur'] as $subMenuItem)
                                 @if ($subMenuItem->Id_Menu === $menuItem->IdMenu)
@@ -177,7 +232,8 @@
                             {{ __('Logout') }}
                         </a>
 
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                            style="display: none;">
                             @csrf
                         </form>
                     </li>
