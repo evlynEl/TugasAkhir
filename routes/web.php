@@ -1,4 +1,7 @@
 <?php
+use App\Http\Controllers\Inventory\Transaksi\Mutasi\AccMhnMasukKeluarController;
+use App\Http\Controllers\Inventory\Transaksi\Mutasi\KeluarBarangUntukPenjualanController;
+use App\Http\Controllers\Inventory\Transaksi\Mutasi\MhnMasukKeluarController;
 use function foo\func;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -146,8 +149,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('PermohonanPenerimaBenang', PermohonanPenerimaBenangController::class);
     Route::resource('PermohonanSatuDivisi', PermohonanSatuDivisiController::class);
     Route::resource('AccSatuDivisi', AccSatuDivisiController::class);
-    Route::resource('ReturPenjualan', ReturPenjualanController::class);
-    Route::resource('PengembalianPascaPenjualan', PengembalianPascaPenjualanController::class);
+    Route::resource('AccReturPenjualan', ReturPenjualanController::class);
+    Route::resource('AccPascaKirim', PengembalianPascaPenjualanController::class);
+    Route::resource('AccKeluarPenjualan', KeluarBarangUntukPenjualanController::class);
     Route::resource('KonversiBarang', KonversiBarangController::class);
     Route::resource('AccKonversiBarang', AccKonversiBarangController::class);
     Route::resource('PenghangusanBarang', PenghangusanBarangController::class);
@@ -163,5 +167,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('TransaksiBulanan', TransaksiBulananController::class);
     Route::resource('LacakTransaksi', LacakTransaksiController::class);
     Route::resource('CariKodeBarang', CariKodeBarangController::class);
+    Route::resource('MhnMasukKeluar', MhnMasukKeluarController::class);
+    Route::resource('AccMhnMasukKeluar', AccMhnMasukKeluarController::class);
     #endregion
 });
