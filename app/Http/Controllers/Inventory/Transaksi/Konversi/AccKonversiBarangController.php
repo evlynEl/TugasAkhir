@@ -112,9 +112,125 @@ class AccKonversiBarangController extends Controller
     }
 
     //Update the specified resource in storage.
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
-        // 
+        if ($id === 'proses') {
+            $user = trim(Auth::user()->NomorUser);
+            $IdKonversi = $request->input('IdKonversi');
+            $XIdKonversi = $request->input('XIdKonversi');
+            $XIdTransaksi = $request->input('XIdTransaksi');
+            $XIdType = $request->input('XIdType');
+            $XKeluarPrimer = $request->input('XKeluarPrimer');
+            $XKeluarSekunder = $request->input('XKeluarSekunder');
+            $XKeluarTritier = $request->input('XKeluarTritier');
+            $XMasukPrimer = $request->input('XMasukPrimer');
+            $XMasukSekunder = $request->input('XMasukSekunder');
+            $XMasukTritier = $request->input('XMasukTritier');
+
+            // dd($request->all());
+            try {
+                $errors = [];
+
+                //proses cek data konversi
+                foreach ($IdKonversi as $index => $transaksi) {
+                    $a = 0;
+                    $t = 0;
+
+                    $cekDataKonversi = DB::connection('ConnInventory')->select(
+                        'exec SP_1003_INV_Cek_Data_Konversi @IdKonversi = ?',
+                        [$IdKonversi[$index]]
+                    );
+
+                    foreach ($cekDataKonversi as $hasilUraian) {
+                        if (strpos($hasilUraian->UraianD, 'Asal Konversi') === 0) {
+                            $a += 1;
+                        } else {
+                            $t += 1;
+                        }
+                    }
+
+                    if ($a === 0) {
+                        $errors[] = 'Id.Konversi: ' . $IdKonversi[$index] . ' TIDAK DAPAT diPROSES, krn tdk terdapat Asal Konversi!!';
+                        unset($IdKonversi[$index]);
+                    } else if ($t === 0) {
+                        $errors[] = 'Id.Konversi: ' . $IdKonversi[$index] . ' TIDAK DAPAT diPROSES, krn tdk terdapat Tujuan Konversi!!';
+                        unset($IdKonversi[$index]);
+                    }
+                }
+
+                //proses cek transaksi penyesuaian
+                foreach ($IdKonversi as $index => $transaksi) {
+                    $cekDataPenyesuaian = DB::connection('ConnInventory')->select(
+                        'exec SP_1003_INV_Check_Sesuai_Konversi @IdKonversi = ?',
+                        [$IdKonversi[$index]]
+                    );
+
+                    if ($cekDataPenyesuaian[0]->nmerror === 'SALAH') {
+                        $errors[] = 'Id.Konversi: ' . $IdKonversi[$index] . ' TIDAK DAPAT diPROSES, krn ada Transaksi Penyesuaian!!';
+                        unset($IdKonversi[$index]);
+                    }
+                }
+
+                //proses cek saldo
+                foreach ($IdKonversi as $index => $transaksi) {
+                    $cekSaldo = DB::connection('ConnInventory')->select(
+                        'exec SP_1003_INV_Check_Saldo_Konversi @IdKonversi = ?',
+                        [$IdKonversi[$index]]
+                    );
+
+                    if ($cekSaldo[0]->nmerror === 'SALAH') {
+                        $errors[] = 'Id.Konversi: ' . $IdKonversi[$index] . ' TIDAK DAPAT diPROSES, 
+                        krn ada Asal Konversi yg SALDOnya TIDAK CUKUP!!';
+                        unset($IdKonversi[$index]);
+                    }
+                }
+
+                // proses
+                $con = 0;
+                foreach ($IdKonversi as $index => $transaksi) {
+                    foreach ($XIdKonversi as $index2 => $transaksi) {
+                        if ($IdKonversi[$index] === $XIdKonversi[$index2]) {
+                            DB::connection('ConnInventory')->statement(
+                                'exec SP_1273_INV_Proses_Acc_Konversi
+                                @XIdTransaksi = ?,
+                                @XIdType = ?,
+                                @XUserACC = ?,
+                                @XKeluarPrimer = ?,
+                                @XKeluarSekunder = ?,
+                                @XKeluarTritier = ?,
+                                @XMasukPrimer = ?,
+                                @XMasukSekunder = ?,
+                                @XMasukTritier = ?
+                                ',
+                                [
+                                    $XIdTransaksi[$index2],
+                                    $XIdType[$index2],
+                                    $user,
+                                    $XKeluarPrimer[$index2],
+                                    $XKeluarSekunder[$index2],
+                                    $XKeluarTritier[$index2],
+                                    $XMasukPrimer[$index2],
+                                    $XMasukSekunder[$index2],
+                                    $XMasukTritier[$index2],
+                                ]
+                            );
+                            $con += 1;
+                        }
+                    }
+                }
+
+                $successMessage = $con === 0 ? 'Tidak Ada Data Yang Di-ACC' : 'Data TerSimpan';
+                $successMessages[] = $successMessage;
+
+                return response()->json([
+                    'errors' => $errors,
+                    'success' => !empty($successMessages) ? $successMessages : null
+                ], 200);
+
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Data Gagal TerSimpan' . $e->getMessage()], 500);
+            }
+        }
     }
 
     //Remove the specified resource from storage.

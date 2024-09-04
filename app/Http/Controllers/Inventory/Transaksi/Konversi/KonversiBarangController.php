@@ -446,6 +446,10 @@ class KonversiBarangController extends Controller
             $UserInput = Auth::user()->NomorUser;
             $UserInput = trim($UserInput);
 
+            $XJumlahKeluarPrimer = ($XJumlahKeluarPrimer === 'Infinity') ? 0 : $XJumlahKeluarPrimer;
+            $XJumlahKeluarSekunder = ($XJumlahKeluarSekunder === 'Infinity') ? 0 : $XJumlahKeluarSekunder;
+            $XJumlahKeluarTritier = ($XJumlahKeluarTritier === 'Infinity') ? 0 : $XJumlahKeluarTritier;
+
             try {
                 DB::connection('ConnInventory')
                     ->statement('exec [SP_PROSES_ASALKONVTMPTRANSAKSI2]
@@ -509,8 +513,8 @@ class KonversiBarangController extends Controller
             } catch (\Exception $e) {
                 return response()->json(['error' => 'Data gagal diSIMPAN: ' . $e->getMessage()], 500);
             }
-        } 
-        
+        }
+
         // proses isi tujuan
         else if ($id == 'prosesIsiTujuan') {
             $XUraianDetailTransaksi = $request->input('XUraianDetailTransaksi');
@@ -523,6 +527,10 @@ class KonversiBarangController extends Controller
             $XIdKonversi = $request->input('XIdKonversi');
             $UserInput = Auth::user()->NomorUser;
             $UserInput = trim($UserInput);
+
+            $XJumlahMasukPrimer = ($XJumlahMasukPrimer === 'Infinity') ? 0 : $XJumlahMasukPrimer;
+            $XJumlahMasukSekunder = ($XJumlahMasukSekunder === 'Infinity') ? 0 : $XJumlahMasukSekunder;
+            $XJumlahMasukTritier = ($XJumlahMasukTritier === 'Infinity') ? 0 : $XJumlahMasukTritier;
 
             try {
                 DB::connection('ConnInventory')
@@ -569,6 +577,10 @@ class KonversiBarangController extends Controller
             $UserInput = Auth::user()->NomorUser;
             $UserInput = trim($UserInput);
 
+            $XJumlahKeluarPrimer = ($XJumlahKeluarPrimer === 'Infinity') ? 0 : $XJumlahKeluarPrimer;
+            $XJumlahKeluarSekunder = ($XJumlahKeluarSekunder === 'Infinity') ? 0 : $XJumlahKeluarSekunder;
+            $XJumlahKeluarTritier = ($XJumlahKeluarTritier === 'Infinity') ? 0 : $XJumlahKeluarTritier;
+
             try {
                 DB::connection('ConnInventory')
                     ->statement('exec [SP_1003_INV_Insert_04_AsalTmpTransaksi]
@@ -607,6 +619,10 @@ class KonversiBarangController extends Controller
             $XJumlahKeluarSekunder = $request->input('XJumlahKeluarSekunder');
             $XJumlahKeluarTritier = $request->input('XJumlahKeluarTritier');
 
+            $XJumlahKeluarPrimer = ($XJumlahKeluarPrimer === 'Infinity') ? 0 : $XJumlahKeluarPrimer;
+            $XJumlahKeluarSekunder = ($XJumlahKeluarSekunder === 'Infinity') ? 0 : $XJumlahKeluarSekunder;
+            $XJumlahKeluarTritier = ($XJumlahKeluarTritier === 'Infinity') ? 0 : $XJumlahKeluarTritier;
+
             try {
                 DB::connection('ConnInventory')
                     ->statement('exec [SP_1003_INV_Update_TmpTransaksi]
@@ -633,6 +649,10 @@ class KonversiBarangController extends Controller
             $XJumlahKeluarPrimer = $request->input('XJumlahKeluarPrimer');
             $XJumlahKeluarSekunder = $request->input('XJumlahKeluarSekunder');
             $XJumlahKeluarTritier = $request->input('XJumlahKeluarTritier');
+
+            $XJumlahKeluarPrimer = ($XJumlahKeluarPrimer === 'Infinity') ? 0 : $XJumlahKeluarPrimer;
+            $XJumlahKeluarSekunder = ($XJumlahKeluarSekunder === 'Infinity') ? 0 : $XJumlahKeluarSekunder;
+            $XJumlahKeluarTritier = ($XJumlahKeluarTritier === 'Infinity') ? 0 : $XJumlahKeluarTritier;
 
             try {
                 DB::connection('ConnInventory')

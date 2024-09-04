@@ -5,6 +5,8 @@ var divisiNama = document.getElementById('divisiNama');
 var btnDivisi = document.getElementById('btn_divisi');
 var btn_proses = document.getElementById('btn_proses');
 
+var semua = document.getElementById('semua');
+
 // fungsi swal select pake arrow
 function handleTableKeydown(e, tableId) {
     const table = $(`#${tableId}`).DataTable();
@@ -58,7 +60,9 @@ function handleTableKeydown(e, tableId) {
     }
 }
 
-var selectedData = {
+var selectedIndices = new Set(); // Track selected row indices
+var ListKonv = {
+    XIdKonversi: [],
     XIdTransaksi: [],
     XIdType: [],
     XKeluarPrimer: [],
@@ -68,11 +72,10 @@ var selectedData = {
     XMasukSekunder: [],
     XMasukTritier: []
 };
-
-var selectedKonv = [];
+var ListKonversi = [];
 
 $(document).ready(function () {
-    $('#tableKonv').DataTable({
+    var tableKonv = $('#tableKonv').DataTable({
         paging: false,
         searching: false,
         info: false,
@@ -127,61 +130,59 @@ $(document).ready(function () {
         }
     });
 
-    var selectedIndices = new Set(); // Track selected row indices
-    var selectedData = {
-        XIdTransaksi: [],
-        XIdType: [],
-        XKeluarPrimer: [],
-        XKeluarSekunder: [],
-        XKeluarTritier: [],
-        XMasukPrimer: [],
-        XMasukSekunder: [],
-        XMasukTritier: []
-    };
-
-    function updateSelectedData() {
+    function updateListKonv() {
         // Clear arrays
-        selectedData.XIdTransaksi = [];
-        selectedData.XIdType = [];
-        selectedData.XKeluarPrimer = [];
-        selectedData.XKeluarSekunder = [];
-        selectedData.XKeluarTritier = [];
-        selectedData.XMasukPrimer = [];
-        selectedData.XMasukSekunder = [];
-        selectedData.XMasukTritier = [];
+        ListKonv.XIdKonversi = [];
+        ListKonv.XIdTransaksi = [];
+        ListKonv.XIdType = [];
+        ListKonv.XKeluarPrimer = [];
+        ListKonv.XKeluarSekunder = [];
+        ListKonv.XKeluarTritier = [];
+        ListKonv.XMasukPrimer = [];
+        ListKonv.XMasukSekunder = [];
+        ListKonv.XMasukTritier = [];
 
         // Populate arrays with selected data
         selectedIndices.forEach(index => {
             var rowData = table.row(index).data();
-            selectedData.XIdTransaksi.push(rowData[2]);  // Adjust indices as needed
-            selectedData.XIdType.push(rowData[16]);
-            selectedData.XKeluarPrimer.push(rowData[5]);
-            selectedData.XKeluarSekunder.push(rowData[6]);
-            selectedData.XKeluarTritier.push(rowData[7]);
-            selectedData.XMasukPrimer.push(rowData[8]);
-            selectedData.XMasukSekunder.push(rowData[9]);
-            selectedData.XMasukTritier.push(rowData[10]);
+            ListKonv.XIdKonversi.push(rowData[1]);  // Adjust indices as needed
+            ListKonv.XIdTransaksi.push(rowData[2]);  // Adjust indices as needed
+            ListKonv.XIdType.push(rowData[4]);
+            ListKonv.XKeluarPrimer.push(rowData[5]);
+            ListKonv.XKeluarSekunder.push(rowData[6]);
+            ListKonv.XKeluarTritier.push(rowData[7]);
+            ListKonv.XMasukPrimer.push(rowData[8]);
+            ListKonv.XMasukSekunder.push(rowData[9]);
+            ListKonv.XMasukTritier.push(rowData[10]);
         });
     }
 
-    function handleCheckboxChange() {
-        var row = $(this).closest('tr');
-        var rowIndex = table.row(row).index();
-        var isChecked = $(this).prop('checked');
-
-        if (isChecked) {
-            selectedIndices.add(rowIndex);
+    function handleCheckboxChange(isBulk = false, isChecked = false, checkbox = null) {
+        if (isBulk) {
+            table.rows().every(function (rowIdx) {
+                if (isChecked) {
+                    selectedIndices.add(rowIdx);
+                } else {
+                    selectedIndices.delete(rowIdx);
+                }
+            });
         } else {
-            selectedIndices.delete(rowIndex);
+            var row = $(checkbox).closest('tr');
+            var rowIndex = table.row(row).index();
+
+            if (isChecked) {
+                selectedIndices.add(rowIndex);
+            } else {
+                selectedIndices.delete(rowIndex);
+            }
         }
 
-        updateSelectedData();
+        updateListKonv();
     }
 
-    $('#tableData').on('change', 'input.row-checkbox', handleCheckboxChange);
-
-    var table = $('#tableData').DataTable();
-    var tableKonv = $('#tableKonv').DataTable();
+    $('#tableData').on('change', 'input.row-checkbox', function () {
+        handleCheckboxChange(false, $(this).prop('checked'), this);
+    });
 
     $('#semua').on('click', function () {
         var isChecked = $(this).data('checked') || false;
@@ -189,7 +190,7 @@ $(document).ready(function () {
         $(this).data('checked', isChecked);
 
         $('.row-checkbox').prop('checked', isChecked).each(function () {
-            $(this).trigger('change');
+            handleCheckboxChange(true, isChecked, this);
         });
 
         if (isChecked) {
@@ -197,19 +198,51 @@ $(document).ready(function () {
             tableKonv.$('tr').addClass('selected');
             $('#tableKonv').addClass('table-disabled');
 
-            selectedKonv = [];
+            ListKonversi = [];
 
             tableKonv.rows('.selected').every(function (rowIdx, tableLoop, rowLoop) {
                 let value = this.data()[0];
-                selectedKonv.push(value);
+                ListKonversi.push(value);
             });
         } else {
             $(this).text('Pilih Semua');
             tableKonv.$('tr').removeClass('selected');
             $('#tableKonv').removeClass('table-disabled');
 
-            selectedKonv = [];
+            ListKonversi = [];
         }
+
+        updateListKonv();
+    });
+
+    $('#tableKonv tbody').on('click', 'tr', function (event) {
+        var tableKonv = $('#tableKonv').DataTable();
+        var table = $('#tableData').DataTable();
+
+        tableKonv.$('tr.selected').removeClass('selected');
+        $(this).addClass('selected');
+
+        var data = tableKonv.row(this).data();
+        let konvSelected = data[0];
+
+        ListKonversi = [];
+        ListKonversi.push(konvSelected);
+
+        selectedIndices.clear();
+
+        table.rows().every(function (rowIdx, tableLoop, rowLoop) {
+            var rowData = this.data();
+            var checkbox = $(this.node()).find('input[type="checkbox"]');
+
+            if (rowData[1] === konvSelected) {
+                checkbox.prop('checked', true);
+                selectedIndices.add(rowIdx);
+            } else {
+                checkbox.prop('checked', false);
+            }
+        });
+
+        updateListKonv();
     });
 
 });
@@ -308,34 +341,114 @@ function clearText() {
     clearText1();
 }
 
-// ngisi input kalo select table
-$('#tableKonv tbody').on('click', 'tr', function (event) {
-    var tableKonv = $('#tableKonv').DataTable();
-    var table = $('#tableData').DataTable();
-
-    tableKonv.$('tr.selected').removeClass('selected');
-    $(this).addClass('selected');
-
-    var data = tableKonv.row(this).data();
-    let konvSelected = data[0];
-
-    selectedKonv = [];
-    selectedKonv.push(konvSelected);
-
-    table.rows().every(function (rowIdx, tableLoop, rowLoop) {
-        var rowData = this.data();
-        var checkbox = $(this.node()).find('input[type="checkbox"]');
-
-        if (rowData[1] === konvSelected) {
-            checkbox.prop('checked', true); 
-        } else {
-            checkbox.prop('checked', false);
-        }
-    });
-});
 
 var c, i, j, a, t, al, tl, jum, k, con;
 var KdKonversi, sidtype, Asal, Tujuan, Konversi;
+
+function Proses_Acc() {
+    console.log(ListKonv);
+
+    $.ajax({
+        type: 'PUT',
+        url: 'AccKonversiBarang/proses',
+        data: {
+            IdKonversi: ListKonversi,
+            XIdKonversi: ListKonv.XIdKonversi,
+            XIdTransaksi: ListKonv.XIdTransaksi,
+            XIdType: ListKonv.XIdType,
+            XKeluarPrimer: ListKonv.XKeluarPrimer,
+            XKeluarSekunder: ListKonv.XKeluarSekunder,
+            XKeluarTritier: ListKonv.XKeluarTritier,
+            XMasukPrimer: ListKonv.XMasukPrimer,
+            XMasukSekunder: ListKonv.XMasukSekunder,
+            XMasukTritier: ListKonv.XMasukTritier,
+            _token: csrfToken
+        },
+        success: function (response) {
+            if (response.errors && response.errors.length > 0) {
+                // Function to show errors one by one
+                let showNextError = function (index) {
+                    if (index < response.errors.length) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Tidak Bisa Di Acc!',
+                            text: response.errors[index],
+                            returnFocus: false,
+                        }).then(() => {
+                            showNextError(index + 1);
+                        });
+                    } else {
+                        // All errors have been shown, now show success message
+                        if (response.success) {
+                            if (response.success) {
+                                console.log(response.success);
+
+                                let iconType = response.success[0] === 'Tidak Ada Data Yang Di-ACC' ? 'info' : 'success';
+
+                                Swal.fire({
+                                    icon: iconType,
+                                    title: 'Success',
+                                    text: response.success,
+                                    returnFocus: false,
+                                }).then(() => {
+                                    console.log('sukses');
+                                    $('#semua').data('checked', false).text('Pilih Semua');
+                                    $('#tableKonv').removeClass('table-disabled');
+
+                                    clearText1();
+                                    Load_Transaksi_Asal(divisiId.value);
+                                    Load_DataKonversi();
+
+                                    ListKonversi = [];
+
+                                    ListKonv = {
+                                        XIdKonversi: [],
+                                        XIdTransaksi: [],
+                                        XIdType: [],
+                                        XKeluarPrimer: [],
+                                        XKeluarSekunder: [],
+                                        XKeluarTritier: [],
+                                        XMasukPrimer: [],
+                                        XMasukSekunder: [],
+                                        XMasukTritier: []
+                                    };
+
+                                });
+                            }
+                        }
+                    }
+                };
+
+                showNextError(0);
+            } else if (response.success) {
+                // Show success message if there are no errors
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: response.success,
+                    returnFocus: false,
+                }).then(() => {
+                    console.log('sukses');
+                });
+            } else if (response.error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Tidak Bisa Di Acc!',
+                    text: response.error,
+                    returnFocus: false,
+                }).then(() => {
+                    console.log('gagal');
+                });
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', error);
+        }
+
+    });
+
+
+}
 
 function Load_Transaksi_Asal(sDivisi) {
     $.ajax({
@@ -379,7 +492,10 @@ btn_proses.addEventListener("click", function (e) {
     var table = $('#tableData').DataTable();
     var tableKonv = $('#tableKonv').DataTable();
 
-    if (tableKonv.$('tr.selected').length > 0) {
+    console.log(ListKonversi.length);
+
+
+    if (tableKonv.$('tr.selected').length > 0 || ListKonversi.length > 0) {
         Proses_Acc();
     }
     else {
@@ -410,15 +526,15 @@ btnDivisi.addEventListener("click", function (e) {
                 </table>
             `,
             preConfirm: () => {
-                const selectedData = $("#table_list")
+                const ListKonv = $("#table_list")
                     .DataTable()
                     .row(".selected")
                     .data();
-                if (!selectedData) {
+                if (!ListKonv) {
                     Swal.showValidationMessage("Please select a row");
                     return false;
                 }
-                return selectedData;
+                return ListKonv;
             },
             width: '40%',
             returnFocus: false,
@@ -463,7 +579,8 @@ btnDivisi.addEventListener("click", function (e) {
                 Load_Transaksi_Asal(divisiId.value);
                 Load_DataKonversi();
 
-                selectedData = {
+                ListKonv = {
+                    XIdKonversi: [],
                     XIdTransaksi: [],
                     XIdType: [],
                     XKeluarPrimer: [],
@@ -474,7 +591,7 @@ btnDivisi.addEventListener("click", function (e) {
                     XMasukTritier: []
                 };
 
-                selectedKonv = [];
+                ListKonversi = [];
 
             }
         });

@@ -69,7 +69,7 @@
                                     class="btn btn-info" >Pilih Semua</button>
                             </div>
                             <div class="col-sm-6 offset-sm-1 pt-1" style="margin-left: 10%">
-                                <label style="color: blue">Untuk memilih lebih dari 1 Kd Konversi yg akan di-ACC : cawang kotak
+                                <label style="color: blue">Untuk memilih lebih dari 1 Kd Konversi yg akan di-ACC : cawang
                                      beberapa kotak Kd Konversi yg akan di-ACC.
                                 </label>
                             </div>
