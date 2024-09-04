@@ -3,20 +3,18 @@
 namespace App\Http\Controllers\Inventory\Transaksi\Mutasi;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\HakAksesController;
 
 class PermohonanSatuDivisiController extends Controller
 {
     //Display a listing of the resource.
     public function index()
     {
-
-        $data = 'HAPPY HAPPY HAPPY';
-
-        // dd($dataDivisi);
-        return view('Inventory.Transaksi.Mutasi.SatuDivisi.FormPermohonanSatuDivisi', compact('data'));
+        $access = (new HakAksesController)->HakAksesFiturMaster('Inventory');
+        return view('Inventory.Transaksi.Mutasi.SatuDivisi.PermohonanSatuDivisi', compact('access'));
     }
 
     //Show the form for creating a new resource.
