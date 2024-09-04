@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class FormPengembalianPascaPenjualanController extends Controller
+class MhnPemberiController extends Controller
 {
     //Display a listing of the resource.
     public function index()
@@ -16,7 +16,7 @@ class FormPengembalianPascaPenjualanController extends Controller
         $data = 'HAPPY HAPPY HAPPY';
 
         // dd($dataDivisi);
-        return view('Inventory.Transaksi.Mutasi.KeluarMasukKRR.FormPengembalianPascaPenjualan', compact('data'));
+        return view('Inventory.Transaksi.Mutasi.AntarDivisi.FormMhnPemberi', compact('data'));
     }
 
     //Show the form for creating a new resource.

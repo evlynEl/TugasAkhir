@@ -7,16 +7,16 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class FormAccSatuDivisiController extends Controller
+class ReturPenjualanController extends Controller
 {
     //Display a listing of the resource.
     public function index()
     {
 
-        $data = 'Test';
+        $data = 'HAPPY HAPPY HAPPY';
 
         // dd($dataDivisi);
-        return view('Inventory.Transaksi.Mutasi.SatuDivisi.FormAccSatuDivisi', compact('data'));
+        return view('Inventory.Transaksi.Mutasi.KeluarMasukKRR.FormReturPenjualan', compact('data'));
     }
 
     //Show the form for creating a new resource.
@@ -45,7 +45,7 @@ class FormAccSatuDivisiController extends Controller
             $data['Harga']
         ]);
 
-        return redirect()->route('FormAccMhnPenerima.index')->with('alert', 'Data berhasil ditambahkan!');
+        return redirect()->route('FormMhnPenerima.index')->with('alert', 'Data berhasil ditambahkan!');
     }
 
     //Display the specified resource.
@@ -53,19 +53,28 @@ class FormAccSatuDivisiController extends Controller
     {
         $crExplode = explode(".", $cr);
         $lastIndex = count($crExplode) - 1;
-        //getListData
+        //getListPerkiraan
         if ($crExplode[$lastIndex] == "getDivisi") {
             $dataDivisi = DB::connection('ConnInventory')->select('exec SP_1003_INV_userdivisi @XKdUser = ?', [$crExplode[0]]);
             return response()->json($dataDivisi);
         } else if ($crExplode[$lastIndex] == "getObjek") {
             $dataObjek = DB::connection('ConnInventory')->select('exec SP_1003_INV_User_Objek @XKdUser = ?, @XIdDivisi = ?', [$crExplode[0], $crExplode[1]]);
             return response()->json($dataObjek);
-        } else if ($crExplode[$lastIndex] == "getBelumAcc") {
-            $dataBelumAcc = DB::connection('ConnInventory')->select('exec SP_1003_INV_List_BelumACC_TmpTransaksi @Kode = ?, @XIdTypeTransaksi = ?, @XIdDivisi = ?', [1, '02', $crExplode[0]]);
-            return response()->json($dataBelumAcc);
-        } else if ($crExplode[$lastIndex] == "getSudahAcc") {
-            $dataSudahAcc = DB::connection('ConnInventory')->select('exec SP_1003_INV_List_SudahACC_TmpTransaksi @Kode = ?, @XIdTypeTransaksi = ?, @XIdDivisi = ?', [2, '02', $crExplode[0]]);
-            return response()->json($dataSudahAcc);
+        } else if ($crExplode[$lastIndex] == "getKelompokUtama") {
+            $dataKelut = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdObjek_KelompokUtama @XIdObjek_KelompokUtama = ?', [$crExplode[0]]);
+            return response()->json($dataKelut);
+        } else if ($crExplode[$lastIndex] == "getKelompok") {
+            $dataKelompok = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdKelompokUtama_Kelompok @XIdKelompokUtama_Kelompok = ?', [$crExplode[0]]);
+            return response()->json($dataKelompok);
+        } else if ($crExplode[$lastIndex] == "getSubKelompok") {
+            $dataSubKelompok = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdKelompok_SubKelompok @XIdKelompok_SubKelompok = ?', [$crExplode[0]]);
+            return response()->json($dataSubKelompok);
+        } else if ($crExplode[$lastIndex] == "getListMohon") {
+            $dataMohon = DB::connection('ConnInventory')->select('exec SP_1003_INV_List_Mohon_TmpTransaksi @Kode = ?, @XIdTypeTransaksi = ?, @XIdDivisi = ?', [$crExplode[0],$crExplode[1],$crExplode[2]]);
+            return response()->json($dataMohon);
+        } else if ($crExplode[$lastIndex] == "getDataPemohon") {
+            $dataPemohon = DB::connection('ConnInventory')->select('exec SP_1003_INV_List_Mohon_TmpTransaksi @Kode = ?, @XIdTypeTransaksi = ?, @XIdDivisi = ?, @XUser = ?', [$crExplode[0], $crExplode[1]]);
+            return response()->json($dataPemohon);
         }
     }
 
@@ -80,19 +89,15 @@ class FormAccSatuDivisiController extends Controller
     {
         $data = $request->all();
         // dd($data , " Masuk update");
-        if ($data['updateProsesAcc'] == "AccManager") {
-            DB::connection('ConnInventory')->statement('exec SP_1003_INV_Update_ACCManager_TmpTransaksi @UserACC = ?, @Kode = ?, @YIdTransaksi = ?', [
-                $data['UserACC'],
-                3,
-                $data['IdTransaksi']
-            ]);
-        } else if ($data['updateProsesAcc'] == "BatalAcc") {
-            DB::connection('ConnInventory')->statement('exec SP_1003_INV_Batal_ACCManager_TmpTransaksi @Kode = ?, @YIdTransaksi = ?', [
-                3,
-                $data['IdTransaksi']
-            ]);
-        }
-        return redirect()->route('FormAccMhnPenerima.index')->with('alert', 'Data berhasil diupdate!');
+        DB::connection('ConnInventory')->statement('exec SP_1003_INV_Update_TmpTransaksi @XIdTransaksi = ?, @XUraianDetailTransaksi = ?, @XJumlahKeluarPrimer = ?, @XJumlahKeluarSekunder = ?, @XJumlahKeluarTritier = ?, @XTujuanIdSubkelompok = ?', [
+            $data['IdTransaksi'],
+            $data['UraianDetailTransaksi'],
+            $data['JumlahKeluarPrimer'],
+            $data['JumlahKeluarSekunder'],
+            $data['JumlahKeluarTritier'],
+            $data['TujuanIdSubKel'],
+        ]);
+        return redirect()->route('FormMhnPenerima.index')->with('alert', 'Data berhasil diupdate!');
     }
 
     //Remove the specified resource from storage.
