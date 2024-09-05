@@ -241,6 +241,7 @@ function Cek_Sesuai_Pemberi(sIdtrans) {
 btnRefresh.addEventListener("click", function (e) {
     ClearForm();
     LoadData();
+    btnProses.disabled = true;
 });
 
 btnProses.addEventListener("click", function (e) {

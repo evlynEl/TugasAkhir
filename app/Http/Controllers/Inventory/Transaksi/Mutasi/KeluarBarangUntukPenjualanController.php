@@ -26,44 +26,98 @@ class KeluarBarangUntukPenjualanController extends Controller
     //Store a newly created resource in storage.
     public function store(Request $request)
     {
-        $data = $request->all();
-        // dd($data , " Masuk store");
-        DB::connection('ConnInventory')->statement('exec SP_1273_INV_Insert_02_TmpTransaksi @XIdTypeTransaksi = ?, @XUraianDetailTransaksi = ?, @XSaatawalTransaksi = ?
-        , @XIdType = ?, @XIdPenerima = ?, @XJumlahKeluarPrimer = ?, @XJumlahKeluarSekunder = ?, @XJumlahKeluarTritier = ?, @XAsalIdSubKelompok = ?, @XTujuanIdSubkelompok = ?, @Harga = ?', [
-            $data['IdTypeTransaksi'],
-            $data['UraianDetailTransaksi'],
-            $data['SaatAwalTransaksi'],
-            $data['IdType'],
-            $data['IdPenerima'],
-            $data['JumlahKeluarPrimer'],
-            $data['JumlahKeluarSekunder'],
-            $data['JumlahKeluarTritier'],
-            $data['AsalIdSubKel'],
-            $data['TujuanIdSubKel'],
-            $data['Harga']
-        ]);
-
-        return redirect()->route('FormAccMhnPenerima.index')->with('alert', 'Data berhasil ditambahkan!');
+        // 
     }
 
     //Display the specified resource.
-    public function show($cr)
+    public function show(Request $request, $id)
     {
-        $crExplode = explode(".", $cr);
-        $lastIndex = count($crExplode) - 1;
-        //getListData
-        if ($crExplode[$lastIndex] == "getDivisi") {
-            $dataDivisi = DB::connection('ConnInventory')->select('exec SP_1003_INV_userdivisi @XKdUser = ?', [$crExplode[0]]);
-            return response()->json($dataDivisi);
-        } else if ($crExplode[$lastIndex] == "getObjek") {
-            $dataObjek = DB::connection('ConnInventory')->select('exec SP_1003_INV_User_Objek @XKdUser = ?, @XIdDivisi = ?', [$crExplode[0], $crExplode[1]]);
-            return response()->json($dataObjek);
-        } else if ($crExplode[$lastIndex] == "getBelumAcc") {
-            $dataBelumAcc = DB::connection('ConnInventory')->select('exec SP_1003_INV_List_BelumACC_TmpTransaksi @Kode = ?, @XIdTypeTransaksi = ?, @XIdDivisi = ?', [1, '02', $crExplode[0]]);
-            return response()->json($dataBelumAcc);
-        } else if ($crExplode[$lastIndex] == "getSudahAcc") {
-            $dataSudahAcc = DB::connection('ConnInventory')->select('exec SP_1003_INV_List_SudahACC_TmpTransaksi @Kode = ?, @XIdTypeTransaksi = ?, @XIdDivisi = ?', [2, '02', $crExplode[0]]);
-            return response()->json($dataSudahAcc);
+        $UserInput = Auth::user()->NomorUser;
+        $UserInput = trim($UserInput);
+
+        if ($id === 'tampilListBarang') {
+            $divisi = DB::connection('ConnInventory')->select('exec [SP_1003_INV_LIST_JUAL_TMPTRANSAKSI]
+           @User = ?', [$UserInput]);
+
+            $data_divisi = [];
+            foreach ($divisi as $detail_divisi) {
+                $data_divisi[] = [
+                    'IdTransaksi' => $detail_divisi->IdTransaksi,
+                    'NamaType' => $detail_divisi->NamaType,
+                    'Primer' => $detail_divisi->Primer,
+                    'Sekunder' => $detail_divisi->Sekunder,
+                    'Tritier' => $detail_divisi->Tritier,
+                    'IdType' => $detail_divisi->IdType,
+                ];
+            }
+
+            return response()->json($data_divisi);
+        }
+
+        // cek
+        else if ($id === 'cekSesuaiPemberi') {
+            $idtransaksi = $request->input('idtransaksi');
+
+            $divisi = DB::connection('ConnInventory')->select('exec [SP_1003_INV_check_penyesuaian_transaksi]
+           @Kode = ?, @idtransaksi = ?, @idtypetransaksi = ?', [1, $idtransaksi, '06']);
+
+            $data_divisi = [];
+            foreach ($divisi as $detail_divisi) {
+                $data_divisi[] = [
+                    'jumlah' => $detail_divisi->jumlah
+                ];
+            }
+
+            return response()->json($data_divisi);
+        }
+
+        // detail
+        else if ($id === 'tampilData') {
+            $IDTransaksi = $request->input('IDTransaksi');
+
+            $divisi = DB::connection('ConnInventory')->select('exec [SP_1003_INV_LIST_JUAL_TMPTRANSAKSI]
+           @IDTransaksi = ?, @User = ?', [$IDTransaksi, $UserInput]);
+
+            $data_divisi = [];
+            foreach ($divisi as $detail_divisi) {
+                $data_divisi[] = [
+                    'IdTransaksi' => $detail_divisi->IdTransaksi, // dbo.Tmp_Transaksi.IdTransaksi
+                    'IdType' => $detail_divisi->IdType, // dbo.Tmp_Transaksi.IdType
+                    'NamaType' => $detail_divisi->NamaType, // dbo.Type.NamaType
+                    'Primer' => $detail_divisi->JumlahPengeluaranPrimer, // dbo.Tmp_Transaksi.JumlahPengeluaranPrimer
+                    'Sekunder' => $detail_divisi->JumlahPengeluaranSekunder, // dbo.Tmp_Transaksi.JumlahPengeluaranSekunder
+                    'Tritier' => $detail_divisi->JumlahPengeluaranTritier, // dbo.Tmp_Transaksi.JumlahPengeluaranTritier
+                    'satuanPrimer' => $detail_divisi->satuanPrimer, // SatuanPrimer.nama_satuan
+                    'satuanSekunder' => $detail_divisi->satuanSekunder, // SatuanSekunder.nama_satuan
+                    'SatuanTritier' => $detail_divisi->SatuanTritier, // SatuanTritier.nama_satuan
+                    'IdSubkelompok' => $detail_divisi->IdSubkelompok, // dbo.Subkelompok.IdSubkelompok
+                    'NamaSubKelompok' => $detail_divisi->NamaSubKelompok, // dbo.Subkelompok.NamaSubKelompok
+                    'NamaKelompok' => $detail_divisi->NamaKelompok, // dbo.Kelompok.NamaKelompok
+                    'NamaKelompokUtama' => $detail_divisi->NamaKelompokUtama, // dbo.KelompokUtama.NamaKelompokUtama
+                    'NamaObjek' => $detail_divisi->NamaObjek, // dbo.Objek.NamaObjek
+                    'NamaDivisi' => $detail_divisi->NamaDivisi, // dbo.Divisi.NamaDivisi
+                    'IdKelompok' => $detail_divisi->IdKelompok, // dbo.Kelompok.IdKelompok
+                    'IdKelompokUtama' => $detail_divisi->IdKelompokUtama, // dbo.KelompokUtama.IdKelompokUtama
+                    'IdObjek' => $detail_divisi->IdObjek, // dbo.Objek.IdObjek
+                    'IdDivisi' => $detail_divisi->IdDivisi, // dbo.Divisi.IdDivisi
+                    'SaldoPrimer' => $detail_divisi->SaldoPrimer, // dbo.Type.SaldoPrimer
+                    'SaldoSekunder' => $detail_divisi->SaldoSekunder, // dbo.Type.SaldoSekunder
+                    'SaldoTritier' => $detail_divisi->SaldoTritier, // dbo.Type.SaldoTritier
+                    'NamaCust' => $detail_divisi->NamaCust, // SALES.dbo.VW_PRG_1486_SLS_DO_INV.NamaCust
+                    'NO_PO' => $detail_divisi->NO_PO, // SALES.dbo.VW_PRG_1486_SLS_DO_INV.NO_PO
+                    'Tgl_PO' => $detail_divisi->Tgl_PO, // SALES.dbo.VW_PRG_1486_SLS_DO_INV.Tgl_PO
+                    'IDSuratPesanan' => $detail_divisi->IDSuratPesanan, // SALES.dbo.VW_PRG_1486_SLS_DO_INV.IDSuratPesanan
+                    'MaxKirimDO' => $detail_divisi->MaxKirimDO, // SALES.dbo.VW_PRG_1486_SLS_DO_INV.MaxKirimDO
+                    'MinKirimDO' => $detail_divisi->MinKirimDO, // SALES.dbo.VW_PRG_1486_SLS_DO_INV.MinKirimDO
+                    'SatuanJual' => $detail_divisi->SatuanJual, // SALES.dbo.VW_PRG_1486_SLS_DO_INV.SatuanJual
+                    'KodeUser' => $detail_divisi->KodeUser, // dbo.UserObjek.KodeUser
+                    'TglDO' => $detail_divisi->TglDO, // SALES.dbo.VW_PRG_1486_SLS_DO_INV.TglDO
+                    'Status' => $detail_divisi->Status, // dbo.Tmp_Transaksi.Status
+                    'KodeBarang' => $detail_divisi->KodeBarang, // dbo.Type.KodeBarang
+                ];
+            }
+
+            return response()->json($data_divisi);
         }
     }
 
@@ -74,34 +128,45 @@ class KeluarBarangUntukPenjualanController extends Controller
     }
 
     //Update the specified resource in storage.
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
-        $data = $request->all();
-        // dd($data , " Masuk update");
-        if ($data['updateProsesAcc'] == "AccManager") {
-            DB::connection('ConnInventory')->statement('exec SP_1003_INV_Update_ACCManager_TmpTransaksi @UserACC = ?, @Kode = ?, @YIdTransaksi = ?', [
-                $data['UserACC'],
-                3,
-                $data['IdTransaksi']
-            ]);
-        } else if ($data['updateProsesAcc'] == "BatalAcc") {
-            DB::connection('ConnInventory')->statement('exec SP_1003_INV_Batal_ACCManager_TmpTransaksi @Kode = ?, @YIdTransaksi = ?', [
-                3,
-                $data['IdTransaksi']
-            ]);
+        if ($id == 'proses') {
+            // dd($request->all());
+            $IDtransaksi = $request->input('IDtransaksi');
+            $JumlahKeluarPrimer = $request->input('JumlahKeluarPrimer');
+            $JumlahKeluarSekunder = $request->input('JumlahKeluarSekunder');
+            $JumlahKeluartritier = $request->input('JumlahKeluartritier');
+            $JumlahKonversi = $request->input('JumlahKonversi');
+            $UserInput = Auth::user()->NomorUser;
+            $UserInput = trim($UserInput);
+
+            try {
+                DB::connection('ConnInventory')
+                    ->statement('exec [SP_1003_INV_Proses_Acc_Jual]
+                @IDtransaksi = ?,
+                @IDPemberi = ?,
+                @JumlahKeluarPrimer = ?,
+                @JumlahKeluarSekunder = ?,
+                @JumlahKeluartritier = ?,
+                @JumlahKonversi = ?
+                ', [
+                        $IDtransaksi,
+                        $UserInput,
+                        $JumlahKeluarPrimer,
+                        $JumlahKeluarSekunder,
+                        $JumlahKeluartritier,
+                        $JumlahKonversi,
+                    ]);
+                return response()->json(['success' => 'Data sudah terSIMPAN'], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Data gagal terSIMPAN: ' . $e->getMessage()], 500);
+            }
         }
-        return redirect()->route('FormAccMhnPenerima.index')->with('alert', 'Data berhasil diupdate!');
     }
 
     //Remove the specified resource from storage.
     public function destroy(Request $request)
     {
-        $data = $request->all();
-        // dd('Masuk Destroy', $data);
-            DB::connection('ConnInventory')->statement('exec SP_1003_INV_Delete_TmpTransaksi  @XIdTransaksi = ?', [
-                $data['IdTransaksi']
-            ]);
-
-        return redirect()->route('MaxMinStok.index')->with('alert', 'Data berhasil dihapus!');
+        // 
     }
 }
