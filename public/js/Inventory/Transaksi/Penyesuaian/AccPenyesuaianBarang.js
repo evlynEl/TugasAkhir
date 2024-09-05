@@ -27,6 +27,12 @@ var no_primer = document.getElementById('no_primer');
 var no_sekunder = document.getElementById('no_sekunder');
 var no_tritier = document.getElementById('no_tritier');
 
+var divisiId = document.getElementById('divisiId');
+var objekId = document.getElementById('objekId');
+var kelompokId = document.getElementById('kelompokId');
+var kelutId = document.getElementById('kelutId');
+var subkelId = document.getElementById('subkelId');
+
 // button
 var btn_divisi = document.getElementById('btn_divisi');
 var btn_objek = document.getElementById('btn_objek');
@@ -413,7 +419,7 @@ $('#tableData tbody').on('click', 'tr', function () {
     });
 });
 
-// menampilkan data berdasarkan pemohon
+// menampilkan semua data
 function showTable() {
     $.ajax({
         type: 'GET',

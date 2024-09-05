@@ -32,6 +32,12 @@ var no_sekunder2 = document.getElementById('no_sekunder2');
 var no_tritier2 = document.getElementById('no_tritier2');
 var alasan = document.getElementById('alasan');
 
+var divisiId = document.getElementById('divisiId');
+var objekId = document.getElementById('objekId');
+var kelompokId = document.getElementById('kelompokId');
+var kelutId = document.getElementById('kelutId');
+var subkelId = document.getElementById('subkelId');
+
 // button
 var btn_divisi = document.getElementById('btn_divisi');
 var btn_objek = document.getElementById('btn_objek');
@@ -930,7 +936,6 @@ function getSaldo(kodeType) {
                 sekunder.value = formatNumber(response[0].SaldoSekunder);
                 tritier.value = formatNumber(response[0].SaldoTritier);
             }
-            // alasan.focus();
         },
         error: function (xhr, status, error) {
             console.error('AJAX Error:', error);
@@ -1057,7 +1062,6 @@ $('#tableData tbody').on('click', 'tr', function () {
     kelompokNama.value = decodeHtmlEntities(data[8]);
     subkelNama.value = decodeHtmlEntities(data[9]);
     pemohon.value = data[10];
-    // objekId.value = data[11];
 
     $.ajax({
         type: 'GET',
