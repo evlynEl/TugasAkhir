@@ -296,7 +296,7 @@ btn_divisi.addEventListener("click", function (e) {
                     btn_isi.focus();
                     uraian.disabled = false;
 
-                    if (a === 1) {
+                    if (a === 1 || a === 3) {
                         btn_objek.focus();
                     }
                 }
@@ -976,6 +976,8 @@ function getSaldo(kodeType) {
                 primer.value = formatNumber(response[0].SaldoPrimer);
                 sekunder.value = formatNumber(response[0].SaldoSekunder);
                 tritier.value = formatNumber(response[0].SaldoTritier);
+
+                uraian.select();
             }
         },
         error: function (xhr, status, error) {
@@ -1118,11 +1120,17 @@ $('#tableData tbody').on('click', 'tr', function () {
     user.value = data[22];
     kodeBarang.value = data[23];
 
-    primer2.select();
+    if (a === 1 || a === 2) {
+        primer2.select();
+    } else {
+        btn_proses.focus();
+    }
 });
 
 // menampilkan semua data
 function showTable() {
+    $('.divTable').show();
+
     $.ajax({
         type: 'GET',
         url: 'MhnMasukKeluar/getData',
@@ -1166,7 +1174,7 @@ btn_proses.addEventListener("click", function (e) {
 
     if (a === 3) {
         $.ajax({
-            url: "MhnMasukKeluar/hapusBarang",
+            url: "MhnMasukKeluar/hapusMutasi",
             type: "DELETE",
             data: {
                 _token: csrfToken,
@@ -1175,16 +1183,97 @@ btn_proses.addEventListener("click", function (e) {
             timeout: 30000,
             success: function (response) {
                 if (response.success) {
-                    showAlert('success', 'Data terHAPUS', () => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: response.success,
+                        returnFocus: false,
+                    }).then(() => {
                         clearInputs();
-                        if (tampil === 1) {
-                            showAllTable();
-                        } else {
-                            showTable();
-                        }
+                        showTable();
+                    });
+
+                } else if (response.error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: response.error,
+                        returnFocus: false,
+                    }).then(() => {
+                        btn_proses.focus();
+                    });
+
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('AJAX Error:', error);
+            }
+        });
+    } else {
+
+        $.ajax({
+            type: 'PUT',
+            url: 'MhnMasukKeluar/proses',
+            data: {
+                _token: csrfToken,
+                a: a,
+                kode: kode,
+                uraian: uraian.value,
+                kodeType: kodeType.value,
+                kodeTransaksi: kodeTransaksi.value,
+                user: user.value,
+                tanggal: tanggal.value,
+                subkelId: subkelId.value,
+                primer2: primer2.value,
+                sekunder2: sekunder2.value,
+                tritier2: tritier2.value,
+                subkelId: subkelId.value
+            },
+            timeout: 30000,
+            success: function (response) {
+                if (a === 1 && response.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: response.success,
+                        returnFocus: false,
+                    }).then(() => {
+                        primer2.value = 0;
+                        sekunder2.value = 0;
+                        tritier2.value = 0;
+
+                        showTable();
+
+                        allInputs.forEach(function (input) {
+                            let divAtas = input.closest('#top') !== null;
+                            let divPenting = input.closest('#baris-1') !== null;
+                            let divids = input.closest('#ids') !== null;
+                            let uraianDetil = input.closest('#uraian') !== null;
+
+                            if (!divAtas && !divPenting && !divids && !uraianDetil) {
+                                input.value = '';
+                            }
+                        });
+                    });
+                } else if (a === 2 && response.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: response.success,
+                        returnFocus: false,
+                    }).then(() => {
+                        showTable();
+                        clearInputs();
                     });
                 } else if (response.error) {
-                    showAlert('warning', 'Data Tidak ter-HAPUS.');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Proses data GAGAL !',
+                        text: response.error,
+                        returnFocus: false,
+                    }).then(() => {
+                        btn_divisi.focus();
+                    });
                 }
             },
             error: function (xhr, status, error) {
@@ -1192,78 +1281,6 @@ btn_proses.addEventListener("click", function (e) {
             }
         });
     }
-
-    $.ajax({
-        type: 'PUT',
-        url: 'MhnMasukKeluar/proses',
-        data: {
-            _token: csrfToken,
-            a: a,
-            kode: kode,
-            uraian: uraian.value,
-            kodeType: kodeType.value,
-            kodeTransaksi: kodeTransaksi.value,
-            user: user.value,
-            tanggal: tanggal.value,
-            subkelId: subkelId.value,
-            primer2: primer2.value,
-            sekunder2: sekunder2.value,
-            tritier2: tritier2.value,
-            subkelId: subkelId.value
-        },
-        timeout: 30000,
-        success: function (response) {
-            if (a === 1 && response.success) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: response.success,
-                    returnFocus: false,
-                }).then(() => {
-                    primer2.value = 0;
-                    sekunder2.value = 0;
-                    tritier2.value = 0;
-
-                    if (masuk.checked) {
-                        masuk.checked = false;
-                    } else {
-                        keluar.checked = false;
-                    }
-
-                    showTable();
-                    clearInputs();
-                });
-            } else if (a === 2 && response.success) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: response.success,
-                    returnFocus: false,
-                }).then(() => {
-                    if (masuk.checked) {
-                        masuk.checked = false;
-                    } else {
-                        keluar.checked = false;
-                    }
-
-                    showTable();
-                    clearInputs();
-                });
-            } else if (response.error) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Proses data GAGAL !',
-                    text: response.error,
-                    returnFocus: false,
-                }).then(() => {
-                    btn_divisi.focus();
-                });
-            }
-        },
-        error: function (xhr, status, error) {
-            console.error('AJAX Error:', error);
-        }
-    });
 });
 
 disableKetik();
@@ -1272,11 +1289,14 @@ var allInputs = document.querySelectorAll('input');
 // kosongin input
 function clearInputs() {
     allInputs.forEach(function (input) {
-        let divPenting = input.closest('#baris-1') !== null;
+        let divAtas = input.closest('#top') !== null;
+        let divPenting = input.closest('#perlu') !== null;
         let divids = input.closest('#ids') !== null;
         let uraianDetil = input.closest('#uraian') !== null;
-        let objekDetil = input.closest('#objek') !== null;
-        if (!divPenting && !divids && !uraianDetil && !objekDetil) {
+        let objekNama = input.closest('#objekNama') !== null;
+        let objekId = input.closest('#objekId') !== null;
+
+        if (!divAtas && !divPenting && !divids && !uraianDetil && !objekNama && !objekId) {
             input.value = '';
         }
     });
@@ -1338,13 +1358,23 @@ btn_isi.addEventListener('click', function () {
 
 // button batal event listener
 btn_batal.addEventListener('click', function () {
+    if (masuk.checked) {
+        masuk.checked = false;
+    } else {
+        keluar.checked = false;
+    }
+
     disableKetik();
+    clearInputs();
+
     btn_objek.disabled = true;
     btn_kelut.disabled = true;
     btn_kelompok.disabled = true;
     btn_subkel.disabled = true;
     btn_kodeType.disabled = true;
     btn_hapus.disabled = false;
+
+    $('#tableData').hide();
 });
 
 // button koreksi event listener
@@ -1369,11 +1399,14 @@ btn_koreksi.addEventListener('click', function () {
 btn_hapus.addEventListener('click', function () {
     a = 3;
 
-    btn_isi.style.display = 'none';
-    btn_simpan.style.display = 'inline-block';
+    primer.value = 0;
+    sekunder.value = 0;
+    tritier.value = 0;
 
-    btn_koreksi.style.display = 'none';
-    btn_batal.style.display = 'inline-block';
+    btn_objek.disabled = false;
+    btn_objek.focus();
 
+    enableKetik();
     btn_hapus.disabled = true;
+
 });

@@ -221,12 +221,6 @@ class AccPenyesuaianBarangController extends Controller
     //Remove the specified resource from storage.
     public function destroy(Request $request)
     {
-        $data = $request->all();
-        // dd('Masuk Destroy', $data);
-        DB::connection('ConnInventory')->statement('exec SP_1003_INV_Delete_TmpTransaksi  @XIdTransaksi = ?', [
-            $data['IdTransaksi']
-        ]);
-
-        return redirect()->route('MaxMinStok.index')->with('alert', 'Data berhasil dihapus!');
+        //
     }
 }

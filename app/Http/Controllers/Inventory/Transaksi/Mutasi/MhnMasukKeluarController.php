@@ -318,11 +318,12 @@ class MhnMasukKeluarController extends Controller
     public function destroy(Request $request, $id)
     {
         $kodeTransaksi = $request->input('kodeTransaksi');
-        if ($id === 'hapusBarang') {
+        if ($id === 'hapusMutasi') {
             try {
-                DB::connection('ConnInventory')->statement('exec SP_1003_INV_Delete_Transaksi  @XIdTransaksi = ?', [$kodeTransaksi]);
+                DB::connection('ConnInventory')->statement('exec SP_1003_INV_Delete_TmpTransaksi  @XIdTransaksi = ?', [$kodeTransaksi]);
 
-                return response()->json(['success' => 'Data sudah diHAPUS'], 200);
+                // dd($request->all());
+                return response()->json(['success' => 'Data sudah diHAPUS!!'], 200);
             } catch (\Exception $e) {
                 return response()->json(['error' => 'Data gagal diHAPUS: ' . $e->getMessage()], 500);
             }
