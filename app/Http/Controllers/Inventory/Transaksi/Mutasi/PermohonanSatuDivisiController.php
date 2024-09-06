@@ -46,9 +46,7 @@ class PermohonanSatuDivisiController extends Controller
                 ];
             }
             return response()->json($data_divisi);
-        }
-
-        else if ($id === 'getUserId') {
+        } else if ($id === 'getUserId') {
             return response()->json(['user' => $user]);
         }
 
@@ -199,7 +197,7 @@ class PermohonanSatuDivisiController extends Controller
             $XIdSubKelompok = $request->input('XIdSubKelompok') ?? '0';
             $XPIB = $request->input('XPIB');
 
-            if (!$XPIB) {
+            if ($XPIB === null) {
                 $kelompok = DB::connection('ConnInventory')->select('exec SP_1003_INV_KodeBarang_Type
             @XKodeBarang = ?, @XIdSubKelompok = ?', [$XKodeBarang, $XIdSubKelompok]);
                 $data_kelompok = [];
@@ -399,6 +397,8 @@ class PermohonanSatuDivisiController extends Controller
     //Update the specified resource in storage.
     public function update(Request $request, $id)
     {
+        $user = Auth::user()->NomorUser;
+
         if ($id == 'insertTempType') {
             $XIdDivisi = $request->input('XIdDivisi');
             $XIdSubKelompok = $request->input('XIdSubKelompok');
@@ -416,11 +416,149 @@ class PermohonanSatuDivisiController extends Controller
                 return response()->json(['error' => 'Data gagal diPROSES: ' . $e->getMessage()], 500);
             }
         }
+
+        // save
+        else if ($id == 'saveData') {
+            $XUraianDetailTransaksi = $request->input('XUraianDetailTransaksi');
+            $XIdType = $request->input('XIdType');
+            $Xsaatawaltransaksi = $request->input('Xsaatawaltransaksi');
+            $XJumlahKeluarPrimer = $request->input('XJumlahKeluarPrimer');
+            $XJumlahKeluarSekunder = $request->input('XJumlahKeluarSekunder');
+            $XJumlahKeluarTritier = $request->input('XJumlahKeluarTritier');
+            $XAsalIdSubKelompok = $request->input('XAsalIdSubKelompok');
+            $XTujuanIdSubkelompok = $request->input('XTujuanIdSubkelompok');
+            $XPIB = $request->input('XPIB');
+
+            $nextIdTrans = DB::connection('ConnInventory')->select("SELECT IDENT_CURRENT('Tmp_Transaksi') + 1 AS IdTrans");
+            $idtransaksi = $nextIdTrans[0]->IdTrans;
+
+            if ($XPIB === null) {
+                try {
+                    DB::connection('ConnInventory')
+                        ->statement('exec [SP_1003_INV_Insert_01_TmpTransaksi]
+                @XIdTypeTransaksi = ?,
+                @XUraianDetailTransaksi = ?,
+                @XIdType = ?,
+                @XIdPemberi = ?,
+                @Xsaatawaltransaksi = ?,
+                @XJumlahKeluarPrimer = ?,
+                @XJumlahKeluarSekunder = ?,
+                @XJumlahKeluarTritier = ?,
+                @XAsalIdSubKelompok = ?,
+                @XTujuanIdSubkelompok = ?', [
+                            '01',
+                            $XUraianDetailTransaksi,
+                            $XIdType,
+                            $user,
+                            $Xsaatawaltransaksi,
+                            $XJumlahKeluarPrimer,
+                            $XJumlahKeluarSekunder,
+                            $XJumlahKeluarTritier,
+                            $XAsalIdSubKelompok,
+                            $XTujuanIdSubkelompok,
+                        ]);
+
+                    return response()->json([
+                        'success' => 'Data tersimpan dg Idtransaksi : ' . $idtransaksi,
+                        'idtransaksi' => $idtransaksi  // Return idtransaksi separately
+                    ], 200);
+                } catch (\Exception $e) {
+                    return response()->json(['error' => 'Data gagal diPROSES: ' . $e->getMessage()], 500);
+                }
+            } else {
+                try {
+                    DB::connection('ConnInventory')
+                        ->statement('exec [SP_1003_INV_Insert_01_TmpTransaksi]
+                @XIdTypeTransaksi = ?,
+                @XUraianDetailTransaksi = ?,
+                @XIdType = ?,
+                @XIdPemberi = ?,
+                @Xsaatawaltransaksi = ?,
+                @XJumlahKeluarPrimer = ?,
+                @XJumlahKeluarSekunder = ?,
+                @XJumlahKeluarTritier = ?,
+                @XAsalIdSubKelompok = ?,
+                @XTujuanIdSubkelompok = ?,
+                @XPIB = ?', [
+                            '01',
+                            $XUraianDetailTransaksi,
+                            $XIdType,
+                            $user,
+                            $Xsaatawaltransaksi,
+                            $XJumlahKeluarPrimer,
+                            $XJumlahKeluarSekunder,
+                            $XJumlahKeluarTritier,
+                            $XAsalIdSubKelompok,
+                            $XTujuanIdSubkelompok,
+                            $XPIB,
+                        ]);
+
+                    return response()->json([
+                        'success' => 'Data tersimpan dg Idtransaksi : ' . $idtransaksi,
+                        'idtransaksi' => $idtransaksi  // Return idtransaksi separately
+                    ], 200);
+                } catch (\Exception $e) {
+                    return response()->json(['error' => 'Data gagal diPROSES: ' . $e->getMessage()], 500);
+                }
+            }
+        }
+
+        // save
+        else if ($id == 'koreksiData') {
+            $XIdTransaksi = $request->input('XIdTransaksi');
+            $XUraianDetailTransaksi = $request->input('XUraianDetailTransaksi');
+            $XJumlahKeluarPrimer = $request->input('XJumlahKeluarPrimer');
+            $XJumlahKeluarSekunder = $request->input('XJumlahKeluarSekunder');
+            $XJumlahKeluarTritier = $request->input('XJumlahKeluarTritier');
+            $XTujuanSubkelompok = $request->input('XTujuanSubkelompok');
+
+            try {
+                DB::connection('ConnInventory')
+                    ->statement('exec [SP_1003_INV_Update_TmpTransaksi]
+                @XIdTransaksi = ?,
+                @XUraianDetailTransaksi = ?,
+                @XJumlahKeluarPrimer = ?,
+                @XJumlahKeluarSekunder = ?,
+                @XJumlahKeluarTritier = ?,
+                @XTujuanSubkelompok = ?', [
+                        $XIdTransaksi,
+                        $XUraianDetailTransaksi,
+                        $XJumlahKeluarPrimer,
+                        $XJumlahKeluarSekunder,
+                        $XJumlahKeluarTritier,
+                        $XTujuanSubkelompok,
+                    ]);
+
+                return response()->json([
+                    'success' => 'Data Telah Terkoreksi, idtransaksi : ' . $XIdTransaksi,
+                    'XIdTransaksi' => $XIdTransaksi  // Return idtransaksi separately
+                ], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Data gagal diPROSES: ' . $e->getMessage()], 500);
+            }
+        }
     }
 
     //Remove the specified resource from storage.
-    public function destroy(Request $request)
+    public function destroy(Request $request, $id)
     {
-        // 
+        if ($id == 'deleteData') {
+            $XIdTransaksi = $request->input('XIdTransaksi');
+
+            try {
+                DB::connection('ConnInventory')
+                    ->statement('exec [SP_1003_INV_Delete_TmpTransaksi]
+                @XIdTransaksi = ?', [
+                        $XIdTransaksi,
+                    ]);
+
+                return response()->json([
+                    'success' => 'Data Telah Terhapus, idtransaksi : ' . $XIdTransaksi,
+                    'XIdTransaksi' => $XIdTransaksi  // Return idtransaksi separately
+                ], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Data gagal diPROSES: ' . $e->getMessage()], 500);
+            }
+        }
     }
 }

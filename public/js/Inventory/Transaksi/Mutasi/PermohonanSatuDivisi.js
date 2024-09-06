@@ -751,6 +751,61 @@ function LoadPenerima() {
     });
 }
 
+function LoadPenerimaIsiKoreksi() {
+    return new Promise(function (resolve, reject) {
+        $.ajax({
+            type: 'GET',
+            url: 'PermohonanSatuDivisi/loadPenerima',
+            data: {
+                XKodeBarang: kodeBarang.value,
+                XIdSubKelompok: subkelId2.value,
+                XPIB: pib.value,
+                _token: csrfToken
+            },
+            success: function (result) {
+                let loadPenerima = false;
+
+                if (result.length !== 0) {
+                    satuanPrimer2.value = result[0].satuan_primer ? decodeHtmlEntities(result[0].satuan_primer.trim()) : 'NULL';
+                    satuanSekunder2.value = result[0].satuan_sekunder ? decodeHtmlEntities(result[0].satuan_sekunder.trim()) : 'NULL';
+                    satuanTritier2.value = result[0].satuan_tritier ? decodeHtmlEntities(result[0].satuan_tritier.trim()) : 'NULL';
+
+                    if (satuanPrimer.value.trim() === satuanPrimer2.value.trim()) {
+                        if (satuanSekunder.value.trim() === satuanSekunder2.value.trim()) {
+                            if (satuanTritier.value.trim() === satuanTritier2.value.trim()) {
+                                loadPenerima = true;
+                            } else {
+                                loadPenerima = satuanPrimer.value.trim() === 'NULL';
+                            }
+                        } else {
+                            loadPenerima = satuanSekunder.value.trim() === 'NULL';
+                        }
+                    }
+
+                    if (!loadPenerima) {
+                        Swal.fire({
+                            icon: 'info',
+                            text: 'Satuan Tritier, Sekunder, Primer pada Divisi ' + (decodeHtmlEntities(divisiNama.value)) +
+                                ' ADA yang TIDAK SAMA dengan Divisi Penerima Barang !!!... Koreksi di Maitenance Type Barang per Divisi',
+                        });
+                    }
+                } else {
+                    Swal.fire({
+                        icon: 'info',
+                        text: 'Tidak Ada Type Barang ' + (decodeHtmlEntities(namaBarang.value)) + ' Pada Divisi Penerima',
+                    });
+                }
+
+                resolve(loadPenerima);
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+                reject(error);
+            }
+        });
+    });
+}
+
 $('#primer2').on('keydown', function (e) {
     if (e.key === 'Enter') {
         e.preventDefault();
@@ -879,11 +934,10 @@ btn_hapus.addEventListener("click", function (e) {
                         userId = result.user.trim();
 
                         if (userId === pemberi) {
-                            Load_Saldo(kodeType.value);
                             pilih = 3;
                             tombol(3);
                             btn_proses.disabled = false;
-                            btn_proses.focus();
+                            // btn_proses.focus();
                         }
                         else {
                             Swal.fire({
@@ -905,11 +959,19 @@ btn_hapus.addEventListener("click", function (e) {
     }
 });
 
-btn_proses.addEventListener("click", function (e) {
-    // if (pilih === 1 || pilih === 2) {
-    //     LoadPenerima();
-    //     // BELOM
-    // }
+var cekproses;
+btn_proses.addEventListener("click", function (e) {    
+    if (pilih === 1 || pilih === 2) {
+        LoadPenerimaIsiKoreksi().then(function (result) {
+            cekproses = result;
+        }).catch(function (error) {
+            console.error('Error in LoadPenerimaIsiKoreksi:', error);
+        });
+    }
+
+    if (!cekproses) {
+        return;
+    }
 
     if (tanggal.value > today) {
         Swal.fire({
@@ -952,10 +1014,119 @@ btn_proses.addEventListener("click", function (e) {
             btn_subkel2.focus();
         });
     }
+
+    SaveData();
 });
 
-function SaveData(){
+function SaveData() {
+    console.log(pilih);
 
+    if (pilih === 1) {
+        $.ajax({
+            type: 'PUT',
+            url: 'PermohonanSatuDivisi/saveData',
+            data: {
+                _token: csrfToken,
+                XUraianDetailTransaksi: (uraian.value) ? decodeHtmlEntities(uraian.value) : null,
+                XIdType: kodeType.value,
+                Xsaatawaltransaksi: tanggal.value,
+                XJumlahKeluarPrimer: primer2.value,
+                XJumlahKeluarSekunder: sekunder2.value,
+                XJumlahKeluarTritier: tritier2.value,
+                XAsalIdSubKelompok: subkelId.value,
+                XTujuanIdSubkelompok: subkelId2.value,
+                XPIB: pib.value,
+                // idtransaksi: transaksiId.value,
+            },
+            success: function (result) {
+                transaksiId.value = decodeHtmlEntities(result.idtransaksi);
+                Swal.fire({
+                    icon: 'success',
+                    text: result.success,
+                    returnFocus: false,
+                }).then(() => {
+                    primer2.value = 0;
+                    sekunder2.value = 0;
+                    tritier2.value = 0;
+                    btn_objek2.focus();
+
+                    if (tabelApa === 1) {
+                        TampilAllData();
+                    }
+                    else {
+                        TampilData();
+                    }
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+    }
+
+    else if (pilih === 2) {
+        $.ajax({
+            type: 'PUT',
+            url: 'PermohonanSatuDivisi/koreksiData',
+            data: {
+                _token: csrfToken,
+                XIdTransaksi: transaksiId.value,
+                XUraianDetailTransaksi: (uraian.value) ? decodeHtmlEntities(uraian.value) : null,
+                XJumlahKeluarPrimer: primer2.value,
+                XJumlahKeluarSekunder: sekunder2.value,
+                XJumlahKeluarTritier: tritier2.value,
+                XTujuanSubkelompok: subkelId2.value,
+            },
+            success: function (result) {
+                Swal.fire({
+                    icon: 'success',
+                    text: result.success,
+                    returnFocus: false,
+                }).then(() => {
+                    tombol(1);
+                    if (tabelApa === 1) {
+                        TampilAllData();
+                    }
+                    else {
+                        TampilData();
+                    }
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+    }
+
+    else if (pilih === 3) {
+        $.ajax({
+            type: 'DELETE',
+            url: 'PermohonanSatuDivisi/deleteData',
+            data: {
+                _token: csrfToken,
+                XIdTransaksi: transaksiId.value,
+            },
+            success: function (result) {
+                Swal.fire({
+                    icon: 'success',
+                    text: result.success,
+                    returnFocus: false,
+                }).then(() => {
+                    tombol(1);
+                    if (tabelApa === 1) {
+                        TampilAllData();
+                    }
+                    else {
+                        TampilData();
+                    }
+                    ClearForm();
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+    }
 }
 
 btn_batal.addEventListener("click", function (e) {
