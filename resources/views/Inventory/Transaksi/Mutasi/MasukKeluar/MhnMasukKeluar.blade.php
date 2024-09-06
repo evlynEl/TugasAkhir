@@ -7,7 +7,7 @@
                     <div class="card-header">Mutasi Masuk-Keluar</div>
                     <div class="card-body RDZOverflow RDZMobilePaddingLR0">
 
-                        <div class="row pb-2">
+                        <div class="row pb-2" id="top">
                             <div class="col-2">
                                 <label><strong>Jenis Mutasi</strong></label>
                             </div>
@@ -161,21 +161,21 @@
                                     <label><strong>Stok Akhir</strong></label><div class="col-sm-1 mr-3"></div>
                                     <label>Primer</label>
                                     <div class="col-sm-5">
-                                        <input type="text" class="form-control" id="primer" name="primer" readonly>
+                                        <input type="text" class="form-control" id="primer" name="primer">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-3"></div>
                                     <label>Sekunder</label>
                                     <div class="col-sm-5">
-                                        <input type="text" class="form-control" id="sekunder" name="sekunder" readonly>
+                                        <input type="text" class="form-control" id="sekunder" name="sekunder">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-3 mr-4"></div>
                                     <label>Tritier</label>
                                     <div class="col-sm-5">
-                                        <input type="text" class="form-control" id="tritier" name="tritier" readonly>
+                                        <input type="text" class="form-control" id="tritier" name="tritier">
                                     </div>
                                 </div>
                             </div>
