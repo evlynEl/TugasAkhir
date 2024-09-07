@@ -99,7 +99,7 @@ $('#tableData tbody').on('click', 'tr', function () {
     btnProses.disabled = false;
 
     var data = table.row(this).data();
-    let sIdTrans = data[1];
+    let sIdTrans = decodeHtmlEntities(data[1]);
 
     Tampil_Data(sIdTrans);
 
@@ -225,7 +225,7 @@ function Cek_Sesuai_Pemberi(sIdtrans) {
                 Swal.fire({
                     icon: 'error',
                     text: 'Tidak ada Data yang Tidak Bisa DiAcc !!!. Karena Ada Transaksi Penyesuaian yang Belum Diacc untuk type '
-                        + type.value + ' Pada divisi pemberi',
+                        + decodeHtmlEntities(type.value) + ' Pada divisi pemberi',
                 });
             }
             else {

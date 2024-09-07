@@ -152,8 +152,8 @@ btn_divisi.addEventListener("click", function (e) {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                divisiId.value = result.value.IdDivisi.trim();
-                divisiNama.value = result.value.NamaDivisi.trim();
+                divisiId.value = decodeHtmlEntities(result.value.IdDivisi.trim());
+                divisiNama.value = decodeHtmlEntities(result.value.NamaDivisi.trim());
                 btn_objek.focus();
             }
         });
@@ -161,6 +161,12 @@ btn_divisi.addEventListener("click", function (e) {
         console.error(error);
     }
 });
+
+function decodeHtmlEntities(text) {
+    var txt = document.createElement("textarea");
+    txt.innerHTML = text;
+    return txt.value;
+}
 
 // button list objek
 btn_objek.addEventListener("click", function (e) {
@@ -227,8 +233,8 @@ btn_objek.addEventListener("click", function (e) {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                objekId.value = result.value.IdObjek.trim();
-                objekNama.value = result.value.NamaObjek.trim();
+                objekId.value = decodeHtmlEntities(result.value.IdObjek.trim());
+                objekNama.value = decodeHtmlEntities(result.value.NamaObjek.trim());
                 btn_kelut.focus();
             }
         });
@@ -302,8 +308,8 @@ btn_kelut.addEventListener("click", function (e) {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                kelutId.value = result.value.IdKelompokUtama.trim();
-                kelutNama.value = result.value.NamaKelompokUtama.trim();
+                kelutId.value = decodeHtmlEntities(result.value.IdKelompokUtama.trim());
+                kelutNama.value = decodeHtmlEntities(result.value.NamaKelompokUtama.trim());
                 btn_kelompok.focus();
             }
         });
@@ -377,8 +383,8 @@ btn_kelompok.addEventListener("click", function (e) {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                kelompokId.value = result.value.idkelompok.trim();
-                kelompokNama.value = result.value.namakelompok.trim();
+                kelompokId.value = decodeHtmlEntities(result.value.idkelompok.trim());
+                kelompokNama.value = decodeHtmlEntities(result.value.namakelompok.trim());
                 btn_subkel.focus();
             }
         });
@@ -452,8 +458,8 @@ btn_subkel.addEventListener("click", function (e) {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                subkelId.value = result.value.IdSubkelompok.trim();
-                subkelNama.value = result.value.NamaSubKelompok.trim();
+                subkelId.value = decodeHtmlEntities(result.value.IdSubkelompok.trim());
+                subkelNama.value = decodeHtmlEntities(result.value.NamaSubKelompok.trim());
                 btn_kodeType.focus();
             }
         });
@@ -528,8 +534,8 @@ btn_kodeType.addEventListener("click", function (e) {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                kodeType.value = result.value.IdType.trim();
-                namaType.value = result.value.NamaType.trim();
+                kodeType.value = decodeHtmlEntities(result.value.IdType.trim());
+                namaType.value = decodeHtmlEntities(result.value.NamaType.trim());
 
                 $.ajax({
                     type: 'GET',
@@ -549,10 +555,10 @@ btn_kodeType.addEventListener("click", function (e) {
 
                         const selectedRow = result.data;
 
-                        triter.value = selectedRow[0].satuan_tritier;
-                        sekunder.value = selectedRow[0].satuan_sekunder;
-                        primer.value = selectedRow[0].satuan_primer;
-                        kodeBarang.innerText = ' Kode Barang : ' + selectedRow[0].KodeBarang;
+                        triter.value = formatNumber(selectedRow[0].satuan_tritier);
+                        sekunder.value = formatNumber(selectedRow[0].satuan_sekunder);
+                        primer.value = formatNumber(selectedRow[0].satuan_primer);
+                        kodeBarang.innerText = ' Kode Barang : ' + decodeHtmlEntities(selectedRow[0].KodeBarang);
                         minim.value = parseInt(selectedRow[0].MinimumStock).toFixed(0);
                         maximum.value = parseInt(selectedRow[0].MaximumStock ?? 0).toFixed(0);
 
@@ -574,6 +580,12 @@ btn_kodeType.addEventListener("click", function (e) {
     }
 });
 
+function formatNumber(value) {
+    if (!isNaN(parseFloat(value)) && isFinite(value)) {
+        return parseFloat(value).toFixed(2);
+    }
+    return value;
+}
 
 // button list Kode Type
 btn_namaType.addEventListener("click", function (e) {
@@ -640,8 +652,8 @@ btn_namaType.addEventListener("click", function (e) {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                kodeType.value = result.value.IdType.trim();
-                namaType.value = result.value.NamaType.trim();
+                kodeType.value = decodeHtmlEntities(result.value.IdType.trim());
+                namaType.value = decodeHtmlEntities(result.value.NamaType.trim());
 
                 $.ajax({
                     type: 'GET',
@@ -661,10 +673,10 @@ btn_namaType.addEventListener("click", function (e) {
 
                         const selectedRow = result.data;
 
-                        triter.value = selectedRow[0].satuan_tritier;
-                        sekunder.value = selectedRow[0].satuan_sekunder;
-                        primer.value = selectedRow[0].satuan_primer;
-                        kodeBarang.innerText = ' Kode Barang : ' + selectedRow[0].KodeBarang;
+                        triter.value = formatNumber(selectedRow[0].satuan_tritier);
+                        sekunder.value = formatNumber(selectedRow[0].satuan_sekunder);
+                        primer.value = formatNumber(selectedRow[0].satuan_primer);
+                        kodeBarang.innerText = ' Kode Barang : ' + decodeHtmlEntities(selectedRow[0].KodeBarang);
                         minim.value = parseInt(selectedRow[0].MinimumStock).toFixed(0);
                         maximum.value = parseInt(selectedRow[0].MaximumStock ?? 0).toFixed(0);
 

@@ -187,8 +187,8 @@ btn_objek.addEventListener("click", function (e) {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                objekId.value = result.value.IdObjek.trim();
-                objekNama.value = result.value.NamaObjek.trim();
+                objekId.value = decodeHtmlEntities(result.value.IdObjek.trim());
+                objekNama.value = decodeHtmlEntities(result.value.NamaObjek.trim());
                 btn_ok.focus();
             }
         });
@@ -196,6 +196,12 @@ btn_objek.addEventListener("click", function (e) {
         console.error(error);
     }
 });
+
+function decodeHtmlEntities(text) {
+    var txt = document.createElement("textarea");
+    txt.innerHTML = text;
+    return txt.value;
+}
 
 // button ok
 btn_ok.addEventListener("click", function (e) {

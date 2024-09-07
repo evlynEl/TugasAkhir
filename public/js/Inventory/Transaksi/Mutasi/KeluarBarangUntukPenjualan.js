@@ -111,7 +111,7 @@ $('#tableData tbody').on('click', 'tr', function () {
     btnProses.disabled = false;
 
     var data = table.row(this).data();
-    let sIdTrans = data[1];
+    let sIdTrans = decodeHtmlEntities(data[1]);
 
     Tampil_Data(sIdTrans);
 
@@ -219,7 +219,7 @@ btnProses.addEventListener("click", function (e) {
 
 });
 
-function proses(){
+function proses() {
     $.ajax({
         type: 'PUT',
         url: 'AccKeluarPenjualan/proses',
@@ -229,7 +229,7 @@ function proses(){
             JumlahKeluarPrimer: primer1.value,
             JumlahKeluarSekunder: sekunder1.value,
             JumlahKeluartritier: tritier1.value,
-            JumlahKonversi: konversi.value,
+            JumlahKonversi: decodeHtmlEntities(konversi.value),
         },
         success: function (result) {
             if (response.success) {
@@ -343,6 +343,8 @@ function Tampil_Listbarang() {
                 updateDataTable(result);
             }
             else {
+                var table = $('#tableData').DataTable();
+                table.clear().draw();
                 Swal.fire({
                     icon: 'info',
                     text: 'Tidak ada Data yang ditampilkan.',

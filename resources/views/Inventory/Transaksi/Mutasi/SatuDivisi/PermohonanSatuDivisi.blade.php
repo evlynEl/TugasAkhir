@@ -4,7 +4,7 @@
         <div class="row justify-content-center">
             <div class="col-md-10 RDZMobilePaddingLR0">
                 <div class="card">
-                    <div class="card-header" style="">Transaksi Harian</div>
+                    <div class="card-header" style="">Permohonan Satu Divisi</div>
                     <div class="card-body RDZOverflow RDZMobilePaddingLR0">
 
                         <div class="row" id="tableHideShow" style="margin-top: -1%">
@@ -137,7 +137,8 @@
                                     <label>PIB</label>
                                 </div>
                                 <div class="col-sm-1">
-                                    <input style="width: 200%; margin-left: -80%" type="text" class="form-control" id="pib" name="pib" readonly>
+                                    <input style="width: 200%; margin-left: -80%" type="text" class="form-control"
+                                        id="pib" name="pib" readonly>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" class="form-control" style="margin-left: 50%; width: 125%"
@@ -199,9 +200,8 @@
                                 <div class="col-sm-4">
                                     <div class="input-group">
                                         <input type="text" id="objekId2" name="objekId2" style="display: none"
-                                            class="form-control" >
-                                        <input type="text" class="form-control" id="objekNama2" name="objekNama2"
-                                            >
+                                            class="form-control">
+                                        <input type="text" class="form-control" id="objekNama2" name="objekNama2">
                                         <div class="input-group-append">
                                             <button type="button" id="btn_objek2" class="btn btn-info"
                                                 disabled>...</button>
@@ -212,8 +212,7 @@
                                     <label>Id Transaksi</label>
                                 </div>
                                 <div class="col-sm-2">
-                                    <input type="text" class="form-control" id="transaksiId" name="transaksiId"
-                                        >
+                                    <input type="text" class="form-control" id="transaksiId" name="transaksiId">
                                 </div>
                             </div>
                             <div class="row mt-1 pr-5">
@@ -223,9 +222,8 @@
                                 <div class="col-sm-4">
                                     <div class="input-group">
                                         <input type="text" style="display: none" id="kelutId2" name="kelutId2"
-                                            class="form-control" >
-                                        <input type="text" class="form-control" id="kelutNama2" name="kelutNama2"
-                                            >
+                                            class="form-control">
+                                        <input type="text" class="form-control" id="kelutNama2" name="kelutNama2">
                                         <div class="input-group-append">
                                             <button type="button" id="btn_kelut2" class="btn btn-info"
                                                 disabled>...</button>
@@ -238,9 +236,9 @@
                                 <div class="col-sm-4">
                                     <div class="input-group">
                                         <input type="text" style="display: none" id="kelompokId2" name="kelompokId2"
-                                            class="form-control" >
+                                            class="form-control">
                                         <input type="text" class="form-control" id="kelompokNama2"
-                                            name="kelompokNama2" >
+                                            name="kelompokNama2">
                                         <div class="input-group-append">
                                             <button type="button" id="btn_kelompok2" class="btn btn-info"
                                                 disabled>...</button>
@@ -257,9 +255,8 @@
                                 <div class="col-sm-4">
                                     <div class="input-group">
                                         <input type="text" style="display: none" id="subkelId2" name="subkelId2"
-                                            class="form-control" >
-                                        <input type="text" class="form-control" id="subkelNama2" name="subkelNama2"
-                                            >
+                                            class="form-control">
+                                        <input type="text" class="form-control" id="subkelNama2" name="subkelNama2">
                                         <div class="input-group-append">
                                             <button type="button" id="btn_subkel2" class="btn btn-info"
                                                 disabled>...</button>
@@ -276,8 +273,7 @@
 
                                 <div class="col-sm-2 mt-2">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="primer2" name="primer2"
-                                            >
+                                        <input type="text" class="form-control" id="primer2" name="primer2">
                                     </div>
                                 </div>
                                 <div class="col-sm-1 mt-2" style="margin-left: -2%">
@@ -289,8 +285,7 @@
 
                                 <div class="col-sm-2 mt-2" style="margin-left: 3%">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="sekunder2" name="sekunder2"
-                                            >
+                                        <input type="text" class="form-control" id="sekunder2" name="sekunder2">
                                     </div>
                                 </div>
                                 <div class="col-sm-1 mt-2" style="margin-left: -2%">
@@ -302,8 +297,7 @@
 
                                 <div class="col-sm-2 mt-2" style="margin-left: 3%">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="tritier2" name="tritier2"
-                                            >
+                                        <input type="text" class="form-control" id="tritier2" name="tritier2">
                                     </div>
                                 </div>
                                 <div class="col-sm-1 mt-2" style="margin-left: -2%">

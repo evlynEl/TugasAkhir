@@ -365,8 +365,8 @@ function ClearForm() {
     tritier2.value = 0;
     satuanTritier2.value = '';
 
-    primer2.readOnly = false;
-    sekunder2.readOnly = false;
+    primer2.disabled = false;
+    sekunder2.disabled = false;
     btn_kelut.disabled = true;
     btn_kelompok.disabled = true;
     btn_subkel.disabled = true;
@@ -445,14 +445,15 @@ function Load_Type() {
 
                 primer2.disabled = false;
                 sekunder2.disabled = false;
-                Load_Saldo(kodeType.value);
-                // if (satuanPrimer.value.trim() === 'NULL' && satuanSekunder.value.trim() === 'NULL') {
-                //     primer2.disabled = true;
-                //     sekunder2.disabled = true;
-                // }
-                // else if (satuanPrimer.value.trim() === 'NULL' && satuanSekunder.value.trim() !== 'NULL') {
-                //     primer2.disabled = true;
-                // }
+                Load_Saldo(kodeType.value).then(() => {
+                    if (satuanPrimer.value.trim() === 'NULL' && satuanSekunder.value.trim() === 'NULL') {
+                        primer2.disabled = true;
+                        sekunder2.disabled = true;
+                    } else if (satuanPrimer.value.trim() === 'NULL' && satuanSekunder.value.trim() !== 'NULL') {
+                        primer2.disabled = true;
+                    }
+                });
+
                 btn_objek2.disabled = false;
                 btn_objek2.focus();
             }
@@ -531,14 +532,14 @@ function Load_Type_CIR() {
 
                 primer2.disabled = false;
                 sekunder2.disabled = false;
-                Load_Saldo(kodeType.value);
-                // if (satuanPrimer.value.trim() === 'NULL' && satuanSekunder.value.trim() === 'NULL') {
-                //     primer2.disabled = true;
-                //     sekunder2.disabled = true;
-                // }
-                // else if (satuanPrimer.value.trim() === 'NULL' && satuanSekunder.value.trim() !== 'NULL') {
-                //     primer2.disabled = true;
-                // }
+                Load_Saldo(kodeType.value).then(() => {
+                    if (satuanPrimer.value.trim() === 'NULL' && satuanSekunder.value.trim() === 'NULL') {
+                        primer2.disabled = true;
+                        sekunder2.disabled = true;
+                    } else if (satuanPrimer.value.trim() === 'NULL' && satuanSekunder.value.trim() !== 'NULL') {
+                        primer2.disabled = true;
+                    }
+                });
                 btn_objek2.disabled = false;
                 btn_objek2.focus();
             }
@@ -617,14 +618,14 @@ function Load_Type_ABM() {
 
                 primer2.disabled = false;
                 sekunder2.disabled = false;
-                Load_Saldo(kodeType.value);
-                // if (satuanPrimer.value.trim() === 'NULL' && satuanSekunder.value.trim() === 'NULL') {
-                //     primer2.disabled = true;
-                //     sekunder2.disabled = true;
-                // }
-                // else if (satuanPrimer.value.trim() === 'NULL' && satuanSekunder.value.trim() !== 'NULL') {
-                //     primer2.disabled = true;
-                // }
+                Load_Saldo(kodeType.value).then(() => {
+                    if (satuanPrimer.value.trim() === 'NULL' && satuanSekunder.value.trim() === 'NULL') {
+                        primer2.disabled = true;
+                        sekunder2.disabled = true;
+                    } else if (satuanPrimer.value.trim() === 'NULL' && satuanSekunder.value.trim() !== 'NULL') {
+                        primer2.disabled = true;
+                    }
+                });
                 btn_objek2.disabled = false;
                 btn_objek2.focus();
             }
@@ -635,48 +636,35 @@ function Load_Type_ABM() {
 }
 
 function Load_Saldo(sIdtype) {
-    $.ajax({
-        type: 'GET',
-        url: 'PermohonanSatuDivisi/getSaldo',
-        data: {
-            IdType: sIdtype,
-            _token: csrfToken
-        },
-        success: function (result) {
-            if (result) {
-                primer.value = result[0].SaldoPrimer ? formatNumber(result[0].SaldoPrimer) : formatNumber(0);
-                sekunder.value = result[0].SaldoSekunder ? formatNumber(result[0].SaldoSekunder) : formatNumber(0);
-                tritier.value = result[0].SaldoTritier ? formatNumber(result[0].SaldoTritier) : formatNumber(0);
+    return new Promise(function (resolve, reject) {
+        $.ajax({
+            type: 'GET',
+            url: 'PermohonanSatuDivisi/getSaldo',
+            data: {
+                IdType: sIdtype,
+                _token: csrfToken
+            },
+            success: function (result) {
+                if (result) {
+                    primer.value = result[0].SaldoPrimer ? formatNumber(result[0].SaldoPrimer) : formatNumber(0);
+                    sekunder.value = result[0].SaldoSekunder ? formatNumber(result[0].SaldoSekunder) : formatNumber(0);
+                    tritier.value = result[0].SaldoTritier ? formatNumber(result[0].SaldoTritier) : formatNumber(0);
 
-                satuanPrimer.value = result[0].SatPrimer ? decodeHtmlEntities(result[0].SatPrimer) : 'NULL';
-                satuanSekunder.value = result[0].SatSekunder ? decodeHtmlEntities(result[0].SatSekunder) : 'NULL';
-                satuanTritier.value = result[0].SatTritier ? decodeHtmlEntities(result[0].SatTritier) : 'NULL';
+                    satuanPrimer.value = result[0].SatPrimer ? decodeHtmlEntities(result[0].SatPrimer) : 'NULL';
+                    satuanSekunder.value = result[0].SatSekunder ? decodeHtmlEntities(result[0].SatSekunder) : 'NULL';
+                    satuanTritier.value = result[0].SatTritier ? decodeHtmlEntities(result[0].SatTritier) : 'NULL';
 
-                kodeBarang.value = decodeHtmlEntities(result[0].KodeBarang);
+                    kodeBarang.value = decodeHtmlEntities(result[0].KodeBarang);
 
-                if (satuanPrimer.value.trim() === 'NULL' && satuanSekunder.value.trim() === 'NULL') {
-                    primer2.disabled = true;
-                    sekunder2.disabled = true;
+                    resolve(result);
                 }
-                else if (satuanPrimer.value.trim() === 'NULL' && satuanSekunder.value.trim() !== 'NULL') {
-                    primer2.disabled = true;
-                }
-
-                if (pilih === 2 || pilih === 3) {
-                    primer2.disabled = false;
-                    sekunder2.disabled = false;
-                    if (pilih === 2) {
-                        primer2.focus();
-                    }
-                    else {
-                        btn_proses.focus();
-                    }
-                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+                // Reject the promise with the error
+                reject(error);
             }
-        },
-        error: function (xhr, status, error) {
-            console.error('Error:', error);
-        }
+        });
     });
 }
 
@@ -937,7 +925,7 @@ btn_hapus.addEventListener("click", function (e) {
                             pilih = 3;
                             tombol(3);
                             btn_proses.disabled = false;
-                            // btn_proses.focus();
+                            btn_proses.focus();
                         }
                         else {
                             Swal.fire({
@@ -960,20 +948,25 @@ btn_hapus.addEventListener("click", function (e) {
 });
 
 var cekproses;
-btn_proses.addEventListener("click", function (e) {    
+btn_proses.addEventListener("click", async function (e) {
+    // Handle the async function properly with await
+    let cekproses = true;
     if (pilih === 1 || pilih === 2) {
-        LoadPenerimaIsiKoreksi().then(function (result) {
-            cekproses = result;
-        }).catch(function (error) {
+        try {
+            cekproses = await LoadPenerimaIsiKoreksi();
+        } catch (error) {
             console.error('Error in LoadPenerimaIsiKoreksi:', error);
-        });
+            return; // Stop execution if there is an error in LoadPenerimaIsiKoreksi
+        }
     }
 
+    // Check if cekproses is false, return early
     if (!cekproses) {
         return;
     }
 
-    if (tanggal.value > today) {
+    // Compare dates, ensure the format of 'today' and 'tanggal.value' are consistent
+    if (new Date(tanggal.value) > new Date()) {
         Swal.fire({
             icon: 'error',
             text: 'Tanggal Mohon lebih besar dari tanggal hari ini',
@@ -981,6 +974,7 @@ btn_proses.addEventListener("click", function (e) {
         return;
     }
 
+    // Check if Penerima and Pemberi divisions are the same
     if (subkelId.value.trim() === subkelId2.value.trim()) {
         Swal.fire({
             icon: 'error',
@@ -989,6 +983,7 @@ btn_proses.addEventListener("click", function (e) {
         return;
     }
 
+    // Validate if all quantities are zero
     if (parseFloat(primer2.value) === 0 && parseFloat(sekunder2.value) === 0 && parseFloat(tritier2.value) === 0) {
         Swal.fire({
             icon: 'error',
@@ -997,6 +992,7 @@ btn_proses.addEventListener("click", function (e) {
         return;
     }
 
+    // Ensure Tritier value is greater than 0
     if (parseFloat(tritier2.value) <= 0) {
         Swal.fire({
             icon: 'error',
@@ -1005,18 +1001,22 @@ btn_proses.addEventListener("click", function (e) {
         return;
     }
 
-    if (subkelId2.value < 0 || subkelId2.value === '') {
+    // Check if subkelId2 is a valid number
+    if (parseFloat(subkelId2.value) < 0 || subkelId2.value.trim() === '') {
         Swal.fire({
             icon: 'error',
             text: 'Tujuan Mutasi Harap Diisi !!!',
             returnFocus: false,
         }).then(() => {
-            btn_subkel2.focus();
+            btn_subkel2.focus();  // Focus on the button after the error message
         });
+        return;
     }
 
+    // If all validations pass, save the data
     SaveData();
 });
+
 
 function SaveData() {
     console.log(pilih);
@@ -1650,8 +1650,8 @@ btn_objek2.addEventListener("click", function (e) {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                objekId2.value = result.value.IdObjek.trim();
-                objekNama2.value = result.value.NamaObjek.trim();
+                objekId2.value = decodeHtmlEntities(result.value.IdObjek.trim());
+                objekNama2.value = decodeHtmlEntities(result.value.NamaObjek.trim());
 
                 btn_kelut2.disabled = false;
                 btn_kelut2.focus();
@@ -1733,8 +1733,8 @@ btn_kelut2.addEventListener("click", function (e) {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                kelutId2.value = result.value.IdKelompokUtama.trim();
-                kelutNama2.value = result.value.NamaKelompokUtama.trim();
+                kelutId2.value = decodeHtmlEntities(result.value.IdKelompokUtama.trim());
+                kelutNama2.value = decodeHtmlEntities(result.value.NamaKelompokUtama.trim());
 
                 btn_kelompok2.disabled = false;
                 btn_kelompok2.focus();
@@ -1814,8 +1814,8 @@ btn_kelompok2.addEventListener("click", function (e) {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                kelompokId2.value = result.value.idkelompok.trim();
-                kelompokNama2.value = result.value.namakelompok.trim();
+                kelompokId2.value = decodeHtmlEntities(result.value.idkelompok.trim());
+                kelompokNama2.value = decodeHtmlEntities(result.value.namakelompok.trim());
 
                 btn_subkel2.disabled = false;
                 btn_subkel2.focus();
@@ -1892,10 +1892,18 @@ btn_subkel2.addEventListener("click", function (e) {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                subkelId2.value = result.value.IdSubkelompok.trim();
-                subkelNama2.value = result.value.NamaSubKelompok.trim();
+                subkelId2.value = decodeHtmlEntities(result.value.IdSubkelompok.trim());
+                subkelNama2.value = decodeHtmlEntities(result.value.NamaSubKelompok.trim());
 
-                LoadPenerima();
+                LoadPenerimaIsiKoreksi().then(function (result) {
+                    cekproses = result;
+                }).catch(function (error) {
+                    console.error('Error in LoadPenerimaIsiKoreksi:', error);
+                });
+
+                if (cekproses) {
+                    primer2.focus();
+                }
             }
         });
     } catch (error) {
