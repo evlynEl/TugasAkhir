@@ -26,24 +26,7 @@ class AccMhnMasukKeluarController extends Controller
     //Store a newly created resource in storage.
     public function store(Request $request)
     {
-        $data = $request->all();
-        // dd($data , " Masuk store");
-        DB::connection('ConnInventory')->statement('exec SP_1273_INV_Insert_02_TmpTransaksi @XIdTypeTransaksi = ?, @XUraianDetailTransaksi = ?, @XSaatawalTransaksi = ?
-        , @XIdType = ?, @XIdPenerima = ?, @XJumlahKeluarPrimer = ?, @XJumlahKeluarSekunder = ?, @XJumlahKeluarTritier = ?, @XAsalIdSubKelompok = ?, @XTujuanIdSubkelompok = ?, @Harga = ?', [
-            $data['IdTypeTransaksi'],
-            $data['UraianDetailTransaksi'],
-            $data['SaatAwalTransaksi'],
-            $data['IdType'],
-            $data['IdPenerima'],
-            $data['JumlahKeluarPrimer'],
-            $data['JumlahKeluarSekunder'],
-            $data['JumlahKeluarTritier'],
-            $data['AsalIdSubKel'],
-            $data['TujuanIdSubKel'],
-            $data['Harga']
-        ]);
-
-        return redirect()->route('FormAccMhnPenerima.index')->with('alert', 'Data berhasil ditambahkan!');
+        //
     }
 
     //Display the specified resource.
@@ -52,18 +35,12 @@ class AccMhnMasukKeluarController extends Controller
         $user = Auth::user()->NomorUser;
         $divisiId = $request->input('divisiId');
         $objekId = $request->input('objekId');
-        $kelompokId = $request->input('kelompokId');
-        $kelutId = $request->input('kelutId');
-        $subkelId = $request->input('subkelId');
-
-        $kodeType = $request->input('kodeType');
+        $mutasi = $request->input('mutasi');
         $uraian = $request->input('uraian');
 
         if ($id === 'getUserId') {
             return response()->json(['user' => $user]);
-        }
-
-        else if ($id === 'getDivisi') {
+        } else if ($id === 'getDivisi') {
             // mendapatkan daftar divisi
             $divisi = DB::connection('ConnInventory')->select('exec SP_1003_INV_userdivisi @XKdUser = ?', [$user]);
             $data_divisi = [];
@@ -74,9 +51,7 @@ class AccMhnMasukKeluarController extends Controller
                 ];
             }
             return datatables($divisi)->make(true);
-        }
-
-        else if ($id === 'getObjek') {
+        } else if ($id === 'getObjek') {
             // mendapatkan daftar objek
             $objek = DB::connection('ConnInventory')->select('exec SP_1003_INV_User_Objek @XKdUser = ?, @XIdDivisi = ?', [$user, $divisiId]);
             $data_objek = [];
@@ -88,12 +63,10 @@ class AccMhnMasukKeluarController extends Controller
             }
             // dd($objek, $request->all());
             return datatables($objek)->make(true);
-        }
-
-        else if ($id === 'getData') {
+        } else if ($id === 'getData') {
             // mendapatkan isi tabel
             $justData = DB::connection('ConnInventory')->select('
-            SP_1003_INV_List_BelumACC_TmpTransaksi @Kode = 13, @XIdTypeTransaksi = ?, @XUraian = ?, @XIdobjek = ?', ['13', $uraian, $objekId]);
+            SP_1003_INV_List_BelumACC_TmpTransaksi @Kode = 13, @XIdTypeTransaksi = ?, @XUraian = ?, @XIdobjek = ?', ['13', $mutasi, $objekId]);
 
             $data_justData = [];
             foreach ($justData as $detail_justData) {
@@ -123,11 +96,11 @@ class AccMhnMasukKeluarController extends Controller
                     'kodebarang' => $detail_justData->kodebarang
                 ];
 
-                if ($uraian === 'Mutasi Masuk') {
+                if ($mutasi === 'Mutasi Masuk') {
                     $data_entry['JumlahPemasukanPrimer'] = $detail_justData->JumlahPemasukanPrimer;
                     $data_entry['JumlahPemasukanSekunder'] = $detail_justData->JumlahPemasukanSekunder;
                     $data_entry['JumlahPemasukanTritier'] = $detail_justData->JumlahPemasukanTritier;
-                } else if ($uraian === 'Mutasi Keluar') {
+                } else if ($mutasi === 'Mutasi Keluar') {
                     $data_entry['JumlahPengeluaranPrimer'] = $detail_justData->JumlahPengeluaranPrimer;
                     $data_entry['JumlahPengeluaranSekunder'] = $detail_justData->JumlahPengeluaranSekunder;
                     $data_entry['JumlahPengeluaranTritier'] = $detail_justData->JumlahPengeluaranTritier;
@@ -149,41 +122,55 @@ class AccMhnMasukKeluarController extends Controller
     //Update the specified resource in storage.
     public function update(Request $request, $id)
     {
-        $user = Auth::user()->NomorUser;
+        $penerima = $request->input('penerima');
+        $idTransaksi = $request->input('idTransaksi');
+        $idType = $request->input('idType');
+        $checked = $request->input('checked');
+        $primer = $request->input('primer');
+        $sekunder = $request->input('sekunder');
+        $tritier = $request->input('tritier');
+        $responses = [];
 
-        if ($id === 'accHibah') {
-            $YIdTransaksi = $request->input('YIdTransaksi');
-
+        if ($id === 'accMutasi') {
             try {
-                DB::connection('ConnInventory')
-                    ->statement('exec [SP_1003_INV_PROSES_ACC_HIBAH]
-                    @kode = ?, @UserACC = ?, @YIdTransaksi = ?',
-                        [
-                            1, $user, $YIdTransaksi,
-                        ]
+                foreach ($idTransaksi as $index => $transaksi) {
+                    $type = $idType[$index];
+                    $primerValue = $primer[$index];
+                    $sekunderValue = $sekunder[$index];
+                    $tritierValue = $tritier[$index];
+
+                    // Proses
+                    $proses = DB::connection('ConnInventory')->select(
+                        'exec SP_1003_INV_CHECK_PENYESUAIAN_TRANSAKSI @idtype = ?, @idtypetransaksi = ?',
+                        [$type, $transaksi]
                     );
 
-                return response()->json(['success' => 'Data berhasil diACC'], 200);
+                    $jumlah = (int)$proses[0]->jumlah;
+
+                    if ($jumlah > 0) {
+                        return response()->json(['warning' => 'Tidak Bisa DiAcc !!!. Karena Ada Transaksi Penyesuaian yang Belum Diacc untuk type ' . $transaksi], 200);
+                    } else {
+                        if ($checked) {
+                            DB::connection('ConnInventory')->statement(
+                                'exec SP_1003_INV_Proses_Acc_Mutasi_masuk @IdTransaksi = ?, @idPenerima = ?, @JumlahMasukPrimer = ?,@JumlahMasukSekunder = ?, @JumlahMasukTritier = ?',
+                                [$transaksi, $penerima, $primerValue, $sekunderValue, $tritierValue]
+                            );
+                            $responses[] = 'Data ' . $transaksi . ' sudah disimpan';
+                        } else if (!$checked) {
+                            DB::connection('ConnInventory')->statement(
+                                'exec SP_1003_INV_Proses_Acc_Mutasi_Keluar @IdTransaksi = ?, @idPenerima = ?, @JumlahKeluarPrimer = ?,@JumlahKeluarSekunder = ?, @JumlahKeluarTritier = ?',
+                                [$transaksi, $penerima, $primerValue, $sekunderValue, $tritierValue]
+                            );
+                            $responses[] = 'Data ' . $transaksi . ' sudah disimpan';
+                        }
+                    }
+                }
+
+                $responseText = implode('<br>', $responses);
+                // dd($responseText);
+                return response()->json(['success' => $responseText], 200);
             } catch (\Exception $e) {
-                return response()->json(['error' => 'Data gagal diACC: ' . $e->getMessage()], 500);
-            }
-        }
-
-        if ($id === 'batalAccHibah') {
-            $YIdTransaksi = $request->input('YIdTransaksi');
-
-            try {
-                DB::connection('ConnInventory')
-                    ->statement('exec [SP_1003_INV_Batal_AccManager_TmpTransaksi]
-                    @kode = ?, @YIdTransaksi = ?',
-                        [
-                            4, $YIdTransaksi,
-                        ]
-                    );
-
-                return response()->json(['success' => 'Data berhasil dibatalkan'], 200);
-            } catch (\Exception $e) {
-                return response()->json(['error' => 'Data gagal dibatalkan: ' . $e->getMessage()], 500);
+                return response()->json(['error' => 'Data gagal diACC'], 500);
             }
         }
     }

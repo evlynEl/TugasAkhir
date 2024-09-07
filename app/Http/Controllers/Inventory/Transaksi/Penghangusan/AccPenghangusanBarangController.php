@@ -176,7 +176,7 @@ class AccPenghangusanBarangController extends Controller
 
                 return response()->json(['success' => 'Data Sudah Tersimpan'], 200);
             } catch (\Exception $e) {
-                return response()->json(['error' => 'Data Gagal Tersimpan ' . $e->getMessage()], 500);
+                return response()->json(['error' => 'Data Gagal Tersimpan '], 500);
             }
         }
     }

@@ -26,7 +26,7 @@ class AccHibahController extends Controller
     //Store a newly created resource in storage.
     public function store(Request $request)
     {
-        // 
+        //
     }
 
     //Display the specified resource.
@@ -133,7 +133,7 @@ class AccHibahController extends Controller
 
             try {
                 DB::connection('ConnInventory')
-                    ->statement('exec [SP_1003_INV_PROSES_ACC_HIBAH] 
+                    ->statement('exec [SP_1003_INV_PROSES_ACC_HIBAH]
         @kode = ?, @UserACC = ?, @YIdTransaksi = ?',
                         [
                             1, $user, $YIdTransaksi,
@@ -151,7 +151,7 @@ class AccHibahController extends Controller
 
             try {
                 DB::connection('ConnInventory')
-                    ->statement('exec [SP_1003_INV_Batal_AccManager_TmpTransaksi] 
+                    ->statement('exec [SP_1003_INV_Batal_AccManager_TmpTransaksi]
         @kode = ?, @YIdTransaksi = ?',
                         [
                             4, $YIdTransaksi,

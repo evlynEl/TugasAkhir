@@ -509,7 +509,20 @@ btn_proses.addEventListener("click", function (e) {
                 }
             },
             error: function (xhr, status, error) {
-                console.error('AJAX Error:', error);
+                console.error('Error:', error);
+
+                var errorMessage = xhr.responseJSON && xhr.responseJSON.error
+                    ? xhr.responseJSON.error
+                    : 'An unknown error occurred.';
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Proses data GAGAL !',
+                    text: errorMessage,
+                    returnFocus: false,
+                }).then(() => {
+                    btn_divisi.focus();
+                });
             }
         });
     });

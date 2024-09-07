@@ -86,6 +86,7 @@
                             </div>
                         </div>
 
+                        <label for="mutasiLabel" id="mutasiLabel" style="display: none;"></label>
                         <div class="col-sm-12" id="baris-2">
                             <div class="row pt-2">
                                 <div class="col-sm-2"  style="text-align: center;">
@@ -108,21 +109,21 @@
                                 <div style="width: 10%"></div>
                                 <label>Primer</label>
                                 <div style="width: 3%"></div>
-                                <div class="col-sm-2">
+                                <div class="col-sm-1 p-0">
                                     <input type="text" class="form-control" id="primer" name="primer">
                                 </div>
                                 <label for="no_primer" id="no_primer"></label>
 
                                 <label>Sekunder</label>
                                 <div style="width: 1.5%"></div>
-                                <div class="col-sm-2">
+                                <div class="col-sm-1 p-0">
                                     <input type="text" class="form-control" id="sekunder" name="sekunder">
                                 </div>
                                 <label for="no_sekunder" id="no_sekunder"></label>
 
                                 <label>Tritier</label>
                                 <div style="width: 2%"></div>
-                                <div class="col-sm-2">
+                                <div class="col-sm-1 p-0">
                                     <input type="text" class="form-control" id="tritier" name="tritier">
                                 </div>
                                 <label for="no_tritier" id="no_tritier"></label>

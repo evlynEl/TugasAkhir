@@ -64,6 +64,8 @@ inputs.forEach((masuk, index) => {
                 tritier2.select();
             } else if (masuk.id === 'tritier2') {
                 btn_proses.focus();
+            } else if (masuk.id === 'uraian') {
+                primer2.select();
             }
         }
     })

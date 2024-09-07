@@ -555,19 +555,23 @@ btn_proses.addEventListener('click', function () {
                 }).then(() => {
                     btn_divisi.focus();
                 });
-            } else if (response.error) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Tidak Bisa Di Acc !',
-                    text: response.error,
-                    returnFocus: false,
-                }).then(() => {
-                    btn_divisi.focus();
-                });
-            }
+            } 
         },
         error: function (xhr, status, error) {
             console.error('Error:', error);
+
+            var errorMessage = xhr.responseJSON && xhr.responseJSON.error
+                ? xhr.responseJSON.error
+                : 'An unknown error occurred.';
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Tidak Bisa Di Acc !',
+                text: errorMessage,
+                returnFocus: false,
+            }).then(() => {
+                btn_divisi.focus();
+            });
         }
     });
 });
