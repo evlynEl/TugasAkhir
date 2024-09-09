@@ -990,6 +990,7 @@ function handleChange() {
         tritier2.select();
     } else if (primerValue === 'NULL' && sekunderValue !== 'NULL') {
         primer2.disabled = true;
+        sekunder2.disabled = false;
         sekunder2.select();
     } else {
         primer2.select();
@@ -1049,19 +1050,19 @@ $('#tableData tbody').on('click', 'tr', function () {
     var data = table.row(this).data();
     console.log(data);
 
-    kodeTransaksi.value = data[0];
-    namaBarang.value = decodeHtmlEntities(data[1]);
-    alasan.value = decodeHtmlEntities(data[2]);
-    var originalDate = data[4];
+    kodeTransaksi.value = data[1];
+    namaBarang.value = decodeHtmlEntities(data[2]);
+    alasan.value = decodeHtmlEntities(data[3]);
+    var originalDate = data[5];
     var parts = originalDate.split('/');
     var formattedDate = parts[2] + '-' + parts[0].padStart(2, '0') + '-' + parts[1].padStart(2, '0');
     tanggal.value = formattedDate;
-    divisiNama.value = decodeHtmlEntities(data[5]);
-    objekNama.value = decodeHtmlEntities(data[6]);
-    kelutNama.value = decodeHtmlEntities(data[7]);
-    kelompokNama.value = decodeHtmlEntities(data[8]);
-    subkelNama.value = decodeHtmlEntities(data[9]);
-    pemohon.value = data[10];
+    divisiNama.value = decodeHtmlEntities(data[6]);
+    objekNama.value = decodeHtmlEntities(data[7]);
+    kelutNama.value = decodeHtmlEntities(data[8]);
+    kelompokNama.value = decodeHtmlEntities(data[9]);
+    subkelNama.value = decodeHtmlEntities(data[10]);
+    pemohon.value = data[11];
 
     $.ajax({
         type: 'GET',

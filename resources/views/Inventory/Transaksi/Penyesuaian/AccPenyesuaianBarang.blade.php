@@ -80,10 +80,10 @@
                         <div class="baris-2 pl-3">
                             <div class="row pt-2 pr-5">
                                 <div class="col-2">
-                                    <label for="kodeBarang">Kode Barang</label>
+                                    <label for="kodeTransaksi">Kode Transaksi</label>
                                 </div>
-                                <div class="col-sm-3 mr-3">
-                                    <input type="text" class="form-control" id="kodeBarang" name="kodeBarang">
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="kodeTransaksi" name="kodeTransaksi" readonly>
                                 </div>
 
                                 <div class="col-sm-2">
@@ -95,83 +95,85 @@
                                 </div>
                                 <div class="col-sm-1" style="text-align: right">
                                     <label for="pemohon">Pemohon</label>
-                                    <div class="col-sm-1">
-                                        <input type="text" class="form-control" id="pemohon" name="pemohon"
-                                            readonly>
-                                    </div>
+                                </div>
+                                <div class="col-sm-1">
+                                    <input type="text" class="form-control" id="pemohon" name="pemohon" readonly>
                                 </div>
 
                             </div>
                             <div class="row">
                                 <div class="col-sm-2">
                                     <label for="kodeNamaBarang">Kode / Nama Barang</label>
-                                    <div class="col-sm-2 p-0 pl-2">
-                                        <input type="text" class="form-control" id="kodeBarang"
-                                            name="kodeBarang"readonly>
-                                    </div>
-                                    <div class="col-sm-7 pl-1">
-                                        <input type="text" class="form-control" id="namaBarang"
-                                            name="namaBarang"readonly>
-                                    </div>
+                                </div>
+                                <div class="col-sm-2 p-0 pl-2">
+                                    <input type="text" class="form-control" id="kodeBarang" name="kodeBarang"readonly>
+                                </div>
+                                <div class="col-sm-7 pl-1">
+                                    <input type="text" class="form-control" id="namaBarang" name="namaBarang"readonly>
                                 </div>
                             </div>
 
-                            <div class="row">
-                                <div class="row pr-4" id="before">
-                                    <div class="col-sm-3">
-                                        <label>Jumlah Barang Sebelum Disesuaikan</label>
-                                    </div>
-                                    <div class="col-sm-2 pr-1 pl-4">
-                                        <input type="text" class="form-control" id="primer" name="primer"
-                                            readonly>
-                                    </div>
-                                    <div class="col-sm-1 p-0">
-                                        <input type="text" class="form-control" id="no_primer" name="no_primer"
-                                            readonly>
-                                    </div>
-                                    <div class="col-sm-2 pr-1">
-                                        <input type="text" class="form-control" id="sekunder" name="sekunder"
-                                            readonly>
-                                    </div>
-                                    <div class="col-sm-1 p-0">
-                                        <input type="text" class="form-control" id="no_sekunder" name="no_sekunder"
-                                            readonly>
-                                    </div>
-                                    <div class="col-sm-2 pr-1">
-                                        <input type="text" class="form-control" id="tritier" name="tritier"
-                                            readonly>
-                                    </div>
-                                    <div class="col-sm-1 p-0">
-                                        <input type="text" class="form-control" id="no_tritier" name="no_tritier">
-                                    </div>
+                            <div class="row pr-4" id="before">
+                                <div class="col-sm-3"></div>
+                                <div class="col-sm-3 pl-5">Primer</div>
+                                <div class="col-sm-3 pl-5">Sekunder</div>
+                                <div class="col-sm-3 pl-5">Tritier</div>
+
+                                <div class="col-sm-3">
+                                    <label>Jumlah Barang Sebelum Disesuaikan</label>
+                                </div>
+                                <div class="col-sm-2 pr-1 pl-4">
+                                    <input type="text" class="form-control" id="primer" name="primer" readonly>
+                                </div>
+                                <div class="col-sm-1 p-0">
+                                    <input type="text" class="form-control" id="no_primer" name="no_primer" readonly>
+                                </div>
+                                <div class="col-sm-2 pr-1">
+                                    <input type="text" class="form-control" id="sekunder" name="sekunder" readonly>
+                                </div>
+                                <div class="col-sm-1 p-0">
+                                    <input type="text" class="form-control" id="no_sekunder" name="no_sekunder" readonly>
+                                </div>
+                                <div class="col-sm-2 pr-1">
+                                    <input type="text" class="form-control" id="tritier" name="tritier" readonly>
+                                </div>
+                                <div class="col-sm-1 p-0">
+                                    <input type="text" class="form-control" id="no_tritier" name="no_tritier"
+                                        readonly>
                                 </div>
                             </div>
 
-                            <div class="row">
-                                <div class="row pb-2" id="after">
-                                    <div class="col-sm-3">
-                                        <label>Jumlah Barang Sesudah Disesuaikan</label>
-                                    </div>
-                                    <div class="col-sm-2 pr-0">
-                                        <input type="text" class="form-control" id="primer2" name="primer2"
-                                            readonly>
-                                    </div>
-                                    <div class="col-sm-1"></div>
-                                    <div class="col-sm-2 pr-0 pl-1">
-                                        <input type="text" class="form-control" id="sekunder2" name="sekunder2"
-                                            readonly>
-                                    </div>
-                                    <div class="col-sm-1"></div>
-                                    <div class="col-sm-2 pr-0 pl-0">
-                                        <input type="text" class="form-control" id="tritier2" name="tritier2"
-                                            readonly>
-                                    </div>
-                                    <div class="col-sm-1"></div>
+                            <div class="row pb-2" id="after">
+                                <div class="col-sm-3">
+                                    <label>Jumlah Barang Sesudah Disesuaikan</label>
                                 </div>
+                                <div class="col-sm-2 pr-0">
+                                    <input type="text" class="form-control" id="primer2" name="primer2" readonly>
+                                </div>
+                                <div class="col-sm-1"></div>
+                                <div class="col-sm-2 pr-0 pl-1">
+                                    <input type="text" class="form-control" id="sekunder2" name="sekunder2" readonly>
+                                </div>
+                                <div class="col-sm-1"></div>
+                                <div class="col-sm-2 pr-0 pl-0">
+                                    <input type="text" class="form-control" id="tritier2" name="tritier2" readonly>
+                                </div>
+                                <div class="col-sm-1"></div>
                             </div>
                         </div>
 
-
+                        <div class="col-sm-12">
+                            <div class="col-sm-12 mb-2">
+                                <div class="table-responsive fixed-height" style="height: 300px">
+                                    <table class="table table-bordered no-wrap-header" id="tableData">
+                                        <thead>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="row button-container">
                             <button type="button" id="btn_all" class="btn btn-outline-secondary">Pilih Semua</button>
