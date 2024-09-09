@@ -1,7 +1,4 @@
 <?php
-use App\Http\Controllers\Inventory\Transaksi\Mutasi\AccMhnMasukKeluarController;
-use App\Http\Controllers\Inventory\Transaksi\Mutasi\KeluarBarangUntukPenjualanController;
-use App\Http\Controllers\Inventory\Transaksi\Mutasi\MhnMasukKeluarController;
 use function foo\func;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -16,10 +13,10 @@ use App\Http\Controllers\Laporan\LaporanStokController;
 use App\Http\Controllers\Laporan\LaporanSaldoController;
 use App\Http\Controllers\COA\FIBC\ACC\ACCQCManController;
 use App\Http\Controllers\COA\FIBC\ACC\ACCQCSpvController;
-
 use function PHPUnit\Framework\assertDirectoryIsReadable;
 use App\Http\Controllers\QC\Afalan\QCInputAfalanController;
 use App\Http\Controllers\QC\Extruder\QCExtruderBController;
+
 use App\Http\Controllers\QC\Extruder\QCExtruderDController;
 use App\Http\Controllers\COA\FIBC\Input\InputTestController;
 use App\Http\Controllers\COA\COA\Master\MasterPartController;
@@ -28,11 +25,11 @@ use App\Http\Controllers\QC\Afalan\QCKoreksiAfalanController;
 use App\Http\Controllers\COA\FIBC\Input\InputDetailController;
 use App\Http\Controllers\Inventory\Master\StokBarangController;
 use App\Http\Controllers\COA\COA\Master\MasterMaterialController;
-
-
 use App\Http\Controllers\Inventory\Informasi\KartuStokController;
 use App\Http\Controllers\QC\Circular\QCCircularTropodoController;
 use App\Http\Controllers\QC\Extruder\QCExtruderTropodoController;
+
+
 use App\Http\Controllers\Inventory\Master\KodePerkiraanController;
 use App\Http\Controllers\QC\Circular\QCCircularMojosariController;
 use App\Http\Controllers\Inventory\Master\MaintenanceTypeController;
@@ -43,29 +40,33 @@ use App\Http\Controllers\Inventory\Transaksi\Hibah\AccHibahController;
 use App\Http\Controllers\Inventory\Informasi\TransaksiHarianController;
 use App\Http\Controllers\Inventory\Informasi\TransaksiBulananController;
 use App\Http\Controllers\Inventory\Transaksi\TerimaPurchasingController;
-use App\Http\Controllers\Inventory\Informasi\ListDetailTransaksiController;
-use App\Http\Controllers\Inventory\Transaksi\Hibah\PenerimaHibahController;
-use App\Http\Controllers\Inventory\Transaksi\PemakaianGelondonganController;
-use App\Http\Controllers\Inventory\Transaksi\Hibah\PermohonanHibahController;
 use App\Http\Controllers\Inventory\Transaksi\Mutasi\MhnPemberiController;
 use App\Http\Controllers\Inventory\Transaksi\Mutasi\MhnPenerimaController;
-use App\Http\Controllers\Inventory\Transaksi\Konversi\KonversiBarangController;
+use App\Http\Controllers\Inventory\Informasi\ListDetailTransaksiController;
+use App\Http\Controllers\Inventory\Transaksi\Hibah\PenerimaHibahController;
 use App\Http\Controllers\Inventory\Transaksi\Mutasi\AccSatuDivisiController;
 use App\Http\Controllers\Inventory\Transaksi\Mutasi\PemberiBarangController;
+use App\Http\Controllers\Inventory\Transaksi\PemakaianGelondonganController;
+use App\Http\Controllers\Inventory\Transaksi\Hibah\PermohonanHibahController;
 use App\Http\Controllers\Inventory\Transaksi\Mutasi\AccMhnPenerimaController;
+use App\Http\Controllers\Inventory\Transaksi\Mutasi\MhnMasukKeluarController;
 use App\Http\Controllers\Inventory\Transaksi\Mutasi\ReturPenjualanController;
-use App\Http\Controllers\Inventory\Transaksi\Konversi\AccKonversiBarangController;
+use App\Http\Controllers\Inventory\Transaksi\Konversi\KonversiBarangController;
 use App\Http\Controllers\Inventory\Transaksi\Mutasi\AccPemberiBarangController;
+use App\Http\Controllers\Inventory\Transaksi\Mutasi\PemberiBarangAssController;
+use App\Http\Controllers\Inventory\Transaksi\Mutasi\AccMhnMasukKeluarController;
 use App\Http\Controllers\Inventory\Transaksi\Mutasi\PermohonanPenerimaController;
+use App\Http\Controllers\Inventory\Transaksi\Konversi\AccKonversiBarangController;
 use App\Http\Controllers\Inventory\Transaksi\Mutasi\PermohonanSatuDivisiController;
+use App\Http\Controllers\Inventory\Transaksi\Penyesuaian\PenyesuaianBarangController;
+use App\Http\Controllers\Inventory\Transaksi\Mutasi\PermohonanPenerimaBenangController;
 use App\Http\Controllers\Inventory\Transaksi\Penghangusan\PenghangusanBarangController;
+use App\Http\Controllers\Inventory\Transaksi\Penyesuaian\AccPenyesuaianBarangController;
 use App\Http\Controllers\Inventory\Transaksi\TerimaBenang\TerimaBenangGedungDController;
 use App\Http\Controllers\Inventory\Transaksi\TerimaBenang\TerimaBenangTropodoController;
-use App\Http\Controllers\Inventory\Transaksi\Penyesuaian\PenyesuaianBarangController;
-use App\Http\Controllers\Inventory\Transaksi\Penghangusan\AccPenghangusanBarangController;
-use App\Http\Controllers\Inventory\Transaksi\Mutasi\PermohonanPenerimaBenangController;
-use App\Http\Controllers\Inventory\Transaksi\Penyesuaian\AccPenyesuaianBarangController;
+use App\Http\Controllers\Inventory\Transaksi\Mutasi\KeluarBarangUntukPenjualanController;
 use App\Http\Controllers\Inventory\Transaksi\Mutasi\PengembalianPascaPenjualanController;
+use App\Http\Controllers\Inventory\Transaksi\Penghangusan\AccPenghangusanBarangController;
 
 /*
 |--------------------------------------------------------------------------
@@ -144,6 +145,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('AccMhnPenerima', AccMhnPenerimaController::class);
     Route::resource('AccPemberiBarang', AccPemberiBarangController::class);
     Route::resource('PemberiBarang', PemberiBarangController::class);
+    Route::resource('PemberiBarangAss', PemberiBarangAssController::class);
     Route::resource('MhnPemberi', MhnPemberiController::class);
     Route::resource('PermohonanPenerima', PermohonanPenerimaController::class);
     Route::resource('PermohonanPenerimaBenang', PermohonanPenerimaBenangController::class);

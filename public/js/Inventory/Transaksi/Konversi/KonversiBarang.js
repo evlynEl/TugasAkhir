@@ -395,8 +395,8 @@ btnDivisi.addEventListener("click", function (e) {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                divisiId.value = result.value.IdDivisi.trim();
-                divisiNama.value = result.value.NamaDivisi.trim();
+                divisiId.value = decodeHtmlEntities(result.value.IdDivisi.trim());
+                divisiNama.value = decodeHtmlEntities(result.value.NamaDivisi.trim());
                 clearText();
                 enableButton();
                 Load_DataKonversi();
@@ -2332,7 +2332,7 @@ $('#kodeBarangAsal').on('keydown', function (e) {
                 if (parseInt(result[0].Jumlah) === 0) {
                     Swal.fire({
                         icon: 'error',
-                        text: 'Tidak Ada Kode Barang :' + kodeBarangAsal.value + ' Pada sub kel : ' + subkelIdAsal.value,
+                        text: 'Tidak Ada Kode Barang :' + decodeHtmlEntities(kodeBarangAsal.value) + ' Pada sub kel : ' + decodeHtmlEntities(subkelIdAsal.value),
                     });
                 }
             },

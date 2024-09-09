@@ -137,7 +137,7 @@ $('#tableData tbody').on('click', 'tr', function () {
     $(this).addClass('selected');
     var data = table.row(this).data();
 
-    let XIdType = data[1];
+    let XIdType = decodeHtmlEntities(data[1]);
 
     let originalDate = new Date(data[0]);
 
@@ -336,8 +336,8 @@ btn_divisi.addEventListener("click", function (e) {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                divisiId.value = result.value.IdDivisi.trim();
-                divisiNama.value = result.value.NamaDivisi.trim();
+                divisiId.value = decodeHtmlEntities(result.value.IdDivisi.trim());
+                divisiNama.value = decodeHtmlEntities(result.value.NamaDivisi.trim());
                 btn_objek.focus();
             }
         });
@@ -412,8 +412,8 @@ btn_objek.addEventListener("click", function (e) {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                objekId.value = result.value.IdObjek.trim();
-                objekNama.value = result.value.NamaObjek.trim();
+                objekId.value = decodeHtmlEntities(result.value.IdObjek.trim());
+                objekNama.value = decodeHtmlEntities(result.value.NamaObjek.trim());
 
                 callAllData();
             }
@@ -491,8 +491,8 @@ btn_kelut.addEventListener("click", function (e) {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                kelutId.value = result.value.IdKelompokUtama.trim();
-                kelutNama.value = result.value.NamaKelompokUtama.trim();
+                kelutId.value = decodeHtmlEntities(result.value.IdKelompokUtama.trim());
+                kelutNama.value = decodeHtmlEntities(result.value.NamaKelompokUtama.trim());
 
                 kelompokId.value = '';
                 kelompokNama.value = '';
@@ -576,8 +576,8 @@ btn_kelompok.addEventListener("click", function (e) {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                kelompokId.value = result.value.IdKelompok.trim();
-                kelompokNama.value = result.value.NamaKelompok.trim();
+                kelompokId.value = decodeHtmlEntities(result.value.IdKelompok.trim());
+                kelompokNama.value = decodeHtmlEntities(result.value.NamaKelompok.trim());
 
                 subkelId.value = '';
                 subkelNama.value = '';
@@ -661,9 +661,9 @@ btn_subkel.addEventListener("click", function (e) {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                subkelId.value = result.value.IdSubkelompok.trim();
-                subkelNama.value = result.value.NamaSubKelompok.trim();
-                kodeType.value = result.value.IdType.trim();
+                subkelId.value = decodeHtmlEntities(result.value.IdSubkelompok.trim());
+                subkelNama.value = decodeHtmlEntities(result.value.NamaSubKelompok.trim());
+                kodeType.value = decodeHtmlEntities(result.value.IdType.trim());
             }
         });
     } catch (error) {

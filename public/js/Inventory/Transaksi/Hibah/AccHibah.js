@@ -274,8 +274,8 @@ btn_divisi.addEventListener("click", function (e) {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                divisiId.value = result.value.IdDivisi.trim();
-                divisiNama.value = result.value.NamaDivisi.trim();
+                divisiId.value = decodeHtmlEntities(result.value.IdDivisi.trim());
+                divisiNama.value = decodeHtmlEntities(result.value.NamaDivisi.trim());
                 btn_ok.focus();
             }
         });

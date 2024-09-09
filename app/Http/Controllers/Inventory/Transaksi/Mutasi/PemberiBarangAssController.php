@@ -8,13 +8,13 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\HakAksesController;
 
-class PemberiBarangController extends Controller
+class PemberiBarangAssController extends Controller
 {
     //Display a listing of the resource.
     public function index()
     {
         $access = (new HakAksesController)->HakAksesFiturMaster('Inventory');
-        return view('Inventory.Transaksi.Mutasi.AntarDivisi.PemberiBarang', compact('access'));
+        return view('Inventory.Transaksi.Mutasi.AntarDivisi.PemberiBarangAss', compact('access'));
     }
 
     //Show the form for creating a new resource.
@@ -121,6 +121,7 @@ class PemberiBarangController extends Controller
                     'SaldoPrimer' => $detail_objek->SaldoPrimer,
                     'SaldoSekunder' => $detail_objek->SaldoSekunder,
                     'SaldoTritier' => $detail_objek->SaldoTritier,
+                    'IdSubkelompok' => $detail_objek->IdSubkelompok,
                 ];
             }
             return response()->json($data_objek);
@@ -172,12 +173,33 @@ class PemberiBarangController extends Controller
         $user = Auth::user()->NomorUser;
 
         if ($id === 'proses') {
+            $XIdTransaksi = $request->input('XIdTransaksi');
+            $XUraianDetailTransaksi = $request->input('XUraianDetailTransaksi');
+            $XJumlahKeluarPrimer = $request->input('XJumlahKeluarPrimer');
+            $XJumlahKeluarSekunder = $request->input('XJumlahKeluarSekunder');
+            $XJumlahKeluarTritier = $request->input('XJumlahKeluarTritier');
+            $XTujuanSubKelompok = $request->input('XTujuanSubKelompok');
+
             $IdTransaksi = $request->input('IdTransaksi');
             $JumlahKeluarPrimer = $request->input('JumlahKeluarPrimer');
             $JumlahKeluarSekunder = $request->input('JumlahKeluarSekunder');
             $JumlahKeluarTritier = $request->input('JumlahKeluarTritier');
 
             try {
+                // proses update
+                DB::connection('ConnInventory')
+                    ->statement('exec [SP_1003_INV_Update_TmpTransaksi]
+        @XIdTransaksi = ?, @XUraianDetailTransaksi = ?, @XJumlahKeluarPrimer = ?, @XJumlahKeluarSekunder = ?, @XJumlahKeluarTritier = ?, @XTujuanSubKelompok = ?',
+                        [
+                            $XIdTransaksi,
+                            $XUraianDetailTransaksi,
+                            $XJumlahKeluarPrimer,
+                            $XJumlahKeluarSekunder,
+                            $XJumlahKeluarTritier,
+                            $XTujuanSubKelompok,
+                        ]
+                    );
+
                 $result = DB::connection('ConnInventory')->table('Type')
                     ->select(
                         'IdType as IdTypePemberi',
@@ -373,6 +395,7 @@ class PemberiBarangController extends Controller
                         }
                     }
                 } else {
+                    // Handle the case where $KonvTerima === 'Y'
                     if ($MaxStokTerima !== null && empty($NmError1)) {
                         if ($KonvSekPriTerima !== 0) {
                             $NmError1 = 'Divisi PENERIMA : ' . $DivisiPenerima . ' Konversi Sekunder Ke Primer BELUM BISA, Programnya tidak bisa memproses data jika terdapat Konversi Primer ke Sekunder !!';
@@ -395,6 +418,7 @@ class PemberiBarangController extends Controller
                         $NmError1 = 'Divisi PEMBERI : ' . $DivisiPemberi . ' Saldo Akhir Primer Tinggal= ' . $SldPrimerBeri . ', Jadi tidak bisa diambil sebanyak= ' . $JumlahKeluarPrimer;
                     }
                 }
+
 
                 // prosesnya
                 DB::connection('ConnInventory')

@@ -897,8 +897,8 @@ btn_subkelPenerima.addEventListener("click", function (e) {
                             if (result[0].Jumlah == 0) {
                                 Swal.fire({
                                     icon: 'error',
-                                    text: "Tidak ada barang : " + (namaType.value.trim()) + ' pada Divisi/SubKelompok : '
-                                        + (divisiNamaPenerima.value.trim()) + '/' + (subkelNamaPenerima.value.trim()),
+                                    text: "Tidak ada barang : " + (decodeHtmlEntities(namaType.value.trim())) + ' pada Divisi/SubKelompok : '
+                                        + (decodeHtmlEntities(divisiNamaPenerima.value.trim())) + '/' + (decodeHtmlEntities(subkelNamaPenerima.value.trim())),
                                     returnFocus: false
                                 }).then(() => {
                                     btn_subkelPenerima.focus();
@@ -1543,7 +1543,7 @@ btn_proses.addEventListener("click", function (e) {
                 Swal.fire({
                     icon: 'error',
                     text: 'Tidak Bisa Input!!! Karena Ada Transaksi Penyesuaian yang Belum diACC untuk type : '
-                        + (result[0].IdType.trim()) + ', Nama Type: ' + (decodeHtmlEntities(namaType.value.trim()))
+                        + (decodeHtmlEntities(result[0].IdType.trim())) + ', Nama Type: ' + (decodeHtmlEntities(namaType.value.trim()))
                         + ' Pada divisi ' + (decodeHtmlEntities(divisiNamaPenerima.value.trim())),
                 }).then(() => {
                     showAllTable();
@@ -1569,9 +1569,9 @@ btn_proses.addEventListener("click", function (e) {
                         if (result[0].ada > 0) {
                             Swal.fire({
                                 title: 'PESAN!!!!',
-                                html: "Data Terima Benang Utk Tgl " + tanggal.value + ", Spek Benang: " + namaType.value + "<br>" +
-                                    "Asal: " + kelompokNama.value + ", " + subkelNama.value +
-                                    ". Tujuan: " + kelompokNamaPenerima.value + ", " + subkelNamaPenerima.value + "<br><br>" +
+                                html: "Data Terima Benang Utk Tgl " + tanggal.value + ", Spek Benang: " + (decodeHtmlEntities(namaType.value)) + "<br>" +
+                                    "Asal: " + (decodeHtmlEntities(kelompokNama.value)) + ", " + (decodeHtmlEntities(subkelNama.value)) +
+                                    ". Tujuan: " + (decodeHtmlEntities(kelompokNamaPenerima.value)) + ", " + (decodeHtmlEntities(subkelNamaPenerima.value)) + "<br><br>" +
                                     "Sudah Ada. Tolong DiCEK Dulu!!!<br><br>" +
                                     "Apa Anda Yakin Mau di Input Lagi????",
                                 icon: 'warning',
@@ -1658,10 +1658,10 @@ btn_batal.addEventListener("click", function (e) {
     btn_proses.disabled = true;
     btn_isi.disabled = false;
     btn_batal.disabled = true;
-    if (tabelApa === 1){
+    if (tabelApa === 1) {
         showAllTable();
     }
-    else if (tabelApa === 0){
+    else if (tabelApa === 0) {
         showTable();
     }
 });

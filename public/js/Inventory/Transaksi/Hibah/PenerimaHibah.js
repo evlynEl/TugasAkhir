@@ -97,9 +97,9 @@ $('#tableData tbody').on('click', 'tr', function () {
                 satuanPrimer.value = result[0].Primer ?? '';
                 satuanSekunder.value = result[0].Sekunder ?? '';
                 satuanTritier.value = result[0].Tritier ?? '';
-                kelutNama.value = result[0].NamaKelompokUtama;
-                kelompokNama.value = result[0].NamaKelompok;
-                subkelNama.value = result[0].NamaSubKelompok;
+                kelutNama.value = decodeHtmlEntities(result[0].NamaKelompokUtama);
+                kelompokNama.value = decodeHtmlEntities(result[0].NamaKelompok);
+                subkelNama.value = decodeHtmlEntities(result[0].NamaSubKelompok);
             }
             else {
                 triter.value = '';
@@ -253,8 +253,8 @@ btn_divisi.addEventListener("click", function (e) {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                divisiId.value = result.value.IdDivisi.trim();
-                divisiNama.value = result.value.NamaDivisi.trim();
+                divisiId.value = decodeHtmlEntities(result.value.IdDivisi.trim());
+                divisiNama.value = decodeHtmlEntities(result.value.NamaDivisi.trim());
                 btn_objek.focus();
             }
         });
@@ -330,8 +330,8 @@ btn_objek.addEventListener("click", function (e) {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                objekId.value = result.value.IdObjek.trim();
-                objekNama.value = result.value.NamaObjek.trim();
+                objekId.value = decodeHtmlEntities(result.value.IdObjek.trim());
+                objekNama.value = decodeHtmlEntities(result.value.NamaObjek.trim());
                 btn_ok.focus();
             }
         });
