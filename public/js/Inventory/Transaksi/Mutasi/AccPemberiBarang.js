@@ -35,8 +35,9 @@ var satuanTritier = document.getElementById('satuanTritier');
 // Buttons
 var btn_divisi = document.getElementById('btn_divisi');
 var btn_objek = document.getElementById('btn_objek');
-var btn_refresh = document.getElementById('btn_refresh');
+// var btn_refresh = document.getElementById('btn_refresh');
 var btn_proses = document.getElementById('btn_proses');
+var btn_batal = document.getElementById('btn_batal');
 var btn_ok = document.getElementById('btn_ok');
 
 var acc = document.getElementById('acc');
@@ -74,6 +75,8 @@ function getUserId() {
     });
 }
 
+var IdArray = [];
+
 $(document).ready(function () {
     getUserId();
 
@@ -83,6 +86,7 @@ $(document).ready(function () {
         info: false,
         ordering: false,
         columns: [
+            { title: '', orderable: false, className: 'select-checkbox', data: null, defaultContent: '' }, // Checkbox
             { title: 'Transaksi' },
             { title: 'Nama Barang' },
             { title: 'Alasan Mutasi' },
@@ -94,7 +98,23 @@ $(document).ready(function () {
             { title: 'Sekunder' },
             { title: 'Tritier' },
             { title: 'UserAcc' },
-        ]
+        ],
+        columnDefs: [
+            {
+                targets: 0,
+                orderable: false,
+                className: 'select-checkbox',
+                render: function (data, type, row, meta) {
+                    return `<input type="checkbox" class="row-checkbox"
+                                    data-id="${row[1]}">`;
+                }
+            }
+        ],
+        order: [[1, 'asc']],
+        select: {
+            style: 'os',
+            selector: 'td:first-child'
+        }
     });
 });
 
@@ -174,10 +194,10 @@ function updateDataTable(data) {
 
     data.forEach(function (item) {
         table.row.add([
+            '',
             escapeHtml(item.IdTransaksi),
             escapeHtml(item.NamaType),
             item.UraianDetailTransaksi ? escapeHtml(item.UraianDetailTransaksi) : '',
-            escapeHtml(item.NamaDivisi),
             escapeHtml(item.NamaKelompokUtama),
             escapeHtml(item.NamaKelompok),
             escapeHtml(item.NamaSubKelompok),
@@ -186,6 +206,7 @@ function updateDataTable(data) {
             formatNumber(item.JumlahPengeluaranSekunder),
             formatNumber(item.JumlahPengeluaranTritier),
             item.KomfirmasiPenerima ? escapeHtml(item.KomfirmasiPenerima) : '',
+            escapeHtml(item.NamaDivisi),
         ]);
     });
 
@@ -199,55 +220,87 @@ function formatNumber(value) {
     return value;
 }
 
+function showAcc() {
+    $.ajax({
+        type: 'GET',
+        url: 'AccPemberiBarang/getAcc',
+        data: {
+            _token: csrfToken,
+            XIdObjek: objekId.value,
+        },
+        success: function (result) {
+            if (result.length !== 0) {
+                updateDataTable(result);
+            }
+            else {
+                var table = $('#tableData').DataTable();
+                table.clear().draw();
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
+}
+
+function showBatal() {
+    $.ajax({
+        type: 'GET',
+        url: 'AccPemberiBarang/getBatalAcc',
+        data: {
+            _token: csrfToken,
+            XIdObjek: objekId.value,
+        },
+        success: function (result) {
+            if (result.length !== 0) {
+                updateDataTable(result);
+            }
+            else {
+                var table = $('#tableData').DataTable();
+                table.clear().draw();
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
+}
+
 btn_ok.addEventListener("click", function (e) {
     if (acc.checked) {
-        $.ajax({
-            type: 'GET',
-            url: 'AccPemberiBarang/getAcc',
-            data: {
-                _token: csrfToken,
-                XIdObjek: objekId.value,
-            },
-            success: function (result) {
-                if (result.length !== 0) {
-                    updateDataTable(result);
-                }
-                else {
-                    var table = $('#tableData').DataTable();
-                    table.clear().draw();
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error('Error:', error);
-            }
-        });
+        showAcc();
     }
     else if (batalAcc.checked) {
-        $.ajax({
-            type: 'GET',
-            url: 'AccPemberiBarang/getBatalAcc',
-            data: {
-                _token: csrfToken,
-                XIdObjek: objekId.value,
-            },
-            success: function (result) {
-                console.log(result);
-                
-                if (result.length !== 0) {
-                    updateDataTable(result);
-                }
-                else {
-                    var table = $('#tableData').DataTable();
-                    table.clear().draw();
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error('Error:', error);
-            }
-        });
+        showBatal();
     }
 
+    acc.disabled = true;
+    batalAcc.disabled = true;
+    btn_ok.disabled = true;
+    btn_objek.disabled = true;
+    btn_proses.disabled = false;
+    ClearText();
+
 });
+
+function ClearText() {
+    kelutNama.value = '';
+    kelompokNama.value = '';
+    subkelNama.value = '';
+    divisiNama2.value = '';
+    objekNama2.value = '';
+    kelutNama2.value = '';
+    kelompokNama2.value = '';
+    subkelNama2.value = '';
+    kodeTransaksi.value = '';
+    namaBarang.value = '';
+    primer.value = 0;
+    sekunder.value = 0;
+    tritier.value = 0;
+    satuanPrimer.value = '';
+    satuanSekunder.value = '';
+    satuanTritier.value = '';
+}
 
 // button list divisi
 btn_divisi.addEventListener("click", function (e) {
@@ -401,3 +454,153 @@ btn_objek.addEventListener("click", function (e) {
         console.error(error);
     }
 });
+
+$('#tableData tbody').on('click', 'tr', function () {
+    var table = $('#tableData').DataTable();
+    table.$('tr.selected').removeClass('selected');
+    $(this).addClass('selected');
+
+    var data = table.row(this).data();
+    kodeTransaksi.value = decodeHtmlEntities(data[1]);
+    namaBarang.value = decodeHtmlEntities(data[2]);
+    kelutNama.value = decodeHtmlEntities(data[4]);
+    kelompokNama.value = decodeHtmlEntities(data[5]);
+    subkelNama.value = decodeHtmlEntities(data[6]);
+    primer.value = formatNumber(data[8]);
+    sekunder.value = formatNumber(data[9]);
+    tritier.value = formatNumber(data[10]);
+
+    Tampil_Item();
+});
+
+$('#tableData tbody').on('change', '.row-checkbox', function () {
+    var transaksiId = $(this).data('id');
+
+    if ($(this).is(':checked')) {
+        if (!IdArray.includes(transaksiId)) {
+            IdArray.push(transaksiId);
+        }
+    } else {
+        IdArray = IdArray.filter(id => id !== transaksiId);
+    }
+});
+
+function Proses_Acc() {
+    $.ajax({
+        type: 'PUT',
+        url: 'AccPemberiBarang/acc',
+        data: {
+            _token: csrfToken,
+            listTransaksi: IdArray,
+        },
+        success: function (response) {
+            if (response.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Sukses Acc',
+                    text: response.success,
+                    returnFocus: false,
+                }).then(() => {
+                    showAcc();
+                    IdArray = [];
+                });
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
+}
+
+function Batal_Acc() {
+    $.ajax({
+        type: 'PUT',
+        url: 'AccPemberiBarang/batal',
+        data: {
+            _token: csrfToken,
+            listTransaksi: IdArray,
+        },
+        success: function (response) {
+            if (response.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Sukses Batal Acc',
+                    text: response.success,
+                    returnFocus: false,
+                }).then(() => {
+                    showBatal();
+                    IdArray = [];
+                });
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
+}
+
+// btn_refresh.addEventListener("click", function (e) {
+//     if (acc.checked) {
+//         showAcc();
+//     }
+//     else if (batalAcc.checked) {
+//         showBatal();
+//     }
+// });
+
+btn_proses.addEventListener("click", function (e) {
+    if (IdArray.length !== 0) {
+        if (acc.checked) {
+            Proses_Acc();
+        }
+        else if (batalAcc.checked) {
+            Batal_Acc();
+        }
+    }
+    else {
+        Swal.fire({
+            icon: 'error',
+            title: 'Tidak Data Yang DiAcc !..',
+            returnFocus: false,
+        });
+        return;
+    }
+});
+
+btn_batal.addEventListener("click", function (e) {
+    acc.disabled = false;
+    batalAcc.disabled = false;
+    btn_objek.disabled = false;
+    btn_ok.disabled = false;
+    btn_proses.disabled = true;
+    ClearText();
+    var table = $('#tableData').DataTable();
+    table.clear().draw();
+    btn_divisi.focus();
+});
+
+function Tampil_Item() {
+    $.ajax({
+        type: 'GET',
+        url: 'AccPemberiBarang/tampilItem',
+        data: {
+            _token: csrfToken,
+            XIdTransaksi: kodeTransaksi.value,
+        },
+        success: function (result) {
+            if (result.length !== 0) {
+                divisiNama2.value = decodeHtmlEntities(result[0].NamaDivisi);
+                objekNama2.value = decodeHtmlEntities(result[0].NamaObjek);
+                kelutNama2.value = decodeHtmlEntities(result[0].NamaKelompokUtama);
+                kelompokNama2.value = decodeHtmlEntities(result[0].NamaKelompok);
+                subkelNama2.value = decodeHtmlEntities(result[0].NamaSubKelompok);
+                satuanPrimer.value = result[0].Satuan_Primer ? decodeHtmlEntities(result[0].Satuan_Primer) : '';
+                satuanSekunder.value = result[0].Satuan_Sekunder ? decodeHtmlEntities(result[0].Satuan_Sekunder) : '';
+                satuanTritier.value = result[0].Satuan_Tritier ? decodeHtmlEntities(result[0].Satuan_Tritier) : '';
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
+}

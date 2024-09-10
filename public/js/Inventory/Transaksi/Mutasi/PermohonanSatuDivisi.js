@@ -527,8 +527,8 @@ function Load_Type_CIR() {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                kodeType.value = decodeHtmlEntities(result.value.idtype.trim());
-                namaBarang.value = decodeHtmlEntities(result.value.BARU.trim());
+                kodeType.value = result.value.Id_Type ? decodeHtmlEntities(result.value.Id_Type.trim()) : '';
+                namaBarang.value =result.value.Nm_Type ? decodeHtmlEntities(result.value.Nm_Type.trim()) : '';
 
                 primer2.disabled = false;
                 sekunder2.disabled = false;

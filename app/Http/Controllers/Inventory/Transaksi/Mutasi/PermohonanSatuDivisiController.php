@@ -292,10 +292,7 @@ class PermohonanSatuDivisiController extends Controller
 
         // get type cir
         else if ($id === 'getTypeCIR') {
-            $XIdSubKelompok_Type = $request->input('XIdSubKelompok_Type') ?? '0';
-
-            $subkel = DB::connection('ConnInventory')->select('exec SP_1003_INV_list_type_perukuran
-            @XIdSubKelompok_Type = ?', [$XIdSubKelompok_Type]);
+            $subkel = DB::connection('ConnInventory')->select('exec SP_1003_INV_list_type_perukuran');
             $data_subkel = [];
             foreach ($subkel as $detail_subkel) {
                 $data_subkel[] = [
@@ -305,7 +302,6 @@ class PermohonanSatuDivisiController extends Controller
             }
             return datatables($subkel)->make(true);
         }
-
         // get type 
         else if ($id === 'getType') {
             $XIdSubKelompok_Type = $request->input('XIdSubKelompok_Type') ?? '0';

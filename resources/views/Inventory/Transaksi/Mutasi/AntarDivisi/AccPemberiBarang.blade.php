@@ -4,20 +4,22 @@
         <div class="row justify-content-center">
             <div class="col-md-10 RDZMobilePaddingLR0">
                 <div class="card">
-                    <div class="card-header" style="">PEMBERI BARANG</div>
+                    <div class="card-header" style="">ACC Pemberi Barang Untuk Mutasi Barang Antar Divisi (Awal Penerima
+                        Barang)
+                    </div>
                     <div class="card-body RDZOverflow RDZMobilePaddingLR0">
 
                         <div class="baris-1 pl-3" id="baris-1">
 
                             <div class="row pr-5">
                                 <div class="col-sm-2">
-                                    <label for="objekId"><strong>PENERIMA</strong></label>
+                                    <label for="objekId"><strong>PEMBERI</strong></label>
                                 </div>
                             </div>
 
                             <div class="row pr-5">
                                 <div class="col-sm-2">
-                                    <label for="pemberi">User Pemberi</label>
+                                    <label for="pemberi">Pemohon</label>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" class="form-control" disabled id="pemberi" name="pemberi">
@@ -38,7 +40,10 @@
                                 <div class="col-sm-2">
                                     <label for="divisiId">Divisi</label>
                                 </div>
-                                <div class="col-sm-4">
+                                <div class="col-sm-1">
+                                    <input type="text" id="divisiId" name="divisiId" class="form-control">
+                                </div>
+                                <div class="col-sm-3">
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="divisiNama" name="divisiNama">
                                         <div class="input-group-append">
@@ -48,8 +53,7 @@
                                 </div>
 
                                 <div class="col-sm-2">
-                                    <button type="button" id="btn_ok" disabled
-                                        class="btn btn-info">OK</button>
+                                    <button type="button" id="btn_ok" disabled class="btn btn-info">OK</button>
                                 </div>
 
                                 <div class="col-sm-2">
@@ -62,7 +66,10 @@
                                 <div class="col-sm-2">
                                     <label for="objekId">Objek</label>
                                 </div>
-                                <div class="col-sm-4">
+                                <div class="col-sm-1">
+                                    <input type="text" id="objekId" name="objekId" class="form-control">
+                                </div>
+                                <div class="col-sm-3">
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="objekNama" name="objekNama">
                                         <div class="input-group-append">
@@ -97,12 +104,71 @@
                             </div>
 
 
+                            <div class="row mt-1 pr-5">
+                                <div class="col-sm-2">
+                                    <label for="namaBarang">Nama Barang</label>
+                                </div>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="namaBarang" name="namaBarang">
+                                </div>
+                            </div>
+
+                            <div class="row mt-1 pr-5">
+                                <div class="col-sm-2 mb-2">
+                                    <label>Jumlah</label>
+                                </div>
+
+                                <div class="col-sm-1" style="margin-left: -5.25%">
+                                    <label>Primer</label>
+                                </div>
+                                <div class="col-sm-2" style="margin-left: -3%">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="primer" name="primer">
+                                    </div>
+                                </div>
+                                <div class="col-sm-1" style="margin-left: -2%">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="satuanPrimer"
+                                            name="satuanPrimer">
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-1">
+                                    <label>Sekunder</label>
+                                </div>
+                                <div class="col-sm-2" style="margin-left: -2%">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="sekunder" name="sekunder">
+                                    </div>
+                                </div>
+                                <div class="col-sm-1" style="margin-left: -2%">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="satuanSekunder"
+                                            name="satuanSekunder">
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-1">
+                                    <label>Tritier</label>
+                                </div>
+                                <div class="col-sm-2" style="margin-left: -3%">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="tritier" name="tritier">
+                                    </div>
+                                </div>
+                                <div class="col-sm-1" style="margin-left: -2%">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="satuanTritier"
+                                            name="satuanTritier">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="row" id="ids" style="display: none">
                             <div class="col-md-5 d-flex">
-                                <input type="text" id="divisiId" name="divisiId" class="form-control">
-                                <input type="text" id="objekId" name="objekId" class="form-control">
+                                {{-- <input type="text" id="divisiId" name="divisiId" class="form-control"> --}}
+                                {{-- <input type="text" id="objekId" name="objekId" class="form-control"> --}}
                                 <input type="text" id="kelompokId" name="kelompokId" class="form-control">
                                 <input type="text" id="kelutId" name="kelutId" class="form-control">
                                 <input type="text" id="subkelId" name="subkelId" class="form-control">
@@ -164,65 +230,6 @@
                                 </div>
                             </div>
 
-                            <div class="row mt-1 pr-5">
-                                <div class="col-sm-2">
-                                    <label for="namaBarang">Nama Barang</label>
-                                </div>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="namaBarang" name="namaBarang">
-                                </div>
-                            </div>
-
-                            <div class="row mt-1 pr-5">
-                                <div class="col-sm-2 mb-2">
-                                    <label>Jumlah Barang</label>
-                                </div>
-
-                                <div class="col-sm-1" style="margin-left: -5.25%">
-                                    <label>Primer</label>
-                                </div>
-                                <div class="col-sm-2" style="margin-left: -3%">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" id="primer" name="primer">
-                                    </div>
-                                </div>
-                                <div class="col-sm-1" style="margin-left: -2%">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" id="satuanPrimer"
-                                            name="satuanPrimer">
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-1">
-                                    <label>Sekunder</label>
-                                </div>
-                                <div class="col-sm-2" style="margin-left: -2%">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" id="sekunder" name="sekunder">
-                                    </div>
-                                </div>
-                                <div class="col-sm-1" style="margin-left: -2%">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" id="satuanSekunder"
-                                            name="satuanSekunder">
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-1">
-                                    <label>Tritier</label>
-                                </div>
-                                <div class="col-sm-2" style="margin-left: -3%">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" id="tritier" name="tritier">
-                                    </div>
-                                </div>
-                                <div class="col-sm-1" style="margin-left: -2%">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" id="satuanTritier"
-                                            name="satuanTritier">
-                                    </div>
-                                </div>
-                            </div>
                         </div>
 
                         <div class="col-sm-12">
@@ -238,19 +245,13 @@
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-sm-2">
+                        <div style="text-align: right">
+                            {{-- <div class="col-sm-2">
                                 <button style="width: 75%" type="button" id="btn_refresh"
                                     class="btn btn-info">REFRESH</button>
-                            </div>
-                            <div class="col-sm-2 offset-sm-3">
-                                <button style="width: 75%" type="button" id="btn_proses"
-                                    class="btn btn-info">Proses</button>
-                            </div>
-                            {{-- <div class="col-sm-2 offset-sm-3">
-                                <button style="width: 75%" type="button" id="btn_batal"
-                                    class="btn btn-info">Batal</button>
                             </div> --}}
+                            <button type="button" id="btn_proses" class="btn btn-info" disabled>Proses</button>
+                            <button type="button" id="btn_batal" class="btn btn-info">Batal</button>
                         </div>
                     </div>
                 </div>

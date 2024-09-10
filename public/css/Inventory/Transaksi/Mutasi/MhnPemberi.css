@@ -1,38 +1,84 @@
-input {
-    margin-top: 3px;
-    margin-bottom: 3px;
+/* .baris-1 {
+    margin-right: 30px;
+    padding: 1px;
+} */
+
+.col-md-1,
+.col-md-9 {
+    padding-left: 0;
 }
 
-input[type="text"],
-input[type="date"] {
-    height: 30px;
-    font-size: 14px;
+.bordered {
+    border: black 1px solid;
 }
 
-.input-group-append .btn {
-    padding: 10% 60%;
-    font-size: 14px;
-    margin-top: 3px;
+.baris-1 .col-md-2,
+.col-md-3 {
+    padding: 2px 2px;
 }
 
-.baris-1, #baris-2, .baris-3{
+.baris-2 .col-md-9 {
+    padding: 2px 0;
+}
+
+.baris-3 .row {
+    padding: 2px 0;
+}
+
+.baris-1,
+.baris-2,
+.baris-3,
+.baris-4 {
     outline: 1px solid #bbb;
     margin-bottom: 10px;
     align-items: center;
 }
 
-#baris-2 {
+.baris-4 .col-md-3,
+.baris-4 label {
     display: flex;
-    justify-content: space-between; /* Adjust spacing between the two columns */
+    align-items: center;
+    margin: 0;
+    padding: 5px 0;
 }
-.baris-2 .col-sm-6 {
-    flex: 1; /* Make each column take up equal space */
-    margin-right: 15px; /* Optional: add margin for spacing */
+
+input {
+    padding: 0;
+}
+
+#btn_isi,
+#btn_proses,
+#btn_batal,
+#btn_koreksi,
+#btn_hapus {
+    width: 8%;
+}
+
+input[type="text"] {
+    height: 30px;
+    font-size: 14px;
+}
+
+.input-group-append .btn {
+    padding: 15% 60%;
+    font-size: 14px;
 }
 
 .table-responsive.fixed-height tbody {
     background-color: white;
 }
+
+/* .table-responsive.fixed-height tr.selected {
+    color: red !important;
+    background-color: #eeeeee;
+} */
+
+
+/* table.dataTable tbody tr.selected>* {
+    background-color: transparent !important;
+    box-shadow: none !important;
+    color: red;
+} */
 
 .table-responsive.fixed-height {
     overflow-y: auto;
@@ -52,16 +98,4 @@ input[type="date"] {
 
 .table-responsive.fixed-height tbody {
     background-color: white;
-}
-
-#btn_isi,
-#btn_proses,
-#btn_batal,
-#btn_koreksi,
-#btn_hapus {
-    width: 8%;
-}
-
-#no_primer, #no_sekunder, #no_tritier{
-    padding-right: 20px;
 }

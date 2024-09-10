@@ -69,7 +69,7 @@ class AccPemberiBarangController extends Controller
         // get acc
         else if ($id === 'getAcc') {
             $objek = DB::connection('ConnInventory')->select('exec SP_1003_INV_List_BelumACC_TmpTransaksi
-            @Kode = ?, @XIdTypeTransaksi = ?, @XIdObjek = ?', [1, '02', $request->input('XIdObjek')]);
+            @Kode = ?, @XIdTypeTransaksi = ?, @XIdObjek = ?', [3, '02', $request->input('XIdObjek')]);
             $data_objek = [];
             foreach ($objek as $detail_objek) {
                 $data_objek[] = [
@@ -96,7 +96,7 @@ class AccPemberiBarangController extends Controller
         else if ($id === 'getBatalAcc') {
             $XIdObjek = $request->input('XIdObjek');
             $objek = DB::connection('ConnInventory')->select('exec SP_1003_INV_List_SudahACC_TmpTransaksi
-            @Kode = ?, @XIdTypeTransaksi = ?, @XIdObjek = ?', [2, '02', $XIdObjek]);
+            @Kode = ?, @XIdTypeTransaksi = ?, @XIdObjek = ?', [1, '02', $XIdObjek]);
             $data_objek = [];
             foreach ($objek as $detail_objek) {
                 $data_objek[] = [
@@ -118,6 +118,28 @@ class AccPemberiBarangController extends Controller
             return response()->json($data_objek);
 
         }
+
+        // get batakl acc
+        else if ($id === 'tampilItem') {
+            $XIdTransaksi = $request->input('XIdTransaksi');
+            $objek = DB::connection('ConnInventory')->select('exec SP_1003_INV_AsalSubKelompok_TmpTransaksi
+            @XIdTransaksi = ?', [$XIdTransaksi]);
+            $data_objek = [];
+            foreach ($objek as $detail_objek) {
+                $data_objek[] = [
+                    'NamaDivisi' => $detail_objek->NamaDivisi,
+                    'NamaObjek' => $detail_objek->NamaObjek,
+                    'NamaKelompokUtama' => $detail_objek->NamaKelompokUtama,
+                    'NamaKelompok' => $detail_objek->NamaKelompok,
+                    'NamaSubKelompok' => $detail_objek->NamaSubKelompok,
+                    'Satuan_Primer' => $detail_objek->Satuan_Primer,
+                    'Satuan_Sekunder' => $detail_objek->Satuan_Sekunder,
+                    'Satuan_Tritier' => $detail_objek->Satuan_Tritier,
+                ];
+            }
+            return response()->json($data_objek);
+
+        }
     }
 
     // Show the form for editing the specified resource.
@@ -129,7 +151,49 @@ class AccPemberiBarangController extends Controller
     //Update the specified resource in storage.
     public function update(Request $request, $id)
     {
-        // 
+        $user = Auth::user()->NomorUser;
+
+        // acc
+        if ($id == 'acc') {
+            $listTransaksi = $request->input('listTransaksi');
+
+            try {
+                foreach ($listTransaksi as $transaksi) {
+                    DB::connection('ConnInventory')
+                        ->statement('exec [SP_1003_INV_Update_ACCManager_TmpTransaksi]
+                        @UserACC = ?,
+                        @Kode = ?,
+                        @YIdTransaksi = ?', [
+                            $user,
+                            4,
+                            $transaksi,
+                        ]);
+                }
+                return response()->json(['success' => 'Data Sudah Disimpan !!..'], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Data gagal diSIMPAN: ' . $e->getMessage()], 500);
+            }
+        }
+
+        // batal acc
+        else if ($id == 'batal') {
+            $listTransaksi = $request->input('listTransaksi');
+
+            try {
+                foreach ($listTransaksi as $transaksi) {
+                    DB::connection('ConnInventory')
+                        ->statement('exec [SP_1003_INV_Batal_ACCManager_TmpTransaksi]
+                        @Kode = ?,
+                        @YIdTransaksi = ?', [
+                            1,
+                            $transaksi,
+                        ]);
+                }
+                return response()->json(['success' => 'Pembatalan Acc Telah Terproses !!..'], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Pembatalan Acc gagal.' . $e->getMessage()], 500);
+            }
+        }
     }
 
     //Remove the specified resource from storage.
