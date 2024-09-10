@@ -20,6 +20,7 @@ var kelutNama2 = document.getElementById('kelutNama2');
 var subkelNama2 = document.getElementById('subkelNama2');
 
 var kodeTransaksi = document.getElementById('kodeTransaksi');
+var PIB = document.getElementById('PIB');
 var kodeBarang = document.getElementById('kodeBarang');
 var kodeType = document.getElementById('kodeType');
 var namaBarang = document.getElementById('namaBarang');
@@ -72,18 +73,26 @@ var btn_batal = document.getElementById('btn_batal');
 var btn_koreksi = document.getElementById('btn_koreksi');
 var btn_hapus = document.getElementById('btn_hapus');
 
-var baris3 = document.getElementById('baris-3');
+var baris3 = document.querySelectorAll('#baris-3 input');
 
 let a; // isi = 1, koreksi = 2, hapus = 3
 let tampil; // all data = 1, not all = 2
+let terima;
 let konvTerima;
 let konvBeri;
+let kdBarang;
+let asalSubkel;
+
 const inputs = Array.from(document.querySelectorAll('.card-body input[type="text"]:not([readonly]), .card-body input[type="date"]:not([readonly])'));
 tanggal.value = todayString;
 btn_divisi2.focus();
 
+baris3.forEach(function (input) {
+    input.disabled = true;
+});
 
-// fungsi berhubungan dengan ENTER & oengecekkan yg kosong2
+
+// fungsi berhubungan dengan ENTER & pengecekkan yg kosong2
 inputs.forEach((masuk, index) => {
     masuk.addEventListener('keypress', function (event) {
         if (event.key === 'Enter') {
@@ -119,9 +128,9 @@ inputs.forEach((masuk, index) => {
                             returnFocus: false
                         }).then(() => {
                             tritier3.value = 0;
-                            tritier3.focus();
+                            tritier3.select();
                         });
-                    } else if (tritier3.value === 0 && sekunder3.value === 0 && primer3.value === 0 && objekId.value !== '099') {
+                    } else if (tritier3.value === '0' && sekunder3.value === '0' && primer3.value === '0' && objekId.value !== '099') {
                         Swal.fire({
                             icon: 'warning',
                             title: 'Warning',
@@ -134,7 +143,7 @@ inputs.forEach((masuk, index) => {
 
                 } else {
                     if (tritier3.value > 0) {
-                        if (no_primer.value === no_primer3) {
+                        if (no_primer.value === no_primer3.value) {
                             alasan.focus();
                         } else {
                             Swal.fire({
@@ -154,7 +163,7 @@ inputs.forEach((masuk, index) => {
                     }
                 }
             } else if (masuk.id === 'alasan') {
-                if (tritier3.value === 0 && sekunder3.value === 0 && primer3.value === 0) {
+                if (tritier3.value === '0' && sekunder3.value === '0' && primer3.value === '0') {
                     Swal.fire({
                         icon: 'warning',
                         title: 'Warning',
@@ -257,7 +266,7 @@ function formatNumber(value) {
 function getUserId() {
     $.ajax({
         type: 'GET',
-        url: 'PenyesuaianBarang/getUserId',
+        url: 'MhnPenerima/getUserId',
         data: {
             _token: csrfToken
         },
@@ -320,7 +329,7 @@ btn_divisi2.addEventListener("click", function (e) {
                         serverSide: true,
                         order: [1, "asc"],
                         ajax: {
-                            url: "PenyesuaianBarang/getDivisi2",
+                            url: "MhnPenerima/getDivisi2",
                             dataType: "json",
                             type: "GET",
                             data: {
@@ -398,7 +407,7 @@ btn_divisi.addEventListener("click", function (e) {
                         serverSide: true,
                         order: [1, "asc"],
                         ajax: {
-                            url: "PenyesuaianBarang/getDivisi",
+                            url: "MhnPenerima/getDivisi",
                             dataType: "json",
                             type: "GET",
                             data: {
@@ -474,7 +483,7 @@ btn_objek2.addEventListener("click", function (e) {
                         serverSide: true,
                         order: [1, "asc"],
                         ajax: {
-                            url: "PenyesuaianBarang/getObjek2",
+                            url: "MhnPenerima/getObjek2",
                             dataType: "json",
                             type: "GET",
                             data: {
@@ -513,11 +522,11 @@ btn_objek2.addEventListener("click", function (e) {
                         if (confirmResult.isConfirmed) {
                             tampil = 1;
                             showAllTable();
-                            btn_isi.focus();
+                            // btn_isi.focus();
                         } else {
                             tampil = 2;
                             showTable();
-                            btn_isi.focus();
+                            // btn_isi.focus();
                         }
                     });
                 }
@@ -567,7 +576,7 @@ btn_objek.addEventListener("click", function (e) {
                         serverSide: true,
                         order: [1, "asc"],
                         ajax: {
-                            url: "PenyesuaianBarang/getObjek",
+                            url: "MhnPenerima/getObjek",
                             dataType: "json",
                             type: "GET",
                             data: {
@@ -647,7 +656,7 @@ btn_kelut2.addEventListener("click", function (e) {
                         serverSide: true,
                         order: [1, "asc"],
                         ajax: {
-                            url: "PenyesuaianBarang/getKelUt2",
+                            url: "MhnPenerima/getKelUt2",
                             dataType: "json",
                             type: "GET",
                             data: {
@@ -675,7 +684,7 @@ btn_kelut2.addEventListener("click", function (e) {
                 kelutId2.value = result.value.IdKelompokUtama.trim();
                 kelutNama2.value = decodeHtmlEntities(result.value.NamaKelompokUtama.trim());
 
-                if (kelutNama.value !== '') {
+                if (kelutNama2.value !== '') {
                     btn_kelompok2.disabled = false;
                     btn_kelompok2.focus();
                 }
@@ -725,7 +734,7 @@ btn_kelut.addEventListener("click", function (e) {
                         serverSide: true,
                         order: [1, "asc"],
                         ajax: {
-                            url: "PenyesuaianBarang/getKelUt",
+                            url: "MhnPenerima/getKelUt",
                             dataType: "json",
                             type: "GET",
                             data: {
@@ -807,7 +816,7 @@ btn_kelompok2.addEventListener("click", function (e) {
                         serverSide: true,
                         order: [1, "asc"],
                         ajax: {
-                            url: "PenyesuaianBarang/getKelompok2",
+                            url: "MhnPenerima/getKelompok2",
                             dataType: "json",
                             type: "GET",
                             data: {
@@ -835,7 +844,7 @@ btn_kelompok2.addEventListener("click", function (e) {
                 kelompokId2.value = result.value.idkelompok.trim();
                 kelompokNama2.value = decodeHtmlEntities(result.value.namakelompok.trim());
 
-                if (kelutNama.value !== '') {
+                if (kelutNama2.value !== '') {
                     btn_subkel2.disabled = false;
                     btn_subkel2.focus();
                 }
@@ -885,7 +894,7 @@ btn_kelompok.addEventListener("click", function (e) {
                         serverSide: true,
                         order: [1, "asc"],
                         ajax: {
-                            url: "PenyesuaianBarang/getKelompok",
+                            url: "MhnPenerima/getKelompok",
                             dataType: "json",
                             type: "GET",
                             data: {
@@ -964,7 +973,7 @@ btn_subkel2.addEventListener("click", function (e) {
                         serverSide: true,
                         order: [1, "asc"],
                         ajax: {
-                            url: "PenyesuaianBarang/getSubkel2",
+                            url: "MhnPenerima/getSubkel2",
                             dataType: "json",
                             type: "GET",
                             data: {
@@ -1040,7 +1049,7 @@ btn_subkel.addEventListener("click", function (e) {
                         serverSide: true,
                         order: [1, "asc"],
                         ajax: {
-                            url: "PenyesuaianBarang/getSubkel",
+                            url: "MhnPenerima/getSubkel",
                             dataType: "json",
                             type: "GET",
                             data: {
@@ -1065,7 +1074,6 @@ btn_subkel.addEventListener("click", function (e) {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                btn_kodeType.focus();
                 subkelId.value = result.value.IdSubkelompok.trim();
                 subkelNama.value = result.value.NamaSubKelompok.trim();
 
@@ -1092,13 +1100,13 @@ btn_namaBarang.addEventListener("click", function (e) {
 
     try {
         Swal.fire({
-            title: 'Sub Kelompok',
+            title: 'Kode Barang',
             html: `
                 <table id="table_list" class="table">
                     <thead>
                         <tr>
-                            <th scope="col">ID Sub Kelompok</th>
-                            <th scope="col">Nama Sub Kelompok</th>
+                            <th scope="col">Kode Barang</th>
+                            <th scope="col">Nama Barang</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -1115,7 +1123,7 @@ btn_namaBarang.addEventListener("click", function (e) {
                 }
                 return selectedData;
             },
-            width: '40%',
+            width: '55%',
             returnFocus: false,
             showCloseButton: true,
             showConfirmButton: true,
@@ -1128,7 +1136,7 @@ btn_namaBarang.addEventListener("click", function (e) {
                         serverSide: true,
                         order: [1, "asc"],
                         ajax: {
-                            url: "PenyesuaianBarang/getSubkelType",
+                            url: "MhnPenerima/getSubkelType",
                             dataType: "json",
                             type: "GET",
                             data: {
@@ -1153,82 +1161,69 @@ btn_namaBarang.addEventListener("click", function (e) {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                btn_kodeType.focus();
                 kodeType.value = result.value.IdType.trim();
                 namaBarang.value = result.value.NamaType.trim();
+
+                loadKdBarang(kodeType.value);
+
+                if (PIB.value !== '') {
+                    cekPIB();
+                }
+
+                loadType();
+                terimaKodeBarang();
+
+                if (konvBeri !== undefined && konvTerima !== undefined) {
+                    baris3.forEach(function (input) {
+                        input.disabled = false;
+                    });
+                    primerValue = no_primer3.value.trim();
+                    sekunderValue = no_sekunder3.value.trim();
+                    tritierValue = no_tritier3.value.trim();
+
+                    if (primerValue === 'NULL' && sekunderValue === 'NULL') {
+                        primer3.disabled = true;
+                        sekunder3.disabled = true;
+                        tritier3.select();
+                    } else if (primerValue === 'NULL' && sekunderValue !== 'NULL') {
+                        primer3.disabled = true;
+                        sekunder3.select();
+                    } else {
+                        primer3.select();
+                    }
+
+                } else {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Warning',
+                        html: `Satuan Pemberi dan Penerima Tidak sama <br> Atau Tidak ada Type tersebut Pada Divisi Penerima`,
+                        returnFocus: false
+                    }).then(() => {
+                        return;
+                    });
+                }
             }
         });
     } catch (error) {
         console.error(error);
     }
-
-    if (namaBarang.value !== '') {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Barang Belum Terpilih!',
-            text: `Pilih dulu Nama Barang!!`,
-            returnFocus: false
-        }).then(() => {
-            btn_namaBarang.focus();
-        });
-    }
-
-    loadKdBarang();
-
-    if (PIB.value !== '') {
-        cekPIB();
-        console.log(cekPIB());
-    }
-
-    loadType();
-    if (terima) {
-        baris3.forEach(function (input) {
-            input.disabled = false;
-        });
-        primerValue = no_primer3.value.trim();
-        sekunderValue = no_sekunder3.value.trim();
-        tritierValue = no_tritier3.value.trim();
-
-        if (primerValue === 'NULL' && sekunderValue === 'NULL') {
-            primer3.disabled = true;
-            sekunder3.disabled = true;
-            tritier3.select();
-        } else if (primerValue === 'NULL' && sekunderValue !== 'NULL') {
-            primer3.disabled = true;
-            sekunder3.select();
-        } else {
-            primer3.select();
-        }
-
-    } else {
-        baris3.forEach(function (input) {
-            input.disabled = true;
-        });
-        Swal.fire({
-            icon: 'warning',
-            title: 'Warning',
-            html: `Satuan Pemberi dan Penerima Tidak sama <br> Atau Tidak ada Type tersebut Pada Divisi Penerima`,
-            returnFocus: false
-        });
-    }
-
-
 });
 
-// fungsi unk dptin kode type, kode barang & pib
-function loadKdBarang() {
+// fungsi unk dptin kode barang & pib
+function loadKdBarang(kodeType) {
     $.ajax({
         type: 'GET',
-        url: 'PenyesuaianBarang/getType',
+        url: 'MhnPenerima/getType',
         data: {
             _token: csrfToken,
-            kodeType: kodeType.value,
+            kodeType: kodeType,
             subkelId: subkelId.value
         },
         success: function (result) {
-            kodeType.value = result.value.IdType.trim();
-            kodeBarang.value = result.value.KodeBarang.trim();
-            PIB.value = result.value.PIB?.trim() || '';
+            if (kodeType === result[0].IdType.trim()) {
+                kodeBarang.value = result[0].KodeBarang.trim();
+                PIB.value = result[0].PIB?.trim() || '';
+            }
         },
         error: function (xhr, status, error) {
             console.error('Error:', error);
@@ -1240,22 +1235,26 @@ function loadKdBarang() {
 function cekPIB() {
     $.ajax({
         type: 'GET',
-        url: 'PenyesuaianBarang/cekPIB',
+        url: 'MhnPenerima/cekPIB',
         data: {
             _token: csrfToken,
             kodeBarang: kodeBarang.value,
             subkelId2: subkelId2.value,
-            PIB: PIB.value
+            PIB: PIB.value,
+            divisiNama2: divisiNama2.value,
+            subkelNama2: subkelNama2.value
         },
         success: function (response) {
             if (response.warning) {
                 Swal.fire({
                     icon: 'warning',
-                    text: response.warning,
+                    html: response.warning,
                     returnFocus: false
                 }).then(() => {
                     btn_namaBarang.focus();
                 });
+            } else if (response.success) {
+                console.log('Operation successful');
             }
         },
         error: function (xhr, status, error) {
@@ -1267,7 +1266,7 @@ function cekPIB() {
 function loadType() {
     $.ajax({
         type: 'GET',
-        url: 'PenyesuaianBarang/cekType',
+        url: 'MhnPenerima/cekType',
         data: {
             _token: csrfToken,
             kodeBarang: kodeBarang.value,
@@ -1276,20 +1275,24 @@ function loadType() {
             kodeType: kodeType.value
         },
         success: function (response) {
-            kodeType.value = response[0].IdType !== null ? decodeHtmlEntities(response[0].IdType.trim()) : "-";
-            namaBarang.value = response[0].NamaType !== null ? decodeHtmlEntities(response[0].NamaType.trim()) : "-";
-            kodeBarang.value = response[0].KodeBarang !== null ? decodeHtmlEntities(response[0].KodeBarang.trim()) : "-";
-            primer.value = response[0].SaldoPrimer !== null ? formatNumber(response[0].SaldoPrimer) : "0";
-            sekunder.value = response[0].SaldoSekunder !== null ? formatNumber(response[0].SaldoSekunder) : "0";
-            tritier.value = response[0].SaldoTritier !== null ? formatNumber(response[0].SaldoTritier) : "0";
-            no_primer.value = response[0].Satuan_Primer !== null ? decodeHtmlEntities(response[0].Satuan_Primer.trim()) : "";
-            no_sekunder.value = response[0].Satuan_Sekunder !== null ? decodeHtmlEntities(response[0].Satuan_Sekunder.trim()) : "";
-            no_tritier.value = response[0].Satuan_Tritier !== null ? decodeHtmlEntities(response[0].Satuan_Tritier.trim()) : "";
-            konvBeri = response[0].PakaiAturanKonversi !== null ? response[0].PakaiAturanKonversi.trim() : "";
+            if (response.typeData && response.typeData.length > 0) {
+                const data = response.typeData[0];
 
-            primer2.value = response[0].SaldoPrimer !== null ? formatNumber(response[0].SaldoPrimer) : "0";
-            sekunder2.value = response[0].SaldoSekunder !== null ? formatNumber(response[0].SaldoSekunder) : "0";
-            tritier2.value = response[0].SaldoTritier !== null ? formatNumber(response[0].SaldoTritier) : "0";
+                kodeType.value = data.IdType ? decodeHtmlEntities(data.IdType.trim()) : "-";
+                namaBarang.value = data.NamaType ? decodeHtmlEntities(data.NamaType.trim()) : "-";
+                kodeBarang.value = data.KodeBarang ? decodeHtmlEntities(data.KodeBarang.trim()) : "-";
+                primer.value = data.SaldoPrimer ? formatNumber(data.SaldoPrimer) : "0";
+                sekunder.value = data.SaldoSekunder ? formatNumber(data.SaldoSekunder) : "0";
+                tritier.value = data.SaldoTritier ? formatNumber(data.SaldoTritier) : "0";
+                no_primer.value = data.satuan_primer ? decodeHtmlEntities(data.satuan_primer.trim()) : "";
+                no_sekunder.value = data.satuan_sekunder ? decodeHtmlEntities(data.satuan_sekunder.trim()) : "";
+                no_tritier.value = data.satuan_tritier ? decodeHtmlEntities(data.satuan_tritier.trim()) : "";
+                konvBeri = data.PakaiAturanKonversi ? data.PakaiAturanKonversi.trim() : "";
+
+                primer2.value = response.totalSaldoData[0]?.Primer ? formatNumber(response.totalSaldoData[0].Primer) : "0";
+                sekunder2.value = response.totalSaldoData[0]?.Sekunder ? formatNumber(response.totalSaldoData[0].Sekunder) : "0";
+                tritier2.value = response.totalSaldoData[0]?.Tritier ? formatNumber(response.totalSaldoData[0].Tritier) : "0";
+            }
         },
         error: function (xhr, status, error) {
             console.error('Error:', error);
@@ -1297,13 +1300,10 @@ function loadType() {
     });
 }
 
-let terima;
-
-// fungsi unk cek PIB
 function terimaKodeBarang() {
     $.ajax({
         type: 'GET',
-        url: 'PenyesuaianBarang/kodeBarangTerima',
+        url: 'MhnPenerima/kodeBarangTerima',
         data: {
             _token: csrfToken,
             kodeBarang: kodeBarang.value,
@@ -1321,6 +1321,9 @@ function terimaKodeBarang() {
             console.error('Error:', error);
         }
     });
+
+    console.log(konvBeri, konvTerima);
+
 
     if (konvBeri !== 'Y' && konvTerima !== 'Y') {
         if (no_primer.value === no_primer3.value) {
@@ -1354,10 +1357,31 @@ function terimaKodeBarang() {
 function showAllTable() {
     $.ajax({
         type: 'GET',
-        url: 'PenyesuaianBarang/getAllData',
+        url: 'MhnPenerima/getAllData',
         data: {
             _token: csrfToken,
             divisiId2: divisiId2.value,
+            objekNama2: objekNama2.value
+        },
+        success: function (result) {
+            updateDataTable(result);
+            $('.divTable').show();
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
+}
+
+// menampilkan data berdasarkan pemohon
+function showTable() {
+    $.ajax({
+        type: 'GET',
+        url: 'MhnPenerima/getData',
+        data: {
+            _token: csrfToken,
+            divisiId2: divisiId2.value,
+            pemohon: pemohon.value
         },
         success: function (result) {
             updateDataTable(result);
@@ -1374,7 +1398,7 @@ function updateDataTable(data) {
     var table = $('#tableData').DataTable();
     table.clear();
 
-    data_allData.forEach(function (item) {
+    data.forEach(function (item) {
         table.row.add([
             escapeHtml(item.IdTransaksi.trim()),
             escapeHtml(item.NamaType.trim()),
@@ -1386,39 +1410,19 @@ function updateDataTable(data) {
             escapeHtml(item.NamaKelompokUtama.trim()),
             escapeHtml(item.NamaKelompok.trim()),
             escapeHtml(item.NamaSubKelompok.trim()),
+            escapeHtml(formatNumber(item.JumlahPengeluaranPrimer.trim())),
+            escapeHtml(formatNumber(item.JumlahPengeluaranSekunder.trim())),
+            escapeHtml(formatNumber(item.JumlahPengeluaranTritier.trim())),
             escapeHtml(item.KodeBarang.trim()),
             escapeHtml(item.IdType.trim()),
-            escapeHtml(item.JumlahPengeluaranPrimer.trim()),
-            escapeHtml(item.JumlahPengeluaranSekunder.trim()),
-            escapeHtml(item.JumlahPengeluaranTritier.trim()),
-            escapeHtml(item.Satuan_primer.trim()),
-            escapeHtml(item.Satuan_Sekunder.trim()),
-            escapeHtml(item.Satuan_Tritier.trim()),
+            escapeHtml(item.SatPrimer.trim()),
+            escapeHtml(item.SatSekunder.trim()),
+            escapeHtml(item.SatTritier.trim()),
             escapeHtml(item.IdPenerima1.trim())
         ])
     });
 
     table.draw();
-}
-
-// menampilkan data berdasarkan pemohon
-function showTable() {
-    $.ajax({
-        type: 'GET',
-        url: 'PenyesuaianBarang/getData',
-        data: {
-            _token: csrfToken,
-            divisiId: divisiId.value,
-            pemohon: pemohon.value
-        },
-        success: function (result) {
-            updateDataTable(result);
-            $('.divTable').show();
-        },
-        error: function (xhr, status, error) {
-            console.error('Error:', error);
-        }
-    });
 }
 
 $(document).ready(function () {
@@ -1438,8 +1442,6 @@ $(document).ready(function () {
             { title: 'Kel. Utama' },
             { title: 'Kelompok' },
             { title: 'Sub Kelompok' },
-            { title: 'Kode Type' },
-            { title: 'Kode Barang' },
             { title: 'Primer' },
             { title: 'Sekunder' },
             { title: 'Tritier' },
@@ -1452,52 +1454,53 @@ $('#tableData tbody').on('click', 'tr', function () {
     table.$('tr.selected').removeClass('selected');
     $(this).addClass('selected');
     var data = table.row(this).data();
-    console.log(data);
+    // console.log(data);
 
-    kodeTransaksi.value = data[1];
-    namaBarang.value = decodeHtmlEntities(data[2]);
-    alasan.value = decodeHtmlEntities(data[3]);
-    var originalDate = data[5];
-    var parts = originalDate.split('/');
-    var formattedDate = parts[2] + '-' + parts[0].padStart(2, '0') + '-' + parts[1].padStart(2, '0');
-    tanggal.value = formattedDate;
-    divisiNama2.value = decodeHtmlEntities(data[6]);
+    kodeTransaksi.value = data[0];
+    namaBarang.value = decodeHtmlEntities(data[1]);
+    alasan.value = decodeHtmlEntities(data[2]);
+    divisiNama2.value = decodeHtmlEntities(data[5]);
     objekNama2.value = decodeHtmlEntities(data[6]);
     kelutNama2.value = decodeHtmlEntities(data[7]);
     kelompokNama2.value = decodeHtmlEntities(data[8]);
     subkelNama2.value = decodeHtmlEntities(data[9]);
-    kodeBarang.value = decodeHtmlEntities(data[10]);
-    namaBarang.value = decodeHtmlEntities(data[11]);
-    primer3.value = formatNumber(data[12]);
-    sekunder3.value = formatNumber(data[13]);
-    tritier3.value = formatNumber(data[14]);
+    primer3.value = formatNumber(data[10]);
+    sekunder3.value = formatNumber(data[11]);
+    tritier3.value = formatNumber(data[12]);
+    kodeBarang.value = decodeHtmlEntities(data[13]);
+    kodeType.value = decodeHtmlEntities(data[14]);
     no_primer3.value = decodeHtmlEntities(data[15]);
     no_sekunder3.value = decodeHtmlEntities(data[16]);
     no_tritier3.value = decodeHtmlEntities(data[17]);
-    user.value = data[18];
+    pemohon.value = data[18];
 
     $.ajax({
         type: 'GET',
-        url: 'PenyesuaianBarang/getSelect',
+        url: 'MhnPenerima/getSelect',
         data: {
             _token: csrfToken,
             kodeTransaksi: kodeTransaksi.value
         },
-        success: function (result) {
-            if (result) {
-                primer.value = formatNumber(result[0].SaldoPrimer) ?? formatNumber(0);
-                sekunder.value = formatNumber(result[0].SaldoSekunder) ?? formatNumber(0);
-                tritier.value = formatNumber(result[0].SaldoTritier) ?? formatNumber(0);
+        success: function (response) {
+            if (response) {
+                // console.log(response);
 
-                no_primer3.value = result[0].Satuan_Primer;
-                no_sekunder3.value = result[0].Satuan_Sekunder;
-                no_tritier3.value = result[0].Satuan_Tritier;
+                divisiId2.value = response.data_selectData[0].IdDivisi.trim();
+                objekId2.value = response.data_selectData[0].IdObjek.trim();
+                kelutId2.value = response.data_selectData[0].IdKelompokUtama.trim();
+                kelompokId2.value = response.data_selectData[0].IdKelompok.trim();
+                subkelId2.value = response.data_selectData[0].IdSubkelompok.trim();
 
-                primer2.value = formatNumber(result[0].SaldoPrimer2) ?? formatNumber(0);
-                sekunder2.value = formatNumber(result[0].SaldoSekunder2) ?? formatNumber(0);
-                tritier2.value = formatNumber(result[0].SaldoTritier2) ?? formatNumber(0);
-
-                primer2.select();
+                divisiId.value = response.identityData[0].IdDivisi.trim();
+                divisiNama.value = response.identityData[0].NamaDivisi.trim();
+                objekId.value = response.identityData[0].IdObjek.trim();
+                objekNama.value = response.identityData[0].NamaObjek.trim();
+                kelutId.value = response.identityData[0].IdKelompokUtama.trim();
+                kelutNama.value = response.identityData[0].NamaKelompokUtama.trim();
+                kelompokId.value = response.identityData[0].IdKelompok.trim();
+                kelompokNama.value = response.identityData[0].NamaKelompok.trim();
+                subkelId.value = response.identityData[0].IdSubkelompok.trim();
+                subkelNama.value = response.identityData[0].NamaSubKelompok.trim();
             }
         },
         error: function (xhr, status, error) {
@@ -1506,7 +1509,136 @@ $('#tableData tbody').on('click', 'tr', function () {
     });
 });
 
+function cekKodeBarang() {
+    $.ajax({
+        type: 'GET',
+        url: 'MhnPenerima/getDetailId',
+        data: {
+            _token: csrfToken,
+            kodeType: kodeType.value,
+            subkelId2: subkelId2.value
+        },
+        success: function (result) {
+            console.log(result);
+
+            kdBarang = result[0].KodeBarang.trim();
+            asalSubkel = result[0].IdSubkelompok_Type.trim();
+            acc = result[0].isValid.trim();
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
+}
+
+let cekPr;
+let cekSek
+let cekTr;
+let acc;
+let hargaAkhir;
+let sisaSaldo;
+
+$(document).ready(function () {
+    table = $('#tableHarga').DataTable({
+        paging: false,
+        searching: false,
+        info: false,
+        ordering: false,
+        columns: [
+            { title: 'No. Terima' },
+            { title: 'Qty' },
+            { title: 'Harga' },
+            { title: 'Kurs' },
+            { title: 'Harga Satuan' }
+        ]
+    });
+});
+
+// fungsi unk update isi tabel
+function updateDataTableKecil(data) {
+    var table = $('#tableHarga').DataTable();
+    table.clear();
+
+    data.forEach(function (item) {
+        table.row.add([
+            escapeHtml(item.IdTransaksi.trim()),
+            escapeHtml(item.NamaType.trim()),
+            escapeHtml(item.UraianDetailTransaksi.trim()),
+            escapeHtml(item.IdPenerima.trim()),
+            escapeHtml(item.SaatAwalTransaksi.trim())
+        ])
+    });
+
+    table.draw();
+}
+
+function simpan_isi() {
+    cekKodeBarang();
+
+    cekPr = primer3.value + primer2.value;
+    cekSek = sekunder3.value + sekunder2.value;
+    cekTr = tritier3.value + tritier2.value;
+
+    if (konvBeri !== 'Y' && konvTerima !== 'Y' && objekId2 !== '099') {
+        if (primer.value < cekPr || sekunder.value < cekSek ||tritier.value < cekTr) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Saldo Tidak Cukup!',
+                text: `Saldo Tidak Mencukupi, Cek Kembali Jumlah Yang Akan diMutasi !`,
+                returnFocus: false
+            }).then(() => {
+                return;
+            });
+        }
+    }
+
+    if (acc) {
+        $.ajax({
+            type: 'GET',
+            url: 'MhnPenerima/getListType',
+            data: {
+                _token: csrfToken,
+                kodeType: kodeType.value,
+                divisiNama: divisiNama.value,
+                objekNama: objekNama.value
+            },
+            success: function (response) {
+                console.log(response);
+
+                if (response.data && response.data.length > 0) {
+                    updateDataTableKecil(response.data[0]);
+                }
+
+                hargaAkhir = response.totalHarga1;
+                sisaSaldo = response.remainingSaldo;
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+    } else {
+        Swal.fire({
+            icon: 'warning',
+            text: `Kode Transaksi ${kodeTransaksi} Tidak Dapat Di ACC,
+                    Sebab Type Barang Belum Ada Pada Sub Kelompok ${subkelNama2}. Isi Dulu Di Menu Maintenance Type Barang!!`,
+            returnFocus: false
+        });
+
+    }
+}
+
 btn_proses.addEventListener("click", function (e) {
+    if (namaBarang.value === '') {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Barang Belum Terpilih!',
+            text: `Pilih dulu Nama Barang!!`,
+            returnFocus: false
+        }).then(() => {
+            btn_namaBarang.focus();
+        });
+    }
+
     if (a === 1) {
         if (divisiNama2.value === '') {
             Swal.fire({
@@ -1553,7 +1685,7 @@ btn_proses.addEventListener("click", function (e) {
 
     if (a === 3) {
         $.ajax({
-            url: "PenyesuaianBarang/hapusBarang",
+            url: "MhnPenerima/hapusBarang",
             type: "DELETE",
             data: {
                 _token: csrfToken,
@@ -1590,19 +1722,23 @@ btn_proses.addEventListener("click", function (e) {
 
     $.ajax({
         type: 'PUT',
-        url: 'PenyesuaianBarang/proses',
+        url: 'MhnPenerima/proses',
         data: {
             _token: csrfToken,
             a: a,
+            divisiNama: divisiNama.value,
+            objekNama: objekNama.value,
             alasan: alasan.value,
-            kodeType: kodeType.value,
-            subkelId: subkelId.value,
-            pemohon: pemohon.value,
             tanggal: tanggal.value,
-            primer3: primer3,
-            sekunder3: sekunder3,
-            tritier3: tritier3,
-            kodeTransaksi: kodeTransaksi.value,
+            kodeType: kodeType.value,
+            pemohon: pemohon.value,
+            primer3: primer3.value,
+            sekunder3: sekunder3.value,
+            tritier3: tritier3.value,
+            subkelId: subkelId.value,
+            subkelId2: subkelId2.value,
+            harga: hargaAkhir,
+            PIB: PIB.value,
         },
         timeout: 30000,
         success: function (response) {
@@ -1613,9 +1749,9 @@ btn_proses.addEventListener("click", function (e) {
                     text: response.success,
                     returnFocus: false,
                 }).then(() => {
-                    primer2.value = 0;
-                    sekunder2.value = 0;
-                    tritier2.value = 0;
+                    primer3.value = 0;
+                    sekunder3.value = 0;
+                    tritier3.value = 0;
 
                     allInputs.forEach(function (input) {
                         let divPenting = input.closest('#baris-1') !== null;
@@ -1624,8 +1760,6 @@ btn_proses.addEventListener("click", function (e) {
                             input.value = '';
                         }
                     });
-
-                    btn_kodeType.focus();
 
                 });
             } else if (a === 2 && response.success) {
@@ -1665,6 +1799,7 @@ btn_proses.addEventListener("click", function (e) {
 disableKetik()
 var allInputs = document.querySelectorAll('input');
 
+
 // kosongin input
 function clearInputs() {
     allInputs.forEach(function (input) {
@@ -1678,7 +1813,7 @@ function clearInputs() {
 
 // fungsi bisa ketik
 function enableKetik() {
-    clearInputs();
+    // clearInputs();
 
     // hide button isi, tampilkan button proses
     btn_isi.style.display = 'none';
@@ -1688,10 +1823,6 @@ function enableKetik() {
     btn_batal.style.display = 'inline-block';
 
     btn_hapus.disabled = true;
-
-    baris3.forEach(function (input) {
-        input.disabled = true;
-    });
 }
 
 // fungsi gak bisa ketik
@@ -1715,16 +1846,14 @@ btn_isi.addEventListener('click', function () {
     enableKetik();
     btn_kelut2.disabled = false;
     btn_kelut2.focus();
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
 
-
-
-    primer2.disabled = false;
-    sekunder2.disabled = false;
-    tritier2.disabled = false;
-
-    primer2.value = 0;
-    sekunder2.value = 0;
-    tritier2.value = 0;
+    primer3.value = 0;
+    sekunder3.value = 0;
+    tritier3.value = 0;
     btn_hapus.disabled = true;
 });
 

@@ -207,9 +207,7 @@
                                 <div style="width: 170px;margin-left: 5px;">
                                     <input type="text" class="form-control" id="PIB" name="PIB"readonly>
                                 </div>
-                                <div class="col-sm-2 ">
-                                    <label for="kodeType">Kode Type</label>
-                                </div>
+                                <label for="kodeType" style="margin-left: 10px; margin-right:60px">Kode Type</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control" id="kodeType" name="kodeType"readonly>
                                 </div>
@@ -235,7 +233,7 @@
                                 </div>
                             </div>
 
-                            <div class="row pl-3">
+                            <div class="row pl-3 pt-2">
                                 <label>Stok Akhir Barang</label>
                                 <label style="margin-left: 20px;">Sat. Primer</label>
                                 <div style="width: 150px; margin-left: 10px">
@@ -259,7 +257,7 @@
                                     <input type="text" class="form-control" id="no_tritier" name="no_tritier" readonly>
                                 </div>
                             </div>
-                            <div class="row pr-5">
+                            <div class="row pr-5 pb-1">
                                 <div class="col-sm-2">
                                     <label>Jumlah Belum ACC</label>
                                 </div>
@@ -310,6 +308,19 @@
                                 </div>
                                 <div class="col-sm-9">
                                     <input type="text" class="form-control" id="alasan" name="alasan">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="col-sm-12 mb-2">
+                                <div class="table-responsive fixed-height" style="height: 100px">
+                                    <table class="table table-bordered no-wrap-header" id="tableHarga">
+                                        <thead>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
