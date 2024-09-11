@@ -273,7 +273,6 @@ class MhnPenerimaController extends Controller
             ];
 
             // dd($request->all(), $response_data);
-
             return response()->json($response_data);
         }
 
@@ -434,7 +433,7 @@ class MhnPenerimaController extends Controller
             foreach ($data_detail as $item) {
                 $cekBarang = DB::connection('ConnInventory')->select('exec SP_5409_INV_CheckKodeBarang_Type @kodebarang = ?, @subkel = ?', [$item['KodeBarang'], $subkelId2]);
 
-                if (count($cekBarang) > 0) {
+                if (count($cekBarang) === 0) {
                     $acc = false;
                     break;
                 }
@@ -444,6 +443,8 @@ class MhnPenerimaController extends Controller
                 'detailData' => $data_detail,
                 'isValid' => $acc
             ];
+
+            // dd($request->all(), $response_data);
 
             return response()->json($response_data);
         }
@@ -462,7 +463,9 @@ class MhnPenerimaController extends Controller
             if ($hasPositiveSaldo) {
                 $cekAda = DB::connection('ConnInventory')->select('exec SP_1003_INV_LIST_TYPE @Kode = 8, @IdType = ?', [$kodeType]);
 
-                if (!empty($cekAda)) {
+                $ada = (int)$cekAda[0]->Ada;
+
+                if ($ada > 0) {
                     $data = DB::connection('ConnInventory')->select('exec SP_1003_INV_LIST_TYPE @Kode = 9, @IdType = ?', [$kodeType]);
 
                     $arrData = array_map(function($item) {
@@ -474,50 +477,52 @@ class MhnPenerimaController extends Controller
                             'HargaSatuan' => $item->HargaSatuan
                         ];
                     }, $data);
+
+                    // dd($arrData);
+
+                    $saldo = $data_saldo[0]['SaldoTritier'] ?? 0;
+                    $totalHarga1 = 0;
+                    $saldo1 = $saldo;
+                    $qtyKeluar = (float) $tritier3;
+
+                    foreach ($arrData as $index => $item) {
+                        $noTerima = $item['NoTerima'];
+                        $qty = (float) $item['Qty'];
+                        $hargaSatuan = (float) $item['HargaSatuan'];
+                        $totalHarga = $qty * $hargaSatuan;
+
+                        $qtyKeluar -= $qty;
+
+                        if ($qtyKeluar <= 0) {
+                            DB::connection('ConnPurch')->statement('exec SP_1273_INV_Update_QtyAvailable @Kode = ?, @NoTerima = ?, @Qty = ?', ['1', $noTerima, $qty]);
+                            break;
+                        } else {
+                            DB::connection('ConnPurch')->statement('exec SP_1273_INV_Update_QtyAvailable @Kode = ?, @NoTerima = ?, @Qty = ?', ['1', $noTerima, $qtyKeluar]);
+                        }
+
+                        $totalHarga1 += $totalHarga;
+                    }
+
+                    $txtHarga = $totalHarga1 / $saldo1;
+
+                    DB::connection('ConnInventory')->statement('exec SP_1003_INV_LIST_TYPE @Kode = ?, @IdType = ?, @Harga = ?', ['7', $kodeType, $txtHarga]);
+
+                    if ($txtHarga === '') {
+                        $txtHarga = '0';
+                    }
+
+                    $response = [
+                        'data' => $arrData,
+                        'totalHarga1' => $totalHarga1,
+                        'remainingSaldo' => $saldo
+                    ];
+
+                    // dd($request->all(), $response);
+
+                    return response()->json($response);
                 }
             }
-
-            $saldo = $data_saldo[0]['SaldoTritier'] ?? 0;
-            $totalHarga1 = 0;
-            $saldo1 = $saldo;
-            $qtyKeluar = (float) $tritier3;
-
-            foreach ($arrData as $index => $item) {
-                $noTerima = $item['NoTerima'];
-                $qty = (float) $item['Qty'];
-                $hargaSatuan = (float) $item['HargaSatuan'];
-                $totalHarga = $qty * $hargaSatuan;
-
-                $qtyKeluar -= $qty;
-
-                if ($qtyKeluar <= 0) {
-                    DB::connection('ConnPurch')->statement('exec SP_1273_INV_Update_QtyAvailable @Kode = ?, @NoTerima = ?, @Qty = ?', ['1', $noTerima, $qty]);
-                    break;
-                } else {
-                    DB::connection('ConnPurch')->statement('exec SP_1273_INV_Update_QtyAvailable @Kode = ?, @NoTerima = ?, @Qty = ?', ['1', $noTerima, $qtyKeluar]);
-                }
-
-                $totalHarga1 += $totalHarga;
-            }
-
-            $txtHarga = $totalHarga1 / $saldo1;
-
-            DB::connection('ConnInventory')->statement('exec SP_1003_INV_LIST_TYPE @Kode = ?, @IdType = ?, @Harga = ?', ['7', $kodeType, $txtHarga]);
-
-            if ($txtHarga === '') {
-                $txtHarga = '0';
-            }
-
-            $response = [
-                'data' => $arrData,
-                'totalHarga1' => $totalHarga1,
-                'remainingSaldo' => $saldo
-            ];
-
-            return response()->json($response);
         }
-
-
     }
 
     // Show the form for editing the specified resource.
@@ -560,7 +565,7 @@ class MhnPenerimaController extends Controller
                     if (str_contains($divisiNama, 'Warehouse') && (str_contains($objekNama, 'Gudang teknik') || str_contains($objekNama, 'Persediaan'))) {
                         DB::connection('ConnInventory')->statement(
                             'exec SP_1273_INV_Insert_02_TmpTransaksi
-                            @XIdTypeTransaksi = ?, @XUraianDetailTransaksi = ?, @XSaatawalTransaksi = ?, @XIdType = ?,  @XIdPenerima = ?, ,
+                            @XIdTypeTransaksi = ?, @XUraianDetailTransaksi = ?, @XSaatawalTransaksi = ?, @XIdType = ?,  @XIdPenerima = ?,
                             @XJumlahKeluarPrimer = ?, @XJumlahKeluarSekunder = ?, @XJumlahKeluarTritier = ?, @XAsalIdSubKelompok = ?,
                             @XTujuanIdSubKelompok = ?, @Harga = ?, @XPIB = ?',
                             ['02', $uraian, $tanggal, $kodeType, $pemohon,
@@ -572,7 +577,7 @@ class MhnPenerimaController extends Controller
                         // proses insert tmprtansaksi
                         DB::connection('ConnInventory')->statement(
                             'exec SP_1273_INV_Insert_02_TmpTransaksi
-                            @XIdTypeTransaksi = ?, @XUraianDetailTransaksi = ?, @XSaatawalTransaksi = ?, @XIdType = ?,  @XIdPenerima = ?, ,
+                            @XIdTypeTransaksi = ?, @XUraianDetailTransaksi = ?, @XSaatAwalTransaksi = ?, @XIdType = ?,  @XIdPenerima = ?,
                             @XJumlahKeluarPrimer = ?, @XJumlahKeluarSekunder = ?, @XJumlahKeluarTritier = ?, @XAsalIdSubKelompok = ?,
                             @XTujuanIdSubKelompok = ?, @Harga = ?',
                             ['02', $uraian, $tanggal, $kodeType, $pemohon,
@@ -582,8 +587,8 @@ class MhnPenerimaController extends Controller
 
                     else {
                         DB::connection('ConnInventory')->statement(
-                            'exec SP_1273_INV_Insert_02_TmpTransaksi
-                            @XIdTypeTransaksi = ?, @XUraianDetailTransaksi = ?, @XSaatawalTransaksi = ?, @XIdType = ?,  @XIdPenerima = ?, ,
+                            'exec SP_1003_INV_Insert_02_TmpTransaksi
+                            @XIdTypeTransaksi = ?, @XUraianDetailTransaksi = ?, @XSaatAwalTransaksi = ?, @XIdType = ?,  @XIdPenerima = ?,
                             @XJumlahKeluarPrimer = ?, @XJumlahKeluarSekunder = ?, @XJumlahKeluarTritier = ?, @XAsalIdSubKelompok = ?,
                             @XTujuanIdSubKelompok = ?, @Harga = ?, @XPIB = ?',
                             ['02', $uraian, $tanggal, $kodeType, $pemohon,

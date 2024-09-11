@@ -104,7 +104,7 @@
                             </div>
                         </div>
 
-                        <div class="row" id="ids" {{--style="display:none;"--}}>
+                        <div class="row" id="ids" style="display:none;">
                             <div class="col-md-5 d-flex">
                                 <input type="text" id="divisiId2" name="divisiId2" class="form-control" readonly>
                                 <input type="text" id="objekId2" name="objekId2" class="form-control" readonly>
@@ -112,7 +112,7 @@
                                 <input type="text" id="kelutId2" name="kelutId2" class="form-control" readonly>
                             </div>
                         </div>
-                        <div class="row" id="ids2" {{--style="display:none;"--}}>
+                        <div class="row" id="ids2" style="display:none;">
                             <div class="col-md-5 d-flex">
                                 <input type="text" id="divisiId" name="divisiId" class="form-control" readonly>
                                 <input type="text" id="objekId" name="objekId" class="form-control" readonly>
@@ -285,21 +285,21 @@
                                     <input type="text" class="form-control" id="primer3" name="primer3">
                                 </div>
                                 <div style="width: 70px; margin-left: 2px; margin-right: 2%">
-                                    <input type="text" class="form-control" id="no_primer3" name="no_primer3">
+                                    <input type="text" class="form-control" id="no_primer3" name="no_primer3" readonly>
                                 </div>
                                 <label>Sekunder</label>
                                 <div style="width: 150px; margin-left: 10px">
                                     <input type="text" class="form-control" id="sekunder3" name="sekunder3">
                                 </div>
                                 <div style="width: 70px; margin-left: 2px; margin-right: 2%">
-                                    <input type="text" class="form-control" id="no_sekunder3" name="no_sekunder3">
+                                    <input type="text" class="form-control" id="no_sekunder3" name="no_sekunder3" readonly>
                                 </div>
                                 <label>Tritier</label>
                                 <div style="width: 150px; margin-left: 10px">
                                     <input type="text" class="form-control" id="tritier3" name="tritier3">
                                 </div>
                                 <div style="width: 70px; margin-left: 2px; margin-right: 2%">
-                                    <input type="text" class="form-control" id="no_tritier3" name="no_tritier3" >
+                                    <input type="text" class="form-control" id="no_tritier3" name="no_tritier3" readonly>
                                 </div>
                             </div>
                             <div class="row pb-2">
