@@ -1027,7 +1027,7 @@ function SaveData() {
             url: 'PermohonanSatuDivisi/saveData',
             data: {
                 _token: csrfToken,
-                XUraianDetailTransaksi: (uraian.value) ? decodeHtmlEntities(uraian.value) : null,
+                XUraianDetailTransaksi: (uraian.value) ? decodeHtmlEntities(uraian.value) : '',
                 XIdType: kodeType.value,
                 Xsaatawaltransaksi: tanggal.value,
                 XJumlahKeluarPrimer: primer2.value,
@@ -1071,7 +1071,7 @@ function SaveData() {
             data: {
                 _token: csrfToken,
                 XIdTransaksi: transaksiId.value,
-                XUraianDetailTransaksi: (uraian.value) ? decodeHtmlEntities(uraian.value) : null,
+                XUraianDetailTransaksi: (uraian.value) ? decodeHtmlEntities(uraian.value) : '',
                 XJumlahKeluarPrimer: primer2.value,
                 XJumlahKeluarSekunder: sekunder2.value,
                 XJumlahKeluarTritier: tritier2.value,

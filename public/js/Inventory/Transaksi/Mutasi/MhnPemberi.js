@@ -205,6 +205,8 @@ function TampilItem(IdTrans) {
             _token: csrfToken
         },
         success: function (result) {
+            console.log(result);
+
             if (result) {
                 divisiId2.value = decodeHtmlEntities(result[0].IdDivisi);
                 objekId2.value = decodeHtmlEntities(result[0].IdObjek);
@@ -240,6 +242,8 @@ function TampilItem(IdTrans) {
             _token: csrfToken
         },
         success: function (result) {
+            console.log(result);
+            
             if (result) {
                 divisiId.value = decodeHtmlEntities(result[0].IdDivisi);
                 objekId.value = decodeHtmlEntities(result[0].IdObjek);
@@ -491,6 +495,10 @@ btnDivisi.addEventListener("click", function (e) {
                 if (divisiId.value === 'EXP') {
                     $('.keranjang').show();
                     $('.kosong').hide();
+                }
+                else{
+                    $('.keranjang').hide();
+                    $('.kosong').show();
                 }
                 btnObjek.disabled = false;
                 btnObjek.focus();
@@ -778,6 +786,7 @@ btnIsi.addEventListener("click", function (e) {
 
 var CekPrimer, CekSekunder, CekTritier;
 btnProses.addEventListener("click", function (e) {
+    let jalan = true;
     if (new Date(tanggal.value) > new Date()) {
         Swal.fire({
             icon: 'error',
@@ -836,21 +845,143 @@ btnProses.addEventListener("click", function (e) {
                 text: 'Saldo Tidak Mencukupi, Cek Kembali Jumlah Yang Akan diMutasi !',
                 returnFocus: false,
             });
+            jalan = false;
+            return;
         }
 
         LoadPenerima().then(function (loadPenerima) {
             if (!loadPenerima) {
+                jalan = false;
                 return;
             }
             else {
-                btnProses.disabled = 
+                btnProses.disabled = false;
+                primer2.focus();
             }
         }).catch(function (error) {
             console.error('Error occurred:', error);
         });
     }
 
+    if (jalan) {
+        SaveData();
+        // Tombol(1);
+        // OrderText(2);
+    }
+
 });
+
+function SaveData() {
+    if (Pil === 1) {
+        $.ajax({
+            type: 'PUT',
+            url: 'MhnPemberi/saveData',
+            data: {
+                _token: csrfToken,
+                XUraianDetailTransaksi: (uraian.value) ? decodeHtmlEntities(uraian.value) : '',
+                XIdType: idType.value,
+                Xsaatawaltransaksi: tanggal.value,
+                XJumlahKeluarPrimer: primer2.value,
+                XJumlahKeluarSekunder: sekunder2.value,
+                XJumlahKeluarTritier: tritier2.value,
+                XAsalIdSubKelompok: subkelId.value,
+                XTujuanIdSubkelompok: subkelId2.value,
+                XPIB: pib.value,
+                Jumlah: jmlKeranjang.value,
+            },
+            success: function (result) {
+                idTransaksi.value = decodeHtmlEntities(result.idtransaksi);
+                Swal.fire({
+                    icon: 'success',
+                    text: result.success,
+                    returnFocus: false,
+                }).then(() => {
+                    primer2.value = 0;
+                    sekunder2.value = 0;
+                    tritier2.value = 0;
+                    primer2.focus();
+
+                    if (Pilih === 0) {
+                        TampilAllData();
+                    }
+                    else {
+                        TampilData();
+                    }
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+    }
+
+    else if (Pil === 2) {
+        $.ajax({
+            type: 'PUT',
+            url: 'MhnPemberi/koreksiData',
+            data: {
+                _token: csrfToken,
+                XIdTransaksi: idTransaksi.value,
+                XUraianDetailTransaksi: (uraian.value) ? decodeHtmlEntities(uraian.value) : '',
+                XJumlahKeluarPrimer: primer2.value,
+                XJumlahKeluarSekunder: sekunder2.value,
+                XJumlahKeluarTritier: tritier2.value,
+                XTujuanSubkelompok: subkelId2.value,
+            },
+            success: function (result) {
+                Swal.fire({
+                    icon: 'success',
+                    text: result.success,
+                    returnFocus: false,
+                }).then(() => {
+                    if (tabelApa === 1) {
+                        TampilAllData();
+                    }
+                    else {
+                        TampilData();
+                    }
+                    ClearForm();
+                    Tombol(1);
+                    OrderText(2);
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+    }
+
+    else if (Pil === 3) {
+        $.ajax({
+            type: 'DELETE',
+            url: 'MhnPemberi/deleteData',
+            data: {
+                _token: csrfToken,
+                XIdTransaksi: idTransaksi.value,
+            },
+            success: function (result) {
+                Swal.fire({
+                    icon: 'success',
+                    text: result.success,
+                    returnFocus: false,
+                }).then(() => {
+                    if (tabelApa === 1) {
+                        TampilAllData();
+                    }
+                    else {
+                        TampilData();
+                    }
+                    ClearForm();
+                    Tombol(1);
+                    OrderText(2);
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+    }
+}
 
 // button list kelompok utama
 btnKelut.addEventListener("click", function (e) {
@@ -2110,7 +2241,7 @@ $('#primer2').on('keydown', function (e) {
 
         var value = $(this).val();
 
-        if (value > primer.value) {
+        if (parseFloat(value) > parseFloat(primer.value)) {
             Swal.fire({
                 icon: 'warning',
                 text: 'Saldo Primernya Tinggal : ' + formatNumber(primer.value.trim()),
@@ -2131,7 +2262,7 @@ $('#sekunder2').on('keydown', function (e) {
 
         var value = $(this).val();
 
-        if (value > sekunder.value) {
+        if (parseFloat(value) > parseFloat(sekunder.value)) {
             Swal.fire({
                 icon: 'warning',
                 text: 'Saldo Sekundernya Tinggal : ' + formatNumber(sekunder.value.trim()),
@@ -2152,7 +2283,7 @@ $('#tritier2').on('keydown', function (e) {
 
         var value = $(this).val();
 
-        if (value > primer.value) {
+        if (parseFloat(value) > parseFloat(tritier.value)) {            
             Swal.fire({
                 icon: 'warning',
                 text: 'Saldo Tritiernya Tinggal : ' + formatNumber(tritier.value.trim()),
