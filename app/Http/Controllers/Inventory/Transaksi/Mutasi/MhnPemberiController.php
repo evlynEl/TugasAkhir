@@ -279,8 +279,286 @@ class MhnPemberiController extends Controller
                     'OutTritier' => $detail_subkel->OutTritier,
                 ];
             }
-            dd($subkel, $IdType);
+            // dd($subkel, $IdType);
             return response()->json($data_subkel);
+        }
+
+        // mendapatkan daftar divisi penerima
+        else if ($id === 'getDivisi2') {
+            $divisi = DB::connection('ConnInventory')->select('exec SP_1003_INV_UserDivisi_Diminta @XKdUser = ?', [$user]);
+            $data_divisi = [];
+            foreach ($divisi as $detail_divisi) {
+                $data_divisi[] = [
+                    'NamaDivisi' => $detail_divisi->NamaDivisi,
+                    'IdDivisi' => $detail_divisi->IdDivisi
+                ];
+            }
+            return datatables($divisi)->make(true);
+        }
+
+        // mendapatkan daftar objek penerima
+        else if ($id === 'getObjek2') {
+            $divisiId2 = $request->input('divisiId2');
+
+            $objek = DB::connection('ConnInventory')->select('exec SP_1003_INV_UserObjek_Diminta @XKdUser = ?, @XIdDivisi = ?', [$user, $divisiId2]);
+            $data_objek = [];
+            foreach ($objek as $detail_objek) {
+                $data_objek[] = [
+                    'NamaObjek' => $detail_objek->NamaObjek,
+                    'IdObjek' => $detail_objek->IdObjek
+                ];
+            }
+            return datatables($objek)->make(true);
+        }
+
+        // mendapatkan daftar kelompok utama penerima
+        else if ($id === 'getKelUt2') {
+            $objekId2 = $request->input('objekId2');
+
+            $kelut = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdObjek_KelompokUtama @XIdObjek_KelompokUtama = ?', [$objekId2]);
+            $data_kelut = [];
+            foreach ($kelut as $detail_kelut) {
+                $data_kelut[] = [
+                    'NamaKelompokUtama' => $detail_kelut->NamaKelompokUtama,
+                    'IdKelompokUtama' => $detail_kelut->IdKelompokUtama
+                ];
+            }
+            return datatables($kelut)->make(true);
+        }
+
+        // mendapatkan daftar kelompok penerima
+        else if ($id === 'getKelompok2') {
+            $kelutId2 = $request->input('kelutId2');
+
+            $kelompok = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdKelompokUtama_Kelompok @XIdKelompokUtama_Kelompok = ?', [$kelutId2]);
+            $data_kelompok = [];
+            foreach ($kelompok as $detail_kelompok) {
+                $data_kelompok[] = [
+                    'idkelompok' => $detail_kelompok->idkelompok,
+                    'namakelompok' => $detail_kelompok->namakelompok
+                ];
+            }
+            return datatables($kelompok)->make(true);
+        }
+
+        // mendapatkan daftar kelompok penerima CIR-EXP
+        else if ($id === 'cirExp') {
+            $kelutId2 = $request->input('kelutId2');
+            $KodeBarang = $request->input('KodeBarang');
+
+            $kelompok = DB::connection('ConnPurchase')->select('exec SP_1273_PRG_Cek_SpekBenang @KodeBarang = ?', [$KodeBarang]);
+
+            $SpekBenang = $kelompok[0]->SpekBenang;
+
+            $kelompok = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdKelompokUtama_Kelompok 
+            @XIdKelompokUtama_Kelompok = ?, @Type = ?, @Spek = ?', [$kelutId2, '4', trim($SpekBenang)]);
+
+            // dd($kelompok);
+            $data_kelompok = [];
+            foreach ($kelompok as $detail_kelompok) {
+                $data_kelompok[] = [
+                    'idkelompok' => $detail_kelompok->IdKelompok,
+                    'namakelompok' => $detail_kelompok->NamaKelompok,
+                ];
+            }
+            return datatables($data_kelompok)->make(true);
+        }
+
+        // mendapatkan daftar kelompok penerima CLM-EXP
+        else if ($id === 'clmExp') {
+            $kelutId2 = $request->input('kelutId2');
+            $KodeBarang = $request->input('KodeBarang');
+
+            $kelompok = DB::connection('ConnPurchase')->select('exec SP_1273_PRG_Cek_SpekBenang @KodeBarang = ?', [$KodeBarang]);
+
+            $SpekBenang = $kelompok[0]->SpekBenang;
+
+            $kelompok = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdKelompokUtama_Kelompok 
+            @XIdKelompokUtama_Kelompok = ?, @Type = ?, @Spek = ?', [$kelutId2, '5', trim($SpekBenang)]);
+
+            // dd($kelompok);
+            $data_kelompok = [];
+            foreach ($kelompok as $detail_kelompok) {
+                $data_kelompok[] = [
+                    'idkelompok' => $detail_kelompok->IdKelompok,
+                    'namakelompok' => $detail_kelompok->NamaKelompok,
+                ];
+            }
+            return datatables($data_kelompok)->make(true);
+        }
+
+        // mendapatkan daftar sub kelompok penerima
+        else if ($id === 'getSubkel2') {
+            $kelompokId2 = $request->input('kelompokId2');
+
+            $subkel = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdKelompok_SubKelompok @XIdKelompok_SubKelompok = ?', [$kelompokId2]);
+            $data_subkel = [];
+            foreach ($subkel as $detail_subkel) {
+                $data_subkel[] = [
+                    'IdSubkelompok' => $detail_subkel->IdSubkelompok,
+                    'NamaSubKelompok' => $detail_subkel->NamaSubKelompok
+                ];
+            }
+            return datatables($subkel)->make(true);
+        }
+
+        // mendapatkan load penerima
+        else if ($id === 'loadPenerima') {
+            $XKodeBarang = $request->input('XKodeBarang');
+            $XIdSubKelompok = $request->input('XIdSubKelompok') ?? '0';
+            $XPIB = $request->input('XPIB');
+
+            if ($XPIB === null) {
+                $kelompok = DB::connection('ConnInventory')->select('exec SP_1003_INV_KodeBarang_Type
+            @XKodeBarang = ?, @XIdSubKelompok = ?', [$XKodeBarang, $XIdSubKelompok]);
+                $data_kelompok = [];
+                foreach ($kelompok as $detail_kelompok) {
+                    $data_kelompok[] = [
+                        'satuan_primer' => $detail_kelompok->satuan_primer,
+                        'satuan_sekunder' => $detail_kelompok->satuan_sekunder,
+                        'satuan_tritier' => $detail_kelompok->satuan_tritier,
+                    ];
+                }
+                return response()->json($data_kelompok);
+            } else {
+                $kelompok = DB::connection('ConnInventory')->select('exec SP_1003_INV_KodeBarang_Type
+                @XKodeBarang = ?, @XIdSubKelompok = ?, @XPIB = ?', [$XKodeBarang, $XIdSubKelompok, $XPIB]);
+                $data_kelompok = [];
+                foreach ($kelompok as $detail_kelompok) {
+                    $data_kelompok[] = [
+                        'satuan_primer' => $detail_kelompok->satuan_primer,
+                        'satuan_sekunder' => $detail_kelompok->satuan_sekunder,
+                        'satuan_tritier' => $detail_kelompok->satuan_tritier,
+                    ];
+                }
+                return response()->json($data_kelompok);
+            }
+        }
+
+        // klik trabel
+        else if ($id === 'tampilItem') {
+            $XIdTransaksi = $request->input('XIdTransaksi');
+
+            $subkel = DB::connection('ConnInventory')->select('exec SP_1003_INV_TujuanSubKelompok_TmpTransaksi
+            @XIdTransaksi = ?', [$XIdTransaksi]);
+            $data_subkel = [];
+            foreach ($subkel as $detail_subkel) {
+                $data_subkel[] = [
+                    'IdType' => $detail_subkel->IdType,
+                    'IdDivisi' => $detail_subkel->IdDivisi,
+                    'NamaDivisi' => $detail_subkel->NamaDivisi,
+                    'IdObjek' => $detail_subkel->IdObjek,
+                    'NamaObjek' => $detail_subkel->NamaObjek,
+                    'IdKelompokUtama' => $detail_subkel->IdKelompokUtama,
+                    'NamaKelompokUtama' => $detail_subkel->NamaKelompokUtama,
+                    'IdKelompok' => $detail_subkel->IdKelompok,
+                    'NamaKelompok' => $detail_subkel->NamaKelompok,
+                    'IdSubkelompok' => $detail_subkel->IdSubkelompok,
+                    'NamaSubKelompok' => $detail_subkel->NamaSubKelompok,
+                    'SaldoPrimer' => $detail_subkel->SaldoPrimer,
+                    'SaldoSekunder' => $detail_subkel->SaldoSekunder,
+                    'SaldoTritier' => $detail_subkel->SaldoTritier,
+                    'SaatAwalTransaksi' => $detail_subkel->SaatAwalTransaksi,
+                    'UraianDetailTransaksi' => $detail_subkel->UraianDetailTransaksi,
+                    'JumlahPemasukanPrimer' => $detail_subkel->JumlahPemasukanPrimer,
+                    'JumlahPemasukanSekunder' => $detail_subkel->JumlahPemasukanSekunder,
+                    'JumlahPemasukanTritier' => $detail_subkel->JumlahPemasukanTritier,
+                    'JumlahPengeluaranPrimer' => $detail_subkel->JumlahPengeluaranPrimer,
+                    'JumlahPengeluaranSekunder' => $detail_subkel->JumlahPengeluaranSekunder,
+                    'JumlahPengeluaranTritier' => $detail_subkel->JumlahPengeluaranTritier,
+                    'Satuan_Primer' => $detail_subkel->Satuan_Primer,
+                    'Satuan_Sekunder' => $detail_subkel->Satuan_Sekunder,
+                    'Satuan_Tritier' => $detail_subkel->Satuan_Tritier,
+                    'KodeBarang' => $detail_subkel->KodeBarang,
+                    'PakaiAturanKonversi' => $detail_subkel->PakaiAturanKonversi,
+                    'KonvSekunderKePrimer' => $detail_subkel->KonvSekunderKePrimer,
+                    'KonvTritierKeSekunder' => $detail_subkel->KonvTritierKeSekunder
+
+                ];
+            }
+            return response()->json($data_subkel);
+        }
+
+        // get item 2
+        else if ($id === 'tampilItem2') {
+            $XIdTransaksi = $request->input('XIdTransaksi');
+            $objek = DB::connection('ConnInventory')->select('exec SP_1003_INV_AsalSubKelompok_TmpTransaksi
+            @XIdTransaksi = ?', [$XIdTransaksi]);
+            $data_objek = [];
+            foreach ($objek as $detail_objek) {
+                $data_objek[] = [
+                    'IdDivisi' => $detail_objek->IdDivisi,
+                    'IdObjek' => $detail_objek->IdObjek,
+                    'IdKelompokUtama' => $detail_objek->IdKelompokUtama,
+                    'IdKelompok' => $detail_objek->IdKelompok,
+                    'IdSubkelompok' => $detail_objek->IdSubkelompok,
+                ];
+            }
+            return response()->json($data_objek);
+
+        }
+
+        // get useer
+        else if ($id === 'getUser') {
+            $NamaUser = $request->input('NamaUser');
+
+            $divisi = DB::connection('ConnInventory')->select('exec SP_1003_INV_ListNama_Login @NamaUser = ?', [$NamaUser]);
+            $data_divisi = [];
+            foreach ($divisi as $detail_divisi) {
+                $data_divisi[] = [
+                    'kodeUser' => $detail_divisi->kodeUser,
+                ];
+            }
+            return response()->json($data_divisi);
+        }
+
+        // cek kode barang
+        else if ($id === 'cekKodeBarang') {
+            $XKodeBarang = $request->input('XKodeBarang');
+            $XIdSubKelompok = $request->input('XIdSubKelompok');
+
+            $divisi = DB::connection('ConnInventory')->select('exec [SP_1003_INV_cekkodebarang_type]
+   @XKodeBarang = ?, @XIdSubKelompok = ?', [$XKodeBarang, $XIdSubKelompok]);
+
+            $data_divisi = [];
+            foreach ($divisi as $detail_divisi) {
+                $data_divisi[] = [
+                    'Jumlah' => $detail_divisi->Jumlah,
+                ];
+            }
+
+            return response()->json($data_divisi);
+        }
+
+        else if ($id === 'loadTypeBarang') {
+            $XKodeBarang = $request->input('XKodeBarang');
+            $XIdSubKelompok = $request->input('XIdSubKelompok');
+            $XPIB = $request->input('XPIB');
+
+            if ($XPIB === null) {
+                $type = DB::connection('ConnInventory')->select('exec SP_1273_INV_kodebarang_type1 @XKodeBarang = ?, @XIdSubKelompok = ?', [$XKodeBarang, $XIdSubKelompok]);
+            }
+            else{
+                $type = DB::connection('ConnInventory')->select('exec SP_1273_INV_kodebarang_type1 @XKodeBarang = ?, @XIdSubKelompok = ?, @XPIB = ?', [$XKodeBarang, $XIdSubKelompok, $XPIB]);
+            }
+
+            $data_type = [];
+            foreach ($type as $detail_type) {
+                $data_type[] = [
+                    'IdType' => $detail_type->IdType,
+                    'NamaType' => $detail_type->NamaType,
+                    'KodeBarang' => $detail_type->KodeBarang,
+                    'SaldoPrimer' => $detail_type->SaldoPrimer,
+                    'SaldoSekunder' => $detail_type->SaldoSekunder,
+                    'SaldoTritier' => $detail_type->SaldoTritier,
+                    'satuan_primer' => $detail_type->satuan_primer,
+                    'satuan_sekunder' => $detail_type->satuan_sekunder,
+                    'satuan_tritier' => $detail_type->satuan_tritier,
+                    'PakaiAturanKonversi' => $detail_type->PakaiAturanKonversi
+                ];
+            }
+
+            return response()->json($data_type);
         }
     }
 

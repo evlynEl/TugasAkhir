@@ -166,6 +166,94 @@ function ClearForm() {
     sekunder2.disabled = false;
 }
 
+var TPemberi;
+$('#tableData tbody').on('click', 'tr', function () {
+    var table = $('#tableData').DataTable();
+    table.$('tr.selected').removeClass('selected');
+    $(this).addClass('selected');
+    var data = table.row(this).data();
+    IdTrans = decodeHtmlEntities(data[0]);
+
+    Yidtransaksi = decodeHtmlEntities(data[0]);
+    YKdBrg = decodeHtmlEntities(data[12]);
+    Primer = formatNumber(data[9]);
+    Sekunder = formatNumber(data[10]);
+    Tritier = formatNumber(data[11]);
+
+    let date = data[7];
+    let parts = date.split('/');
+    let formattedDate = `${parts[2]}-${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}`;
+
+    idTransaksi.value = decodeHtmlEntities(data[0]);
+    kelutNama.value = decodeHtmlEntities(data[3]);
+    kelompokNama.value = decodeHtmlEntities(data[4]);
+    subkelNama.value = decodeHtmlEntities(data[5]);
+    tanggal.value = formattedDate;
+    uraian.value = decodeHtmlEntities(data[2]);
+    type.value = decodeHtmlEntities(data[1]);
+    TPemberi = decodeHtmlEntities(data[6]);
+
+    TampilItem(IdTrans);
+});
+
+function TampilItem(IdTrans) {
+    $.ajax({
+        type: 'GET',
+        url: 'MhnPemberi/tampilItem',
+        data: {
+            XIdTransaksi: IdTrans,
+            _token: csrfToken
+        },
+        success: function (result) {
+            if (result) {
+                divisiId2.value = decodeHtmlEntities(result[0].IdDivisi);
+                objekId2.value = decodeHtmlEntities(result[0].IdObjek);
+                kelutId2.value = decodeHtmlEntities(result[0].IdKelompokUtama);
+                kelompokId2.value = decodeHtmlEntities(result[0].IdKelompok);
+                subkelId2.value = decodeHtmlEntities(result[0].IdSubKelompok);
+                divisiNama2.value = decodeHtmlEntities(result[0].NamaDivisi);
+                objekNama2.value = decodeHtmlEntities(result[0].NamaObjek);
+                kelutNama2.value = decodeHtmlEntities(result[0].NamaKelompokUtama);
+                kelompokNama2.value = decodeHtmlEntities(result[0].NamaKelompok);
+                subkelNama2.value = decodeHtmlEntities(result[0].NamaSubKelompok);
+                satuanPrimer2.value = result[0].Satuan_Primer ? decodeHtmlEntities(result[0].Satuan_Primer.trim()) : 'Null';
+                satuanSekunder2.value = result[0].Satuan_Sekunder ? decodeHtmlEntities(result[0].Satuan_Sekunder.trim()) : 'Null';
+                satuanTritier2.value = result[0].Satuan_Tritier ? decodeHtmlEntities(result[0].Satuan_Tritier.trim()) : 'Null';
+                primer2.value = formatNumber(result[0].JumlahPengeluaranPrimer);
+                sekunder2.value = formatNumber(result[0].JumlahPengeluaranSekunder);
+                tritier2.value = formatNumber(result[0].JumlahPengeluaranTritier);
+                idType.value = decodeHtmlEntities(result[0].IdType);
+                kodeBarang.value = decodeHtmlEntities(result[0].KodeBarang);
+                pib.value = formatNumber(result[0].SaldoPrimer);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
+
+    $.ajax({
+        type: 'GET',
+        url: 'MhnPemberi/tampilItem2',
+        data: {
+            XIdTransaksi: IdTrans,
+            _token: csrfToken
+        },
+        success: function (result) {
+            if (result) {
+                divisiId.value = decodeHtmlEntities(result[0].IdDivisi);
+                objekId.value = decodeHtmlEntities(result[0].IdObjek);
+                kelutId.value = decodeHtmlEntities(result[0].IdKelompokUtama);
+                kelompokId.value = decodeHtmlEntities(result[0].IdKelompok);
+                subkelId.value = decodeHtmlEntities(result[0].IdSubKelompok);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
+}
+
 // fungsi swal select pake arrow
 function handleTableKeydown(e, tableId) {
     const table = $(`#${tableId}`).DataTable();
@@ -271,12 +359,14 @@ function Tombol(angka) {
         btnHapus.disabled = false;
         btnKoreksi.disabled = false;
         btnProses.disabled = true;
+        btnBatal.disabled = true;
         btnIsi.focus();
     }
     else {
         btnIsi.disabled = true;
         btnHapus.disabled = true;
         btnKoreksi.disabled = true;
+        btnBatal.disabled = false;
         if (Pil === 1) {
             btnProses.disabled = true;
         }
@@ -320,7 +410,14 @@ document.addEventListener("DOMContentLoaded", function () {
     $('.kosong').show();
     Pil = 0;
     OrderText(1);
-    btnDivisi.focus();
+    tanggal.focus();
+});
+
+$('#tanggal').on('keydown', function (e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        btnDivisi.focus();
+    }
 });
 
 // button list divisi
@@ -653,13 +750,106 @@ function TampilData() {
     });
 }
 
+btnBatal.addEventListener("click", function (e) {
+    primer2.disabled = false;
+    sekunder2.disabled = false;
+
+    if (Pilih === 0) {
+        TampilAllData();
+    }
+    else {
+        TampilData();
+    }
+
+    Tombol(1);
+    OrderText(2);
+});
+
 btnIsi.addEventListener("click", function (e) {
     Pil = 1;
     OrderText(2);
     Tombol(2);
     ClearForm();
+    var table = $('#tableData').DataTable();
+    table.$('tr.selected').removeClass('selected');
     btnKelut.disabled = false;
     btnKelut.focus();
+});
+
+var CekPrimer, CekSekunder, CekTritier;
+btnProses.addEventListener("click", function (e) {
+    if (new Date(tanggal.value) > new Date()) {
+        Swal.fire({
+            icon: 'error',
+            text: 'Tanggal Mohon lebih besar dari tanggal hari ini',
+        });
+        return;
+    }
+
+    if (subkelId.value.trim() === subkelId2.value.trim() || divisiId.value.trim() === divisiId2.value.trim()) {
+        Swal.fire({
+            icon: 'error',
+            text: 'Divisi Penerima dan Pemberi tidak boleh sama !!',
+        }).then(() => {
+            btn_subkel2.focus();
+        });
+        return;
+    }
+
+    if (parseFloat(primer2.value) === 0 && parseFloat(sekunder2.value) === 0 && parseFloat(tritier2.value) === 0) {
+        Swal.fire({
+            icon: 'error',
+            text: 'Jumlah Barang Yang dimutasi harap di isi',
+        }).then(() => {
+            primer2.focus();
+        });
+        return;
+    }
+
+    if (parseFloat(tritier2.value) <= 0) {
+        Swal.fire({
+            icon: 'error',
+            text: 'Nilai Tritier Harus di isi',
+        });
+        return;
+    }
+
+    if (parseFloat(subkelId2.value) < 0 || subkelId2.value.trim() === '') {
+        Swal.fire({
+            icon: 'error',
+            text: 'Tujuan Mutasi Harap Diisi !!!',
+            returnFocus: false,
+        }).then(() => {
+            btn_subkel2.focus();
+        });
+        return;
+    }
+
+    if (Pil === 1) {
+        CekPrimer = parseFloat(primer2.value) + parseFloat(primer3.value);
+        CekSekunder = parseFloat(sekunder2.value) + parseFloat(sekunder3.value);
+        CekTritier = formatNumber(parseFloat(tritier2.value) + parseFloat(tritier3.value));
+
+        if (parseFloat(primer.value) < CekPrimer || parseFloat(sekunder.value) < CekSekunder || parseFloat(tritier.value) < CekTritier) {
+            Swal.fire({
+                icon: 'error',
+                text: 'Saldo Tidak Mencukupi, Cek Kembali Jumlah Yang Akan diMutasi !',
+                returnFocus: false,
+            });
+        }
+
+        LoadPenerima().then(function (loadPenerima) {
+            if (!loadPenerima) {
+                return;
+            }
+            else {
+                btnProses.disabled = 
+            }
+        }).catch(function (error) {
+            console.error('Error occurred:', error);
+        });
+    }
+
 });
 
 // button list kelompok utama
@@ -960,8 +1150,8 @@ function Load_Type_ABM() {
                 idType.value = decodeHtmlEntities(result.value.idtype.trim());
                 type.value = decodeHtmlEntities(result.value.BARU.trim());
 
-                btnDivisi2.disabled = false;
-                btnDivisi2.focus();
+                // btnDivisi2.disabled = false;
+                // btnDivisi2.focus();
 
                 LoadPIB();
 
@@ -1039,8 +1229,8 @@ function Load_Type_CIR() {
                 idType.value = result.value.Id_Type ? decodeHtmlEntities(result.value.Id_Type.trim()) : '';
                 type.value = result.value.Nm_Type ? decodeHtmlEntities(result.value.Nm_Type.trim()) : '';
 
-                btnDivisi2.disabled = false;
-                btnDivisi2.focus();
+                // btnDivisi2.disabled = false;
+                // btnDivisi2.focus();
 
                 LoadPIB();
 
@@ -1118,8 +1308,8 @@ function Load_Type() {
                 idType.value = decodeHtmlEntities(result.value.IdType.trim());
                 type.value = decodeHtmlEntities(result.value.NamaType.trim());
 
-                btnDivisi2.disabled = false;
-                btnDivisi2.focus();
+                // btnDivisi2.disabled = false;
+                // btnDivisi2.focus();
 
                 LoadPIB();
 
@@ -1166,8 +1356,6 @@ function Load_Saldo(sIdtype) {
 }
 
 function Load_JumlahAntrian(sIdtype) {
-    console.log(sIdtype);
-    
     $.ajax({
         type: 'GET',
         url: 'MhnPemberi/getJumlahAntrian',
@@ -1176,20 +1364,17 @@ function Load_JumlahAntrian(sIdtype) {
             _token: csrfToken
         },
         success: function (result) {
-            console.log(result);
-            
             if (result.length !== 0) {
                 primer3.value = result[0].OutPrimer ? formatNumber(result[0].OutPrimer) : formatNumber(0);
                 sekunder3.value = result[0].OutSekunder ? formatNumber(result[0].OutSekunder) : formatNumber(0);
                 tritier3.value = result[0].OutTritier ? formatNumber(result[0].OutTritier) : formatNumber(0);
-
-                if (divisiId.value === 'EXP') {
-                    jmlKeranjang.focus();
-                }
-                else {
-                    btnDivisi2.disabled = false;
-                    btnDivisi2.focus();
-                }
+            }
+            if (divisiId.value === 'EXP') {
+                jmlKeranjang.focus();
+            }
+            else {
+                btnDivisi2.disabled = false;
+                btnDivisi2.focus();
             }
         },
         error: function (xhr, status, error) {
@@ -1250,18 +1435,812 @@ btnType.addEventListener("click", function (e) {
     else {
         Load_Type();
     }
-
-    // LoadPIB();
-
-    // if (idType.value === '') {
-    //     Load_Saldo(idType.value);
-
-    //     if (divisiId.value === 'EXP') {
-    //         jmlKeranjang.focus();
-    //     }
-    //     else {
-    //         btnDivisi2.disabled = false;
-    //         btnDivisi2.focus();
-    //     }
-    // }
 });
+
+$('#jmlKeranjang').on('keydown', function (e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+
+        var value = $(this).val();
+
+        if (value === '' || value === '0') {
+            Swal.fire({
+                icon: 'warning',
+                text: 'Input Jumlah Keranjang Terlebih Dahulu',
+                returnFocus: false,
+            }).then(() => {
+                jmlKeranjang.focus();
+            });
+        } else {
+            btnDivisi2.disabled = false;
+            btnDivisi2.focus();
+        }
+    }
+});
+
+// button list divisi penerima
+btnDivisi2.addEventListener("click", function (e) {
+
+    objekId2.value = '';
+    objekNama2.value = '';
+    kelutId2.value = '';
+    kelutNama2.value = '';
+    kelompokId2.value = '';
+    kelompokNama2.value = '';
+    subkelId2.value = '';
+    subkelNama2.value = '';
+
+    try {
+        Swal.fire({
+            title: 'Divisi',
+            html: `
+                <table id="table_list" class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID Divisi</th>
+                            <th scope="col">Nama Divisi</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            `,
+            preConfirm: () => {
+                const selectedData = $("#table_list")
+                    .DataTable()
+                    .row(".selected")
+                    .data();
+                if (!selectedData) {
+                    Swal.showValidationMessage("Please select a row");
+                    return false;
+                }
+                return selectedData;
+            },
+            width: '40%',
+            returnFocus: false,
+            showCloseButton: true,
+            showConfirmButton: true,
+            confirmButtonText: 'Select',
+            didOpen: () => {
+                $(document).ready(function () {
+                    const table = $("#table_list").DataTable({
+                        responsive: true,
+                        processing: true,
+                        serverSide: true,
+                        order: [1, "asc"],
+                        ajax: {
+                            url: "MhnPemberi/getDivisi2",
+                            dataType: "json",
+                            type: "GET",
+                            data: {
+                                _token: csrfToken
+                            }
+                        },
+                        columns: [
+                            { data: "IdDivisi" },
+                            { data: "NamaDivisi" }
+                        ]
+                    });
+
+                    $("#table_list tbody").on("click", "tr", function () {
+                        table.$("tr.selected").removeClass("selected");
+                        $(this).addClass("selected");
+                    });
+
+                    currentIndex = null;
+                    Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
+                });
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                divisiId2.value = result.value.IdDivisi.trim();
+                divisiNama2.value = decodeHtmlEntities(result.value.NamaDivisi.trim());
+
+                if (divisiNama2.value !== '') {
+                    btnObjek2.disabled = false;
+                    btnObjek2.focus();
+                }
+            }
+        });
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+// button list objek penerima
+btnObjek2.addEventListener("click", function (e) {
+
+    kelutId2.value = '';
+    kelutNama2.value = '';
+    kelompokId2.value = '';
+    kelompokNama2.value = '';
+    subkelId2.value = '';
+    subkelNama2.value = '';
+
+    try {
+        Swal.fire({
+            title: 'Objek',
+            html: `
+                <table id="table_list" class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID Objek</th>
+                            <th scope="col">Nama Objek</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            `,
+            preConfirm: () => {
+                const selectedData = $("#table_list")
+                    .DataTable()
+                    .row(".selected")
+                    .data();
+                if (!selectedData) {
+                    Swal.showValidationMessage("Please select a row");
+                    return false;
+                }
+                return selectedData;
+            },
+            width: '40%',
+            returnFocus: false,
+            showCloseButton: true,
+            showConfirmButton: true,
+            confirmButtonText: 'Select',
+            didOpen: () => {
+                $(document).ready(function () {
+                    const table = $("#table_list").DataTable({
+                        responsive: true,
+                        processing: true,
+                        serverSide: true,
+                        order: [1, "asc"],
+                        ajax: {
+                            url: "MhnPemberi/getObjek2",
+                            dataType: "json",
+                            type: "GET",
+                            data: {
+                                _token: csrfToken,
+                                divisiId2: divisiId2.value
+                            }
+                        },
+                        columns: [
+                            { data: "IdObjek" },
+                            { data: "NamaObjek" }
+                        ]
+                    });
+
+                    $("#table_list tbody").on("click", "tr", function () {
+                        table.$("tr.selected").removeClass("selected");
+                        $(this).addClass("selected");
+                    });
+
+                    currentIndex = null;
+                    Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
+                });
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                objekId2.value = result.value.IdObjek.trim();
+                objekNama2.value = decodeHtmlEntities(result.value.NamaObjek.trim());
+
+                btnKelut2.disabled = false;
+                btnKelut2.focus();
+            }
+        });
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+// button list kelompok utama penerima
+btnKelut2.addEventListener("click", function (e) {
+
+    kelompokId2.value = '';
+    kelompokNama2.value = '';
+    subkelId2.value = '';
+    subkelNama2.value = '';
+
+    try {
+        Swal.fire({
+            title: 'Kelompok Utama',
+            html: `
+                <table id="table_list" class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Nama Kelompok Utama</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            `,
+            preConfirm: () => {
+                const selectedData = $("#table_list")
+                    .DataTable()
+                    .row(".selected")
+                    .data();
+                if (!selectedData) {
+                    Swal.showValidationMessage("Please select a row");
+                    return false;
+                }
+                return selectedData;
+            },
+            width: '40%',
+            returnFocus: false,
+            showCloseButton: true,
+            showConfirmButton: true,
+            confirmButtonText: 'Select',
+            didOpen: () => {
+                $(document).ready(function () {
+                    const table = $("#table_list").DataTable({
+                        responsive: true,
+                        processing: true,
+                        serverSide: true,
+                        order: [1, "asc"],
+                        ajax: {
+                            url: "MhnPemberi/getKelUt2",
+                            dataType: "json",
+                            type: "GET",
+                            data: {
+                                _token: csrfToken,
+                                objekId2: objekId2.value
+                            }
+                        },
+                        columns: [
+                            { data: "IdKelompokUtama" },
+                            { data: "NamaKelompokUtama" }
+                        ]
+                    });
+
+                    $("#table_list tbody").on("click", "tr", function () {
+                        table.$("tr.selected").removeClass("selected");
+                        $(this).addClass("selected");
+                    });
+
+                    currentIndex = null;
+                    Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
+                });
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                kelutId2.value = result.value.IdKelompokUtama.trim();
+                kelutNama2.value = decodeHtmlEntities(result.value.NamaKelompokUtama.trim());
+
+                if (kelutNama2.value !== '') {
+                    btnKelompok2.disabled = false;
+                    btnKelompok2.focus();
+                }
+            }
+        });
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+var SpekBenang, urlBaru;
+// button list kelompok penerima
+btnKelompok2.addEventListener("click", function (e) {
+    subkelId2.value = '';
+    subkelNama2.value = '';
+
+    if (divisiId2.value === 'CIR' && divisiId.value === 'EXP') {
+        urlBaru = 'cirExp';
+    }
+    else if (divisiId2.value === 'CLM' && divisiId.value === 'EXP') {
+        urlBaru = 'clmExp';
+    }
+    else {
+        urlBaru = 'getKelompok2';
+    }
+
+    try {
+        Swal.fire({
+            title: 'Kelompok',
+            html: `
+                <table id="table_list" class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Nama Kelompok</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            `,
+            preConfirm: () => {
+                const selectedData = $("#table_list")
+                    .DataTable()
+                    .row(".selected")
+                    .data();
+                if (!selectedData) {
+                    Swal.showValidationMessage("Please select a row");
+                    return false;
+                }
+                return selectedData;
+            },
+            width: '40%',
+            returnFocus: false,
+            showCloseButton: true,
+            showConfirmButton: true,
+            confirmButtonText: 'Select',
+            didOpen: () => {
+                $(document).ready(function () {
+                    const table = $("#table_list").DataTable({
+                        responsive: true,
+                        processing: true,
+                        serverSide: true,
+                        order: [1, "asc"],
+                        ajax: {
+                            url: "MhnPemberi/" + urlBaru,
+                            dataType: "json",
+                            type: "GET",
+                            data: {
+                                _token: csrfToken,
+                                kelutId2: kelutId2.value,
+                                KodeBarang: kodeBarang.value,
+                            }
+                        },
+                        columns: [
+                            { data: "idkelompok" },
+                            { data: "namakelompok" }
+                        ]
+                    });
+
+                    $("#table_list tbody").on("click", "tr", function () {
+                        table.$("tr.selected").removeClass("selected");
+                        $(this).addClass("selected");
+                    });
+
+                    currentIndex = null;
+                    Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
+                });
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                kelompokId2.value = decodeHtmlEntities(result.value.idkelompok.trim());
+                kelompokNama2.value = decodeHtmlEntities(result.value.namakelompok.trim());
+
+                if (kelutNama2.value !== '') {
+                    btnSubkel2.disabled = false;
+                    btnSubkel2.focus();
+                }
+            }
+        });
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+
+// button list sub kelompok penerima
+btnSubkel2.addEventListener("click", function (e) {
+    try {
+        Swal.fire({
+            title: 'Sub Kelompok',
+            html: `
+                <table id="table_list" class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID Sub Kelompok</th>
+                            <th scope="col">Nama Sub Kelompok</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            `,
+            preConfirm: () => {
+                const selectedData = $("#table_list")
+                    .DataTable()
+                    .row(".selected")
+                    .data();
+                if (!selectedData) {
+                    Swal.showValidationMessage("Please select a row");
+                    return false;
+                }
+                return selectedData;
+            },
+            width: '40%',
+            returnFocus: false,
+            showCloseButton: true,
+            showConfirmButton: true,
+            confirmButtonText: 'Select',
+            didOpen: () => {
+                $(document).ready(function () {
+                    const table = $("#table_list").DataTable({
+                        responsive: true,
+                        processing: true,
+                        serverSide: true,
+                        order: [1, "asc"],
+                        ajax: {
+                            url: "MhnPemberi/getSubkel2",
+                            dataType: "json",
+                            type: "GET",
+                            data: {
+                                _token: csrfToken,
+                                kelompokId2: kelompokId2.value
+                            }
+                        },
+                        columns: [
+                            { data: "IdSubkelompok" },
+                            { data: "NamaSubKelompok" }
+                        ]
+                    });
+
+                    $("#table_list tbody").on("click", "tr", function () {
+                        table.$("tr.selected").removeClass("selected");
+                        $(this).addClass("selected");
+                    });
+
+                    currentIndex = null;
+                    Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
+                });
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                subkelId2.value = result.value.IdSubkelompok.trim();
+                subkelNama2.value = result.value.NamaSubKelompok.trim();
+
+                btnProses.disabled = true;
+                primer2.disabled = false;
+                sekunder2.disabled = false;
+
+                if (Pil === 2) {
+                    Load_Saldo(idType.value);
+                }
+
+                LoadPenerima().then(function (loadPenerima) {
+                    if (!loadPenerima) {
+                        return;
+                    }
+                    else {
+                        btnProses.disabled = false;
+
+                        if (satuanPrimer.value.trim() === 'NULL' && satuanSekunder.value.trim() === 'NULL') {
+                            primer2.disabled = true;
+                            sekunder2.disabled = true;
+                            tritier2.focus();
+                        }
+                        else if (satuanPrimer.value.trim() === 'NULL' && satuanSekunder.value.trim() !== 'NULL') {
+                            primer2.disabled = true;
+                            sekunder2.focus();
+                        }
+                        else {
+                            primer2.focus();
+                        }
+                    }
+                }).catch(function (error) {
+                    console.error('Error occurred:', error);
+                });
+
+            }
+        });
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+var pemberi;
+btnKoreksi.addEventListener("click", function (e) {
+    if (TPemberi !== '') {
+        $.ajax({
+            type: 'GET',
+            url: 'MhnPemberi/getUser',
+            data: {
+                NamaUser: TPemberi,
+                _token: csrfToken
+            },
+            success: function (result) {
+                pemberi = result[0].kodeUser.trim();
+
+                if (pemberi.trim() !== idUser.trim()) {
+                    Swal.fire({
+                        icon: 'error',
+                        text: 'Anda Tidak berhak mengkoreksi data milik user : ' + pemberi,
+                    });
+                }
+                else {
+                    Pil = 2;
+                    Tombol(2);
+                    OrderText(3);
+                    btnDivisi2.focus();
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+    }
+});
+
+btnHapus.addEventListener("click", function (e) {
+    if (TPemberi !== '') {
+        $.ajax({
+            type: 'GET',
+            url: 'MhnPemberi/getUser',
+            data: {
+                NamaUser: TPemberi,
+                _token: csrfToken
+            },
+            success: function (result) {
+                pemberi = result[0].kodeUser.trim();
+
+                if (pemberi.trim() !== idUser.trim()) {
+                    Swal.fire({
+                        icon: 'error',
+                        text: 'Anda Tidak berhak mengkoreksi data milik user : ' + pemberi,
+                    });
+                }
+                else {
+                    Pil = 3;
+                    Tombol(2);
+                    btnProses.focus();
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+    }
+});
+
+$('#kodeBarang').on('keydown', function (e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        kodeBarang.value = kodeBarang.value.trim();
+
+        if (subkelId.value !== '' && kodeBarang.value !== '') {
+            kodeBarang.value = kodeBarang.value.padStart(9, '0').slice(-9);
+
+            primer2.disabled = false;
+            sekunder2.disabled = false;
+
+            $.ajax({
+                type: 'GET',
+                url: 'KonversiBarang/cekKodeBarang',
+                data: {
+                    XKodeBarang: kodeBarang.value.trim(),
+                    XIdSubKelompok: subkelId.value,
+                    _token: csrfToken
+                },
+                success: function (result) {
+                    if (parseInt(result[0].Jumlah) === 0) {
+                        Swal.fire({
+                            icon: 'error',
+                            text: 'Tidak Ada Kode Barang :' + decodeHtmlEntities(kodeBarang.value) + ' Pada sub kel : ' + decodeHtmlEntities(subkelNama.value),
+                        });
+                    }
+
+                    else {
+                        Load_TypeBarang().then(function (LoadTypeBarang) {
+                            if (LoadTypeBarang) {
+                                primer3.value = 0;
+                                sekunder3.value = 0;
+                                tritier3.value = 0;
+
+                                $.ajax({
+                                    type: 'GET',
+                                    url: 'MhnPemberi/getJumlahAntrian',
+                                    data: {
+                                        IdType: idType.value,
+                                        _token: csrfToken
+                                    },
+                                    success: function (result) {
+                                        if (result.length !== 0) {
+                                            primer3.value = result[0].OutPrimer ? formatNumber(result[0].OutPrimer) : formatNumber(0);
+                                            sekunder3.value = result[0].OutSekunder ? formatNumber(result[0].OutSekunder) : formatNumber(0);
+                                            tritier3.value = result[0].OutTritier ? formatNumber(result[0].OutTritier) : formatNumber(0);
+                                        }
+                                    },
+                                    error: function (xhr, status, error) {
+                                        console.error('Error:', error);
+                                    }
+                                });
+
+                                if (satuanPrimer.value === 'NULL' && satuanSekunder.value === 'NULL') {
+                                    primer2.disabled = true;
+                                    sekunder2.disabled = true;
+                                }
+                                else if (satuanPrimer.value === 'NULL' && satuanSekunder.value !== 'NULL') {
+                                    primer2.disabled = true;
+                                }
+                                btnDivisi2.disabled = false;
+                                btnDivisi2.focus();
+                            }
+                        }).catch(function (error) {
+                            console.error('Error occurred:', error);
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+    }
+});
+
+var LoadTypeBarang;
+function Load_TypeBarang() {
+    return new Promise(function (resolve, reject) {
+        $.ajax({
+            type: 'GET',
+            url: 'MhnPemberi/loadTypeBarang',
+            data: {
+                _token: csrfToken,
+                XKodeBarang: kodeBarang.value,
+                XIdSubKelompok: subkelId.value,
+                XPIB: pib.value,
+            },
+            success: function (response) {
+                LoadTypeBarang = false;
+                console.log(response);
+
+
+                if (response.length > 0) {
+                    let result = response[0];
+
+                    idType.value = result.IdType !== null ? decodeHtmlEntities(result.IdType.trim()) : "-";
+                    type.value = result.NamaType !== null ? decodeHtmlEntities(result.NamaType.trim()) : "-";
+                    kodeBarang.value = decodeHtmlEntities(result.KodeBarang.trim());
+                    primer.value = result.SaldoPrimer !== null ? formatNumber(result.SaldoPrimer) : "0";
+                    sekunder.value = result.SaldoSekunder !== null ? formatNumber(result.SaldoSekunder) : "0";
+                    tritier.value = result.SaldoTritier !== null ? formatNumber(result.SaldoTritier) : "0";
+                    satuanPrimer.value = result.satuan_primer !== null ? decodeHtmlEntities(result.satuan_primer.trim()) : "";
+                    satuanSekunder.value = result.satuan_sekunder !== null ? decodeHtmlEntities(result.satuan_sekunder.trim()) : "";
+                    satuanTritier.value = result.satuan_tritier !== null ? decodeHtmlEntities(result.satuan_tritier.trim()) : "";
+                    satuanPrimer2.value = result.satuan_primer !== null ? decodeHtmlEntities(result.satuan_primer.trim()) : "";
+                    satuanSekunder2.value = result.satuan_sekunder !== null ? decodeHtmlEntities(result.satuan_sekunder.trim()) : "";
+                    satuanTritier2.value = result.satuan_tritier !== null ? decodeHtmlEntities(result.satuan_tritier.trim()) : "";
+
+                    LoadTypeBarang = true;
+                }
+
+                resolve(LoadTypeBarang);
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+                reject(error);
+            }
+        });
+    });
+}
+
+$('#primer2').on('keydown', function (e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+
+        var value = $(this).val();
+
+        if (value > primer.value) {
+            Swal.fire({
+                icon: 'warning',
+                text: 'Saldo Primernya Tinggal : ' + formatNumber(primer.value.trim()),
+                returnFocus: false,
+            }).then(() => {
+                primer2.value = 0;
+                primer2.focus();
+            });
+        } else {
+            sekunder2.focus();
+        }
+    }
+});
+
+$('#sekunder2').on('keydown', function (e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+
+        var value = $(this).val();
+
+        if (value > sekunder.value) {
+            Swal.fire({
+                icon: 'warning',
+                text: 'Saldo Sekundernya Tinggal : ' + formatNumber(sekunder.value.trim()),
+                returnFocus: false,
+            }).then(() => {
+                sekunder2.value = 0;
+                sekunder2.focus();
+            });
+        } else {
+            tritier2.focus();
+        }
+    }
+});
+
+$('#tritier2').on('keydown', function (e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+
+        var value = $(this).val();
+
+        if (value > primer.value) {
+            Swal.fire({
+                icon: 'warning',
+                text: 'Saldo Tritiernya Tinggal : ' + formatNumber(tritier.value.trim()),
+                returnFocus: false,
+            }).then(() => {
+                tritier2.value = 0;
+                tritier2.focus();
+            });
+        } else if (objekId.value === '147' && objekId2 === '095') {
+            if (value > 20) {
+                Swal.fire({
+                    icon: 'warning',
+                    text: 'Jumlah kirim tdk boleh lebih dari 20 Kg',
+                    returnFocus: false,
+                }).then(() => {
+                    tritier2.value = 0;
+                    tritier2.focus();
+                });
+            }
+            else {
+                uraian.focus();
+            }
+        }
+        else {
+            uraian.focus();
+        }
+    }
+});
+
+$('#uraian').on('keydown', function (e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        btnProses.focus();
+    }
+});
+
+var loadPenerima = false;
+function LoadPenerima() {
+    return new Promise(function (resolve, reject) {
+        $.ajax({
+            type: 'GET',
+            url: 'MhnPemberi/loadPenerima',
+            data: {
+                XKodeBarang: kodeBarang.value,
+                XIdSubKelompok: subkelId2.value,
+                XPIB: pib.value,
+                _token: csrfToken
+            },
+            success: function (result) {
+                loadPenerima = false;
+
+                if (result.length !== 0) {
+                    satuanPrimer2.value = result[0].satuan_primer ? decodeHtmlEntities(result[0].satuan_primer.trim()) : 'NULL';
+                    satuanSekunder2.value = result[0].satuan_sekunder ? decodeHtmlEntities(result[0].satuan_sekunder.trim()) : 'NULL';
+                    satuanTritier2.value = result[0].satuan_tritier ? decodeHtmlEntities(result[0].satuan_tritier.trim()) : 'NULL';
+
+                    if (satuanPrimer.value.trim() === satuanPrimer2.value.trim()) {
+                        if (satuanSekunder.value.trim() === satuanSekunder2.value.trim()) {
+                            if (satuanTritier.value.trim() === satuanTritier2.value.trim()) {
+                                loadPenerima = true;
+                            } else {
+                                loadPenerima = satuanPrimer.value.trim() === 'NULL';
+                            }
+                        } else {
+                            loadPenerima = satuanSekunder.value.trim() === 'NULL';
+                        }
+                    }
+
+                    if (!loadPenerima) {
+                        Swal.fire({
+                            icon: 'info',
+                            text: 'Satuan Tritier, Sekunder, Primer pada Divisi ' + (decodeHtmlEntities(divisiNama.value)) +
+                                ' ADA yang TIDAK SAMA dengan Divisi Penerima Barang !!!... Koreksi di Maitenance Type Barang per Divisi',
+                        });
+                    }
+                } else {
+                    Swal.fire({
+                        icon: 'info',
+                        text: 'Tidak Ada Type Barang ' + (decodeHtmlEntities(type.value)) + ' Pada Divisi Penerima',
+                    });
+                }
+
+                resolve(loadPenerima);
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+                reject(error);
+            }
+        });
+    });
+}

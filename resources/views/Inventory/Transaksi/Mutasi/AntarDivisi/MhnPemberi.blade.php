@@ -120,20 +120,19 @@
                                     <label for="idType">Id Type</label>
                                 </div>
                                 <div class="col-sm-2">
-                                    <input type="text" id="idType" name="idType" class="form-control" readonly>
+                                    <input style="width: 150%" type="text" id="idType" name="idType" class="form-control">
                                 </div>
-                                <div class="col-sm-2">
+                                <div class="col-sm-2" style="margin-left: 7%">
                                     <label for="kodeBarang">Kode Barang</label>
                                 </div>
-                                <div class="col-sm-2">
-                                    <input type="text" class="form-control" id="kodeBarang" name="kodeBarang"
-                                        readonly>
+                                <div class="col-sm-2" style="margin-left: -7%">
+                                    <input type="text" class="form-control" id="kodeBarang" name="kodeBarang">
                                 </div>
                                 <div class="col-sm-1">
                                     <label for="pib">PIB</label>
                                 </div>
                                 <div class="col-sm-2">
-                                    <input type="text" class="form-control" id="pib" name="pib" readonly>
+                                    <input type="text" class="form-control" id="pib" name="pib">
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" class="form-control" style="margin-left: 50%; width: 125%"
@@ -174,8 +173,7 @@
                                     <label for="jmlKeranjang">Jml Keranjang</label>
                                 </div>
                                 <div class="col-sm-1 keranjang">
-                                    <input type="text" id="jmlKeranjang" name="jmlKeranjang" class="form-control"
-                                        readonly>
+                                    <input type="text" id="jmlKeranjang" name="jmlKeranjang" class="form-control">
                                 </div>
                                 <div class="col-sm-3 kosong"></div>
                                 <div class="col-sm-1 offset-sm-7">
@@ -362,10 +360,10 @@
 
                         <div style="text-align: right">
                             <button type="button" id="btn_isi" class="btn btn-info" disabled>Isi</button>
-                            <button type="button" id="btn_proses" class="btn btn-info" disabled>Proses</button>
-                            <button type="button" id="btn_batal" class="btn btn-info" disabled>Batal</button>
                             <button type="button" id="btn_koreksi" class="btn btn-info" disabled>Koreksi</button>
                             <button type="button" id="btn_hapus" class="btn btn-info" disabled>Hapus</button>
+                            <button type="button" id="btn_proses" class="btn btn-info" disabled>Proses</button>
+                            <button type="button" id="btn_batal" class="btn btn-info" disabled>Batal</button>
                         </div>
                     </div>
                 </div>
