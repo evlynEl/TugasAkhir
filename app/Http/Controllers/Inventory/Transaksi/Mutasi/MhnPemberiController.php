@@ -606,10 +606,10 @@ class MhnPemberiController extends Controller
             $idtransaksi = $nextIdTrans[0]->IdTrans;
 
             if ($XPIB === null && $Jumlah === null) {
-                dd($request->all());
+                // dd($request->all());
                 try {
                     DB::connection('ConnInventory')
-                        ->statement('exec [SP_1003_INV_Insert_01_TmpTransaksi]
+                        ->statement('exec [SP_1003_INV_Insert_03_TmpTransaksi_1]
                 @XIdTypeTransaksi = ?,
                 @XUraianDetailTransaksi = ?,
                 @XIdType = ?,
@@ -642,7 +642,7 @@ class MhnPemberiController extends Controller
             } else if ($XPIB === null && $Jumlah !== null) {
                 try {
                     DB::connection('ConnInventory')
-                        ->statement('exec [SP_1003_INV_Insert_01_TmpTransaksi]
+                        ->statement('exec [SP_1003_INV_Insert_03_TmpTransaksi_1]
                 @XIdTypeTransaksi = ?,
                 @XUraianDetailTransaksi = ?,
                 @XIdType = ?,
@@ -677,7 +677,7 @@ class MhnPemberiController extends Controller
             } else if ($XPIB !== null && $Jumlah === null) {
                 try {
                     DB::connection('ConnInventory')
-                        ->statement('exec [SP_1003_INV_Insert_01_TmpTransaksi]
+                        ->statement('exec [SP_1003_INV_Insert_03_TmpTransaksi_1]
                 @XIdTypeTransaksi = ?,
                 @XUraianDetailTransaksi = ?,
                 @XIdType = ?,
@@ -712,7 +712,7 @@ class MhnPemberiController extends Controller
             } else {
                 try {
                     DB::connection('ConnInventory')
-                        ->statement('exec [SP_1003_INV_Insert_01_TmpTransaksi]
+                        ->statement('exec [SP_1003_INV_Insert_03_TmpTransaksi_1]
                 @XIdTypeTransaksi = ?,
                 @XUraianDetailTransaksi = ?,
                 @XIdType = ?,

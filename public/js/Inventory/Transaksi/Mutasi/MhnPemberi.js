@@ -162,6 +162,8 @@ function ClearForm() {
     satuanSekunder2.value = '';
     satuanTritier2.value = '';
 
+    TPemberi = '';
+
     primer2.disabled = false;
     sekunder2.disabled = false;
 }
@@ -172,13 +174,9 @@ $('#tableData tbody').on('click', 'tr', function () {
     table.$('tr.selected').removeClass('selected');
     $(this).addClass('selected');
     var data = table.row(this).data();
-    IdTrans = decodeHtmlEntities(data[0]);
+    ClearForm();
 
-    Yidtransaksi = decodeHtmlEntities(data[0]);
-    YKdBrg = decodeHtmlEntities(data[12]);
-    Primer = formatNumber(data[9]);
-    Sekunder = formatNumber(data[10]);
-    Tritier = formatNumber(data[11]);
+    IdTrans = decodeHtmlEntities(data[0]);
 
     let date = data[7];
     let parts = date.split('/');
@@ -205,14 +203,12 @@ function TampilItem(IdTrans) {
             _token: csrfToken
         },
         success: function (result) {
-            console.log(result);
-
             if (result) {
                 divisiId2.value = decodeHtmlEntities(result[0].IdDivisi);
                 objekId2.value = decodeHtmlEntities(result[0].IdObjek);
                 kelutId2.value = decodeHtmlEntities(result[0].IdKelompokUtama);
                 kelompokId2.value = decodeHtmlEntities(result[0].IdKelompok);
-                subkelId2.value = decodeHtmlEntities(result[0].IdSubKelompok);
+                subkelId2.value = decodeHtmlEntities(result[0].IdSubkelompok);
                 divisiNama2.value = decodeHtmlEntities(result[0].NamaDivisi);
                 objekNama2.value = decodeHtmlEntities(result[0].NamaObjek);
                 kelutNama2.value = decodeHtmlEntities(result[0].NamaKelompokUtama);
@@ -242,14 +238,12 @@ function TampilItem(IdTrans) {
             _token: csrfToken
         },
         success: function (result) {
-            console.log(result);
-            
             if (result) {
                 divisiId.value = decodeHtmlEntities(result[0].IdDivisi);
                 objekId.value = decodeHtmlEntities(result[0].IdObjek);
                 kelutId.value = decodeHtmlEntities(result[0].IdKelompokUtama);
                 kelompokId.value = decodeHtmlEntities(result[0].IdKelompok);
-                subkelId.value = decodeHtmlEntities(result[0].IdSubKelompok);
+                subkelId.value = decodeHtmlEntities(result[0].IdSubkelompok);
             }
         },
         error: function (xhr, status, error) {
@@ -496,7 +490,7 @@ btnDivisi.addEventListener("click", function (e) {
                     $('.keranjang').show();
                     $('.kosong').hide();
                 }
-                else{
+                else {
                     $('.keranjang').hide();
                     $('.kosong').show();
                 }
@@ -934,7 +928,7 @@ function SaveData() {
                     text: result.success,
                     returnFocus: false,
                 }).then(() => {
-                    if (tabelApa === 1) {
+                    if (Pilih === 0) {
                         TampilAllData();
                     }
                     else {
@@ -965,7 +959,7 @@ function SaveData() {
                     text: result.success,
                     returnFocus: false,
                 }).then(() => {
-                    if (tabelApa === 1) {
+                    if (Pilih === 0) {
                         TampilAllData();
                     }
                     else {
@@ -1452,37 +1446,42 @@ function Load_Type() {
 }
 
 function Load_Saldo(sIdtype) {
-    $.ajax({
-        type: 'GET',
-        url: 'MhnPemberi/getSaldo',
-        data: {
-            IdType: sIdtype,
-            _token: csrfToken
-        },
-        success: function (result) {
-            if (result) {
-                primer.value = result[0].SaldoPrimer ? formatNumber(result[0].SaldoPrimer) : formatNumber(0);
-                sekunder.value = result[0].SaldoSekunder ? formatNumber(result[0].SaldoSekunder) : formatNumber(0);
-                tritier.value = result[0].SaldoTritier ? formatNumber(result[0].SaldoTritier) : formatNumber(0);
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            type: 'GET',
+            url: 'MhnPemberi/getSaldo',
+            data: {
+                IdType: sIdtype,
+                _token: csrfToken
+            },
+            success: function (result) {
+                if (result) {
+                    primer.value = result[0].SaldoPrimer ? formatNumber(result[0].SaldoPrimer) : formatNumber(0);
+                    sekunder.value = result[0].SaldoSekunder ? formatNumber(result[0].SaldoSekunder) : formatNumber(0);
+                    tritier.value = result[0].SaldoTritier ? formatNumber(result[0].SaldoTritier) : formatNumber(0);
 
-                satuanPrimer.value = result[0].SatPrimer ? decodeHtmlEntities(result[0].SatPrimer) : 'NULL';
-                satuanSekunder.value = result[0].SatSekunder ? decodeHtmlEntities(result[0].SatSekunder) : 'NULL';
-                satuanTritier.value = result[0].SatTritier ? decodeHtmlEntities(result[0].SatTritier) : 'NULL';
+                    satuanPrimer.value = result[0].SatPrimer ? decodeHtmlEntities(result[0].SatPrimer) : 'NULL';
+                    satuanSekunder.value = result[0].SatSekunder ? decodeHtmlEntities(result[0].SatSekunder) : 'NULL';
+                    satuanTritier.value = result[0].SatTritier ? decodeHtmlEntities(result[0].SatTritier) : 'NULL';
 
-                kodeBarang.value = decodeHtmlEntities(result[0].KodeBarang);
-                pib.value = result[0].PIB ? decodeHtmlEntities(result[0].PIB) : '';
+                    kodeBarang.value = decodeHtmlEntities(result[0].KodeBarang);
+                    pib.value = result[0].PIB ? decodeHtmlEntities(result[0].PIB) : '';
 
-                primer3.value = 0;
-                sekunder3.value = 0;
-                tritier3.value = 0;
+                    primer3.value = 0;
+                    sekunder3.value = 0;
+                    tritier3.value = 0;
 
-                Load_JumlahAntrian(sIdtype);
+                    Load_JumlahAntrian(sIdtype);
 
+                    resolve(result);
+                } else {
+                    reject('No result found');
+                }
+            },
+            error: function (xhr, status, error) {
+                reject(error);
             }
-        },
-        error: function (xhr, status, error) {
-            console.error('Error:', error);
-        }
+        });
     });
 }
 
@@ -2015,33 +2014,56 @@ btnSubkel2.addEventListener("click", function (e) {
                 sekunder2.disabled = false;
 
                 if (Pil === 2) {
-                    Load_Saldo(idType.value);
+                    Load_Saldo(idType.value).then(function (result) {
+                        return LoadPenerima();
+                    }).then(function (loadPenerima) {
+                        if (!loadPenerima) {
+                            return;
+                        } else {
+                            btnProses.disabled = false;
+
+                            if (satuanPrimer.value.trim() === 'NULL' && satuanSekunder.value.trim() === 'NULL') {
+                                primer2.disabled = true;
+                                sekunder2.disabled = true;
+                                tritier2.focus();
+                            } else if (satuanPrimer.value.trim() === 'NULL' && satuanSekunder.value.trim() !== 'NULL') {
+                                primer2.disabled = true;
+                                sekunder2.focus();
+                            } else {
+                                primer2.focus();
+                            }
+                        }
+                    }).catch(function (error) {
+                        console.error('Error occurred:', error);
+                    });
+
                 }
 
-                LoadPenerima().then(function (loadPenerima) {
-                    if (!loadPenerima) {
-                        return;
-                    }
-                    else {
-                        btnProses.disabled = false;
-
-                        if (satuanPrimer.value.trim() === 'NULL' && satuanSekunder.value.trim() === 'NULL') {
-                            primer2.disabled = true;
-                            sekunder2.disabled = true;
-                            tritier2.focus();
-                        }
-                        else if (satuanPrimer.value.trim() === 'NULL' && satuanSekunder.value.trim() !== 'NULL') {
-                            primer2.disabled = true;
-                            sekunder2.focus();
+                else {
+                    LoadPenerima().then(function (loadPenerima) {
+                        if (!loadPenerima) {
+                            return;
                         }
                         else {
-                            primer2.focus();
-                        }
-                    }
-                }).catch(function (error) {
-                    console.error('Error occurred:', error);
-                });
+                            btnProses.disabled = false;
 
+                            if (satuanPrimer.value.trim() === 'NULL' && satuanSekunder.value.trim() === 'NULL') {
+                                primer2.disabled = true;
+                                sekunder2.disabled = true;
+                                tritier2.focus();
+                            }
+                            else if (satuanPrimer.value.trim() === 'NULL' && satuanSekunder.value.trim() !== 'NULL') {
+                                primer2.disabled = true;
+                                sekunder2.focus();
+                            }
+                            else {
+                                primer2.focus();
+                            }
+                        }
+                    }).catch(function (error) {
+                        console.error('Error occurred:', error);
+                    });
+                }
             }
         });
     } catch (error) {
@@ -2203,8 +2225,6 @@ function Load_TypeBarang() {
             },
             success: function (response) {
                 LoadTypeBarang = false;
-                console.log(response);
-
 
                 if (response.length > 0) {
                     let result = response[0];
@@ -2283,7 +2303,7 @@ $('#tritier2').on('keydown', function (e) {
 
         var value = $(this).val();
 
-        if (parseFloat(value) > parseFloat(tritier.value)) {            
+        if (parseFloat(value) > parseFloat(tritier.value)) {
             Swal.fire({
                 icon: 'warning',
                 text: 'Saldo Tritiernya Tinggal : ' + formatNumber(tritier.value.trim()),
@@ -2334,6 +2354,8 @@ function LoadPenerima() {
             },
             success: function (result) {
                 loadPenerima = false;
+
+                console.log(result);
 
                 if (result.length !== 0) {
                     satuanPrimer2.value = result[0].satuan_primer ? decodeHtmlEntities(result[0].satuan_primer.trim()) : 'NULL';

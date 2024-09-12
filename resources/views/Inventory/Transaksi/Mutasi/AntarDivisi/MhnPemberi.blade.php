@@ -132,7 +132,7 @@
                                     <label for="pib">PIB</label>
                                 </div>
                                 <div class="col-sm-2">
-                                    <input type="text" class="form-control" id="pib" name="pib">
+                                    <input type="text" class="form-control" id="pib" name="pib" readonly>
                                 </div>
                                 <div class="col-sm-1">
                                     <input type="text" class="form-control" style="margin-left: 50%; width: 125%"
