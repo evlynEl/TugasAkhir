@@ -82,6 +82,11 @@ let konvTerima;
 let konvBeri;
 let kdBarang;
 let asalSubkel;
+let cekPr;
+let cekSek
+let cekTr;
+let acc;
+let hargaAkhir;
 
 const inputs = Array.from(document.querySelectorAll('.card-body input[type="text"]:not([readonly]), .card-body input[type="date"]:not([readonly])'));
 tanggal.value = todayString;
@@ -189,8 +194,10 @@ inputs.forEach((masuk, index) => {
                     btn_isi.focus();
                 } else if (a === 2) {
                     btn_koreksi.focus();
-                } else {
+                } else if (a === 3) {
                     btn_hapus.focus();
+                } else {
+                    btn_proses().focus();
                 }
             }
         }
@@ -536,11 +543,9 @@ btn_objek2.addEventListener("click", function (e) {
                         if (confirmResult.isConfirmed) {
                             tampil = 1;
                             showAllTable();
-                            // btn_isi.focus();
                         } else {
                             tampil = 2;
                             showTable();
-                            // btn_isi.focus();
                         }
                     });
                 }
@@ -1554,9 +1559,9 @@ $('#tableData tbody').on('click', 'tr', function () {
                 subkelNama.value = response.identityData[0].NamaSubKelompok.trim();
 
                 loadType(kodeBarang.value, kodeType.value, PIB.value)
-                .catch((error) => {
-                    console.error('Error in loadType:', error);
-                });
+                    .catch((error) => {
+                        console.error('Error in loadType:', error);
+                    });
             }
         },
         error: function (xhr, status, error) {
@@ -1595,14 +1600,6 @@ function cekKodeBarang() {
         });
     });
 }
-
-
-let cekPr;
-let cekSek
-let cekTr;
-let acc;
-let hargaAkhir;
-let sisaSaldo;
 
 $(document).ready(function () {
     table = $('#tableHarga').DataTable({
@@ -1681,8 +1678,7 @@ async function simpan_isi() {
                         updateDataTableKecil(response.data[0]);
                     }
 
-                    hargaAkhir = response.totalHarga1;
-                    sisaSaldo = response.remainingSaldo;
+                    hargaAkhir = response.txtHarga;
                 },
                 error: function (xhr, status, error) {
                     console.error('Error:', error);
@@ -1776,8 +1772,17 @@ btn_proses.addEventListener("click", function (e) {
         simpan_isi();
     }
 
-    // If 'a === 3', handle delete logic
     if (a === 3) {
+        if (kodeTransaksi.value === '') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Pilih dulu data yg akan diHAPUS !',
+                returnFocus: false,
+            });
+            return;
+        }
+        
         $.ajax({
             url: "MhnPenerima/hapusBarang",
             type: "DELETE",
@@ -1793,11 +1798,18 @@ btn_proses.addEventListener("click", function (e) {
                         title: response.success,
                         returnFocus: false
                     }).then(() => {
+                        primer3.value = 0;
+                        sekunder3.value = 0;
+                        tritier3.value = 0;
+
                         if (tampil === 1) {
                             showAllTable();
+                            clearInputs();
                         } else {
                             showTable();
+                            clearInputs();
                         }
+                        disableKetik();
                     });
                 } else if (response.error) {
                     Swal.fire({
@@ -1827,13 +1839,14 @@ btn_proses.addEventListener("click", function (e) {
             tanggal: tanggal.value,
             kodeType: kodeType.value,
             pemohon: pemohon.value,
-            primer3: primer3.value,
-            sekunder3: sekunder3.value,
-            tritier3: tritier3.value,
+            primer3: parseFloat(primer3.value),
+            sekunder3: parseFloat(sekunder3.value),
+            tritier3: parseFloat(tritier3.value),
             subkelId: subkelId.value,
             subkelId2: subkelId2.value,
             harga: hargaAkhir,
             PIB: PIB.value,
+            kodeTransaksi: kodeTransaksi.value
         },
         timeout: 30000,
         success: function (response) {
@@ -1853,6 +1866,7 @@ btn_proses.addEventListener("click", function (e) {
                     } else {
                         showTable();
                     }
+                    disableKetik();
                 });
             } else if (a === 2 && response.success) {
                 Swal.fire({
@@ -1861,6 +1875,10 @@ btn_proses.addEventListener("click", function (e) {
                     text: response.success,
                     returnFocus: false,
                 }).then(() => {
+                    primer3.value = 0;
+                    sekunder3.value = 0;
+                    tritier3.value = 0;
+
                     if (tampil === 1) {
                         showAllTable();
                         clearInputs();
@@ -1868,6 +1886,7 @@ btn_proses.addEventListener("click", function (e) {
                         showTable();
                         clearInputs();
                     }
+                    disableKetik();
                 });
             } else if (response.error) {
                 Swal.fire({
@@ -1913,12 +1932,11 @@ function clearInputs() {
     primer3.disabled = true;
     sekunder3.disabled = true;
     tritier3.disabled = true;
+    alasan.disabled = true;
 }
 
 // fungsi bisa ketik
 function enableKetik() {
-    // clearInputs();
-
     // hide button isi, tampilkan button proses
     btn_isi.style.display = 'none';
     btn_proses.style.display = 'inline-block';
@@ -1996,6 +2014,9 @@ btn_koreksi.addEventListener('click', function () {
         primer3.disabled = false;
         sekunder3.disabled = false;
         tritier3.disabled = false;
+        alasan.disabled = false;
+
+        primer3.select();
 
         // hide button isi, tampilkan button proses
         btn_isi.style.display = 'none';
@@ -2010,23 +2031,13 @@ btn_koreksi.addEventListener('click', function () {
 // button hapus event listener
 btn_hapus.addEventListener('click', function () {
     a = 3;
-    // tampilin isi tabel
-    // $('#tableData').show();
+    // hide button isi, tampilkan button proses
+    btn_isi.style.display = 'none';
+    btn_proses.style.display = 'inline-block';
+    // hide button koreksi, tampilkan button batal
+    btn_koreksi.style.display = 'none';
+    btn_batal.style.display = 'inline-block';
 
-    // btn_hapus.disabled = true;
-
-    if (kodeTransaksi.value === '') {
-        showAlert('warning', 'Pilih dulu data yg akan diHAPUS !');
-        return;
-    } else {
-        // hide button isi, tampilkan button proses
-        btn_isi.style.display = 'none';
-        btn_proses.style.display = 'inline-block';
-        // hide button koreksi, tampilkan button batal
-        btn_koreksi.style.display = 'none';
-        btn_batal.style.display = 'inline-block';
-
-        btn_hapus.disabled = true;
-        btn_proses.focus();
-    }
+    btn_hapus.disabled = true;
+    btn_proses.focus();
 });

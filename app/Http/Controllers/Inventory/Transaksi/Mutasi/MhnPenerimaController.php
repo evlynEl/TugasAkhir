@@ -513,8 +513,7 @@ class MhnPenerimaController extends Controller
 
                     $response = [
                         'data' => $arrData,
-                        'totalHarga1' => $totalHarga1,
-                        'remainingSaldo' => $saldo
+                        'txtHarga' => $txtHarga
                     ];
 
                     // dd($request->all(), $response);
@@ -605,6 +604,7 @@ class MhnPenerimaController extends Controller
 
             else if ($a === 2) { // KOREKSI
                 try {
+                    // dd($request->all());
                     // update
                     DB::connection('ConnInventory')->statement(
                         'exec SP_1003_INV_Update_TmpTransaksi
@@ -612,7 +612,6 @@ class MhnPenerimaController extends Controller
                         [$kodeTransaksi, $uraian, $primer3, $sekunder3, $tritier3, $subkelId2]
                     );
 
-                    // dd($request->all());
 
                     return response()->json(['success' => 'Data sudah diKOREKSI!!'], 200);
                 } catch (\Exception $e) {

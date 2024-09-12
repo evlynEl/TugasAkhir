@@ -314,7 +314,7 @@
 
                         <div class="col-sm-12">
                             <div class="col-sm-12 mb-2">
-                                <div class="table-responsive fixed-height" style="height: 100px">
+                                <div class="table-responsive fixed-height" style="height: 100px; display:none;">
                                     <table class="table table-bordered no-wrap-header" id="tableHarga">
                                         <thead>
                                         </thead>
