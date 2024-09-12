@@ -35,9 +35,12 @@ var btn_typeKonv = document.getElementById('btn_typeKonv');
 
 var today = new Date().toISOString().slice(0, 10);
 tanggal.value = (today);
+
+let simpan, ada, Yidtransaksi, YKdBrg, jumlah, YidType, YidTypePenerima;
+
 btn_ok.focus();
 
-divisiNama.value = 'Circular loom' ;
+divisiNama.value = 'Circular loom';
 objekId.value = '095';
 objekNama.value = 'Bahan Baku';
 
@@ -148,7 +151,6 @@ $(document).ready(function () {
         info: false,
         ordering: false,
         columns: [
-            { title: '', orderable: false, className: 'select-checkbox', data: null, defaultContent: '' }, // Checkbox
             { title: 'ID Trans' },
             { title: 'Barang' },
             { title: 'Alasan Mutasi' },
@@ -163,17 +165,6 @@ $(document).ready(function () {
             { title: 'KdBrg' },
             { title: 'IdSubkel' }
         ],
-        columnDefs: [
-            {
-                targets: 0,
-                orderable: false,
-                className: 'select-checkbox',
-                render: function (data, type, row, meta) {
-                    return `<input type="checkbox" class="row-checkbox"
-                                data-id="${row[1]}">`;
-                }
-            }
-        ],
         order: [[1, 'asc']]
     });
 });
@@ -185,7 +176,6 @@ function updateDataTable(data) {
 
     data.forEach(function (item) {
         table.row.add([
-            '',
             escapeHtml(item.IdTransaksi.trim()),
             escapeHtml(item.NamaType.trim()),
             escapeHtml(item.UraianDetailTransaksi.trim()),
@@ -214,15 +204,14 @@ $('#tableData tbody').on('click', 'tr', function () {
 
     // console.log(data);
 
-    kodeTransaksi.value = data[1];
-    namaBarang.value = decodeHtmlEntities(data[2]);
-
-    kelutNama.value = decodeHtmlEntities(data[4]);
-    kelompokNama.value = decodeHtmlEntities(data[5]);
-    subkelNama.value = decodeHtmlEntities(data[6]);
-    primer.value = formatNumber(data[8]);
-    sekunder.value = formatNumber(data[9]);
-    tritier.value = formatNumber(data[10]);
+    kodeTransaksi.value = data[0];
+    namaBarang.value = decodeHtmlEntities(data[1]);
+    kelutNama.value = decodeHtmlEntities(data[3]);
+    kelompokNama.value = decodeHtmlEntities(data[4]);
+    subkelNama.value = decodeHtmlEntities(data[5]);
+    primer.value = formatNumber(data[7]);
+    sekunder.value = formatNumber(data[8]);
+    tritier.value = formatNumber(data[9]);
 
     $.ajax({
         type: 'GET',
@@ -242,19 +231,7 @@ $('#tableData tbody').on('click', 'tr', function () {
                 no_primer.value = result[0].Satuan_Primer?.trim() || '';
                 no_sekunder.value = result[0].Satuan_Sekunder?.trim() || '';
                 no_tritier.value = result[0].Satuan_Tritier?.trim() || '';
-
-                if (checkbox.is(':checked')) {
-                    const index = completeDataArray.findIndex(item => item.tableData[1] === data[1]);
-                    if (index === -1) {
-                        completeDataArray.push({
-                            tableData: data,
-                            ajaxResult: result
-                        });
-                    }
-                    console.log('data lengkap: ', completeDataArray);
-                }
             }
-
         },
         error: function (xhr, status, error) {
             console.error('Error:', error);
@@ -373,8 +350,155 @@ btn_typeKonv.addEventListener('click', function () {
     }
 });
 
-let simpan, ada;
+function cekPemberi(Yidtransaksi) {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            type: 'GET',
+            url: 'PermohonanPenerimaBenang/getPemberi',
+            data: {
+                _token: csrfToken,
+                Yidtransaksi: Yidtransaksi
+            },
+            success: function (response) {
+                jumlah = parseFloat(response[0].jumlah.trim());
+                YidType = response[0].IdType.trim();
+
+                if (jumlah >= 1) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Warning!',
+                        text: `Tidak Bisa DiAcc !!!. Karena Ada Transaksi Penyesuaian yang Belum Diacc untuk type ${YidType} Pada divisi pemberi`,
+                        returnFocus: false
+                    }).then(() => {
+                        reject('Jumlah >= 1');
+                    });
+                } else {
+                    resolve(true);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+                reject(error);
+            }
+        });
+    });
+}
+
+
+function cekPenerima(Yidtransaksi, kodeBarang) {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            type: 'GET',
+            url: 'PermohonanPenerimaBenang/getPenerima',
+            data: {
+                _token: csrfToken,
+                Yidtransaksi: Yidtransaksi,
+                kodeBarang: kodeBarang
+            },
+            success: function (response) {
+                jumlah = parseFloat(response[0].jumlah.trim());
+                YidTypePenerima = response[0].IdType.trim();
+
+                if (jumlah >= 1) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Warning!',
+                        text: `Tidak Bisa DiAcc !!!. Karena Ada Transaksi Penyesuaian yang Belum Diacc untuk type ${YidType} Pada divisi penerima`,
+                        returnFocus: false
+                    }).then(() => {
+                        reject('Jumlah >= 1');
+                    });
+                } else {
+                    resolve(true);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+                reject(error);
+            }
+        });
+    });
+}
+
+function cekKonversi(namaBarang) {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            type: 'GET',
+            url: 'PermohonanPenerimaBenang/getKonversi',
+            data: {
+                _token: csrfToken,
+                namaBarang: namaBarang
+            },
+            success: function (response) {
+                if (response[0] && response[0].Result) {
+                    resolve(true);
+                } else {
+                    resolve(false);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+                reject(error);
+            }
+        });
+    });
+}
+
+
+function cariType(namaBarang) {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            type: 'GET',
+            url: 'PermohonanPenerimaBenang/getType',
+            data: {
+                _token: csrfToken,
+                namaBarang: namaBarang,
+                subke
+            },
+            success: function (response) {
+                if (response[0] && response[0].Result) {
+                    resolve(true);
+                } else {
+                    resolve(false);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+                reject(error);
+            }
+        });
+    });
+}
+
+
 
 btn_proses.addEventListener('click', function () {
-    showTable();
+    cekPemberi(Yidtransaksi)
+        .then(() => {
+            return cekPenerima(Yidtransaksi, kodeBarang);
+        })
+        .then(YidTypePenerima => {
+            return $.ajax({
+                type: 'PUT',
+                url: 'PermohonanPenerimaBenang/proses',
+                data: {
+                    _token: csrfToken,
+                    YIdTrans: YIdTrans,
+                    primer: formatNumber(data[7]),
+                    sekunder: formatNumber(data[8]),
+                    tritier: formatNumber(data[9]),
+                    YidType: YidType,
+                    YidTypePenerima: YidTypePenerima
+                }
+            });
+        })
+        .then(result => {
+            // Handle successful AJAX response
+            console.log('Success:', result);
+        })
+        .catch(error => {
+            // Handle any errors or rejections
+            console.error('Error:', error);
+        });
 });
+
