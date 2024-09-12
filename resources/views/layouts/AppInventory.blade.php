@@ -129,32 +129,35 @@
                                         @else
                                             <li>
                                                 <a style="color: black;font-size: 15px;display: block"
-                                                    class="dropdown-item" tabindex="-1"
-                                                    href="#">Mutasi Antar Divisi &raquo;
+                                                    class="dropdown-item" tabindex="-1" href="#">Mutasi Antar
+                                                    Divisi &raquo;
                                                 </a>
                                                 <ul class="dropdown-menu dropdown-submenu">
                                                     <li>
                                                         <a style="color: black;font-size: 15px;display: block"
-                                                            class="dropdown-item" tabindex="-1"
-                                                            href="#">Awal Sebagai Penerima &raquo;
+                                                            class="dropdown-item" tabindex="-1" href="#">Awal
+                                                            Sebagai Penerima &raquo;
                                                         </a>
                                                         <ul class="dropdown-menu dropdown-submenu">
                                                             <li>
                                                                 <a style="color: black;font-size: 15px;display: block"
                                                                     class="dropdown-item" tabindex="-1"
-                                                                    href="{{ url('MhnPenerima') }}">Permohonan Penerima (Bon Barang)
+                                                                    href="{{ url('MhnPenerima') }}">Permohonan Penerima
+                                                                    (Bon Barang)
                                                                 </a>
                                                             </li>
                                                             <li>
                                                                 <a style="color: black;font-size: 15px;display: block"
                                                                     class="dropdown-item" tabindex="-1"
-                                                                    href="{{ url('AccMhnPenerima') }}">Acc Permohonan Penerima
+                                                                    href="{{ url('AccMhnPenerima') }}">Acc Permohonan
+                                                                    Penerima
                                                                 </a>
                                                             </li>
                                                             <li>
                                                                 <a style="color: black;font-size: 15px;display: block"
                                                                     class="dropdown-item" tabindex="-1"
-                                                                    href="{{ url('AccPemberiBarang') }}">Acc Pemberi Barang
+                                                                    href="{{ url('AccPemberiBarang') }}">Acc Pemberi
+                                                                    Barang
                                                                 </a>
                                                             </li>
                                                             <li>
@@ -167,8 +170,8 @@
                                                     </li>
                                                     <li>
                                                         <a style="color: black;font-size: 15px;display: block"
-                                                            class="dropdown-item" tabindex="-1"
-                                                            href="#">Awal Sebagai Pemberi &raquo;
+                                                            class="dropdown-item" tabindex="-1" href="#">Awal
+                                                            Sebagai Pemberi &raquo;
                                                         </a>
                                                         <ul class="dropdown-menu dropdown-submenu">
                                                             <li>
@@ -186,7 +189,8 @@
                                                             <li>
                                                                 <a style="color: black;font-size: 15px;display: block"
                                                                     class="dropdown-item" tabindex="-1"
-                                                                    href="{{ url('PermohonanPenerimaBenang') }}">Penerima (CL)
+                                                                    href="{{ url('PermohonanPenerimaBenang') }}">Penerima
+                                                                    (CL)
                                                                 </a>
                                                             </li>
                                                         </ul>
@@ -217,8 +221,8 @@
 
                                             <li>
                                                 <a style="color: black;font-size: 15px;display: block"
-                                                    class="dropdown-item" tabindex="-1"
-                                                    href="{{ url('mutasi') }}">Mutasi Keluar/Masuk PT KRR &raquo;
+                                                    class="dropdown-item" tabindex="-1" href="#">Mutasi
+                                                    Keluar/Masuk PT KRR &raquo;
                                                 </a>
                                                 <ul class="dropdown-menu dropdown-submenu">
                                                     <li>
@@ -246,8 +250,8 @@
                                             </li>
                                             <li>
                                                 <a style="color: black;font-size: 15px;display: block"
-                                                    class="dropdown-item" tabindex="-1"
-                                                    href="{{ url('mutasi') }}">Mutasi Masuk/Keluar &raquo;
+                                                    class="dropdown-item" tabindex="-1" href="#">Mutasi
+                                                    Masuk/Keluar &raquo;
                                                 </a>
                                                 <ul class="dropdown-menu dropdown-submenu">
                                                     <li>

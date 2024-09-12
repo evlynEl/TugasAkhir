@@ -4,7 +4,7 @@
         <div class="row justify-content-center">
             <div class="col-md-10 RDZMobilePaddingLR0">
                 <div class="card">
-                    <div class="card-header">Mutasi Masuk-Keluar</div>
+                    <div class="card-header">Acc Mutasi Masuk-Keluar</div>
                     <div class="card-body RDZOverflow RDZMobilePaddingLR0">
 
                         <div class="row pb-2" id="top">

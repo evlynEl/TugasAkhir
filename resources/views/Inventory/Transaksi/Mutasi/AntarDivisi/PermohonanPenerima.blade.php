@@ -4,7 +4,7 @@
         <div class="row justify-content-center">
             <div class="col-md-10 RDZMobilePaddingLR0">
                 <div class="card">
-                    <div class="card-header">Form Penerima (Awal Pemberi) Tanpa Acc Manager
+                    <div class="card-header">Penerima (Awal Pemberi) Tanpa Acc Manager
                     </div>
                     <div class="card-body RDZOverflow RDZMobilePaddingLR0">
 
