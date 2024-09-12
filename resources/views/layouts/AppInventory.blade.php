@@ -115,16 +115,156 @@
                                 @endif
                                 @if ($printSecond == 1)
                                     <ul class="dropdown-menu dropdown-submenu">
-                                        @foreach ($access['AccessFitur'] as $secondSubMenuItem)
-                                            @if ($secondSubMenuItem->Id_Menu === $secondMenuItem->IdMenu && $printSecond == 1)
-                                                <li>
-                                                    <a style="color: black;font-size: 15px;display: block"
-                                                        class="dropdown-item" tabindex="-1"
-                                                        href="{{ url($secondSubMenuItem->Route) }}">{{ $secondSubMenuItem->NamaFitur }}
-                                                    </a>
-                                                </li>
-                                            @endif
-                                        @endforeach
+                                        @if ($secondMenuItem->NamaMenu !== 'Mutasi Barang')
+                                            @foreach ($access['AccessFitur'] as $secondSubMenuItem)
+                                                @if ($secondSubMenuItem->Id_Menu === $secondMenuItem->IdMenu && $printSecond == 1)
+                                                    <li>
+                                                        <a style="color: black;font-size: 15px;display: block"
+                                                            class="dropdown-item" tabindex="-1"
+                                                            href="{{ url($secondSubMenuItem->Route) }}">{{ $secondSubMenuItem->NamaFitur }}
+                                                        </a>
+                                                    </li>
+                                                @endif
+                                            @endforeach
+                                        @else
+                                            <li>
+                                                <a style="color: black;font-size: 15px;display: block"
+                                                    class="dropdown-item" tabindex="-1"
+                                                    href="#">Mutasi Antar Divisi &raquo;
+                                                </a>
+                                                <ul class="dropdown-menu dropdown-submenu">
+                                                    <li>
+                                                        <a style="color: black;font-size: 15px;display: block"
+                                                            class="dropdown-item" tabindex="-1"
+                                                            href="#">Awal Sebagai Penerima &raquo;
+                                                        </a>
+                                                        <ul class="dropdown-menu dropdown-submenu">
+                                                            <li>
+                                                                <a style="color: black;font-size: 15px;display: block"
+                                                                    class="dropdown-item" tabindex="-1"
+                                                                    href="{{ url('MhnPenerima') }}">Permohonan Penerima (Bon Barang)
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a style="color: black;font-size: 15px;display: block"
+                                                                    class="dropdown-item" tabindex="-1"
+                                                                    href="{{ url('AccMhnPenerima') }}">Acc Permohonan Penerima
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a style="color: black;font-size: 15px;display: block"
+                                                                    class="dropdown-item" tabindex="-1"
+                                                                    href="{{ url('AccPemberiBarang') }}">Acc Pemberi Barang
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a style="color: black;font-size: 15px;display: block"
+                                                                    class="dropdown-item" tabindex="-1"
+                                                                    href="{{ url('PemberiBarang') }}">Pemberi
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                    <li>
+                                                        <a style="color: black;font-size: 15px;display: block"
+                                                            class="dropdown-item" tabindex="-1"
+                                                            href="#">Awal Sebagai Pemberi &raquo;
+                                                        </a>
+                                                        <ul class="dropdown-menu dropdown-submenu">
+                                                            <li>
+                                                                <a style="color: black;font-size: 15px;display: block"
+                                                                    class="dropdown-item" tabindex="-1"
+                                                                    href="{{ url('MhnPemberi') }}">Permohonan Pemberi
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a style="color: black;font-size: 15px;display: block"
+                                                                    class="dropdown-item" tabindex="-1"
+                                                                    href="{{ url('PermohonanPenerima') }}">Penerima
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a style="color: black;font-size: 15px;display: block"
+                                                                    class="dropdown-item" tabindex="-1"
+                                                                    href="{{ url('PermohonanPenerimaBenang') }}">Penerima (CL)
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <a style="color: black;font-size: 15px;display: block"
+                                                    class="dropdown-item" tabindex="-1" href="#">Mutasi Satu
+                                                    Divisi &raquo;
+                                                </a>
+                                                <ul class="dropdown-menu dropdown-submenu">
+                                                    <li>
+                                                        <a style="color: black;font-size: 15px;display: block"
+                                                            class="dropdown-item" tabindex="-1"
+                                                            href="{{ url('PermohonanSatuDivisi') }}">Permohonan Satu
+                                                            Divisi
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a style="color: black;font-size: 15px;display: block"
+                                                            class="dropdown-item" tabindex="-1"
+                                                            href="{{ url('AccSatuDivisi') }}">Acc Satu Divisi
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+
+                                            <li>
+                                                <a style="color: black;font-size: 15px;display: block"
+                                                    class="dropdown-item" tabindex="-1"
+                                                    href="{{ url('mutasi') }}">Mutasi Keluar/Masuk PT KRR &raquo;
+                                                </a>
+                                                <ul class="dropdown-menu dropdown-submenu">
+                                                    <li>
+                                                        <a style="color: black;font-size: 15px;display: block"
+                                                            class="dropdown-item" tabindex="-1"
+                                                            href="{{ url('AccKeluarPenjualan') }}">Acc Keluar Brg u/
+                                                            Penjualan
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a style="color: black;font-size: 15px;display: block"
+                                                            class="dropdown-item" tabindex="-1"
+                                                            href="{{ url('AccReturPenjualan') }}">Acc Retur Brg Dari
+                                                            Penjualan
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a style="color: black;font-size: 15px;display: block"
+                                                            class="dropdown-item" tabindex="-1"
+                                                            href="{{ url('AccPascaKirim') }}">Acc Pengembalian Pasca
+                                                            Kirim
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <a style="color: black;font-size: 15px;display: block"
+                                                    class="dropdown-item" tabindex="-1"
+                                                    href="{{ url('mutasi') }}">Mutasi Masuk/Keluar &raquo;
+                                                </a>
+                                                <ul class="dropdown-menu dropdown-submenu">
+                                                    <li>
+                                                        <a style="color: black;font-size: 15px;display: block"
+                                                            class="dropdown-item" tabindex="-1"
+                                                            href="{{ url('MhnMasukKeluar') }}">Permohonan Masuk/Keluar
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a style="color: black;font-size: 15px;display: block"
+                                                            class="dropdown-item" tabindex="-1"
+                                                            href="{{ url('AccMhnMasukKeluar') }}">Acc Permohonan
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        @endif
                                     </ul>
                                     </li>
                                 @endif
@@ -141,9 +281,9 @@
                                         $printThird = 1;
                                     @endphp
                                     <li class="dropdown-submenu">
-                                        <a class="dropdown-item" tabindex="-1" href="#" id="dropdownMenuButton"
-                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                                            style="margin: 10px;cursor: default;">
+                                        <a class="dropdown-item" tabindex="-1" href="#"
+                                            id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false" style="margin: 10px;cursor: default;">
                                             {{ $thirdMenuItem->NamaMenu }} &raquo;
                                         </a>
                                         <ul class="dropdown-menu">
@@ -185,8 +325,9 @@
                                 @foreach ($access['AccessFitur'] as $subMenuItem)
                                     @if ($subMenuItem->Id_Menu === $menuItem->IdMenu)
                                         <li>
-                                            <a style="color: black;font-size: 15px;display: block" class="dropdown-item"
-                                                tabindex="-1" href="{{ url($subMenuItem->Route) }}">
+                                            <a style="color: black;font-size: 15px;display: block"
+                                                class="dropdown-item" tabindex="-1"
+                                                href="{{ url($subMenuItem->Route) }}">
                                                 {{ $subMenuItem->NamaFitur }}
                                             </a>
                                         </li>
