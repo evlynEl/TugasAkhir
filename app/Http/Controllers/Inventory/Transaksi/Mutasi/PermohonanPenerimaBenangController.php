@@ -39,6 +39,8 @@ class PermohonanPenerimaBenangController extends Controller
         $divisiNama = $request->input('divisiNama');
         $kodeBarang = $request->input('kodeBarang');
         $namaBarang = $request->input('namaBarang');
+        $subkel = $request->input('subkel');
+        $YIdTypeKonv = $request->input('YIdTypeKonv');
 
 
         if ($id === 'getUserId') {
@@ -91,8 +93,9 @@ class PermohonanPenerimaBenangController extends Controller
 
             // dd($request->all(), $data_selectData);
             return response()->json($data_selectData);
-        } else if ($id === 'getpemberi') {
-            $typeKonv = DB::connection('ConnInventory')->select('exec SP_1003_INV_idsubkelompok_type @XIdSubKelompok_Type = ?', [$kodeTransaksi]);
+
+        } else if ($id === 'getTypeKonv') {
+            $typeKonv = DB::connection('ConnInventory')->select('exec SP_1003_INV_idsubkelompok_type @XIdSubKelompok_Type = ?', [$subkel]);
             $data_typeKonv = [];
             foreach ($typeKonv as $detail_typeKonv) {
                 $data_typeKonv[] = [
@@ -126,8 +129,9 @@ class PermohonanPenerimaBenangController extends Controller
                 ];
             }
 
-            // dd($request->all(), $data_selectData);
+            // dd($request->all(), $data_penerima);
             return response()->json($penerima);
+
         } else if ($id === 'getKonversi') {
             $konv = DB::connection('ConnInventory')->select('exec SP_1003_INV_CEK_BENANG @NamaType = ?', [$namaBarang]);
             $data_konv = [];
@@ -136,18 +140,30 @@ class PermohonanPenerimaBenangController extends Controller
                     'Result' => $detail_konv->Result,
                 ];
             }
-
+            // dd($konv);
             return response()->json($konv);
-        } else if ($id === 'getType') {
-            $konv = DB::connection('ConnInventory')->select('exec SP_1003_INV_LIST_TYPE_BENANG @Nama = ?, @idSubKel = ?', [$namaBarang, $subkel]);
+
+        } else if ($id === 'getPenyesuaianKonversi') {
+            $konv = DB::connection('ConnInventory')->select('exec SP_1003_INV_check_penyesuaian @idtype = ?', [$YIdTypeKonv]);
             $data_konv = [];
             foreach ($konv as $detail_konv) {
                 $data_konv[] = [
-                    'Result' => $detail_konv->Result,
+                    'jumlah' => $detail_konv->jumlah,
                 ];
             }
 
             return response()->json($konv);
+
+        } else if ($id === 'getType') {
+            $type = DB::connection('ConnInventory')->select('exec SP_1003_INV_LIST_TYPE_BENANG @Nama = ?, @idSubKel = ?', [$namaBarang, $subkel]);
+            $data_type = [];
+            foreach ($type as $detail_type) {
+                $data_type[] = [
+                    'IdType' => $detail_type->IdType
+                ];
+            }
+
+            return response()->json($type);
         }
     }
 
@@ -160,23 +176,26 @@ class PermohonanPenerimaBenangController extends Controller
     //Update the specified resource in storage.
     public function update(Request $request, $id)
     {
-        $YIdTrans = $request->input('YIdTrans');
+        $Yidtransaksi = $request->input('Yidtransaksi');
         $primer = $request->input('primer');
         $sekunder = $request->input('sekunder');
         $tritier = $request->input('tritier');
         $YidType = $request->input('YidType');
         $YidTypePenerima = $request->input('YidTypePenerima');
         $user = Auth::user()->NomorUser;
+        $idTrans = $request->input('idTrans');
+        $sIdKonv = $request->input('sIdKonv');
+
 
         if ($id === 'proses') {
             try {
                 DB::connection('ConnInventory')->statement(
-                    'exec SP_proses_penerima_insert_error
+                    'exec SP_PROSES_PENERIMA_INSERT_ERROR
                     @XIdTransaksi = ?, @XIdPenerima = ?,
                     @XJumlahKeluarPrimer = ?, @XJumlahKeluarSekunder = ?, @XJumlahKeluarTritier = ?,
                     @XIdtypePemberi = ?,  @XidTypePenerima = ?',
                     [
-                        $YIdTrans,
+                        $Yidtransaksi,
                         $user,
                         $primer,
                         $sekunder,
@@ -185,11 +204,76 @@ class PermohonanPenerimaBenangController extends Controller
                         $YidTypePenerima
                     ]
                 );
+                // dd($request->all());
 
-                return response()->json(['success' => 'Data sudah diSIMPAN'], 200);
+                $result = DB::connection('ConnInventory')->table('Nerror')->first();
+
+                $responseData = [
+                    'Nerror' => $result->Nerror,
+                    'IdTransPenerima' => $result->IdTransPenerima
+                ];
+
+                dd($responseData);
+
+                return response()->json($responseData);
 
             } catch (\Exception $e) {
-                //     // return response()->json(['error' => 'Kd.Transaksi: ' .trim($YIdTrans). 'TDK DPT diACC, krn Kd.Type tidak ada pada sub kelompok tersebut!' .$e->getMessage()], 500);
+                return response()->json(['error' => 'Data gagal diProses. ' .$e->getMessage()], 500);
+            }
+
+
+        } else if ($id === 'getIdKonv') {
+            $results = DB::connection('ConnInventory')->statement('exec SP_1003_INV_IDKONVERSI');
+            $idKonversi = $results[0]->IDKonversi;
+
+            return response()->json(['success' => $idKonversi], 200);
+
+        } else if ($id === 'saveDataAsal') {
+            try {
+                DB::connection('ConnInventory')->statement(
+                    'exec SP_1003_INV_TRANSFER_BENANG_CL
+                    @idkonversi = ?, @UraianDetailTransaksi = ?, @IdType=  ?, @UserAcc = ?,
+                    @KeluarPrimer = ?, @KeluarSekunder = ?, @KeluarTritier = ?,
+                    @AsalSubKel = ?,  @IdTRansaksi_Acuan = ?',
+                    [
+                        $sIdKonv,
+                        'Asal Konversi',
+                        $YidTypePenerima,
+                        $user,
+                        $primer,
+                        $sekunder,
+                        $tritier,
+                        $idTrans
+                    ]
+                );
+
+                return response()->json(['success' => 'Data sudah diSIMPAN'], 200);
+            } catch (\Exception $e) {
+                    return response()->json(['error' => 'Gagal diProses. ' .$e->getMessage()], 500);
+            }
+
+
+        } else if ($id === 'saveDataTujuan') {
+            try {
+                DB::connection('ConnInventory')->statement(
+                    'exec SP_1003_INV_TRANSFER_BENANG_CL
+                    @idkonversi = ?, @UraianDetailTransaksi = ?, @IdType=  ?, @UserAcc = ?,
+                    @MasukPrimer = ?, @MasukSekunder = ?, @MasukTritier = ?, @TujuanSubkel = ?',
+                    [
+                        $sIdKonv,
+                        'Tujuan Konversi',
+                        $YidTypePenerima,
+                        $user,
+                        $primer,
+                        $sekunder,
+                        $tritier,
+                        $idTrans
+                    ]
+                );
+
+                return response()->json(['success' => 'Data sudah diSIMPAN'], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Gagal diProses. ' .$e->getMessage()], 500);
             }
         }
     }

@@ -24,6 +24,7 @@ var divisiId = document.getElementById('divisiId');
 var objekId = document.getElementById('objekId');
 var typeKonv = document.getElementById('typeKonv');
 var idKonv = document.getElementById('idKonv');
+var idTrans = document.getElementById('idTrans');
 
 // button
 var btn_proses = document.getElementById('btn_proses');
@@ -36,7 +37,8 @@ var btn_typeKonv = document.getElementById('btn_typeKonv');
 var today = new Date().toISOString().slice(0, 10);
 tanggal.value = (today);
 
-let simpan, ada, Yidtransaksi, YKdBrg, jumlah, YidType, YidTypePenerima;
+let simpan, Yidtransaksi, kodeBarang, YIdTypeKonv, jumlah, YidType, YidTypePenerima, subkel, sIdKonv, sError, pprimer, ssekunder, ttritier;
+let ada = false;
 
 btn_ok.focus();
 
@@ -202,7 +204,7 @@ $('#tableData tbody').on('click', 'tr', function () {
     var data = table.row(this).data();
     var checkbox = $(this).find('input.row-checkbox');
 
-    // console.log(data);
+    console.log(data);
 
     kodeTransaksi.value = data[0];
     namaBarang.value = decodeHtmlEntities(data[1]);
@@ -210,8 +212,13 @@ $('#tableData tbody').on('click', 'tr', function () {
     kelompokNama.value = decodeHtmlEntities(data[4]);
     subkelNama.value = decodeHtmlEntities(data[5]);
     primer.value = formatNumber(data[7]);
+    pprimer = formatNumber(data[7])
     sekunder.value = formatNumber(data[8]);
+    ssekunder = formatNumber(data[8]);
     tritier.value = formatNumber(data[9]);
+    ttritier = formatNumber(data[9]);
+    kodeBarang = data[11];
+    subkel = data[12];
 
     $.ajax({
         type: 'GET',
@@ -318,7 +325,8 @@ btn_typeKonv.addEventListener('click', function () {
                             dataType: "json",
                             type: "GET",
                             data: {
-                                _token: csrfToken
+                                _token: csrfToken,
+                                subkel: subkel
                             }
                         },
                         columns: [
@@ -409,7 +417,7 @@ function cekPenerima(Yidtransaksi, kodeBarang) {
                         reject('Jumlah >= 1');
                     });
                 } else {
-                    resolve(true);
+                    resolve(YidTypePenerima);
                 }
             },
             error: function (xhr, status, error) {
@@ -430,7 +438,7 @@ function cekKonversi(namaBarang) {
                 namaBarang: namaBarang
             },
             success: function (response) {
-                if (response[0] && response[0].Result) {
+                if (response[0] && response[0].Result.trim() === 'True') {
                     resolve(true);
                 } else {
                     resolve(false);
@@ -444,8 +452,40 @@ function cekKonversi(namaBarang) {
     });
 }
 
+async function cekPenyesuaianKonversi(YIdTypeKonv) {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            type: 'GET',
+            url: 'PermohonanPenerimaBenang/getPenyesuaianKonversi',
+            data: {
+                _token: csrfToken,
+                YIdTypeKonv: YIdTypeKonv
+            },
+            success: function (response) {
+                const jumlah = parseFloat(response[0].jumlah.trim());
 
-function cariType(namaBarang) {
+                if (jumlah >= 1) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Warning!',
+                        text: `Tidak Bisa DiAcc !!!. Karena Ada Transaksi Penyesuaian yang Belum Diacc untuk type ${YIdTypeKonv} Pada divisi pemberi`,
+                        returnFocus: false
+                    }).then(() => {
+                        resolve(false);
+                    });
+                } else {
+                    resolve(true);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+                reject(error);
+            }
+        });
+    });
+}
+
+function cariType(namaBarang, subkel) {
     return new Promise((resolve, reject) => {
         $.ajax({
             type: 'GET',
@@ -453,14 +493,10 @@ function cariType(namaBarang) {
             data: {
                 _token: csrfToken,
                 namaBarang: namaBarang,
-                subke
+                subkel: subkel
             },
             success: function (response) {
-                if (response[0] && response[0].Result) {
-                    resolve(true);
-                } else {
-                    resolve(false);
-                }
+                idKonv.value = response[0].IdType.trim();
             },
             error: function (xhr, status, error) {
                 console.error('Error:', error);
@@ -470,9 +506,80 @@ function cariType(namaBarang) {
     });
 }
 
+async function getIdKonv() {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            type: 'PUT',
+            url: 'PermohonanPenerimaBenang/getIdKonv',
+            data: {
+                _token: csrfToken,
+            },
+            success: function (response) {
+                resolve(response.success);
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+                reject(error);
+            }
+        });
+    });
+}
 
+async function saveDataAsal(sIdKonv) {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            type: 'PUT',
+            url: 'PermohonanPenerimaBenang/saveDataAsal',
+            data: {
+                _token: csrfToken,
+                YisIdKonv: sIdKonv,
+                YidTypePenerima: YidTypePenerima,
+                primer: formatNumber(data[7]), // keluar primer
+                sekunder: formatNumber(data[8]), // keluar sekunder
+                tritier: formatNumber(data[9]), // keluar tritier
+                subkel: data[12],
+                idTrans: idTrans
+            },
+            success: function (response) {
+                resolve(true);
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+                reject(error);
+            }
+        });
+    });
+}
+
+async function saveDataTujuan(sIdKonv) {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            type: 'PUT',
+            url: 'PermohonanPenerimaBenang/saveDataTujuan',
+            data: {
+                _token: csrfToken,
+                sIdKonv: sIdKonv,
+                YidTypePenerima: YidTypePenerima,
+                primer: formatNumber(data[7]), // masuk primer
+                sekunder: formatNumber(data[8]), // masuk sekunder
+                tritier: formatNumber(data[9]), // masuk tritier
+                subkel: data[12],
+                idTrans: idTrans
+            },
+            success: function (response) {
+                resolve(true);
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+                reject(error);
+            }
+        });
+    });
+}
 
 btn_proses.addEventListener('click', function () {
+    Yidtransaksi = kodeTransaksi.value;
+
     cekPemberi(Yidtransaksi)
         .then(() => {
             return cekPenerima(Yidtransaksi, kodeBarang);
@@ -483,22 +590,175 @@ btn_proses.addEventListener('click', function () {
                 url: 'PermohonanPenerimaBenang/proses',
                 data: {
                     _token: csrfToken,
-                    YIdTrans: YIdTrans,
-                    primer: formatNumber(data[7]),
-                    sekunder: formatNumber(data[8]),
-                    tritier: formatNumber(data[9]),
+                    Yidtransaksi: Yidtransaksi,
+                    primer: pprimer,
+                    sekunder: ssekunder,
+                    tritier: ttritier,
                     YidType: YidType,
                     YidTypePenerima: YidTypePenerima
                 }
             });
         })
         .then(result => {
-            // Handle successful AJAX response
-            console.log('Success:', result);
+            sError = result.Nerror.trim();
+            if (sError === 'BENAR') {
+                simpan = true;
+                idTrans.value = result.IdTransPenerima.trim();
+                ada = true;
+            }
+            else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Warning!',
+                    html: `Untuk Idtransaksi = ${Yidtransaksi}  Tidak bisa diacc.<br>${sError}`,
+                    returnFocus: false
+                }).then(() => {
+                    return;
+                });
+            }
         })
         .catch(error => {
-            // Handle any errors or rejections
             console.error('Error:', error);
         });
+
+    if (simpan) {
+        Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Data Sudah Disimpan Untuk Penerimaan Benang!!',
+            returnFocus: false,
+        });
+    } else {
+        if (!ada) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Warning!',
+                text: `Tidak Ada Data Yang DiTerima!!!!....., Untuk Menerima Barang pilih data pada tabel tersedia `,
+                returnFocus: false
+            }).then(() => {
+                return;
+            });
+        }
+    }
+
+    if (!cekKonversi(namaBarang.value) && sError === 'BENAR') {
+        Swal.fire({
+            icon: 'question',
+            text: `Apakah Data Ini Akan Di Konversi ?`,
+            returnFocus: false,
+            showCancelButton: true,
+            confirmButtonText: 'Ya',
+            cancelButtonText: 'Tidak'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                cariType(namaBarang.value, subkel);
+                btn_refresh.disabled = true;
+                btn_proses.disabled = true;
+                btn_konversi.focus();
+            } else {
+                clearInputs();
+            }
+        });
+    }
 });
+
+btn_konversi.addEventListener('click', async function () {
+    try {
+        let sIdKonv = '';
+
+        if (idKonv.value !== '') {
+            YIdTypeKonv = idKonv.value;
+        }
+
+        if (YIdTypeKonv === '') {
+            await Swal.fire({
+                icon: 'warning',
+                title: 'Warning!',
+                text: `Isikan Dulu Type Benang Tujuan Konversi Pada Subkel : ${subkelNama}`,
+                returnFocus: false
+            });
+            return;
+        }
+
+        const isPenyesuaianValid = await cekPenyesuaianKonversi(YIdTypeKonv);
+        if (!isPenyesuaianValid) {
+            await Swal.fire({
+                icon: 'warning',
+                title: 'Warning!',
+                text: `Tidak Bisa Dikonversi Karena type tujuan konversi ada penyesuaian`,
+                returnFocus: false
+            });
+            return;
+        }
+
+        sIdKonv = await getIdKonv();
+        if (sIdKonv === '') {
+            await Swal.fire({
+                icon: 'warning',
+                title: 'Warning!',
+                text: `Klik Kembali Tombol Proses Konversi`,
+                returnFocus: false
+            });
+            clearInputs();
+            showTable();
+            return;
+        }
+
+        const isDataAsalSaved = await saveDataAsal(sIdKonv);
+        if (!isDataAsalSaved) {
+            await Swal.fire({
+                icon: 'warning',
+                title: 'Warning!',
+                text: `Klik Kembali Tombol Proses Konversi`,
+                returnFocus: false
+            });
+            return;
+        }
+
+        const isDataTujuanSaved = await saveDataTujuan(sIdKonv);
+        if (!isDataTujuanSaved) {
+            await Swal.fire({
+                icon: 'warning',
+                title: 'Warning!',
+                text: `Klik Kembali Tombol Proses Konversi`,
+                returnFocus: false
+            });
+            return;
+        }
+
+        await Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: `Data Konversi Sudah Tersimpan`,
+            returnFocus: false
+        });
+
+    } catch (error) {
+        console.error('Error:', error);
+        await Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'An error occurred during the process.',
+            returnFocus: false
+        });
+    }
+})
+
+function clearInputs() {
+    const allInputs = document.querySelectorAll('input');
+    const excludeDivIds = ['divisiTanggal', 'objUser', 'ids'];
+
+    allInputs.forEach(function (input) {
+        let shouldClear = true;
+        excludeDivIds.forEach(function (id) {
+            const excludeDiv = document.getElementById(id);
+            if (excludeDiv && excludeDiv.contains(input)) {
+                shouldClear = false;
+            }
+        });
+        if (shouldClear) {
+            input.value = '';
+        }
+    });
+}
 

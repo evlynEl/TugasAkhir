@@ -10,7 +10,7 @@
 
                         <label>Penerima</label>
                         <div class="baris-1 pl-3" id="baris-1">
-                            <div class="row pt-2">
+                            <div class="row pt-2" id="divisiTanggal">
                                 <div class="col-2">
                                     <label for="divisiId">Divisi</label>
                                 </div>
@@ -29,7 +29,7 @@
                                 </div>
                             </div>
 
-                            <div class="row pr-5">
+                            <div class="row pr-5" id="objUser">
                                 <div class="col-sm-2">
                                     <label for="objekId">Objek</label>
                                 </div>
@@ -46,10 +46,7 @@
                             </div>
 
                             <div class="row" id="ids" style="display:none;">
-                                <div class="col-md-5 d-flex">
-                                    <input type="text" id="divisiId" name="divisiId" class="form-control" readonly>
-                                    <input type="text" id="objekId" name="objekId" class="form-control" readonly>
-                                </div>
+                                <input type="text" id="objekId" name="objekId" class="form-control" readonly>
                             </div>
 
                             <div class="row pr-5">
