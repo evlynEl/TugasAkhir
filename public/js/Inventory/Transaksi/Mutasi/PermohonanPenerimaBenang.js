@@ -605,6 +605,25 @@ btn_proses.addEventListener('click', function () {
                 simpan = true;
                 idTrans.value = result.IdTransPenerima.trim();
                 ada = true;
+                if (simpan) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Data Sudah Disimpan Untuk Penerimaan Benang!!',
+                        returnFocus: false,
+                    });
+                } else {
+                    if (!ada) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Warning!',
+                            text: `Tidak Ada Data Yang DiTerima!!!!....., Untuk Menerima Barang pilih data pada tabel tersedia `,
+                            returnFocus: false
+                        }).then(() => {
+                            return;
+                        });
+                    }
+                }
             }
             else {
                 Swal.fire({
@@ -620,26 +639,6 @@ btn_proses.addEventListener('click', function () {
         .catch(error => {
             console.error('Error:', error);
         });
-
-    if (simpan) {
-        Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: 'Data Sudah Disimpan Untuk Penerimaan Benang!!',
-            returnFocus: false,
-        });
-    } else {
-        if (!ada) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Warning!',
-                text: `Tidak Ada Data Yang DiTerima!!!!....., Untuk Menerima Barang pilih data pada tabel tersedia `,
-                returnFocus: false
-            }).then(() => {
-                return;
-            });
-        }
-    }
 
     if (!cekKonversi(namaBarang.value) && sError === 'BENAR') {
         Swal.fire({
