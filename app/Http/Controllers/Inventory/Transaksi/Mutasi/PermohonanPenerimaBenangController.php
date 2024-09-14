@@ -222,8 +222,20 @@ class PermohonanPenerimaBenangController extends Controller
                 $MinimumStockBeri = $pemberiData->MinimumStock;
                 $satuanUmumBeri = $pemberiData->satuanUmum;
 
+                $SaldoPrimerTerima = $penerimaData->saldoprimer;
+                $SaldoSekunderTerima = $penerimaData->saldosekunder;
+                $SaldoTritierTerima = $penerimaData->saldotritier;
+                $konv1Terima = $penerimaData->konv1;
+                $konv2Terima = $penerimaData->konv2;
+                $UnitPrimerTerima = $penerimaData->UnitPrimer;
+                $UnitSekunderTerima = $penerimaData->UnitSekunder;
+                $UnitTritierTerima = $penerimaData->UnitTritier;
+                $PakaiAturanKonversiTerima = $penerimaData->PakaiAturanKonversi;
+                $MinimumStockTerima = $penerimaData->MinimumStock;
+                $satuanUmumTerima = $penerimaData->satuanUmum;
+
                 // Step 4: Check if Satuan Tritier is the same
-                if ($UnitTritierBeri !== $penerimaData->UnitTritier) {
+                if ($UnitTritierBeri !== $UnitTritierTerima) {
                     $NmError = 'Satuan Paling Kecil Antara Pemberi dan Penerima Tidak Sama';
                     return response()->json(['Nmerror' => $NmError]);
                 }
@@ -246,7 +258,7 @@ class PermohonanPenerimaBenangController extends Controller
                     }
 
                     // Minimum stock validation
-                    if ($pemberiData->MinimumStock != 0) {
+                    if ($MinimumStockBeri != 0) {
                         if ($satuanUmumBeri == $UnitPrimerBeri && ($SaldoPrimerBeri - $primer) < $MinimumStockBeri) {
                             $NmError = 'Karena Jumlah Yang Diberikan Melebihi Minimum Stoknya Divisi Pemberi (Dalam Satuan Primer) : ' . trim($MinimumStockBeri);
                             return response()->json(['Nmerror' => $NmError]);
@@ -283,14 +295,14 @@ class PermohonanPenerimaBenangController extends Controller
                     // If konv1 is 0 and konv2 is not 0
                     if ($konv1Beri === 0 && $konv2Beri !== 0) {
                         // Check if satUmum1 is equal to satPrimer1
-                        if ($pemberiData->satuanUmum == $UnitPrimerBeri) {
+                        if ($satuanUmumBeri == $UnitPrimerBeri) {
                             $NmError = 'Untuk Div Pemberi, Konversi hanya sekunder ke tritier maka untuk nilai PRIMER Tidak boleh di ISI';
                             return response()->json(['Nmerror' => $NmError]);
                         }
 
                         // If satUmum1 equals satSekunder1
-                        if ($pemberiData->satuanUmum === $UnitSekunderBeri) {
-                            $JumlahKeluar = $sekunder + ceil($tritier / $pemberiData->konv2);
+                        if ($satuanUmumBeri === $UnitSekunderBeri) {
+                            $JumlahKeluar = $sekunder + ceil($tritier / $konv2Beri);
 
                             // Check if saldoSekunder minus JumlahKeluar is less than MinStok
                             if ($SaldoSekunderBeri - $JumlahKeluar < $MinimumStockBeri) {
@@ -300,8 +312,8 @@ class PermohonanPenerimaBenangController extends Controller
                         }
 
                         // If satUmum1 equals satTritier1
-                        if ($pemberiData->satuanUmum === $UnitTritierBeri) {
-                            $JumlahKeluar = ($pemberiData->konv2 * $sekunder) + $tritier;
+                        if ($satuanUmumBeri === $UnitTritierBeri) {
+                            $JumlahKeluar = ($konv2Beri * $sekunder) + $tritier;
 
                             // Check if saldoTritier minus JumlahKeluar is less than MinStok
                             if ($SaldoTritierBeri - $JumlahKeluar < $MinimumStockBeri) {
@@ -323,10 +335,10 @@ class PermohonanPenerimaBenangController extends Controller
 
                 if ($PakaiAturanKonversiBeri === 'Y') {
                     if ($konv1Beri === 0 && $konv2Beri !== 0) {
-                        $tmpSaldo = ($pemberiData->konv2 * $SaldoSekunderBeri) + $SaldoTritierBeri;
+                        $tmpSaldo = ($konv2Beri * $SaldoSekunderBeri) + $SaldoTritierBeri;
 
                         // Check if saldo is sufficient
-                        if ($tmpSaldo - ($pemberiData->konv2 * $sekunder) - $tritier < 0) {
+                        if ($tmpSaldo - ($konv2Beri * $sekunder) - $tritier < 0) {
                             $NmError = 'Saldo akhir Tritier Divisi Pemberi Tinggal : ' . trim($SaldoPrimerBeri) . ', Tidak boleh memberi: ' . trim($tritier);
                             return response()->json(['Nmerror' => $NmError]);
                         }
