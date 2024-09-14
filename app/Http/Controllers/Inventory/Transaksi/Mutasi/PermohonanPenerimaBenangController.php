@@ -48,7 +48,7 @@ class PermohonanPenerimaBenangController extends Controller
         } else if ($id === 'getData') {
             // menampilkan data di data table
             $justData = DB::connection('ConnInventory')->select('
-            exec SP_1003_INV_LIST_BELUMACC_TMPTRANSAKSI_1 @kode = 1, @XIdTypeTransaksi = 03, @XIdObjek = ?', [$objekId]);
+            exec SP_1003_INV_LIST_BELUMACC_TMPTRANSAKSI_1 @kode = 1, @XIdTypeTransaksi = "03", @XIdObjek = ?', [$objekId]);
             if (count($justData) > 0) {
                 $data_justData = [];
                 foreach ($justData as $detail_justData) {
@@ -173,19 +173,19 @@ class PermohonanPenerimaBenangController extends Controller
     public function update(Request $request, $id)
     {
         $Yidtransaksi = $request->input('Yidtransaksi');
-        $primer = $request->input('primer');
-        $sekunder = $request->input('sekunder');
-        $tritier = $request->input('tritier');
+        $primer = trim($request->input('primer'));
+        $sekunder = trim($request->input('sekunder'));
+        $tritier = trim($request->input('tritier'));
         $YidType = $request->input('YidType');
         $YidTypePenerima = $request->input('YidTypePenerima');
         $user = Auth::user()->NomorUser;
         $idTrans = $request->input('idTrans');
         $sIdKonv = $request->input('sIdKonv');
         $NmError = null;
+        // dd($request->all());
 
 
         if ($id === 'proses') {
-            DB::beginTransaction();
 
             try {
                 // Step 1: Fetch status from tmp_transaksi
@@ -210,29 +210,33 @@ class PermohonanPenerimaBenangController extends Controller
                     ->where('NonAktif', 'Y')
                     ->first();
 
-                $SaldoPrimerBeri = $pemberiData->saldoprimer;
-                $SaldoSekunderBeri = $pemberiData->saldosekunder;
-                $SaldoTritierBeri = $pemberiData->saldotritier;
-                $konv1Beri = $pemberiData->konv1;
-                $konv2Beri = $pemberiData->konv2;
+                // dd($request->all(), $pemberiData, $penerimaData);
+
+                $SaldoPrimerBeri = trim($pemberiData->SaldoPrimer);
+                $SaldoSekunderBeri = trim($pemberiData->SaldoSekunder);
+                $SaldoTritierBeri = trim($pemberiData->SaldoTritier);
+                $konv1Beri = $pemberiData->KonvSekunderKePrimer;
+                $konv2Beri = $pemberiData->KonvTritierKeSekunder;
                 $UnitPrimerBeri = $pemberiData->UnitPrimer;
                 $UnitSekunderBeri = $pemberiData->UnitSekunder;
                 $UnitTritierBeri = $pemberiData->UnitTritier;
                 $PakaiAturanKonversiBeri = $pemberiData->PakaiAturanKonversi;
                 $MinimumStockBeri = $pemberiData->MinimumStock;
-                $satuanUmumBeri = $pemberiData->satuanUmum;
+                $satuanUmumBeri = $pemberiData->SatuanUmum;
 
-                $SaldoPrimerTerima = $penerimaData->saldoprimer;
-                $SaldoSekunderTerima = $penerimaData->saldosekunder;
-                $SaldoTritierTerima = $penerimaData->saldotritier;
-                $konv1Terima = $penerimaData->konv1;
-                $konv2Terima = $penerimaData->konv2;
+                $SaldoPrimerTerima = trim($penerimaData->SaldoPrimer);
+                $SaldoSekunderTerima = trim($penerimaData->SaldoSekunder);
+                $SaldoTritierTerima = trim($penerimaData->SaldoTritier);
+                $konv1Terima = $penerimaData->KonvSekunderKePrimer;
+                $konv2Terima = $penerimaData->KonvTritierKeSekunder;
                 $UnitPrimerTerima = $penerimaData->UnitPrimer;
                 $UnitSekunderTerima = $penerimaData->UnitSekunder;
                 $UnitTritierTerima = $penerimaData->UnitTritier;
                 $PakaiAturanKonversiTerima = $penerimaData->PakaiAturanKonversi;
                 $MinimumStockTerima = $penerimaData->MinimumStock;
-                $satuanUmumTerima = $penerimaData->satuanUmum;
+                $satuanUmumTerima = $penerimaData->SatuanUmum;
+                $MaxStockTerima = $penerimaData->MaximumStock;
+
 
                 // Step 4: Check if Satuan Tritier is the same
                 if ($UnitTritierBeri !== $UnitTritierTerima) {
@@ -243,17 +247,17 @@ class PermohonanPenerimaBenangController extends Controller
                 // Step 5: Check stock constraints for Pemberi
                 if ($PakaiAturanKonversiBeri !== 'Y') {
                     if ($SaldoPrimerBeri - $primer < 0) {
-                        $NmError = 'Karena Saldo akhir Primer Tinggal: ' . trim($SaldoPrimerBeri) . '. Divisi Pemberi Tidak boleh memberi: ' . $primer;
+                        $NmError = 'Karena Saldo akhir Primer Tinggal: ' . $SaldoPrimerBeri . '. Divisi Pemberi Tidak boleh memberi: ' . $primer;
                         return response()->json(['Nmerror' => $NmError]);
                     }
 
                     if ($SaldoSekunderBeri - $sekunder < 0) {
-                        $NmError = 'Karena Saldo akhir Sekunder Tinggal: ' . trim($SaldoSekunderBeri) . '. Divisi Pemberi Tidak boleh memberi: ' . $sekunder;
+                        $NmError = 'Karena Saldo akhir Sekunder Tinggal: ' . $SaldoSekunderBeri . '. Divisi Pemberi Tidak boleh memberi: ' . $sekunder;
                         return response()->json(['Nmerror' => $NmError]);
                     }
 
                     if ($SaldoTritierBeri - $tritier < 0) {
-                        $NmError = 'Karena Saldo akhir Tritier Tinggal: ' . trim($SaldoTritierBeri) . '. Divisi Pemberi Tidak boleh memberi: ' . $tritier;
+                        $NmError = 'Karena Saldo akhir Tritier Tinggal: ' . $SaldoTritierBeri . '. Divisi Pemberi Tidak boleh memberi: ' . $tritier;
                         return response()->json(['Nmerror' => $NmError]);
                     }
 
@@ -279,6 +283,8 @@ class PermohonanPenerimaBenangController extends Controller
                 $penerimaKonversi = DB::connection('ConnInventory')->table('type')
                     ->where('idtype', $YidTypePenerima)
                     ->value('PakaiAturanKonversi');
+
+                // dd($penerimaKonversi);
 
                 if ($penerimaKonversi === 'Y') {
                     $NmError = 'Karena Program Belum Bisa MengAcc Jika Penerima memakai aturan Konversi';
@@ -330,6 +336,7 @@ class PermohonanPenerimaBenangController extends Controller
                 DB::connection('ConnInventory')->statement('exec SP_1003_INV_Update_IdTransaksi_Counter @XIdTransaksi = ?', [$idTransaksi]);
 
                 $YidTransaksi2 = str_pad($idTransaksi, 9, '0', STR_PAD_LEFT);
+                // dd($YidTransaksi2);
 
 
 
@@ -428,72 +435,256 @@ class PermohonanPenerimaBenangController extends Controller
                         $SaldoSekunderBeri,
                         $SaldoTritierBeri
                     ]);
-
-                    // $data = [
-                    //     'IdTransaksi' => $YidTransaksi2,
-                    //     'IdTypeTransaksi' => $idTypeTransaksi,
-                    //     'UraianDetailTransaksi' => $uraianDetailTransaksi,
-                    //     'IdType' => $idType,
-                    //     'IdPenerima' => $XIdpenerima,
-                    //     'IdPemberi' => $idPemberi,
-                    //     'SaatAwalTransaksi' => $saatAwalTransaksi,
-                    //     'SaatAkhirTransaksi' => $Ytanggal,
-                    //     'SaatLog' => $Ytanggal,
-                    //     'KomfirmasiPenerima' => $XIdpenerima,
-                    //     'KomfirmasiPemberi' => $komfirmasiPemberi,
-                    //     'SaatAwalKomfirmasi' => $saatAwalKomfirmasi,
-                    //     'SaatAkhirKomfirmasi' => $Ytanggal,
-                    //     'JumlahPemasukanPrimer' => $jumlahPemasukanPrimer,
-                    //     'JumlahPemasukanSekunder' => $jumlahPemasukanSekunder,
-                    //     'JumlahPemasukanTritier' => $jumlahPemasukanTritier,
-                    //     'JumlahPengeluaranPrimer' => $jumlahPengeluaranPrimer,
-                    //     'JumlahPengeluaranSekunder' => $jumlahPengeluaranSekunder,
-                    //     'JumlahPengeluaranTritier' => $jumlahPengeluaranTritier,
-                    //     'AsalIdSubKelompok' => $asalIdSubKelompok,
-                    //     'TujuanIdSubkelompok' => $tujuanIdSubkelompok,
-                    //     'Posisi' => $posisi,
-                    //     'SaldoPrimer' => $SaldoPrimer,
-                    //     'SaldoSekunder' => $SaldoSekunder,
-                    //     'SaldoTritier' => $SaldoTritier,
-                    //     'TimeInput' => $timeInput
-                    // ];
-
-                    // Insert into Transaksi table
-                    // DB::table('Transaksi')->insert($data);
                 }
 
 
-                // Step 6: Transaction process for Pemberi and Penerima
-                $YIdTransaksi = DB::connection('ConnInventory')->table('counter')->increment('idtransaksi');
+                // if (condition) {
+                //     # code...
+                // }
 
-                DB::connection('ConnInventory')->table('Transaksi')->insert([
-                    'IdTransaksi' => $YIdTransaksi,
-                    'IdTypeTransaksi' => $pemberiData->IdTypeTransaksi,
-                    'UraianDetailTransaksi' => $pemberiData->UraianDetailTransaksi,
+                $result = DB::connection('ConnInventory')->table('tmp_transaksi')
+                    ->select(
+                        'IdTransaksi',
+                        'IdTypeTransaksi',
+                        'UraianDetailTransaksi',
+                        'IdType',
+                        'IdPenerima',
+                        'IdPemberi',
+                        'SaatAwalTransaksi',
+                        'SaatAkhirTransaksi',
+                        'SaatLog',
+                        'KomfirmasiPenerima',
+                        'KomfirmasiPemberi',
+                        'SaatAwalKomfirmasi',
+                        'SaatAkhirKomfirmasi',
+                        'JumlahPemasukanPrimer',
+                        'JumlahPemasukanSekunder',
+                        'JumlahPemasukanTritier',
+                        'JumlahPengeluaranPrimer',
+                        'JumlahPengeluaranSekunder',
+                        'JumlahPengeluaranTritier',
+                        'AsalIdSubKelompok',
+                        'TujuanIdSubKelompok',
+                        'Posisi',
+                        'TimeInput'
+                    )
+                    ->where('IdTransaksi', $Yidtransaksi)
+                    ->first();
+
+                $saldoberi = [
+                    'SaldoPrimer' => (float)$SaldoPrimerBeri,
+                    'SaldoSekunder' => (float)$SaldoSekunderBeri,
+                    'SaldoTritier' => (float)$SaldoTritierBeri
+                ];
+
+                // dd($result, $saldo);
+
+                $data = [
+                    'IdTransaksi' => $result->IdTransaksi,
+                    'IdTypeTransaksi' => $result->IdTypeTransaksi,
+                    'UraianDetailTransaksi' => $result->UraianDetailTransaksi,
+                    'IdType' => $result->IdType,
+                    'IdPenerima' => $user,
+                    'IdPemberi' => $result->IdPemberi,
+                    'SaatAwalTransaksi' => $result->SaatAwalTransaksi,
+                    'SaatAkhirTransaksi' => now()->format('Y-m-d H:i:s'),
+                    'SaatLog' => now()->format('Y-m-d H:i:s'),
+                    'KomfirmasiPenerima' => $user,
+                    'KomfirmasiPemberi' => $result->KomfirmasiPemberi,
+                    'SaatAwalKomfirmasi' => $result->SaatAwalKomfirmasi,
+                    'SaatAkhirKomfirmasi' => now()->format('Y-m-d H:i:s'),
+                    'JumlahPemasukanPrimer' => $result->JumlahPemasukanPrimer,
+                    'JumlahPemasukanSekunder' => $result->JumlahPemasukanSekunder,
+                    'JumlahPemasukanTritier' => $result->JumlahPemasukanTritier,
+                    'JumlahPengeluaranPrimer' => $result->JumlahPengeluaranPrimer,
+                    'JumlahPengeluaranSekunder' => $result->JumlahPengeluaranSekunder,
+                    'JumlahPengeluaranTritier' => $result->JumlahPengeluaranTritier,
+                    'AsalIdSubKelompok' => $result->AsalIdSubKelompok,
+                    'TujuanIdSubKelompok' => $result->TujuanIdSubKelompok,
+                    'Posisi' => $result->Posisi,
+                    'SaldoPrimer' => $saldoberi['SaldoPrimer'],
+                    'SaldoSekunder' => $saldoberi['SaldoSekunder'],
+                    'SaldoTritier' => $saldoberi['SaldoTritier'],
+                    'TimeInput' => $result->TimeInput
+                ];
+
+                // dd($data);
+
+                // Insert into Transaksi table
+                DB::connection('ConnInventory')->table('Transaksi')->insert($data);
+
+                if ($PakaiAturanKonversiBeri === 'Y') {
+                    $tritier += ($konv2Beri * $sekunder);
+                    $sekunder = 0;
+                }
+                // dd($data);
+
+                // Check if MaxStok is greater than 0
+                if ($MaxStockTerima > 0) {
+                    if ($satuanUmumTerima === $UnitPrimerTerima) {
+                        if ($SaldoPrimerTerima + $primer > $MaxStockTerima) {
+                            $NmError = 'Karena Max Stok Divisi Penerima (Dalam Satuan Primer) sebesar : ' . trim($MaxStockTerima);
+                            return response()->json(['error' => $NmError], 400);
+                        }
+                    }
+                    if ($satuanUmumTerima === $UnitSekunderTerima) {
+                        if ($SaldoSekunderTerima + $sekunder > $MaxStockTerima) {
+                            $NmError = 'Karena Max Stok Divisi Penerima (Dalam Satuan Sekunder) sebesar : ' . trim($MaxStockTerima);
+                            return response()->json(['error' => $NmError], 400);
+                        }
+                    }
+                    if ($satuanUmumTerima === $UnitTritierTerima) {
+                        if ($SaldoTritierTerima + $tritier > $MaxStockTerima) {
+                            $NmError = 'Karena Max Stok Divisi Penerima (Dalam Satuan Tritier) sebesar : ' . trim($MaxStockTerima);
+                            return response()->json(['error' => $NmError], 400);
+                        }
+                    }
+                }
+
+                $currentIdTransaksi = DB::connection('ConnInventory')->table('counter')->value('idtransaksi');
+                $newIdTransaksi = $currentIdTransaksi + 1;
+
+                DB::connection('ConnInventory')->statement('exec SP_1003_INV_Update_IdTransaksi_Counter ?', [$newIdTransaksi]);
+                $YIdTransaksiPenerima = str_pad($newIdTransaksi, 9, '0', STR_PAD_LEFT);
+                // dd($YIdTransaksiPenerima);
+
+                DB::connection('ConnInventory')->statement('EXEC SP_1003_INV_Update_SaldoType_Masuk ?, ?, ?, ?, ? ,?, ?', [
+                    $YidTypePenerima,
+                    $primer,
+                    $sekunder,
+                    $tritier,
+                    $SaldoPrimerTerima,
+                    $SaldoSekunderTerima,
+                    $SaldoTritierTerima
+                ]);
+
+                $result = DB::connection('ConnInventory')->table('tmp_transaksi')
+                    ->select(
+                        'IdTransaksi',
+                        'IdTypeTransaksi',
+                        'UraianDetailTransaksi',
+                        'IdType',
+                        'IdPenerima',
+                        'IdPemberi',
+                        'SaatAwalTransaksi',
+                        'SaatAkhirTransaksi',
+                        'SaatLog',
+                        'KomfirmasiPenerima',
+                        'KomfirmasiPemberi',
+                        'SaatAwalKomfirmasi',
+                        'SaatAkhirKomfirmasi',
+                        'JumlahPemasukanPrimer',
+                        'JumlahPemasukanSekunder',
+                        'JumlahPemasukanTritier',
+                        'JumlahPengeluaranPrimer',
+                        'JumlahPengeluaranSekunder',
+                        'JumlahPengeluaranTritier',
+                        'AsalIdSubKelompok',
+                        'TujuanIdSubKelompok',
+                        'Posisi',
+                        'TimeInput'
+                    )
+                    ->where('IdTransaksi', $Yidtransaksi)
+                    ->first();
+
+                $saldoterima = [
+                    'SaldoPrimer' => (float)$SaldoPrimerTerima,
+                    'SaldoSekunder' => (float)$SaldoSekunderTerima,
+                    'SaldoTritier' => (float)$SaldoTritierTerima
+                ];
+
+                // dd($result, $saldoterima);
+
+                $data = [
+                    'IdTransaksi' => $YIdTransaksiPenerima,
+                    'IdTypeTransaksi' => $result->IdTypeTransaksi,
+                    'UraianDetailTransaksi' => $result->UraianDetailTransaksi,
                     'IdType' => $YidTypePenerima,
                     'IdPenerima' => $user,
-                    'IdPemberi' => $pemberiData->IdPemberi,
+                    'IdPemberi' => $result->IdPemberi,
+                    'SaatAwalTransaksi' => $result->SaatAwalTransaksi,
+                    'SaatAkhirTransaksi' => now()->format('Y-m-d H:i:s'),
+                    'SaatLog' => now()->format('Y-m-d H:i:s'),
+                    'KomfirmasiPenerima' => $user,
+                    'KomfirmasiPemberi' => $result->KomfirmasiPemberi,
+                    'SaatAwalKomfirmasi' => $result->SaatAwalKomfirmasi,
+                    'SaatAkhirKomfirmasi' => now()->format('Y-m-d H:i:s'),
                     'JumlahPengeluaranPrimer' => $primer,
                     'JumlahPengeluaranSekunder' => $sekunder,
                     'JumlahPengeluaranTritier' => $tritier,
-                    'SaldoPrimer' => $pemberiData->saldoprimer,
-                    'SaldoSekunder' => $pemberiData->saldosekunder,
-                    'SaldoTritier' => $pemberiData->saldotritier,
-                    'TimeInput' => now(),
+                    'JumlahPemasukanPrimer' => $result->JumlahPemasukanPrimer,
+                    'JumlahPemasukanSekunder' => $result->JumlahPemasukanSekunder,
+                    'JumlahPemasukanTritier' => $result->JumlahPemasukanTritier,
+                    'AsalIdSubKelompok' => $result->AsalIdSubKelompok,
+                    'TujuanIdSubKelompok' => $result->TujuanIdSubKelompok,
+                    'Posisi' => $result->Posisi,
+                    'IdTransaksi_Acuan' => $YidTransaksi2,
+                    'SaldoPrimer' => $saldoterima['SaldoPrimer'],
+                    'SaldoSekunder' => $saldoterima['SaldoSekunder'],
+                    'SaldoTritier' => $saldoterima['SaldoTritier'],
+                    'TimeInput' => $result->TimeInput
+                ];
+
+                // dd($data);
+
+                // Insert into Transaksi table
+                DB::connection('ConnInventory')->table('Transaksi')->insert($data);
+
+                DB::connection('ConnInventory')->statement('exec SP_1003_INV_UPDATE_STATUS_TMPTRANSAKSI ?', [$Yidtransaksi]);
+
+                DB::connection('ConnInventory')->table('tmp_transaksi')
+                    ->where('idtransaksi', $Yidtransaksi)
+                    ->update(['idtrans' => $YidTransaksi2]);
+
+                // DB::commit();
+
+                // Step 6: Transaction process for Pemberi and Penerima
+                $YIdTransaksi = DB::connection('ConnInventory')->table('counter')->increment('idtransaksi');
+                // dd($YIdTransaksi);
+
+
+
+                $divisi = DB::connection('ConnInventory')->table('Type')
+                    ->join('Subkelompok', 'Type.IdSubkelompok_Type', '=', 'Subkelompok.IdSubkelompok')
+                    ->join('Kelompok', 'Subkelompok.IdKelompok_Subkelompok', '=', 'Kelompok.IdKelompok')
+                    ->join('KelompokUtama', 'Kelompok.IdKelompokUtama_Kelompok', '=', 'KelompokUtama.IdKelompokUtama')
+                    ->join('Objek', 'KelompokUtama.IdObjek_KelompokUtama', '=', 'Objek.IdObjek')
+                    ->join('Divisi', 'Objek.IdDivisi_Objek', '=', 'Divisi.IdDivisi')
+                    ->where('Type.IdType', $YidTypePenerima)
+                    ->value('Divisi.IdDivisi');
+
+                // dd($divisi);
+
+                // Step 2: Conditionally execute stored procedure
+                if ($divisi === 'INV') {
+                    DB::connection('ConnInventory')->statement('EXEC SP_1003_INV_dispresiasi ?, ?, ?, ?', [
+                        $YidType,
+                        $YidTypePenerima,
+                        $tritier,
+                        '03'
+                    ]);
+                }
+
+                return response()->json([
+                    'Nmerror' => 'BENAR',
+                    'IdTransPenerima' => $YIdTransaksiPenerima
                 ]);
-
-                DB::commit();
-
-                return response()->json(['Nmerror' => 'BENAR', 'IdTransPenerima' => $YIdTransaksi]);
             } catch (\Exception $e) {
-                DB::rollBack();
+                // DB::rollBack();
                 return response()->json(['Nmerror' => $e->getMessage()]);
             }
         } else if ($id === 'getIdKonv') {
             $results = DB::connection('ConnInventory')->statement('exec SP_1003_INV_IDKONVERSI');
-            $idKonversi = $results[0]->IDKonversi;
+            // $idKonversi = $results[0]->IDKonversi;
 
-            return response()->json(['success' => $idKonversi], 200);
+            return response()->json(['success' => 'ada'], 200);
+        } else if ('getIdKonvNumber') {
+            $currentId = DB::connection('ConnInventory')->table('counter')->value('idkonversi');
+
+            $newId = $currentId + 1;
+            $idKonversi = str_pad($newId, 9, '0', STR_PAD_LEFT);
+
+            return response()->json(['IDKonversi' => $idKonversi]);
         } else if ($id === 'saveDataAsal') {
             try {
                 DB::connection('ConnInventory')->statement(
