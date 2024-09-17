@@ -62,7 +62,7 @@ class PermohonanPenerimaController extends Controller
         else if ($id === 'cekSesuaiPemberi') {
             $idtransaksi = $request->input('idtransaksi');
 
-            $divisi = DB::connection('ConnInventory')->select('exec [SP_1003_INV_check_penyesuaian_transaksi]
+            $divisi = DB::connection('ConnInventory')->select('exec [SP_1003_INV_check_penyesuaian_pemberi]
            @idtransaksi = ?, @idtypetransaksi = ?', [$idtransaksi, '06']);
 
             $data_divisi = [];
@@ -81,8 +81,8 @@ class PermohonanPenerimaController extends Controller
             $idtransaksi = $request->input('idtransaksi');
             $KodeBarang = $request->input('KodeBarang');
 
-            $divisi = DB::connection('ConnInventory')->select('exec [SP_1003_INV_check_penyesuaian_transaksi]
-           @Kode = ?, @idtransaksi = ?, @idtypetransaksi = ?, @KodeBarang = ?', [2, $idtransaksi, '06', $KodeBarang]);
+            $divisi = DB::connection('ConnInventory')->select('exec [SP_1003_INV_check_penyesuaian_penerima]
+           @idtransaksi = ?, @idtypetransaksi = ?, @KodeBarang = ?', [$idtransaksi, '06', $KodeBarang]);
 
             $data_divisi = [];
             foreach ($divisi as $detail_divisi) {

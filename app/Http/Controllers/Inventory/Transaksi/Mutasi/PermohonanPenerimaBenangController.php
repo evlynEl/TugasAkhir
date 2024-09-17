@@ -73,7 +73,7 @@ class PermohonanPenerimaBenangController extends Controller
                 // dd($data_justData, $request->all());
                 return response()->json($data_justData);
             } else {
-                return response()->json(['warning' => 'Tidak ada Data Yang Diterima Oleh Divisi : ' . trim($divisiNama)], 500);
+                return response()->json(['warning' => 'Tidak ada Data Yang Diterima Oleh Divisi : ' . trim($divisiNama)], 200);
             }
         } else if ($id === 'getSelect') {
             $selectData = DB::connection('ConnInventory')->select('exec SP_1003_INV_AsalSubKelompok_TmpTransaksi @XIdTransaksi = ?', [$kodeTransaksi]);
@@ -187,7 +187,9 @@ class PermohonanPenerimaBenangController extends Controller
 
         if ($id === 'proses') {
 
+            DB::connection('ConnInventory')->beginTransaction();
             try {
+
                 // Step 1: Fetch status from tmp_transaksi
                 $status = DB::connection('ConnInventory')->table('tmp_transaksi')
                     ->where('idtransaksi', $Yidtransaksi)
@@ -472,9 +474,9 @@ class PermohonanPenerimaBenangController extends Controller
                     ->first();
 
                 $saldoberi = [
-                    'SaldoPrimer' => (float)$SaldoPrimerBeri,
-                    'SaldoSekunder' => (float)$SaldoSekunderBeri,
-                    'SaldoTritier' => (float)$SaldoTritierBeri
+                    'SaldoPrimer' => (float) $SaldoPrimerBeri,
+                    'SaldoSekunder' => (float) $SaldoSekunderBeri,
+                    'SaldoTritier' => (float) $SaldoTritierBeri
                 ];
 
                 // dd($result, $saldo);
@@ -588,9 +590,9 @@ class PermohonanPenerimaBenangController extends Controller
                     ->first();
 
                 $saldoterima = [
-                    'SaldoPrimer' => (float)$SaldoPrimerTerima,
-                    'SaldoSekunder' => (float)$SaldoSekunderTerima,
-                    'SaldoTritier' => (float)$SaldoTritierTerima
+                    'SaldoPrimer' => (float) $SaldoPrimerTerima,
+                    'SaldoSekunder' => (float) $SaldoSekunderTerima,
+                    'SaldoTritier' => (float) $SaldoTritierTerima
                 ];
 
                 // dd($result, $saldoterima);
@@ -665,12 +667,15 @@ class PermohonanPenerimaBenangController extends Controller
                     ]);
                 }
 
+                DB::connection('ConnInventory')->commit();
+
                 return response()->json([
                     'Nmerror' => 'BENAR',
                     'IdTransPenerima' => $YIdTransaksiPenerima
                 ]);
             } catch (\Exception $e) {
                 // DB::rollBack();
+                DB::connection('ConnInventory')->rollBack();
                 return response()->json(['Nmerror' => $e->getMessage()]);
             }
         } else if ($id === 'getIdKonv') {

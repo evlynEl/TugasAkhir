@@ -27,6 +27,7 @@ var no_tritier = document.getElementById('no_tritier');
 var divisiId = document.getElementById('divisiId');
 var objekId = document.getElementById('objekId');
 var kodeTransaksi = document.getElementById('kodeTransaksi');
+var namaBarang = document.getElementById('namaBarang');
 
 // button
 var btn_divisi = document.getElementById('btn_divisi');
@@ -136,6 +137,9 @@ $('#tableData tbody').on('click', 'tr', function () {
                 Primer = parseFloat(SaldoPrimer - primer.value);
                 Sekunder = parseFloat(SaldoSekunder - sekunder.value);
                 Tritier = parseFloat(SaldoTritier - tritier.value);
+
+                console.log(Primer, Sekunder, Tritier);
+                
 
                 if (checkbox.is(':checked')) {
                     const index = completeDataArray.findIndex(item => item.tableData[1] === data[1]);
@@ -267,8 +271,10 @@ async function Cek_Sesuai_Pemberi(sIdtrans) {
                 idtransaksi: sIdtrans,
             }
         });
+        console.log(response);
+        
+        Yidtype = decodeHtmlEntities(response[0].IdType);
         if (response[0].jumlah >= 1) {
-            Yidtype = decodeHtmlEntities(response[0].IdType);
             await Swal.fire({
                 icon: 'info',
                 text: 'Tidak Bisa DiAcc !!!. Karena Ada Transaksi Penyesuaian yang Belum Diacc untuk type '
@@ -296,8 +302,8 @@ async function Cek_Sesuai_Penerima(sIdtrans, sKodeBarang) {
                 KodeBarang: sKodeBarang,
             }
         });
-        if (response[0].jumlah >= 1) {
-            YIdTypePenerima = decodeHtmlEntities(response[0].IdType);
+        YIdTypePenerima = decodeHtmlEntities(response[0].IdType);
+        if (response[0].jumlah >= 1) {            
             await Swal.fire({
                 icon: 'info',
                 text: 'Tidak Bisa DiAcc !!!. Karena Ada Transaksi Penyesuaian yang Belum Diacc untuk type '
@@ -322,7 +328,7 @@ btn_refresh.addEventListener('click', function () {
 });
 
 btn_proses.addEventListener('click', async function () {
-    if (parseFloat(Primer) < 0 || parseFloat(Sekunder < 0) || parseFloat(Tritier) < 0) {
+    if (parseFloat(Primer) < 0 || parseFloat(Sekunder) < 0 || parseFloat(Tritier) < 0) {
         Swal.fire({
             icon: 'error',
             html: 'Saldo Tidak Cukup, Cek Stok Anda !',
@@ -337,21 +343,77 @@ btn_proses.addEventListener('click', async function () {
     if (isPemberiValid) {
         if (isPenerimaValid) {
             $.ajax({
-                type: 'GET',
-                url: 'PermohonanPenerima/proses',
+                type: 'PUT',
+                url: 'PermohonanPenerimaBenang/proses',
                 data: {
                     _token: csrfToken,
-                    XIdTransaksi: Yidtransaksi,
-                    XJumlahKeluarPrimer: primer.value,
-                    XJumlahKeluarSekunder: sekunder.value,
-                    XJumlahKeluarTritier: tritier.value,
-                    XIdtypePemberi: Yidtype,
-                    XidTypePenerima: YIdTypePenerima,
+                    Yidtransaksi: Yidtransaksi,
+                    primer: primer.value,
+                    sekunder: sekunder.value,
+                    tritier: tritier.value,
+                    YidType: Yidtype,
+                    YidTypePenerima: YIdTypePenerima
                 }
-            });
+            })
+                .then(result => {
+                    sError = result.Nmerror.trim();
+
+                    if (sError === 'BENAR') {
+                        simpan = true;
+                        ada = true;
+                        if (simpan) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: 'Data Sudah Disimpan!!',
+                                returnFocus: false,
+                            }).then(() => {
+                                clearInputs();
+                                showTable();
+                            });
+                        } else if (!ada) {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Warning!',
+                                text: 'Tidak Ada Data Yang DiTerima!!!!....., Untuk Menerima Barang pilih data pada tabel tersedia ',
+                                returnFocus: false
+                            }).then(() => {
+                                return;
+                            });
+                        }
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: `Untuk Idtransaksi = ${Yidtransaksi} Tidak bisa diacc.<br>${sError}`,
+                            returnFocus: false
+                        }).then(() => {
+                            return;
+                        });
+                    }
+                });
         }
     }
 });
+
+function clearInputs(){
+    kelutNama.value = '';
+    kelompokNama.value = '';
+    subkelNama.value = '';
+    kodeTransaksi.value = '';
+    divisiNama2.value = '';
+    objekNama2.value = '';
+    kelutNama2.value = '';
+    kelompokNama2.value = '';
+    subkelNama2.value = '';
+    namaBarang.value = '';
+    primer.value = '';
+    sekunder.value = '';
+    tritier.value = '';
+    no_primer.value = '';
+    no_sekunder.value = '';
+    no_tritier.value = '';
+}
 
 // button list divisi pemberi
 btn_divisi.addEventListener("click", function (e) {
