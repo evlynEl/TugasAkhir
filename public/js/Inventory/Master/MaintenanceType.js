@@ -84,6 +84,11 @@ inputs.forEach((masuk, index) => {
                     btn_triter.focus();
                 } else if (masuk.id === 'primerSekunder') {
                     sekunderTritier.select();
+                } else if (masuk.id === 'kdBarang') {
+                    tmpKode = formatKdBarang(kdBarang.value)
+                    console.log(tmpKode);
+                    fillKodeBarang(tmpKode);
+
                 } else {
                     inputs[index + 1].focus();
                 }
@@ -93,6 +98,73 @@ inputs.forEach((masuk, index) => {
         }
     })
 });
+function formatKdBarang(kdBarang) {
+    kdBarang = kdBarang.trim();
+    return kdBarang.padStart(9, '0');
+}
+
+function fillKodeBarang(kdBarang) {
+    console.log(kdBarang);
+
+    $.ajax({
+        url: "MaintenanceType/fillKodeBarang",
+        type: "GET",
+        data: {
+            _token: csrfToken,
+            kdBarang: kdBarang
+        },
+        timeout: 30000,
+        success: function (response) {
+            if (response.length > 0) {
+                let result = response[0];
+
+                // Populate form fields with data from the result
+                katUtama.value = decodeHtmlEntities(result.nama_kategori.trim());
+                no_katUtama = result.no_kat_utama.trim();
+                kategori.value = decodeHtmlEntities(result.nama_kategori.trim());
+                no_kategori = result.no_kategori.trim();
+                jenis.value = decodeHtmlEntities(result.nama_sub_kategori.trim());
+                no_subkategori = result.no_sub_kategori.trim();
+                kdBarang.value = result.KD_BRG.trim();
+                namaBarang.value = decodeHtmlEntities(result.NAMA_BRG.trim());
+                namaType.value = decodeHtmlEntities(result.NAMA_BRG.trim());
+
+                triter.value = result.Tritier?.trim() ?? 'NULL';
+                no_tritier = result.No_Sat_Tri?.trim() ?? '000';
+                sekunder.value = result.Sekunder?.trim() ?? 'NULL';
+                no_sekunder = result.No_Sat_Sek?.trim() ?? '000';
+                primer.value = result.Primer?.trim() ?? 'NULL';
+                no_primer = result.No_Sat_Prim?.trim() ?? '000';
+
+                populateDropdownWithSatuanUmum(
+                    'satuan',
+                    result.No_Sat.trim(),
+                    triter.value,
+                    sekunder.value,
+                    primer.value,
+                    no_tritier,
+                    no_sekunder,
+                    no_primer
+                );
+                ketType.value = result.KET.trim();
+
+                namaType.select();
+
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Kode Barang Tidak Ada',
+                    returnFocus: false
+                });
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('AJAX Error:', error);
+        }
+    });
+}
+
 
 // button list divisi
 btn_divisi.addEventListener("click", function (e) {
@@ -879,7 +951,7 @@ function populateDropdownWithSatuanUmum(dropdownId, response, triterValue, sekun
         var option = dropdown.options[i];
         if (option.value.trim() === response.trim()) {
             var selectedNo = option.getAttribute('data-no');
-            console.log('Matching option found with data-no:', selectedNo,  option.value);
+            console.log('Matching option found with data-no:', selectedNo, option.value);
             dropdown.selectedIndex = i;
             break;
         }
@@ -1262,7 +1334,7 @@ function handleTypeSelection() {
             btn_divisi.focus();
         });
         return;
-    } else  if (objekNama.value === '') {
+    } else if (objekNama.value === '') {
         Swal.fire({
             icon: 'warning',
             title: 'Data Belum Lengkap Terisi',
@@ -1271,7 +1343,7 @@ function handleTypeSelection() {
             btn_objek.focus();
         });
         return;
-    } else  if (kelutNama.value === '') {
+    } else if (kelutNama.value === '') {
         Swal.fire({
             icon: 'warning',
             title: 'Data Belum Lengkap Terisi',
@@ -1280,7 +1352,7 @@ function handleTypeSelection() {
             btn_kelut.focus();
         });
         return;
-    } else  if (kelompokNama.value === '') {
+    } else if (kelompokNama.value === '') {
         Swal.fire({
             icon: 'warning',
             title: 'Data Belum Lengkap Terisi',
@@ -1289,7 +1361,7 @@ function handleTypeSelection() {
             btn_kelompok.focus();
         });
         return;
-    } else  if (subkelNama.value === '') {
+    } else if (subkelNama.value === '') {
         Swal.fire({
             icon: 'warning',
             title: 'Data Belum Lengkap Terisi',

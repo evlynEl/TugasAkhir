@@ -290,6 +290,40 @@ class MaintenanceTypeController extends Controller
                 return response()->json([]);
             }
 
+        } else if ($id === 'fillKodeBarang') {
+            $fill = DB::connection('ConnPurchase')->select('exec SP_1003_INV_List_Detail_YTransType @kd_brg_1 = ?', [$kdBarang]);
+            dd($kdBarang);
+            dd($request->all());
+
+            if (count($fill) > 0) {
+                $data_fill = [];
+                foreach ($fill as $detail_fill) {
+                    $data_fill[] = [
+                        'kat_utama' => $detail_fill->kat_utama,
+                        'no_kat_utama' => $detail_fill->no_kat_utama,
+                        'no_kategori' => $detail_fill->no_kategori,
+                        'nama_kategori' => $detail_fill->nama_kategori,
+                        'no_sub_kategori' => $detail_fill->no_sub_kategori,
+                        'nama_sub_kategori' => $detail_fill->nama_sub_kategori,
+                        'KD_BRG' => $detail_fill->KD_BRG,
+                        'NAMA_BRG' => $detail_fill->NAMA_BRG,
+                        'No_Sat_Tri' => $detail_fill->No_Sat_Tri,
+                        'Tritier' => $detail_fill->Tritier,
+                        'No_Sat_Sek' => $detail_fill->No_Sat_Sek,
+                        'Sekunder' => $detail_fill->Sekunder,
+                        'No_Sat_Prim' => $detail_fill->No_Sat_Prim,
+                        'Primer' => $detail_fill->Primer,
+                        'No_Sat' => $detail_fill->No_Sat,
+                        'Satuan' => $detail_fill->Satuan,
+                        'KET' => $detail_fill->KET
+                    ];
+                }
+                return response()->json($data_fill);
+            }
+
+            dd($request->all(), $data_fill);
+
+
         } else if ($id === 'proses') {
             // proses terjadi
             if ($a === 1) { // ISI
