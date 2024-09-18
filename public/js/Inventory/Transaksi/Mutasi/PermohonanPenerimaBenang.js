@@ -168,7 +168,25 @@ $(document).ready(function () {
             { title: 'KdBrg' },
             { title: 'IdSubkel' }
         ],
-        order: [[1, 'asc']]
+        order: [[1, 'asc']],
+        scrollY: '400px',
+        autoWidth: false,
+        scrollX: '100%',
+        columnDefs: [{ targets: [0], width: '12%', className: 'fixed-width' },
+        { targets: [1], width: '25%', className: 'fixed-width' },
+        { targets: [2], width: '25%', className: 'fixed-width' },
+        { targets: [3], width: '12%', className: 'fixed-width' },
+        { targets: [4], width: '10%', className: 'fixed-width' },
+        { targets: [5], width: '10%', className: 'fixed-width' },
+        { targets: [6], width: '10%', className: 'fixed-width' },
+        { targets: [7], width: '12%', className: 'fixed-width' },
+        { targets: [8], width: '12%', className: 'fixed-width' },
+        { targets: [9], width: '12%', className: 'fixed-width' },
+        { targets: [10], width: '12%', className: 'fixed-width'},
+        { targets: [11], width: '12%', className: 'fixed-width'},
+        { targets: [12], width: '12%', className: 'fixed-width'},
+    ]
+
     });
 });
 
@@ -322,7 +340,7 @@ btn_typeKonv.addEventListener('click', function () {
                         serverSide: true,
                         paging: false,
                         scrollY: '400px',
-                        scrollCollapse: true, 
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "PermohonanPenerimaBenang/getTypeKonv",
@@ -338,7 +356,7 @@ btn_typeKonv.addEventListener('click', function () {
                             { data: "NamaType" }
                         ],
                         columnDefs: [
-                            { 
+                            {
                                 targets: 0,
                                 width: '100px',
                             }

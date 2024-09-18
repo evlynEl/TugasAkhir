@@ -139,7 +139,7 @@ $('#tableData tbody').on('click', 'tr', function () {
                 Tritier = parseFloat(SaldoTritier - tritier.value);
 
                 console.log(Primer, Sekunder, Tritier);
-                
+
 
                 if (checkbox.is(':checked')) {
                     const index = completeDataArray.findIndex(item => item.tableData[1] === data[1]);
@@ -272,7 +272,7 @@ async function Cek_Sesuai_Pemberi(sIdtrans) {
             }
         });
         console.log(response);
-        
+
         Yidtype = decodeHtmlEntities(response[0].IdType);
         if (response[0].jumlah >= 1) {
             await Swal.fire({
@@ -303,7 +303,7 @@ async function Cek_Sesuai_Penerima(sIdtrans, sKodeBarang) {
             }
         });
         YIdTypePenerima = decodeHtmlEntities(response[0].IdType);
-        if (response[0].jumlah >= 1) {            
+        if (response[0].jumlah >= 1) {
             await Swal.fire({
                 icon: 'info',
                 text: 'Tidak Bisa DiAcc !!!. Karena Ada Transaksi Penyesuaian yang Belum Diacc untuk type '
@@ -455,7 +455,7 @@ btn_divisi.addEventListener("click", function (e) {
                         serverSide: true,
                         paging: false,
                         scrollY: '400px',
-                        scrollCollapse: true, 
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "MhnPenerima/getDivisi",
@@ -470,7 +470,7 @@ btn_divisi.addEventListener("click", function (e) {
                             { data: "NamaDivisi" }
                         ],
                         columnDefs: [
-                            { 
+                            {
                                 targets: 0,
                                 width: '100px',
                             }
@@ -539,7 +539,7 @@ btn_objek.addEventListener("click", function (e) {
                         serverSide: true,
                         paging: false,
                         scrollY: '400px',
-                        scrollCollapse: true, 
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "MhnPenerima/getObjek",
@@ -555,7 +555,7 @@ btn_objek.addEventListener("click", function (e) {
                             { data: "NamaObjek" }
                         ],
                         columnDefs: [
-                            { 
+                            {
                                 targets: 0,
                                 width: '100px',
                             }
@@ -607,6 +607,22 @@ $(document).ready(function () {
             { title: 'Tritier' },
             { title: 'Tgl Mohon' },
             { title: 'KdBrg' },
-        ]
+        ],
+        scrollY: '400px',
+        autoWidth: false,
+        scrollX: '100%',
+        columnDefs: [{ targets: [0], width: '12%', className: 'fixed-width' },
+        { targets: [1], width: '25%', className: 'fixed-width' },
+        { targets: [2], width: '25%', className: 'fixed-width' },
+        { targets: [3], width: '12%', className: 'fixed-width' },
+        { targets: [4], width: '10%', className: 'fixed-width' },
+        { targets: [5], width: '10%', className: 'fixed-width' },
+        { targets: [6], width: '10%', className: 'fixed-width' },
+        { targets: [7], width: '12%', className: 'fixed-width' },
+        { targets: [8], width: '12%', className: 'fixed-width' },
+        { targets: [9], width: '12%', className: 'fixed-width' },
+        { targets: [10], width: '12%', className: 'fixed-width' },
+        { targets: [11], width: '12%', className: 'fixed-width'}
+    ]
     });
 });

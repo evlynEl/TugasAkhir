@@ -42,7 +42,6 @@ $(document).ready(function () {
         info: false,
         ordering: true,
         columns: [
-            // { title: '', orderable: false, className: 'select-checkbox', data: null, defaultContent: '' },
             { title: 'IdTrans' },
             { title: 'Tanggal' },
             { title: 'Barang' },
@@ -57,26 +56,23 @@ $(document).ready(function () {
             { title: 'Tritier' },
             { title: 'Kd Brg' },
         ],
-        // columnDefs: [
-        //     {
-        //         targets: 0,
-        //         orderable: false,
-        //         className: 'select-checkbox',
-        //         render: function (data, type, row, meta) {
-        //             return `<input type="checkbox" class="row-checkbox"
-        //                             data-id="${row[1]}"
-        //                             data-type="${row[11]}"
-        //                             data-primer="${row[13]}"
-        //                             data-sekunder="${row[14]}"
-        //                             data-tritier="${row[15]}">`;
-        //         }
-        //     }
-        // ],
-        // order: [[1, 'asc']],
-        // select: {
-        //     style: 'os',
-        //     selector: 'td:first-child'
-        // }
+        scrollY: '400px',
+        autoWidth: false,
+        scrollX: '100%',
+        columnDefs: [{ targets: [0], width: '12%', className: 'fixed-width' },
+        { targets: [1], width: '8%', className: 'fixed-width' },
+        { targets: [2], width: '20%', className: 'fixed-width' },
+        { targets: [3], width: '25%', className: 'fixed-width' },
+        { targets: [4], width: '8%', className: 'fixed-width' },
+        { targets: [5], width: '8%', className: 'fixed-width' },
+        { targets: [6], width: '8%', className: 'fixed-width' },
+        { targets: [7], width: '8%', className: 'fixed-width' },
+        { targets: [8], width: '8%', className: 'fixed-width' },
+        { targets: [9], width: '8%', className: 'fixed-width' },
+        { targets: [10], width: '8%', className: 'fixed-width' },
+        { targets: [11], width: '8%', className: 'fixed-width'},
+        { targets: [12], width: '8%', className: 'fixed-width'},
+    ]
     });
 });
 

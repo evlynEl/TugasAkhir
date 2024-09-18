@@ -93,7 +93,25 @@ $(document).ready(function () {
             { title: 'Kel. Utama' },
             { title: 'Kelompok' },
             { title: 'Sub. Kel' },
-        ]
+        ],
+        scrollY: '400px',
+        autoWidth: false,
+        scrollX: '100%',
+        columnDefs: [{ targets: [0], width: '10%', className: 'fixed-width' },
+        { targets: [1], width: '25%', className: 'fixed-width' },
+        { targets: [2], width: '12%', className: 'fixed-width' },
+        { targets: [3], width: '25%', className: 'fixed-width' },
+        { targets: [4], width: '10%', className: 'fixed-width' },
+        { targets: [5], width: '10%', className: 'fixed-width' },
+        { targets: [6], width: '10%', className: 'fixed-width' },
+        { targets: [7], width: '12%', className: 'fixed-width' },
+        { targets: [8], width: '12%', className: 'fixed-width' },
+        { targets: [9], width: '12%', className: 'fixed-width' },
+        { targets: [10], width: '12%', className: 'fixed-width' },
+        { targets: [11], width: '12%', className: 'fixed-width'},
+        { targets: [12], width: '12%', className: 'fixed-width'},
+        { targets: [13], width: '12%', className: 'fixed-width'}
+    ]
     });
 });
 
@@ -248,7 +266,7 @@ btn_divisi.addEventListener("click", function (e) {
                         serverSide: true,
                         paging: false,
                         scrollY: '400px',
-                        scrollCollapse: true, 
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "PemberiBarang/getDivisi",
@@ -263,7 +281,7 @@ btn_divisi.addEventListener("click", function (e) {
                             { data: "NamaDivisi" },
                         ],
                         columnDefs: [
-                            { 
+                            {
                                 targets: 0,
                                 width: '100px',
                             }
@@ -332,7 +350,7 @@ btn_objek.addEventListener("click", function (e) {
                         serverSide: true,
                         paging: false,
                         scrollY: '400px',
-                        scrollCollapse: true, 
+                        scrollCollapse: true,
                         order: [0, "asc"],
                         ajax: {
                             url: "PemberiBarang/getObjek",
@@ -348,7 +366,7 @@ btn_objek.addEventListener("click", function (e) {
                             { data: "NamaObjek" },
                         ],
                         columnDefs: [
-                            { 
+                            {
                                 targets: 0,
                                 width: '100px',
                             }

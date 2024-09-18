@@ -9,7 +9,7 @@
 
                         <div class="row" id="tableHideShow" style="margin-top: -1%">
                             <div class="col-sm-12">
-                                <div class="table-responsive fixed-height" style="height: 300px">
+                                <div class="table-responsive fixed-height">
                                     <table class="table table-bordered no-wrap-header" id="tableData">
                                         <thead>
                                         </thead>
@@ -319,12 +319,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        <div class="baris-1 pl-3">
-
-                        </div>
-
-
 
                         <div style="text-align: right">
                             <button type="button" id="btn_isi" class="btn btn-info" disabled>Isi</button>
