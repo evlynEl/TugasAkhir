@@ -60,7 +60,7 @@ $(document).ready(function () {
         autoWidth: false,
         scrollX: '100%',
         columnDefs: [{ targets: [0], width: '12%', className: 'fixed-width' },
-        { targets: [1], width: '8%', className: 'fixed-width' },
+        { targets: [1], width: '12%', className: 'fixed-width' },
         { targets: [2], width: '20%', className: 'fixed-width' },
         { targets: [3], width: '25%', className: 'fixed-width' },
         { targets: [4], width: '8%', className: 'fixed-width' },
