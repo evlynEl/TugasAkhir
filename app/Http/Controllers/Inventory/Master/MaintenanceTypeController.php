@@ -292,8 +292,8 @@ class MaintenanceTypeController extends Controller
 
         } else if ($id === 'fillKodeBarang') {
             $fill = DB::connection('ConnPurchase')->select('exec SP_1003_INV_List_Detail_YTransType @kd_brg_1 = ?', [$kdBarang]);
-            dd($kdBarang);
-            dd($request->all());
+            // dd($kdBarang);
+            // dd($request->all());
 
             if (count($fill) > 0) {
                 $data_fill = [];
@@ -321,7 +321,7 @@ class MaintenanceTypeController extends Controller
                 return response()->json($data_fill);
             }
 
-            dd($request->all(), $data_fill);
+            // dd($request->all(), $data_fill);
 
 
         } else if ($id === 'proses') {
