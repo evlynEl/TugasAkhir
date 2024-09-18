@@ -58,7 +58,19 @@ $(document).ready(function () {
             { title: 'Primer' },
             { title: 'Sekunder' },
             { title: 'Tritier' },
-        ]
+        ],
+        scrollY: '400px',
+        autoWidth: false,
+        scrollX: '150%',
+        columnDefs: [{ targets: [0], width: '15%', className: 'fixed-width'},
+        { targets: [1], width: '30%', className: 'fixed-width' },
+        { targets: [2], width: '10%', className: 'fixed-width'},
+        { targets: [3], width: '15%', className: 'fixed-width'},
+        { targets: [4], width: '15%', className: 'fixed-width' },
+        { targets: [5], width: '10%', className: 'fixed-width' },
+        { targets: [6], width: '10%', className: 'fixed-width' },
+        { targets: [7], width: '10%', className: 'fixed-width' },
+        { targets: [8], width: '10%', className: 'fixed-width' },]
     });
 });
 
@@ -652,7 +664,7 @@ btn_ok.addEventListener("click", function (e) {
                 },
                 error: function (xhr, status, error) {
                     console.error('Error:', error);
-                }
+            }
             });
         }
 

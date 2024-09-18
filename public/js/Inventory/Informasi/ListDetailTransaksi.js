@@ -29,6 +29,9 @@ $(document).ready(function () {
         searching: false,
         info: false,
         ordering: false,
+        scrollY: '400px',
+        autoWidth: false,
+        scrollX: '100%',
         columns: [
             { title: 'TglAcc' },
             { title: 'Tgl Mohon' },
@@ -44,7 +47,21 @@ $(document).ready(function () {
             { title: 'Saldo Primer' },
             { title: 'Saldo Sekunder' },
             { title: 'Saldo Tritier' },
-        ]
+        ],
+        columnDefs: [{ targets: [0], width: '6%', className: 'fixed-width' },
+        { targets: [1], width: '6%', className: 'fixed-width' },
+        { targets: [2], width: '13%', className: 'fixed-width' },
+        { targets: [3], width: '6%', className: 'fixed-width' },
+        { targets: [4], width: '6%', className: 'fixed-width' },
+        { targets: [5], width: '5%', className: 'fixed-width' },
+        { targets: [6], width: '5%', className: 'fixed-width' },
+        { targets: [7], width: '5%', className: 'fixed-width' },
+        { targets: [8], width: '5%', className: 'fixed-width' },
+        { targets: [9], width: '5%', className: 'fixed-width' },
+        { targets: [10], width: '5%', className: 'fixed-width' },
+        { targets: [11], width: '8%', className: 'fixed-width' },
+        { targets: [12], width: '8%', className: 'fixed-width' },
+        { targets: [13], width: '8%', className: 'fixed-width'}]
     });
 });
 

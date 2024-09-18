@@ -199,8 +199,8 @@
                         </div>
 
                         <div class="row" style="margin-top: 0.5%">
-                            <div class="col-sm-10 offset-sm-1">
-                                <div class="table-responsive fixed-height" style="height: 300px">
+                            <div class="col-sm-12">
+                                <div class="table-responsive fixed-height">
                                     <table class="table table-bordered no-wrap-header" id="tableData">
                                         <thead>
                                         </thead>

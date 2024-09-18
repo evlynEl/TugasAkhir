@@ -559,7 +559,21 @@ $(document).ready(function () {
             { title: 'Pengeluaran Primer' },
             { title: 'Pengeluaran Sekunder' },
             { title: 'Pengeluaran Tritier' },
-        ]
+        ],
+        scrollY: '400px',
+        autoWidth: false,
+        scrollX: '150%',
+        columnDefs: [{ targets: [0], width: '8%', className: 'fixed-width' , visible: false},
+        { targets: [1], width: '5%', className: 'fixed-width' },
+        { targets: [2], width: '12%', className: 'fixed-width'},
+        { targets: [3], width: '12%', className: 'fixed-width'},
+        { targets: [4], width: '20%', className: 'fixed-width' },
+        { targets: [5], width: '10%', className: 'fixed-width' },
+        { targets: [6], width: '10%', className: 'fixed-width' },
+        { targets: [7], width: '10%', className: 'fixed-width' },
+        { targets: [8], width: '10%', className: 'fixed-width' },
+        { targets: [9], width: '10%', className: 'fixed-width' },
+        { targets: [10], width: '10%', className: 'fixed-width' },]
     });
 });
 

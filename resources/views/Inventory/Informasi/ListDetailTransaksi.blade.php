@@ -83,9 +83,9 @@
             </div>
         </div>
 
-        <div class="row" style="margin-top: 0.5%">
+        <div class="row" style="margin-top: 0.5%; font-size: 13px;">
             <div class="col-sm-12">
-                <div class="table-responsive fixed-height" style="height: 350px">
+                <div class="table-responsive fixed-height">
                     <table class="table table-bordered no-wrap-header" id="tableData">
                         <thead>
                         </thead>

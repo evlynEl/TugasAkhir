@@ -78,9 +78,33 @@ $(document).ready(function () {
             { title: 'Jml. Tritier' },
             { title: 'Kode Transaksi' },
             { title: 'NoPIB' },
-        ]
+        ],
+        scrollY: '400px',
+        autoWidth: false,
+        scrollX: '150%',
+        columnDefs: [{ targets: [0], width: '5%', className: 'fixed-width' },
+        { targets: [1], width: '15%', className: 'fixed-width' },
+        { targets: [2], width: '35%', className: 'fixed-width' },
+        { targets: [3], width: '10%', className: 'fixed-width' },
+        { targets: [4], width: '10%', className: 'fixed-width' },
+        { targets: [5], width: '10%', className: 'fixed-width' },
+        { targets: [6], width: '10%', className: 'fixed-width' },
+        { targets: [7], width: '10%', className: 'fixed-width' },]
     });
 });
+
+function formatDateToMMDDYYYY(date) {
+    let dateObj = new Date(date);
+    if (isNaN(dateObj)) {
+        return '';
+    }
+
+    let month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+    let day = dateObj.getDate().toString().padStart(2, '0');
+    let year = dateObj.getFullYear();
+
+    return `${month}/${day}/${year}`;
+}
 
 function decodeHtmlEntities(text) {
     var txt = document.createElement("textarea");
@@ -105,7 +129,7 @@ function updateDataTable(data) {
 
     data.forEach(function (item) {
         table.row.add([
-            escapeHtml(item.SaatAwalTransaksi),
+            formatDateToMMDDYYYY(item.SaatAwalTransaksi),
             escapeHtml(item.IdType),
             escapeHtml(item.NamaType),
             formatNumber(item.JumlahPemasukanPrimer),

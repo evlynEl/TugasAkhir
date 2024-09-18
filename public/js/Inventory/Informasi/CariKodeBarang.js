@@ -24,7 +24,13 @@ $(document).ready(function () {
             { title: 'Kode Barang' },
             { title: 'Nama Barang' },
             { title: 'Kode Type' },
-        ]
+        ],
+        scrollY: '400px',
+        autoWidth: false,
+        scrollX: '100%',
+        columnDefs: [{ targets: [0], width: '20%', className: 'fixed-width'},
+        { targets: [1], width: '50%', className: 'fixed-width' },
+        { targets: [2], width: '30%', className: 'fixed-width'},]
     });
 
     divisiNama.value = "Warehouse";

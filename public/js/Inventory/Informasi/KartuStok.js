@@ -782,6 +782,9 @@ $(document).ready(function () {
         searching: false,
         info: false,
         ordering: false,
+        scrollY: '400px',
+        autoWidth: false,
+        scrollX: '100%',
         columns: [
             { title: 'IdType' },
             { title: 'Kel. Utama' },
@@ -795,7 +798,20 @@ $(document).ready(function () {
             { title: 'SatSekunder' },
             { title: 'Saldo Tritier' },
             { title: 'SatTritier' },
-        ]
+        ],
+        columnDefs: [{ targets: [0], width: '12%', className: 'fixed-width' },
+        { targets: [1], width: '8%', className: 'fixed-width' },
+        { targets: [2], width: '8%', className: 'fixed-width' },
+        { targets: [3], width: '8%', className: 'fixed-width' },
+        { targets: [4], width: '8%', className: 'fixed-width' },
+        { targets: [5], width: '25%', className: 'fixed-width' },
+        { targets: [6], width: '8%', className: 'fixed-width' },
+        { targets: [7], width: '8%', className: 'fixed-width' },
+        { targets: [8], width: '8%', className: 'fixed-width' },
+        { targets: [9], width: '8%', className: 'fixed-width' },
+        { targets: [10], width: '8%', className: 'fixed-width' },
+        { targets: [11], width: '8%', className: 'fixed-width'}]
+
     });
 });
 

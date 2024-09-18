@@ -509,6 +509,9 @@ $(document).ready(function () {
         searching: false,
         info: false,
         ordering: true,
+        scrollY: '400px',
+        autoWidth: false,
+        scrollX: '100%',
         columns: [
             { title: 'Tgl Mohon' },
             { title: 'No. Trans' },
@@ -521,9 +524,33 @@ $(document).ready(function () {
             { title: 'Keluar Primer' },
             { title: 'Keluar Sekunder' },
             { title: 'Keluar Tritier' },
-        ]
+        ],
+        columnDefs: [{ targets: [0], width: '8%', className: 'fixed-width' },
+        { targets: [1], width: '8%', className: 'fixed-width' },
+        { targets: [2], width: '12%', className: 'fixed-width', visible: false},
+        { targets: [3], width: '6%', className: 'fixed-width', visible: false},
+        { targets: [4], width: '20%', className: 'fixed-width' },
+        { targets: [5], width: '8%', className: 'fixed-width' },
+        { targets: [6], width: '8%', className: 'fixed-width' },
+        { targets: [7], width: '8%', className: 'fixed-width' },
+        { targets: [8], width: '8%', className: 'fixed-width' },
+        { targets: [9], width: '8%', className: 'fixed-width' },
+        { targets: [10], width: '8%', className: 'fixed-width' },]
     });
 });
+
+function formatDateToMMDDYYYY(date) {
+    let dateObj = new Date(date);
+    if (isNaN(dateObj)) {
+        return '';
+    }
+
+    let month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+    let day = dateObj.getDate().toString().padStart(2, '0');
+    let year = dateObj.getFullYear();
+
+    return `${month}/${day}/${year}`;
+}
 
 function decodeHtmlEntities(text) {
     var txt = document.createElement("textarea");
@@ -548,7 +575,7 @@ function updateDataTable(data) {
 
     data.forEach(function (item) {
         table.row.add([
-            escapeHtml(item.AwalTrans),
+            formatDateToMMDDYYYY(item.AwalTrans),
             escapeHtml(item.IdTransaksi),
             escapeHtml(item.IdType),
             escapeHtml(item.TypeTransaksi),

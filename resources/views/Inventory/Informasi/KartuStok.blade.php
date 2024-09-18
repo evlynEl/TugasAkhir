@@ -2,7 +2,7 @@
 @section('content')
     <div class="container-fluid">
         <div class="row justify-content-center">
-            <div class="col-md-10 RDZMobilePaddingLR0">
+            <div class="col-md-12 RDZMobilePaddingLR0">
                 <div class="card">
                     <div class="card-header" style="">Kartu Stok</div>
                     <div class="card-body RDZOverflow RDZMobilePaddingLR0">
@@ -120,9 +120,9 @@
                             </div>
                         </div>                        
 
-                        <div class="row" style="margin-top: 0.5%">
+                        <div class="row" style="margin-top: 0.5%; font-size: 13px;">
                             <div class="col-sm-12">
-                                <div class="table-responsive fixed-height" style="height: 300px">
+                                <div class="table-responsive fixed-height">
                                     <table class="table table-bordered no-wrap-header" id="tableData">
                                         <thead>
                                         </thead>

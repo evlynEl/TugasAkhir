@@ -1,4 +1,3 @@
-
 .col-md-1,
 .col-md-9 {
     padding-left: 0;
@@ -65,12 +64,8 @@ input[type="text"] {
 }
 
 .table-responsive.fixed-height {
-    overflow-y: auto;
-    position: relative;
     border-radius: 8px;
     border: 2px solid black;
-    width: 100%;
-    table-layout: fixed;
     background-color: white;
 }
 
@@ -80,8 +75,21 @@ input[type="text"] {
     padding: 0;
 }
 
-.table-responsive.fixed-height tbody {
+.table-responsive.fixed-height tbody td {
     background-color: white;
+    padding: 4px 5px;
+}
+
+.fixed-width {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0;
+}
+
+table.dataTable {
+    table-layout: fixed;
+    width: 100%;
 }
 
 .bordered {
