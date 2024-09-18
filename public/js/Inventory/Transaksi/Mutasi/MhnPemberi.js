@@ -114,7 +114,18 @@ $(document).ready(function () {
             { title: 'SubKel Pemberi' },
             { title: 'Pemohon' },
             { title: 'Tgl Mohon' },
-        ]
+        ],
+        scrollY: '300px',
+        autoWidth: false,
+        scrollX: '100%',
+        columnDefs: [{ targets: [0], width: '10%', className: 'fixed-width' },
+        { targets: [1], width: '25%', className: 'fixed-width' },
+        { targets: [2], width: '25%', className: 'fixed-width' },
+        { targets: [3], width: '10%', className: 'fixed-width' },
+        { targets: [4], width: '10%', className: 'fixed-width' },
+        { targets: [5], width: '10%', className: 'fixed-width' },
+        { targets: [6], width: '10%', className: 'fixed-width' },
+        { targets: [7], width: '10%', className: 'fixed-width'}]
     });
 });
 
