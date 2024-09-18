@@ -166,4 +166,6 @@
 
     <link rel="stylesheet" href="{{ asset('css/Inventory/Transaksi/Hibah/AccHibah.css') }}">
     <script src="{{ asset('js/Inventory/Transaksi/Hibah/AccHibah.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('css/colResizeDatatable.css') }}">
+    <script src="{{ asset('js/colResizeDatatable.js') }}"></script>
 @endsection

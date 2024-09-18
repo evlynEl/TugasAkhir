@@ -266,4 +266,6 @@
 
     <link rel="stylesheet" href="{{ asset('css/Inventory/Transaksi/Mutasi/PemberiBarang.css') }}">
     <script src="{{ asset('js/Inventory/Transaksi/Mutasi/PemberiBarang.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('css/colResizeDatatable.css') }}">
+    <script src="{{ asset('js/colResizeDatatable.js') }}"></script>
 @endsection

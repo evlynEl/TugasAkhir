@@ -243,4 +243,6 @@
     </div>
     <link rel="stylesheet" href="{{ asset('css/Inventory/Transaksi/Mutasi/KeluarBarangUntukPenjualan.css') }}">
     <script src="{{ asset('js/Inventory/Transaksi/Mutasi/KeluarBarangUntukPenjualan.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('css/colResizeDatatable.css') }}">
+    <script src="{{ asset('js/colResizeDatatable.js') }}"></script>
 @endsection

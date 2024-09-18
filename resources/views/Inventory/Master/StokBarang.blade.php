@@ -206,4 +206,6 @@
     </div>
     <link rel="stylesheet" href="{{ asset('css/Inventory/Master/StokBarang.css') }}">
     <script src="{{ asset('js/Inventory/Master/StokBarang.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('css/colResizeDatatable.css') }}">
+    <script src="{{ asset('js/colResizeDatatable.js') }}"></script>
 @endsection

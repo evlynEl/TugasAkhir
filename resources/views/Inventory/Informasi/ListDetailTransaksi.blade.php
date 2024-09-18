@@ -19,7 +19,7 @@
 
             <div class="col-sm-2 mt-2">
                 <div class="input-group">
-                    <input type="text" id="saldoPrimer" class="form-control" 
+                    <input type="text" id="saldoPrimer" class="form-control"
                         readonly>
                 </div>
             </div>
@@ -32,7 +32,7 @@
 
             <div class="col-sm-2 mt-2">
                 <div class="input-group">
-                    <input type="text" id="saldoSekunder" class="form-control" 
+                    <input type="text" id="saldoSekunder" class="form-control"
                         readonly>
                 </div>
             </div>
@@ -99,4 +99,6 @@
     </div>
     <link rel="stylesheet" href="{{ asset('css/Inventory/Informasi/ListDetailTransaksi.css') }}">
     <script src="{{ asset('js/Inventory/Informasi/ListDetailTransaksi.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('css/colResizeDatatable.css') }}">
+    <script src="{{ asset('js/colResizeDatatable.js') }}"></script>
 @endsection

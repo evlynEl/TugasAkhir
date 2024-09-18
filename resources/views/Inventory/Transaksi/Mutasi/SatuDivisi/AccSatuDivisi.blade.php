@@ -2,9 +2,9 @@
 @section('content')
     <div class="container-fluid">
         <div class="row justify-content-center">
-            <div class="col-md-10 RDZMobilePaddingLR0">
+            <div class="col-md-12 RDZMobilePaddingLR0">
                 <div class="card">
-                    <div class="card-header" style="">Acc Permohonan Satu Divisi</div>
+                    <div class="card-header">Acc Permohonan Satu Divisi</div>
                     <div class="card-body RDZOverflow RDZMobilePaddingLR0">
 
                         <div class="baris-1 pl-3">

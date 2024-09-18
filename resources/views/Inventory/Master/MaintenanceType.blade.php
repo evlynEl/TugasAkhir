@@ -311,4 +311,6 @@
     </div>
     <link rel="stylesheet" href="{{ asset('css/Inventory/Master/MaintenanceType.css') }}">
     <script src="{{ asset('js/Inventory/Master/MaintenanceType.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('css/colResizeDatatable.css') }}">
+    <script src="{{ asset('js/colResizeDatatable.js') }}"></script>
 @endsection

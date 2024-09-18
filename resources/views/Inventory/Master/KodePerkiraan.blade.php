@@ -49,4 +49,6 @@
 
     <script src="{{ asset('js/Inventory/Master/KodePerkiraan.js') }}"></script>
     <link rel="stylesheet" href="{{ asset('css/Inventory/Master/KodePerkiraan.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/colResizeDatatable.css') }}">
+    <script src="{{ asset('js/colResizeDatatable.js') }}"></script>
 @endsection

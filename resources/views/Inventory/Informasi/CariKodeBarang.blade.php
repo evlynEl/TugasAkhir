@@ -114,4 +114,6 @@
     </div>
     <link rel="stylesheet" href="{{ asset('css/Inventory/Informasi/CariKodeBarang.css') }}">
     <script src="{{ asset('js/Inventory/Informasi/CariKodeBarang.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('css/colResizeDatatable.css') }}">
+    <script src="{{ asset('js/colResizeDatatable.js') }}"></script>
 @endsection

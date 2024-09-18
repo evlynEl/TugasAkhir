@@ -219,4 +219,6 @@
 
     <link rel="stylesheet" href="{{ asset('css/Inventory/Informasi/LacakTransaksi.css') }}">
     <script src="{{ asset('js/Inventory/Informasi/LacakTransaksi.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('css/colResizeDatatable.css') }}">
+    <script src="{{ asset('js/colResizeDatatable.js') }}"></script>
 @endsection
