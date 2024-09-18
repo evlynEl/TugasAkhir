@@ -413,6 +413,9 @@ function Load_Type() {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true, 
                         order: [1, "asc"],
                         ajax: {
                             url: "PermohonanSatuDivisi/getType",
@@ -426,6 +429,12 @@ function Load_Type() {
                         columns: [
                             { data: "IdType" },
                             { data: "NamaType" },
+                        ],
+                        columnDefs: [
+                            { 
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -500,6 +509,9 @@ function Load_Type_CIR() {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true, 
                         order: [1, "asc"],
                         ajax: {
                             url: "PermohonanSatuDivisi/getTypeCIR",
@@ -513,6 +525,12 @@ function Load_Type_CIR() {
                         columns: [
                             { data: "Id_Type" },
                             { data: "Nm_Type" },
+                        ],
+                        columnDefs: [
+                            { 
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -586,6 +604,9 @@ function Load_Type_ABM() {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true, 
                         order: [1, "asc"],
                         ajax: {
                             url: "PermohonanSatuDivisi/getTypeABM",
@@ -599,6 +620,12 @@ function Load_Type_ABM() {
                         columns: [
                             { data: "idtype" },
                             { data: "BARU" },
+                        ],
+                        columnDefs: [
+                            { 
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -1179,6 +1206,9 @@ btn_divisi.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true, 
                         order: [1, "asc"],
                         ajax: {
                             url: "PermohonanSatuDivisi/getDivisi",
@@ -1191,6 +1221,12 @@ btn_divisi.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdDivisi" },
                             { data: "NamaDivisi" },
+                        ],
+                        columnDefs: [
+                            { 
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -1271,6 +1307,9 @@ btn_objek.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true, 
                         order: [1, "asc"],
                         ajax: {
                             url: "PermohonanSatuDivisi/getObjek",
@@ -1284,6 +1323,12 @@ btn_objek.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdObjek" },
                             { data: "NamaObjek" },
+                        ],
+                        columnDefs: [
+                            { 
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -1349,6 +1394,9 @@ btn_kelut.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true, 
                         order: [0, "asc"],
                         ajax: {
                             url: "PermohonanSatuDivisi/getKelUt",
@@ -1362,6 +1410,12 @@ btn_kelut.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdKelompokUtama" },
                             { data: "NamaKelompokUtama" }
+                        ],
+                        columnDefs: [
+                            { 
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -1427,6 +1481,9 @@ btn_kelompok.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true, 
                         order: [1, "asc"],
                         ajax: {
                             url: "PermohonanSatuDivisi/getKelompok",
@@ -1440,6 +1497,12 @@ btn_kelompok.addEventListener("click", function (e) {
                         columns: [
                             { data: "idkelompok" },
                             { data: "namakelompok" }
+                        ],
+                        columnDefs: [
+                            { 
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -1505,6 +1568,9 @@ btn_subkel.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true, 
                         order: [1, "asc"],
                         ajax: {
                             url: "PermohonanSatuDivisi/getSubkel",
@@ -1518,6 +1584,12 @@ btn_subkel.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdSubkelompok" },
                             { data: "NamaSubKelompok" },
+                        ],
+                        columnDefs: [
+                            { 
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -1623,6 +1695,9 @@ btn_objek2.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true, 
                         order: [1, "asc"],
                         ajax: {
                             url: "PermohonanSatuDivisi/getObjek",
@@ -1636,6 +1711,12 @@ btn_objek2.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdObjek" },
                             { data: "NamaObjek" },
+                        ],
+                        columnDefs: [
+                            { 
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -1706,6 +1787,9 @@ btn_kelut2.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true, 
                         order: [0, "asc"],
                         ajax: {
                             url: "PermohonanSatuDivisi/getKelUt",
@@ -1719,6 +1803,12 @@ btn_kelut2.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdKelompokUtama" },
                             { data: "NamaKelompokUtama" }
+                        ],
+                        columnDefs: [
+                            { 
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -1787,6 +1877,9 @@ btn_kelompok2.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true, 
                         order: [1, "asc"],
                         ajax: {
                             url: "PermohonanSatuDivisi/getKelompok",
@@ -1800,6 +1893,12 @@ btn_kelompok2.addEventListener("click", function (e) {
                         columns: [
                             { data: "idkelompok" },
                             { data: "namakelompok" }
+                        ],
+                        columnDefs: [
+                            { 
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -1865,6 +1964,9 @@ btn_subkel2.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true, 
                         order: [1, "asc"],
                         ajax: {
                             url: "PermohonanSatuDivisi/getSubkel",
@@ -1878,6 +1980,12 @@ btn_subkel2.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdSubkelompok" },
                             { data: "NamaSubKelompok" },
+                        ],
+                        columnDefs: [
+                            { 
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 

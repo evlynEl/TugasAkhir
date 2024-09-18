@@ -369,6 +369,9 @@ btnDivisi.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "KonversiBarang/getDivisi",
@@ -381,6 +384,12 @@ btnDivisi.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdDivisi" },
                             { data: "NamaDivisi" },
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -458,6 +467,9 @@ btn_objek.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [0, "asc"],
                         ajax: {
                             url: "KonversiBarang/getObjek",
@@ -471,6 +483,12 @@ btn_objek.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdObjek" },
                             { data: "NamaObjek" },
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -534,6 +552,9 @@ btn_kelut.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [0, "asc"],
                         ajax: {
                             url: "KonversiBarang/getKelUt",
@@ -547,6 +568,12 @@ btn_kelut.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdKelompokUtama" },
                             { data: "NamaKelompokUtama" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -610,6 +637,9 @@ btn_kelompok.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "KonversiBarang/getKelompok",
@@ -623,6 +653,12 @@ btn_kelompok.addEventListener("click", function (e) {
                         columns: [
                             { data: "idkelompok" },
                             { data: "namakelompok" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -686,6 +722,9 @@ btn_subkel.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "KonversiBarang/getSubkel",
@@ -699,6 +738,12 @@ btn_subkel.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdSubkelompok" },
                             { data: "NamaSubKelompok" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -766,6 +811,9 @@ function Load_Type_ABM(sFld_1, sFld_2) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "KonversiBarang/getTypeABM",
@@ -779,6 +827,12 @@ function Load_Type_ABM(sFld_1, sFld_2) {
                         columns: [
                             { data: "idtype" },
                             { data: "BARU" },
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '200px',
+                            }
                         ]
                     });
 
@@ -845,6 +899,9 @@ function Load_Type_CIR(sFld_1, sFld_2) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "KonversiBarang/getTypeCIR",
@@ -862,6 +919,12 @@ function Load_Type_CIR(sFld_1, sFld_2) {
                         columns: [
                             { data: "Id_Type" },
                             { data: "Nm_Type" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '200px',
+                            }
                         ]
                     });
 
@@ -1027,6 +1090,9 @@ function buttonIdTypeClick() {
                             responsive: true,
                             processing: true,
                             serverSide: true,
+                            paging: false,
+                            scrollY: '400px',
+                            scrollCollapse: true,
                             order: [1, "asc"],
                             ajax: {
                                 url: "KonversiBarang/getIdType",
@@ -1040,6 +1106,12 @@ function buttonIdTypeClick() {
                             columns: [
                                 { data: "IdType" },
                                 { data: "NamaType" },
+                            ],
+                            columnDefs: [
+                                {
+                                    targets: 0,
+                                    width: '200px',
+                                }
                             ]
                         });
 
@@ -1136,6 +1208,9 @@ function buttonIdTypeClick2() {
                             responsive: true,
                             processing: true,
                             serverSide: true,
+                            paging: false,
+                            scrollY: '400px',
+                            scrollCollapse: true,
                             order: [1, "asc"],
                             ajax: {
                                 url: "KonversiBarang/getIdType",
@@ -1149,6 +1224,12 @@ function buttonIdTypeClick2() {
                             columns: [
                                 { data: "IdType" },
                                 { data: "NamaType" },
+                            ],
+                            columnDefs: [
+                                {
+                                    targets: 0,
+                                    width: '200px',
+                                }
                             ]
                         });
 
@@ -1214,6 +1295,9 @@ function only_BKL() {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "KonversiBarang/getIdType",
@@ -1228,6 +1312,12 @@ function only_BKL() {
                             { data: "IdType" },
                             { data: "NamaType" },
                             { data: "KodeBarang" },
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '200px',
+                            }
                         ]
                     });
 
@@ -1290,6 +1380,9 @@ btnNamaType.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "KonversiBarang/getIdType",
@@ -1303,6 +1396,12 @@ btnNamaType.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdType" },
                             { data: "NamaType" },
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '200px',
+                            }
                         ]
                     });
 
@@ -1922,7 +2021,7 @@ btn_prosesAsal.addEventListener("click", function (e) {
                         });
 
                         btn_prosesAsal.disabled = true;
-                       
+
                         clearText();
                         if (kodeKonversi.value === '') {
                             Load_DataKonversi();

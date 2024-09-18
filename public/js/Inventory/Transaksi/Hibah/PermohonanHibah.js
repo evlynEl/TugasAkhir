@@ -291,6 +291,9 @@ btn_divisi.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "PermohonanHibah/getDivisi",
@@ -303,6 +306,12 @@ btn_divisi.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdDivisi" },
                             { data: "NamaDivisi" },
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -389,6 +398,9 @@ btn_objek.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "PermohonanHibah/getObjek",
@@ -402,6 +414,12 @@ btn_objek.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdObjek" },
                             { data: "NamaObjek" },
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -465,6 +483,9 @@ btn_kelut.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "PermohonanHibah/getKelUt",
@@ -478,6 +499,12 @@ btn_kelut.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdKelompokUtama" },
                             { data: "NamaKelompokUtama" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -541,6 +568,9 @@ btn_kelompok.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "PermohonanHibah/getKelompok",
@@ -554,6 +584,12 @@ btn_kelompok.addEventListener("click", function (e) {
                         columns: [
                             { data: "idkelompok" },
                             { data: "namakelompok" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -617,6 +653,9 @@ btn_subkel.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "PermohonanHibah/getSubkel",
@@ -630,6 +669,12 @@ btn_subkel.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdSubkelompok" },
                             { data: "NamaSubKelompok" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -693,6 +738,9 @@ btn_type.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "PermohonanHibah/getType",
@@ -706,6 +754,12 @@ btn_type.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdType" },
                             { data: "NamaType" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -858,7 +912,7 @@ btn_proses.addEventListener("click", function (e) {
 
     var table = $('#tableData').DataTable();
 
-    function reloadTable(){
+    function reloadTable() {
         $.ajax({
             type: 'GET',
             url: 'PermohonanHibah/listMohon',

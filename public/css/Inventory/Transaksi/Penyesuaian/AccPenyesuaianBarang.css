@@ -67,3 +67,10 @@ input[type="date"] {
 #after {
     color: blue;
 }
+
+#table_list th, 
+#table_list td {
+    padding-top: 0;
+    padding-bottom: 0;
+    font-size: 16px;
+}

@@ -65,3 +65,11 @@ input[type="date"] {
 #no_primer, #no_sekunder, #no_tritier{
     padding-right: 20px;
 }
+
+
+#table_list th, 
+#table_list td {
+    padding-top: 0;
+    padding-bottom: 0;
+    font-size: 16px;
+}

@@ -320,6 +320,9 @@ btn_typeKonv.addEventListener('click', function () {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true, 
                         order: [1, "asc"],
                         ajax: {
                             url: "PermohonanPenerimaBenang/getTypeKonv",
@@ -333,6 +336,12 @@ btn_typeKonv.addEventListener('click', function () {
                         columns: [
                             { data: "IdType" },
                             { data: "NamaType" }
+                        ],
+                        columnDefs: [
+                            { 
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 

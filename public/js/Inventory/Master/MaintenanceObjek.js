@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         </thead>
                         <tbody></tbody>
                     </table>`,
-                    width: '40%',
+                width: '40%',
                 showCancelButton: true,
                 confirmButtonText: 'Pilih',
                 cancelButtonText: 'Close',
@@ -124,6 +124,9 @@ document.addEventListener('DOMContentLoaded', function () {
                             responsive: true,
                             processing: true,
                             serverSide: true,
+                            paging: false,
+                            scrollY: '400px',
+                            scrollCollapse: true,
                             order: [[1, "asc"]],
                             ajax: {
                                 url: "MaintenanceObjek/getUserDivisi",
@@ -142,6 +145,12 @@ document.addEventListener('DOMContentLoaded', function () {
                                 },
                                 {
                                     data: "NamaDivisi",
+                                }
+                            ],
+                            columnDefs: [
+                                {
+                                    targets: 0,
+                                    width: '100px',
                                 }
                             ]
                         });
@@ -184,7 +193,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             </thead>
                             <tbody></tbody>
                         </table>`,
-                        width: '40%',
+                width: '40%',
                 showCancelButton: true,
                 confirmButtonText: 'Pilih',
                 returnFocus: false,
@@ -204,6 +213,9 @@ document.addEventListener('DOMContentLoaded', function () {
                             responsive: true,
                             processing: true,
                             serverSide: true,
+                            paging: false,
+                            scrollY: '400px',
+                            scrollCollapse: true,
                             order: [[1, "asc"]],
                             ajax: {
                                 url: "MaintenanceObjek/getObjek",
@@ -223,6 +235,12 @@ document.addEventListener('DOMContentLoaded', function () {
                                 },
                                 {
                                     data: "NamaObjek",
+                                }
+                            ],
+                            columnDefs: [
+                                {
+                                    targets: 0,
+                                    width: '100px',
                                 }
                             ]
                         });
@@ -266,7 +284,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             </thead>
                             <tbody></tbody>
                         </table>`,
-                        width: '40%',
+                width: '40%',
                 showCancelButton: true,
                 confirmButtonText: 'Pilih',
                 returnFocus: false,
@@ -286,6 +304,9 @@ document.addEventListener('DOMContentLoaded', function () {
                             responsive: true,
                             processing: true,
                             serverSide: true,
+                            paging: false,
+                            scrollY: '400px',
+                            scrollCollapse: true,
                             order: [[1, "asc"]],
                             ajax: {
                                 url: "MaintenanceObjek/getKelUtama",
@@ -305,6 +326,12 @@ document.addEventListener('DOMContentLoaded', function () {
                                 },
                                 {
                                     data: "NamaKelompokUtama",
+                                }
+                            ],
+                            columnDefs: [
+                                {
+                                    targets: 0,
+                                    width: '100px',
                                 }
                             ]
                         });
@@ -348,7 +375,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             </thead>
                             <tbody></tbody>
                         </table>`,
-                        width: '40%',
+                width: '40%',
                 showCancelButton: true,
                 confirmButtonText: 'Pilih',
                 returnFocus: false,
@@ -368,6 +395,9 @@ document.addEventListener('DOMContentLoaded', function () {
                             responsive: true,
                             processing: true,
                             serverSide: true,
+                            paging: false,
+                            scrollY: '400px',
+                            scrollCollapse: true,
                             order: [[1, "asc"]],
                             ajax: {
                                 url: "MaintenanceObjek/getKel",
@@ -387,6 +417,12 @@ document.addEventListener('DOMContentLoaded', function () {
                                 },
                                 {
                                     data: "namakelompok",
+                                }
+                            ],
+                            columnDefs: [
+                                {
+                                    targets: 0,
+                                    width: '100px',
                                 }
                             ]
                         });
@@ -430,7 +466,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             </thead>
                             <tbody></tbody>
                         </table>`,
-                        width: '40%',
+                width: '40%',
                 showCancelButton: true,
                 confirmButtonText: 'Pilih',
                 returnFocus: false,
@@ -450,6 +486,9 @@ document.addEventListener('DOMContentLoaded', function () {
                             responsive: true,
                             processing: true,
                             serverSide: true,
+                            paging: false,
+                            scrollY: '400px',
+                            scrollCollapse: true,
                             order: [[1, "asc"]],
                             ajax: {
                                 url: "MaintenanceObjek/getSubKel",
@@ -469,6 +508,12 @@ document.addEventListener('DOMContentLoaded', function () {
                                 },
                                 {
                                     data: "NamaSubKelompok",
+                                }
+                            ],
+                            columnDefs: [
+                                {
+                                    targets: 0,
+                                    width: '100px',
                                 }
                             ]
                         });
@@ -547,7 +592,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             </thead>
                             <tbody></tbody>
                         </table>`,
-                        width: '40%',
+                width: '40%',
                 showCancelButton: true,
                 confirmButtonText: 'Pilih',
                 returnFocus: false,
@@ -567,6 +612,9 @@ document.addEventListener('DOMContentLoaded', function () {
                             responsive: true,
                             processing: true,
                             serverSide: true,
+                            paging: false,
+                            scrollY: '400px',
+                            scrollCollapse: true,
                             order: [[1, "asc"]],
                             ajax: {
                                 url: "MaintenanceObjek/getPerkiraan",
@@ -585,6 +633,12 @@ document.addEventListener('DOMContentLoaded', function () {
                                 },
                                 {
                                     data: "Keterangan",
+                                }
+                            ],
+                            columnDefs: [
+                                {
+                                    targets: 0,
+                                    width: '100px',
                                 }
                             ]
                         });

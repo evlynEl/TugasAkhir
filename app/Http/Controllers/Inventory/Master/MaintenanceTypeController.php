@@ -34,6 +34,7 @@ class MaintenanceTypeController extends Controller
     {
         $user = Auth::user()->NomorUser;
         $a = (int)$request->input('a');
+        $impor = (int)$request->input('impor');
         $namaType = $request->input('namaType');
         $ketType = $request->input('ketType');
         $uraianType = trim($ketType) === '' ? '' : trim($ketType);
@@ -292,8 +293,6 @@ class MaintenanceTypeController extends Controller
 
         } else if ($id === 'fillKodeBarang') {
             $fill = DB::connection('ConnPurchase')->select('exec SP_1003_INV_List_Detail_YTransType @kd_brg_1 = ?', [$kdBarang]);
-            // dd($kdBarang);
-            // dd($request->all());
 
             if (count($fill) > 0) {
                 $data_fill = [];
@@ -318,25 +317,45 @@ class MaintenanceTypeController extends Controller
                         'KET' => $detail_fill->KET
                     ];
                 }
+                // dd($data_fill);
                 return response()->json($data_fill);
             }
 
-            // dd($request->all(), $data_fill);
-
-
         } else if ($id === 'proses') {
+
+            if ($subkelId === null) {
+                return response()->json([
+                    'error' => true,
+                    'errorType' => 'subkelIdEmpty',
+                    'message' => 'ID Sub Kelompok Kosong!'
+                ]);
+            }
+
             // proses terjadi
             if ($a === 1) { // ISI
                 // cek id kode barang
-                $cekKodeBarang = DB::connection('ConnInventory')->select(
-                    'exec SP_1003_INV_CheckKodeBarang_Type
-                    @kd = 1, @noPIB = ?, @XKodebarang = ?, @XIdSubKelompok = ?',
-                    [$PIB, $kdBarang, $subkelId]
-                );
+                if ($impor === 1) {
+                    // Jika impor bernilai 1, jalankan query dengan @kd dan @noPIB
+                    $cekKodeBarang = DB::connection('ConnInventory')->select(
+                        'exec SP_1003_INV_CheckKodeBarang_Type @kd = 1, @noPIB = ?, @XKodebarang = ?, @XIdSubKelompok = ?',
+                        [$PIB, $kdBarang, $subkelId]
+                    );
+                } else {
+                    // Jika impor tidak bernilai 1, jalankan query tanpa @kd dan @noPIB
+                    $cekKodeBarang = DB::connection('ConnInventory')->select(
+                        'exec SP_1003_INV_CheckKodeBarang_Type @XKodebarang = ?, @XIdSubKelompok = ?',
+                        [$kdBarang, $subkelId]
+                    );
+                }
+                
                 // dd($cekKodeBarang);
 
-                if (!empty($cekKodeBarang)) {
-                    return response()->json(['error'], 200);
+                if (count($cekKodeBarang) > 0) {
+                    return response()->json([
+                        'error' => true,
+                        'errorType' => 'kodeBarangExists',
+                        'data' => $cekKodeBarang
+                    ], 500);
                 } else {
                     // cek counter
                     $cekTabel = DB::connection('ConnInventory')->select('exec SP_1003_INV_List_Counter');

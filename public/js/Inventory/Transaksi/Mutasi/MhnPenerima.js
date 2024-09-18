@@ -348,6 +348,9 @@ btn_divisi2.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "MhnPenerima/getDivisi2",
@@ -360,6 +363,12 @@ btn_divisi2.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdDivisi" },
                             { data: "NamaDivisi" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -426,6 +435,9 @@ btn_divisi.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "MhnPenerima/getDivisi",
@@ -438,6 +450,12 @@ btn_divisi.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdDivisi" },
                             { data: "NamaDivisi" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -502,6 +520,9 @@ btn_objek2.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "MhnPenerima/getObjek2",
@@ -515,6 +536,12 @@ btn_objek2.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdObjek" },
                             { data: "NamaObjek" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -593,6 +620,9 @@ btn_objek.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "MhnPenerima/getObjek",
@@ -606,6 +636,12 @@ btn_objek.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdObjek" },
                             { data: "NamaObjek" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -673,6 +709,9 @@ btn_kelut2.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "MhnPenerima/getKelUt2",
@@ -686,6 +725,12 @@ btn_kelut2.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdKelompokUtama" },
                             { data: "NamaKelompokUtama" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -751,6 +796,9 @@ btn_kelut.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true, 
                         order: [1, "asc"],
                         ajax: {
                             url: "MhnPenerima/getKelUt",
@@ -764,7 +812,14 @@ btn_kelut.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdKelompokUtama" },
                             { data: "NamaKelompokUtama" }
+                        ],
+                        columnDefs: [
+                            { 
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
+                        
                     });
 
                     $("#table_list tbody").on("click", "tr", function () {
@@ -833,6 +888,9 @@ btn_kelompok2.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true, 
                         order: [1, "asc"],
                         ajax: {
                             url: "MhnPenerima/getKelompok2",
@@ -846,6 +904,12 @@ btn_kelompok2.addEventListener("click", function (e) {
                         columns: [
                             { data: "idkelompok" },
                             { data: "namakelompok" }
+                        ],
+                        columnDefs: [
+                            { 
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -911,6 +975,9 @@ btn_kelompok.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true, 
                         order: [1, "asc"],
                         ajax: {
                             url: "MhnPenerima/getKelompok",
@@ -924,6 +991,12 @@ btn_kelompok.addEventListener("click", function (e) {
                         columns: [
                             { data: "idkelompok" },
                             { data: "namakelompok" }
+                        ],
+                        columnDefs: [
+                            { 
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -990,6 +1063,9 @@ btn_subkel2.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true, 
                         order: [1, "asc"],
                         ajax: {
                             url: "MhnPenerima/getSubkel2",
@@ -1003,6 +1079,12 @@ btn_subkel2.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdSubkelompok" },
                             { data: "NamaSubKelompok" }
+                        ],
+                        columnDefs: [
+                            { 
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -1066,6 +1148,9 @@ btn_subkel.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true, 
                         order: [1, "asc"],
                         ajax: {
                             url: "MhnPenerima/getSubkel",
@@ -1079,6 +1164,12 @@ btn_subkel.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdSubkelompok" },
                             { data: "NamaSubKelompok" }
+                        ],
+                        columnDefs: [
+                            { 
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -1309,6 +1400,9 @@ btn_namaBarang.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true, 
                         order: [1, "asc"],
                         ajax: {
                             url: "MhnPenerima/getSubkelType",
@@ -1322,6 +1416,12 @@ btn_namaBarang.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdType" },
                             { data: "NamaType" }
+                        ],
+                        columnDefs: [
+                            { 
+                                targets: 0,
+                                width: '200px',
+                            }
                         ]
                     });
 

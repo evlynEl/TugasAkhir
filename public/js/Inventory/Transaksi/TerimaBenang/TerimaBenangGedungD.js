@@ -398,6 +398,9 @@ btn_kelompok.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true, 
                         order: [1, "asc"],
                         ajax: {
                             url: "TerimaBenangGedungD/getKelompok",
@@ -411,6 +414,12 @@ btn_kelompok.addEventListener("click", function (e) {
                         columns: [
                             { data: "idkelompok" },
                             { data: "namakelompok" }
+                        ],
+                        columnDefs: [
+                            { 
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -479,6 +488,9 @@ btn_subkel.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true, 
                         order: [1, "asc"],
                         ajax: {
                             url: "TerimaBenangGedungD/getSubkel",
@@ -492,6 +504,12 @@ btn_subkel.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdSubkelompok" },
                             { data: "NamaSubKelompok" }
+                        ],
+                        columnDefs: [
+                            { 
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -584,6 +602,9 @@ btn_namatype.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true, 
                         order: [1, "asc"],
                         ajax: {
                             url: "TerimaBenangGedungD/getIdType",
@@ -597,6 +618,12 @@ btn_namatype.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdType" },
                             { data: "NamaType" },
+                        ],
+                        columnDefs: [
+                            { 
+                                targets: 0,
+                                width: '200px',
+                            }
                         ]
                     });
 
@@ -762,6 +789,9 @@ btn_subkelPenerima.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true, 
                         order: [1, "asc"],
                         ajax: {
                             url: "TerimaBenangGedungD/getSubkel",
@@ -775,6 +805,12 @@ btn_subkelPenerima.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdSubkelompok" },
                             { data: "NamaSubKelompok" }
+                        ],
+                        columnDefs: [
+                            { 
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 

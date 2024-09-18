@@ -67,3 +67,9 @@ input[type="text"], input[type="date"] {
     padding-left: 0;
 }
 
+#table_list th, 
+#table_list td {
+    padding-top: 0;
+    padding-bottom: 0;
+    font-size: 16px;
+}

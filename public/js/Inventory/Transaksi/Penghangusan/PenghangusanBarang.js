@@ -211,6 +211,9 @@ btn_divisi.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "PenghangusanBarang/getDivisi",
@@ -223,6 +226,12 @@ btn_divisi.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdDivisi" },
                             { data: "NamaDivisi" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -307,6 +316,9 @@ btn_objek.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "PenghangusanBarang/getObjek",
@@ -320,6 +332,12 @@ btn_objek.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdObjek" },
                             { data: "NamaObjek" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -382,6 +400,9 @@ btn_kelut.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "PenghangusanBarang/getKelUt",
@@ -395,6 +416,12 @@ btn_kelut.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdKelompokUtama" },
                             { data: "NamaKelompokUtama" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -457,6 +484,9 @@ btn_kelompok.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "PenghangusanBarang/getKelompok",
@@ -470,6 +500,12 @@ btn_kelompok.addEventListener("click", function (e) {
                         columns: [
                             { data: "idkelompok" },
                             { data: "namakelompok" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -532,6 +568,9 @@ btn_subkel.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "PenghangusanBarang/getSubkel",
@@ -545,6 +584,12 @@ btn_subkel.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdSubkelompok" },
                             { data: "NamaSubKelompok" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -712,6 +757,9 @@ function handleTypeSelection() {
                                     responsive: true,
                                     processing: true,
                                     serverSide: true,
+                                    paging: false,
+                                    scrollY: '400px',
+                                    scrollCollapse: true,
                                     order: [1, "asc"],
                                     ajax: {
                                         url: "PenghangusanBarang/getABM",
@@ -725,6 +773,12 @@ function handleTypeSelection() {
                                     columns: [
                                         { data: "idtype" },
                                         { data: "BARU" }
+                                    ],
+                                    columnDefs: [
+                                        {
+                                            targets: 0,
+                                            width: '200px',
+                                        }
                                     ]
                                 });
 
@@ -808,6 +862,9 @@ function handleTypeSelection() {
                                     responsive: true,
                                     processing: true,
                                     serverSide: true,
+                                    paging: false,
+                                    scrollY: '400px',
+                                    scrollCollapse: true,
                                     order: [1, "asc"],
                                     ajax: {
                                         url: "PenghangusanBarang/getTypeCIR",
@@ -820,6 +877,12 @@ function handleTypeSelection() {
                                     columns: [
                                         { data: "Id_Type" },
                                         { data: "Nm_Type" }
+                                    ],
+                                    columnDefs: [
+                                        {
+                                            targets: 0,
+                                            width: '200px',
+                                        }
                                     ]
                                 });
 
@@ -896,6 +959,9 @@ function handleTypeSelection() {
                                 responsive: true,
                                 processing: true,
                                 serverSide: true,
+                                paging: false,
+                                scrollY: '400px',
+                                scrollCollapse: true,
                                 order: [1, "asc"],
                                 ajax: {
                                     url: "PenghangusanBarang/getType",
@@ -909,6 +975,12 @@ function handleTypeSelection() {
                                 columns: [
                                     { data: "IdType" },
                                     { data: "NamaType" }
+                                ],
+                                columnDefs: [
+                                    {
+                                        targets: 0,
+                                        width: '200px',
+                                    }
                                 ]
                             });
 

@@ -457,6 +457,9 @@ btnDivisi.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "MhnPemberi/getDivisi",
@@ -469,6 +472,12 @@ btnDivisi.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdDivisi" },
                             { data: "NamaDivisi" },
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -553,6 +562,9 @@ btnObjek.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [0, "asc"],
                         ajax: {
                             url: "MhnPemberi/getObjek",
@@ -566,6 +578,12 @@ btnObjek.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdObjek" },
                             { data: "NamaObjek" },
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -1015,6 +1033,9 @@ btnKelut.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "MhnPemberi/getKelUt",
@@ -1028,6 +1049,12 @@ btnKelut.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdKelompokUtama" },
                             { data: "NamaKelompokUtama" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -1091,6 +1118,9 @@ btnKelompok.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "MhnPemberi/getKelompok",
@@ -1104,6 +1134,12 @@ btnKelompok.addEventListener("click", function (e) {
                         columns: [
                             { data: "idkelompok" },
                             { data: "namakelompok" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -1168,6 +1204,9 @@ btnSubkel.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "MhnPemberi/getSubkel",
@@ -1181,6 +1220,12 @@ btnSubkel.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdSubkelompok" },
                             { data: "NamaSubKelompok" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -1245,6 +1290,9 @@ function Load_Type_ABM() {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "MhnPemberi/getTypeABM",
@@ -1258,6 +1306,12 @@ function Load_Type_ABM() {
                         columns: [
                             { data: "idtype" },
                             { data: "BARU" },
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -1325,6 +1379,9 @@ function Load_Type_CIR() {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "MhnPemberi/getTypeCIR",
@@ -1337,6 +1394,12 @@ function Load_Type_CIR() {
                         columns: [
                             { data: "Id_Type" },
                             { data: "Nm_Type" },
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -1403,6 +1466,9 @@ function Load_Type() {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "MhnPemberi/getType",
@@ -1416,6 +1482,12 @@ function Load_Type() {
                         columns: [
                             { data: "IdType" },
                             { data: "NamaType" },
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -1636,6 +1708,9 @@ btnDivisi2.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "MhnPemberi/getDivisi2",
@@ -1648,6 +1723,12 @@ btnDivisi2.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdDivisi" },
                             { data: "NamaDivisi" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -1722,6 +1803,9 @@ btnObjek2.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "MhnPemberi/getObjek2",
@@ -1735,6 +1819,12 @@ btnObjek2.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdObjek" },
                             { data: "NamaObjek" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -1805,6 +1895,9 @@ btnKelut2.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "MhnPemberi/getKelUt2",
@@ -1818,6 +1911,12 @@ btnKelut2.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdKelompokUtama" },
                             { data: "NamaKelompokUtama" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -1898,6 +1997,9 @@ btnKelompok2.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "MhnPemberi/" + urlBaru,
@@ -1912,6 +2014,12 @@ btnKelompok2.addEventListener("click", function (e) {
                         columns: [
                             { data: "idkelompok" },
                             { data: "namakelompok" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -1979,6 +2087,9 @@ btnSubkel2.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "MhnPemberi/getSubkel2",
@@ -1992,6 +2103,12 @@ btnSubkel2.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdSubkelompok" },
                             { data: "NamaSubKelompok" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 

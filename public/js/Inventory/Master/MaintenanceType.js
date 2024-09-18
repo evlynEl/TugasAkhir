@@ -61,6 +61,7 @@ var selectedOption;
 var selectedNo;
 
 let a; // isi = 1, koreksi = 2, hapus = 3
+let impor = 0;
 const divKonversiPS = document.getElementById('konvPS');
 const divKonversiST = document.getElementById('konvST');
 const inputs = Array.from(document.querySelectorAll('.card-body input[type="text"]:not([readonly]), .card-body input[type="date"]:not([readonly])'));
@@ -86,7 +87,6 @@ inputs.forEach((masuk, index) => {
                     sekunderTritier.select();
                 } else if (masuk.id === 'kdBarang') {
                     tmpKode = formatKdBarang(kdBarang.value)
-                    console.log(tmpKode);
                     fillKodeBarang(tmpKode);
 
                 } else {
@@ -98,34 +98,36 @@ inputs.forEach((masuk, index) => {
         }
     })
 });
+
+// format kode barang
 function formatKdBarang(kdBarang) {
     kdBarang = kdBarang.trim();
     return kdBarang.padStart(9, '0');
 }
 
-function fillKodeBarang(kdBarang) {
-    console.log(kdBarang);
+// fungsi untuk autofill jika isi kode barang
+function fillKodeBarang(tmpKode) {
+    console.log(tmpKode);
 
     $.ajax({
         url: "MaintenanceType/fillKodeBarang",
         type: "GET",
         data: {
             _token: csrfToken,
-            kdBarang: kdBarang
+            kdBarang: tmpKode
         },
         timeout: 30000,
         success: function (response) {
             if (response.length > 0) {
                 let result = response[0];
+                kdBarang.value = result.KD_BRG.trim();
 
-                // Populate form fields with data from the result
-                katUtama.value = decodeHtmlEntities(result.nama_kategori.trim());
+                katUtama.value = decodeHtmlEntities(result.kat_utama.trim());
                 no_katUtama = result.no_kat_utama.trim();
                 kategori.value = decodeHtmlEntities(result.nama_kategori.trim());
                 no_kategori = result.no_kategori.trim();
                 jenis.value = decodeHtmlEntities(result.nama_sub_kategori.trim());
                 no_subkategori = result.no_sub_kategori.trim();
-                kdBarang.value = result.KD_BRG.trim();
                 namaBarang.value = decodeHtmlEntities(result.NAMA_BRG.trim());
                 namaType.value = decodeHtmlEntities(result.NAMA_BRG.trim());
 
@@ -138,7 +140,7 @@ function fillKodeBarang(kdBarang) {
 
                 populateDropdownWithSatuanUmum(
                     'satuan',
-                    result.No_Sat.trim(),
+                    result.Satuan.trim(),
                     triter.value,
                     sekunder.value,
                     primer.value,
@@ -149,6 +151,16 @@ function fillKodeBarang(kdBarang) {
                 ketType.value = result.KET.trim();
 
                 namaType.select();
+
+                let a = kdBarang.charAt(0);
+                let b = kdBarang.charAt(1);
+
+                if (a === '1' || a === '4') {
+                    if (b !== '0' || b !== '1') {
+                        impor = 1;
+                    }
+                }
+
 
             } else {
                 Swal.fire({
@@ -164,7 +176,6 @@ function fillKodeBarang(kdBarang) {
         }
     });
 }
-
 
 // button list divisi
 btn_divisi.addEventListener("click", function (e) {
@@ -204,6 +215,9 @@ btn_divisi.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "MaintenanceType/getDivisi",
@@ -216,6 +230,12 @@ btn_divisi.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdDivisi" },
                             { data: "NamaDivisi" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -278,6 +298,9 @@ btn_objek.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "MaintenanceType/getObjek",
@@ -291,6 +314,12 @@ btn_objek.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdObjek" },
                             { data: "NamaObjek" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -353,6 +382,9 @@ btn_kelut.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "MaintenanceType/getKelUt",
@@ -366,6 +398,12 @@ btn_kelut.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdKelompokUtama" },
                             { data: "NamaKelompokUtama" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -428,6 +466,9 @@ btn_kelompok.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "MaintenanceType/getKelompok",
@@ -441,6 +482,12 @@ btn_kelompok.addEventListener("click", function (e) {
                         columns: [
                             { data: "idkelompok" },
                             { data: "namakelompok" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -503,6 +550,9 @@ btn_subkel.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "MaintenanceType/getSubkel",
@@ -516,6 +566,12 @@ btn_subkel.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdSubkelompok" },
                             { data: "NamaSubKelompok" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -582,6 +638,9 @@ btn_katUtama.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "MaintenanceType/getKatut",
@@ -594,6 +653,12 @@ btn_katUtama.addEventListener("click", function (e) {
                         columns: [
                             { data: "no_kat_utama" },
                             { data: "nama" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -658,6 +723,9 @@ btn_kategori.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "MaintenanceType/getKategori",
@@ -671,6 +739,12 @@ btn_kategori.addEventListener("click", function (e) {
                         columns: [
                             { data: "no_kategori" },
                             { data: "nama_kategori" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -735,6 +809,9 @@ btn_jenis.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "MaintenanceType/getSubkategori",
@@ -748,6 +825,12 @@ btn_jenis.addEventListener("click", function (e) {
                         columns: [
                             { data: "no_sub_kategori" },
                             { data: "nama_sub_kategori" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -821,6 +904,9 @@ btn_barang.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "MaintenanceType/getBarang",
@@ -834,6 +920,12 @@ btn_barang.addEventListener("click", function (e) {
                         columns: [
                             { data: "KD_BRG" },
                             { data: "NAMA_BRG" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -956,6 +1048,7 @@ function populateDropdownWithSatuanUmum(dropdownId, response, triterValue, sekun
             break;
         }
     }
+
 }
 
 satuan.addEventListener('change', function () {
@@ -1001,6 +1094,9 @@ btn_triter.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "MaintenanceType/getSatuan",
@@ -1013,6 +1109,12 @@ btn_triter.addEventListener("click", function (e) {
                         columns: [
                             { data: "no_satuan" },
                             { data: "nama_satuan" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -1086,6 +1188,9 @@ btn_sekunder.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "MaintenanceType/getSatuan",
@@ -1098,6 +1203,12 @@ btn_sekunder.addEventListener("click", function (e) {
                         columns: [
                             { data: "no_satuan" },
                             { data: "nama_satuan" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -1171,6 +1282,9 @@ btn_primer.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "MaintenanceType/getSatuan",
@@ -1183,6 +1297,12 @@ btn_primer.addEventListener("click", function (e) {
                         columns: [
                             { data: "no_satuan" },
                             { data: "nama_satuan" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -1414,6 +1534,9 @@ function handleTypeSelection() {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [0, "asc"],
                         ajax: {
                             url: "MaintenanceType/getListKoreksi",
@@ -1427,6 +1550,12 @@ function handleTypeSelection() {
                         columns: [
                             { data: "IdType" },
                             { data: "namaType" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '200px',
+                            }
                         ]
                     });
 
@@ -1611,11 +1740,12 @@ btn_proses.addEventListener("click", function (e) {
                 data: {
                     _token: csrfToken,
                     a: a,
+                    impor: impor,
                     namaType: namaType.value,
                     ketType: ketType.value,
                     PIB: PIB.value,
                     PEB: PEB.value,
-                    kdBarang: kdBarang.value,
+                    kdBarang: tmpKode,
                     subkelId: subkelId.value,
                     konversi: konversi.value,
                     divisiId: divisiId.value,
@@ -1642,9 +1772,29 @@ btn_proses.addEventListener("click", function (e) {
                 },
                 timeout: 30000,
                 success: function (response) {
-                    if (a === 1) {
-                        // ISI
-                        if (response.success) {
+                    if (response.error) {
+                        if (response.errorType === 'subkelIdEmpty') {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'ID Sub Kelompok Kosong!',
+                                text: 'Isi Sub Kelompok Dahulu!'
+                            });
+                        } else if (response.errorType === 'kodeBarangExists') {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Data Tidak ter-SIMPAN.',
+                                text: `Kode Barang: ${response.data[0].KodeBarang.trim()} yang terletak pada Sub Kelompok: ${response.data[0].IdSubkelompok_Type.trim()} Sudah ADA.`
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Terjadi kesalahan yang tidak terduga.'
+                            });
+                        }
+                    } else if (response.success) {
+                        if (a === 1) {
+                            // ISI
                             idtype = response.data && response.data[0] ? response.data[0].idtype : '';
                             Swal.fire({
                                 icon: 'success',
@@ -1654,25 +1804,14 @@ btn_proses.addEventListener("click", function (e) {
                                 btn_isi.focus();
                                 kodeType.value = idtype;
                                 disableKetik();
-
-                                // hide button proses, tampilkan button isi
+            
                                 btn_proses.style.display = 'none';
                                 btn_isi.style.display = 'inline-block';
-
-                                // hide button batal, tampilkan button koreksi
                                 btn_batal.style.display = 'none';
                                 btn_koreksi.style.display = 'inline-block';
                             });
-                        } else if (response.error) {
-                            Swal.fire({
-                                icon: 'warning',
-                                title: 'Data Tidak ter-SIMPAN.',
-                                text: `Kode Barang: ${response.data[0].KodeBarang.trim()} yang terletak pada Sub Kelompok: ${response.data[0].IdSubkelompok_Type.trim()} Sudah ADA.`,
-                            });
-                        }
-                    } else if (a === 2) {
-                        // KOREKSI
-                        if (response.success) {
+                        } else if (a === 2) {
+                            // KOREKSI
                             idtype = response.data && response.data[0] ? response.data[0].idtype : '';
                             Swal.fire({
                                 icon: 'success',
@@ -1681,19 +1820,13 @@ btn_proses.addEventListener("click", function (e) {
                                 disableKetik();
                                 btn_isi.focus();
                             });
-                        } else if (response.error) {
-                            Swal.fire({
-                                icon: 'warning',
-                                title: 'Data Tidak ter-KOREKSI.',
-                            });
                         }
                     }
                 },
                 error: function (xhr, status, error) {
                     console.error('Error:', error);
                 }
-
-            });
+            });            
         }
     } catch (error) {
         console.error('Error:', error);

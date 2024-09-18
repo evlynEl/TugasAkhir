@@ -334,6 +334,9 @@ btn_divisi.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true, 
                         order: [1, "asc"],
                         ajax: {
                             url: "TerimaPurchasing/getDivisi",
@@ -346,6 +349,12 @@ btn_divisi.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdDivisi" },
                             { data: "NamaDivisi" },
+                        ],
+                        columnDefs: [
+                            { 
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -409,6 +418,9 @@ btn_objek.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true, 
                         order: [1, "asc"],
                         ajax: {
                             url: "TerimaPurchasing/getObjek",
@@ -422,6 +434,12 @@ btn_objek.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdObjek" },
                             { data: "NamaObjek" },
+                        ],
+                        columnDefs: [
+                            { 
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -487,6 +505,9 @@ btn_kelut.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true, 
                         order: [0, "asc"],
                         ajax: {
                             url: "TerimaPurchasing/getKelUt",
@@ -501,6 +522,12 @@ btn_kelut.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdKelompokUtama" },
                             { data: "NamaKelompokUtama" }
+                        ],
+                        columnDefs: [
+                            { 
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -572,6 +599,9 @@ btn_kelompok.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true, 
                         order: [1, "asc"],
                         ajax: {
                             url: "TerimaPurchasing/getKelompok",
@@ -586,6 +616,12 @@ btn_kelompok.addEventListener("click", function (e) {
                         columns: [
                             { data: "IdKelompok" },
                             { data: "NamaKelompok" }
+                        ],
+                        columnDefs: [
+                            { 
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 
@@ -656,6 +692,9 @@ btn_subkel.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true, 
                         order: [1, "asc"],
                         ajax: {
                             url: "TerimaPurchasing/getSubkel",
@@ -671,6 +710,12 @@ btn_subkel.addEventListener("click", function (e) {
                             { data: "IdSubkelompok" },
                             { data: "NamaSubKelompok" },
                             { data: "IdType" },
+                        ],
+                        columnDefs: [
+                            { 
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 

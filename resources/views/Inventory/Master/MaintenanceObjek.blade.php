@@ -140,6 +140,7 @@
     </div>
 
     <script type="text/javascript" src="{{ asset('js/Inventory/Master/MaintenanceObjek.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('css/Inventory/Master/MaintenanceObjek.css') }}">
     <link rel="stylesheet" href="{{ asset('css/sweetalert2.min.css') }}">
     <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>
 

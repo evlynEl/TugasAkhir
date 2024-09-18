@@ -4,7 +4,7 @@
         <div class="row justify-content-center">
             <div class="col-md-10 RDZMobilePaddingLR0">
                 <div class="card">
-                    <div class="card-header" style="">Terima Benang EXTRUDER</div>
+                    <div class="card-header" style="">Terima Benang EXTRUDER Gedung D</div>
                     <div class="card-body RDZOverflow RDZMobilePaddingLR0">
                         {{-- ATAS --}}
                         <div class="bordered pl-3">

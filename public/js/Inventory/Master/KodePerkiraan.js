@@ -18,9 +18,9 @@ btn_isi.focus();
 inputs.forEach((masuk, index) => {
     masuk.addEventListener('keypress', function (event) {
         if (event.key === 'Enter') {
-            if (masuk.id === 'keterangan'){
+            if (masuk.id === 'keterangan') {
                 btn_proses.focus();
-            } else{inputs[index + 1].focus();}
+            } else { inputs[index + 1].focus(); }
 
         }
     })
@@ -35,8 +35,8 @@ btn_lihat.addEventListener("click", function (e) {
                 <table id="table_list" class="table">
                     <thead>
                         <tr>
+                        <th scope="col">No Kode Perkiraan</th>
                             <th scope="col">Keterangan</th>
-                            <th scope="col">No Kode Perkiraan</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -64,6 +64,9 @@ btn_lihat.addEventListener("click", function (e) {
                         responsive: true,
                         processing: true,
                         serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
                         order: [0, "asc"],
                         ajax: {
                             url: "KodePerkiraan/getAllKodePerkiraan",
@@ -74,8 +77,14 @@ btn_lihat.addEventListener("click", function (e) {
                             }
                         },
                         columns: [
-                            { data: "Keterangan" },
-                            { data: "NoKodePerkiraan" }
+                            { data: "NoKodePerkiraan" },
+                            { data: "Keterangan" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
                         ]
                     });
 

@@ -53,3 +53,9 @@ input[type="date"] {
     width: 8%;
 }
 
+#table_list th, 
+#table_list td {
+    padding-top: 0;
+    padding-bottom: 0;
+    font-size: 16px;
+}

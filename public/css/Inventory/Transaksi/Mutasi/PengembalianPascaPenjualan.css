@@ -68,11 +68,6 @@ input[type="text"] {
     background-color: white;
 }
 
-/* .table-responsive.fixed-height tr.selected {
-    color: red !important;
-    background-color: #eeeeee;
-} */
-
 
 table.dataTable tbody tr.selected>* {
     background-color: transparent !important;
@@ -98,4 +93,11 @@ table.dataTable tbody tr.selected>* {
 
 .table-responsive.fixed-height tbody {
     background-color: white;
+}
+
+#table_list th, 
+#table_list td {
+    padding-top: 0;
+    padding-bottom: 0;
+    font-size: 16px;
 }
