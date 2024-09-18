@@ -87,6 +87,19 @@ $(document).ready(function () {
             { title: 'Uraian' },
             { title: 'Tanggal' },
             { title: 'Pemohon' }
+        ],
+        scrollY: '300px',
+        autoWidth: false,
+        scrollX: '100%',
+        columnDefs: [{ targets: [0], width: '8%', className: 'fixed-width' },
+        { targets: [1], width: '30%', className: 'fixed-width' },
+        { targets: [2], width: '8%', className: 'fixed-width' },
+        { targets: [3], width: '8%', className: 'fixed-width' },
+        { targets: [4], width: '8%', className: 'fixed-width' },
+        { targets: [5], width: '20%', className: 'fixed-width' },
+        { targets: [6], width: '13%', className: 'fixed-width' },
+        { targets: [7], width: '8%', className: 'fixed-width' },
+        { targets: [8], width: '8%', className: 'fixed-width' },
         ]
     });
 });

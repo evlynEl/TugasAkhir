@@ -9,7 +9,7 @@
 
                         <div class="row mb-2" style="margin-top: -1%">
                             <div class="col-sm-12">
-                                <div class="table-responsive fixed-height" style="height: 300px">
+                                <div class="table-responsive fixed-height">
                                     <table class="table table-bordered no-wrap-header" id="tableData">
                                         <thead>
                                         </thead>

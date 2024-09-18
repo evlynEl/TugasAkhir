@@ -183,6 +183,7 @@ $(document).ready(function () {
             {
                 targets: 0,
                 orderable: false,
+                width: '3%',
                 className: 'select-checkbox',
                 render: function (data, type, row, meta) {
                     return `<input type="checkbox" class="row-checkbox"
@@ -192,8 +193,20 @@ $(document).ready(function () {
                                 data-sekunder="${row[4]}"
                                 data-tritier="${row[5]}">`;
                 }
-            }
+            },
+            { targets: [1], width: '8%', className: 'fixed-width' },
+            { targets: [2], width: '30%', className: 'fixed-width' },
+            { targets: [3], width: '8%', className: 'fixed-width' },
+            { targets: [4], width: '8%', className: 'fixed-width' },
+            { targets: [5], width: '8%', className: 'fixed-width' },
+            { targets: [6], width: '20%', className: 'fixed-width' },
+            { targets: [7], width: '13%', className: 'fixed-width' },
+            { targets: [8], width: '8%', className: 'fixed-width' },
+            { targets: [9], width: '8%', className: 'fixed-width' },
         ],
+        scrollY: '300px',
+        autoWidth: false,
+        scrollX: '100%',
         order: [[1, 'asc']]
     });
 
