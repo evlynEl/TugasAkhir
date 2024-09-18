@@ -570,6 +570,32 @@ $(document).ready(function () {
             { title: 'Keluar Sekunder' },
             { title: 'Keluar Tritier' },
         ],
+        colResize: {
+            isEnabled: true,
+            hoverClass: 'dt-colresizable-hover',
+            hasBoundCheck: true,
+            minBoundClass: 'dt-colresizable-bound-min',
+            maxBoundClass: 'dt-colresizable-bound-max',
+            saveState: true,
+            // isResizable: function (column) {
+            //     return column.idx !== 2;
+            // },
+            onResize: function (column) {
+                //console.log('...resizing...');
+            },
+            onResizeEnd: function (column, columns) {
+                // console.log('I have been resized!');
+            },
+            stateSaveCallback: function (settings, data) {
+                let stateStorageName = window.location.pathname + "/colResizeStateData";
+                localStorage.setItem(stateStorageName, JSON.stringify(data));
+            },
+            stateLoadCallback: function (settings) {
+                let stateStorageName = window.location.pathname + "/colResizeStateData",
+                    data = localStorage.getItem(stateStorageName);
+                return data != null ? JSON.parse(data) : null;
+            }
+        },
         columnDefs: [{ targets: [0], width: '8%', className: 'fixed-width' },
         { targets: [1], width: '8%', className: 'fixed-width' },
         { targets: [2], width: '12%', className: 'fixed-width', visible: false },

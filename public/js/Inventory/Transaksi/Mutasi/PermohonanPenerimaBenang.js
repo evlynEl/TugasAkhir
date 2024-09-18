@@ -168,6 +168,32 @@ $(document).ready(function () {
             { title: 'KdBrg' },
             { title: 'IdSubkel' }
         ],
+        colResize: {
+            isEnabled: true,
+            hoverClass: 'dt-colresizable-hover',
+            hasBoundCheck: true,
+            minBoundClass: 'dt-colresizable-bound-min',
+            maxBoundClass: 'dt-colresizable-bound-max',
+            saveState: true,
+            // isResizable: function (column) {
+            //     return column.idx !== 2;
+            // },
+            onResize: function (column) {
+                //console.log('...resizing...');
+            },
+            onResizeEnd: function (column, columns) {
+                // console.log('I have been resized!');
+            },
+            stateSaveCallback: function (settings, data) {
+                let stateStorageName = window.location.pathname + "/colResizeStateData";
+                localStorage.setItem(stateStorageName, JSON.stringify(data));
+            },
+            stateLoadCallback: function (settings) {
+                let stateStorageName = window.location.pathname + "/colResizeStateData",
+                    data = localStorage.getItem(stateStorageName);
+                return data != null ? JSON.parse(data) : null;
+            }
+        },
         order: [[1, 'asc']],
         scrollY: '400px',
         autoWidth: false,
@@ -182,10 +208,10 @@ $(document).ready(function () {
         { targets: [7], width: '12%', className: 'fixed-width' },
         { targets: [8], width: '12%', className: 'fixed-width' },
         { targets: [9], width: '12%', className: 'fixed-width' },
-        { targets: [10], width: '12%', className: 'fixed-width'},
-        { targets: [11], width: '12%', className: 'fixed-width'},
-        { targets: [12], width: '12%', className: 'fixed-width'},
-    ]
+        { targets: [10], width: '12%', className: 'fixed-width' },
+        { targets: [11], width: '12%', className: 'fixed-width' },
+        { targets: [12], width: '12%', className: 'fixed-width' },
+        ]
 
     });
 });

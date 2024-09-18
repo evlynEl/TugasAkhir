@@ -50,7 +50,8 @@
                                 </div>
                                 <div class="col-md-2">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="kelompokNama" name="kelompokNama" readonly>
+                                        <input type="text" class="form-control" id="kelompokNama" name="kelompokNama"
+                                            readonly>
                                         <div class="input-group-append">
                                             <button type="button" id="btn_kelompok" class="btn btn-info">...</button>
                                         </div>
@@ -81,7 +82,8 @@
                                 </div>
                                 <div class="col-md-2">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="subkelNama" name="subkelNama" readonly>
+                                        <input type="text" class="form-control" id="subkelNama" name="subkelNama"
+                                            readonly>
                                         <div class="input-group-append">
                                             <button type="button" id="btn_subkel" class="btn btn-info">...</button>
                                         </div>
@@ -111,19 +113,21 @@
 
                                 <div class="col-sm-2 mt-2">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="primer" name="primer" readonly>
+                                        <input type="text" class="form-control" id="primer" name="primer"
+                                            readonly>
                                     </div>
                                 </div>
                                 <div class="col-sm-1 mt-2" style="margin-left: -2%">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="satuanPrimer"
-                                            name="satuanPrimer" readonly>
+                                        <input type="text" class="form-control" id="satuanPrimer" name="satuanPrimer"
+                                            readonly>
                                     </div>
                                 </div>
 
                                 <div class="col-sm-2 mt-2" style="margin-left: 3%">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="sekunder" name="sekunder" readonly>
+                                        <input type="text" class="form-control" id="sekunder" name="sekunder"
+                                            readonly>
                                     </div>
                                 </div>
                                 <div class="col-sm-1 mt-2" style="margin-left: -2%">
@@ -135,7 +139,8 @@
 
                                 <div class="col-sm-2 mt-2" style="margin-left: 3%">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="triter" name="triter" readonly>
+                                        <input type="text" class="form-control" id="triter" name="triter"
+                                            readonly>
                                     </div>
                                 </div>
                                 <div class="col-sm-1 mt-2" style="margin-left: -2%">
@@ -151,7 +156,7 @@
 
                         <div class="row" style="margin-top: 0.5%">
                             <div class="col-sm-12">
-                                <div class="table-responsive fixed-height" style="height: 300px">
+                                <div class="table-responsive fixed-height">
                                     <table class="table table-bordered no-wrap-header" id="tableData">
                                         <thead>
                                         </thead>
@@ -171,4 +176,6 @@
     </div>
     <link rel="stylesheet" href="{{ asset('css/Inventory/Informasi/TransaksiHarian.css') }}">
     <script src="{{ asset('js/Inventory/Informasi/TransaksiHarian.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('css/colResizeDatatable.css') }}">
+    <script src="{{ asset('js/colResizeDatatable.js') }}"></script>
 @endsection

@@ -90,6 +90,32 @@ $(document).ready(function () {
             { title: 'Pemohon' },
             { title: 'Tgl Mohon' },
         ],
+        colResize: {
+            isEnabled: true,
+            hoverClass: 'dt-colresizable-hover',
+            hasBoundCheck: true,
+            minBoundClass: 'dt-colresizable-bound-min',
+            maxBoundClass: 'dt-colresizable-bound-max',
+            saveState: true,
+            // isResizable: function (column) {
+            //     return column.idx !== 2;
+            // },
+            onResize: function (column) {
+                //console.log('...resizing...');
+            },
+            onResizeEnd: function (column, columns) {
+                // console.log('I have been resized!');
+            },
+            stateSaveCallback: function (settings, data) {
+                let stateStorageName = window.location.pathname + "/colResizeStateData";
+                localStorage.setItem(stateStorageName, JSON.stringify(data));
+            },
+            stateLoadCallback: function (settings) {
+                let stateStorageName = window.location.pathname + "/colResizeStateData",
+                    data = localStorage.getItem(stateStorageName);
+                return data != null ? JSON.parse(data) : null;
+            }
+        },
         scrollY: '400px',
         autoWidth: false,
         scrollX: '100%',
@@ -558,7 +584,7 @@ function Load_Type_CIR() {
         }).then((result) => {
             if (result.isConfirmed) {
                 kodeType.value = result.value.Id_Type ? decodeHtmlEntities(result.value.Id_Type.trim()) : '';
-                namaBarang.value =result.value.Nm_Type ? decodeHtmlEntities(result.value.Nm_Type.trim()) : '';
+                namaBarang.value = result.value.Nm_Type ? decodeHtmlEntities(result.value.Nm_Type.trim()) : '';
 
                 primer2.disabled = false;
                 sekunder2.disabled = false;
