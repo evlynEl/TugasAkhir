@@ -367,10 +367,14 @@ $(document).ready(function () {
             { title: 'Sekunder' },
             { title: 'Tritier' },
         ],
+        scrollY: '300px',
+        scrollX: '150%',
+        autoWidth: false,
         columnDefs: [
             {
                 targets: 0,
                 orderable: false,
+                width: '3%',
                 className: 'select-checkbox',
                 render: function (data, type, row, meta) {
                     return `<input type="checkbox" class="row-checkbox"
@@ -380,7 +384,22 @@ $(document).ready(function () {
                                 data-sekunder="${row[14]}"
                                 data-tritier="${row[15]}">`;
                 }
-            }
+            },
+            { targets: [1], width: '25%', className: 'fixed-width' },
+            { targets: [2], width: '25%', className: 'fixed-width' },
+            { targets: [3], width: '10%', className: 'fixed-width' },
+            { targets: [4], width: '10%', className: 'fixed-width' },
+            { targets: [5], width: '10%', className: 'fixed-width' },
+            { targets: [6], width: '10%', className: 'fixed-width' },
+            { targets: [7], width: '10%', className: 'fixed-width' },
+            { targets: [8], width: '10%', className: 'fixed-width' },
+            { targets: [9], width: '10%', className: 'fixed-width' },
+            { targets: [10], width: '10%', className: 'fixed-width' },
+            { targets: [11], width: '10%', className: 'fixed-width' },
+            { targets: [12], width: '10%', className: 'fixed-width' },
+            { targets: [13], width: '10%', className: 'fixed-width' },
+            { targets: [14], width: '10%', className: 'fixed-width' },
+            { targets: [15], width: '10%', className: 'fixed-width' },
         ],
         order: [[1, 'asc']]
     });
@@ -573,7 +592,7 @@ btn_proses.addEventListener('click', function () {
                 }).then(() => {
                     btn_divisi.focus();
                 });
-            } 
+            }
         },
         error: function (xhr, status, error) {
             console.error('Error:', error);

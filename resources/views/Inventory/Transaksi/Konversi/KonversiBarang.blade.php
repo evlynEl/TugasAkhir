@@ -42,7 +42,7 @@
                                 </div>
                                 <div class="row mb-2" style="margin-top: 0.5%">
                                     <div class="col-sm-12">
-                                        <div class="table-responsive fixed-height" style="height: 600px">
+                                        <div class="table-responsive fixed-height">
                                             <table class="table table-bordered no-wrap-header" id="tableData">
                                                 <thead>
                                                 </thead>
@@ -76,7 +76,7 @@
                                             <div class="row" style="margin-top: 0.5%">
                                                 <div class="col-sm-12">
                                                     <div class="table-responsive fixed-height"
-                                                        style="height: 200px; width: 425%">
+                                                        style="width: 425%">
                                                         <table class="table table-bordered no-wrap-header" id="tableAsal">
                                                             <thead>
                                                             </thead>
@@ -118,7 +118,7 @@
                                             <div class="row" style="margin-top: 0.5%">
                                                 <div class="col-sm-12">
                                                     <div class="table-responsive fixed-height"
-                                                        style="height: 200px; width: 425%">
+                                                        style="width: 425%">
                                                         <table class="table table-bordered no-wrap-header" id="tableTujuan">
                                                             <thead>
                                                             </thead>

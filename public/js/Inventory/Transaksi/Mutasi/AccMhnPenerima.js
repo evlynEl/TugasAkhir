@@ -104,12 +104,27 @@ $(document).ready(function () {
                 targets: 0,
                 orderable: false,
                 className: 'select-checkbox',
+                width: '3%',
                 render: function (data, type, row, meta) {
                     return `<input type="checkbox" class="row-checkbox"
                                     data-id="${row[1]}">`;
                 }
-            }
+            },
+            { targets: [1], width: '8%', className: 'fixed-width' },
+            { targets: [2], width: '20%', className: 'fixed-width' },
+            { targets: [3], width: '15%', className: 'fixed-width' },
+            { targets: [4], width: '15%', className: 'fixed-width' },
+            { targets: [5], width: '15%', className: 'fixed-width' },
+            { targets: [6], width: '15%', className: 'fixed-width' },
+            { targets: [7], width: '15%', className: 'fixed-width' },
+            { targets: [8], width: '15%', className: 'fixed-width' },
+            { targets: [9], width: '13%', className: 'fixed-width' },
+            { targets: [10], width: '10%', className: 'fixed-width' },
+            { targets: [11], width: '10%', className: 'fixed-width' },
         ],
+        scrollY: '300px',
+        autoWidth: false,
+        scrollX: '100%',
         order: [[1, 'asc']],
         select: {
             style: 'os',

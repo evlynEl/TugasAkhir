@@ -74,22 +74,33 @@ $(document).ready(function () {
             { title: 'Kelompok' },
             { title: 'Sub Kelompok' }
         ],
-        columnDefs: [
-            {
-                targets: 0,
-                orderable: false,
-                className: 'select-checkbox',
-                render: function (data, type, row, meta) {
-                    return `<input type="checkbox" class="row-checkbox"
-                                data-id="${row[1]}"
-                                data-type="${row[11]}"
-                                data-primer="${row[13]}"
-                                data-sekunder="${row[14]}"
-                                data-tritier="${row[15]}">`;
-                }
+        order: [[1, 'asc']],
+        scrollY: '300px',
+        autoWidth: false,
+        scrollX: '100%',
+        columnDefs: [{
+            targets: 0,
+            orderable: false,
+            width: '1%',
+            className: 'select-checkbox',
+            render: function (data, type, row, meta) {
+                return `<input type="checkbox" class="row-checkbox"
+                            data-id="${row[1]}"
+                            data-type="${row[11]}"
+                            data-primer="${row[13]}"
+                            data-sekunder="${row[14]}"
+                            data-tritier="${row[15]}">`;
             }
-        ],
-        order: [[1, 'asc']]
+        }, { targets: [1], width: '10%', className: 'fixed-width' },
+        { targets: [2], width: '35%', className: 'fixed-width' },
+        { targets: [3], width: '35%', className: 'fixed-width' },
+        { targets: [4], width: '10%', className: 'fixed-width' },
+        { targets: [5], width: '10%', className: 'fixed-width' },
+        { targets: [6], width: '10%', className: 'fixed-width' },
+        { targets: [7], width: '10%', className: 'fixed-width' },
+        { targets: [8], width: '10%', className: 'fixed-width' },
+        { targets: [9], width: '10%', className: 'fixed-width' },
+        { targets: [10], width: '10%', className: 'fixed-width' }]
     });
 });
 

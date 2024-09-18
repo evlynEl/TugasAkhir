@@ -798,7 +798,7 @@ btn_kelut.addEventListener("click", function (e) {
                         serverSide: true,
                         paging: false,
                         scrollY: '400px',
-                        scrollCollapse: true, 
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "MhnPenerima/getKelUt",
@@ -814,12 +814,12 @@ btn_kelut.addEventListener("click", function (e) {
                             { data: "NamaKelompokUtama" }
                         ],
                         columnDefs: [
-                            { 
+                            {
                                 targets: 0,
                                 width: '100px',
                             }
                         ]
-                        
+
                     });
 
                     $("#table_list tbody").on("click", "tr", function () {
@@ -890,7 +890,7 @@ btn_kelompok2.addEventListener("click", function (e) {
                         serverSide: true,
                         paging: false,
                         scrollY: '400px',
-                        scrollCollapse: true, 
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "MhnPenerima/getKelompok2",
@@ -906,7 +906,7 @@ btn_kelompok2.addEventListener("click", function (e) {
                             { data: "namakelompok" }
                         ],
                         columnDefs: [
-                            { 
+                            {
                                 targets: 0,
                                 width: '100px',
                             }
@@ -977,7 +977,7 @@ btn_kelompok.addEventListener("click", function (e) {
                         serverSide: true,
                         paging: false,
                         scrollY: '400px',
-                        scrollCollapse: true, 
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "MhnPenerima/getKelompok",
@@ -993,7 +993,7 @@ btn_kelompok.addEventListener("click", function (e) {
                             { data: "namakelompok" }
                         ],
                         columnDefs: [
-                            { 
+                            {
                                 targets: 0,
                                 width: '100px',
                             }
@@ -1065,7 +1065,7 @@ btn_subkel2.addEventListener("click", function (e) {
                         serverSide: true,
                         paging: false,
                         scrollY: '400px',
-                        scrollCollapse: true, 
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "MhnPenerima/getSubkel2",
@@ -1081,7 +1081,7 @@ btn_subkel2.addEventListener("click", function (e) {
                             { data: "NamaSubKelompok" }
                         ],
                         columnDefs: [
-                            { 
+                            {
                                 targets: 0,
                                 width: '100px',
                             }
@@ -1150,7 +1150,7 @@ btn_subkel.addEventListener("click", function (e) {
                         serverSide: true,
                         paging: false,
                         scrollY: '400px',
-                        scrollCollapse: true, 
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "MhnPenerima/getSubkel",
@@ -1166,7 +1166,7 @@ btn_subkel.addEventListener("click", function (e) {
                             { data: "NamaSubKelompok" }
                         ],
                         columnDefs: [
-                            { 
+                            {
                                 targets: 0,
                                 width: '100px',
                             }
@@ -1402,7 +1402,7 @@ btn_namaBarang.addEventListener("click", function (e) {
                         serverSide: true,
                         paging: false,
                         scrollY: '400px',
-                        scrollCollapse: true, 
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "MhnPenerima/getSubkelType",
@@ -1418,7 +1418,7 @@ btn_namaBarang.addEventListener("click", function (e) {
                             { data: "NamaType" }
                         ],
                         columnDefs: [
-                            { 
+                            {
                                 targets: 0,
                                 width: '200px',
                             }
@@ -1601,7 +1601,23 @@ $(document).ready(function () {
             { title: 'Primer' },
             { title: 'Sekunder' },
             { title: 'Tritier' },
-        ]
+        ],
+        scrollY: '300px',
+        autoWidth: false,
+        scrollX: '100%',
+        columnDefs: [{ targets: [0], width: '13%', className: 'fixed-width' },
+        { targets: [1], width: '35%', className: 'fixed-width' },
+        { targets: [2], width: '20%', className: 'fixed-width' },
+        { targets: [3], width: '15%', className: 'fixed-width' },
+        { targets: [4], width: '15%', className: 'fixed-width' },
+        { targets: [5], width: '15%', className: 'fixed-width' },
+        { targets: [6], width: '15%', className: 'fixed-width' },
+        { targets: [7], width: '15%', className: 'fixed-width' },
+        { targets: [8], width: '15%', className: 'fixed-width' },
+        { targets: [9], width: '13%', className: 'fixed-width' },
+        { targets: [10], width: '10%', className: 'fixed-width' },
+        { targets: [11], width: '10%', className: 'fixed-width' },
+        { targets: [12], width: '10%', className: 'fixed-width'}]
     });
 });
 
@@ -1882,7 +1898,7 @@ btn_proses.addEventListener("click", function (e) {
             });
             return;
         }
-        
+
         $.ajax({
             url: "MhnPenerima/hapusBarang",
             type: "DELETE",

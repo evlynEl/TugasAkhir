@@ -3,7 +3,7 @@
     <script></script>
     <div class="container-fluid">
         <div class="row justify-content-center">
-            <div class="col-md-10 RDZMobilePaddingLR0">
+            <div class="col-md-11 RDZMobilePaddingLR0">
                 <div class="card">
                     <div class="card-header">Permohonan Penghangusan Barang</div>
                     <div class="card-body RDZOverflow RDZMobilePaddingLR0">
@@ -101,7 +101,7 @@
 
                         <div class="col-sm-12">
                             <div class="col-sm-12 mb-2">
-                                <div class="table-responsive fixed-height" style="height: 300px">
+                                <div class="table-responsive fixed-height">
                                     <table class="table table-bordered no-wrap-header" id="tableData">
                                         <thead>
                                         </thead>

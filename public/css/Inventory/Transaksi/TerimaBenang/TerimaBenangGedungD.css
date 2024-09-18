@@ -69,12 +69,8 @@ input[type="text"] {
 }
 
 .table-responsive.fixed-height {
-    overflow-y: auto;
-    position: relative;
     border-radius: 8px;
     border: 2px solid black;
-    width: 100%;
-    table-layout: fixed;
     background-color: white;
 }
 
@@ -84,11 +80,11 @@ input[type="text"] {
     padding: 0;
 }
 
-.table-responsive.fixed-height tbody {
+.table-responsive.fixed-height tbody td {
     background-color: white;
 }
 
-#table_list th, 
+#table_list th,
 #table_list td {
     padding-top: 0;
     padding-bottom: 0;

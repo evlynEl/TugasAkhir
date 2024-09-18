@@ -11,7 +11,8 @@ input {
     margin-bottom: 3px;
 }
 
-input[type="text"], input[type="date"] {
+input[type="text"],
+input[type="date"] {
     height: 30px;
     font-size: 14px;
 }
@@ -23,7 +24,8 @@ input[type="text"], input[type="date"] {
     /* margin-bottom: 3px; */
 }
 
-.baris-1, .baris-2 {
+.baris-1,
+.baris-2 {
     outline: 1px solid #bbb;
     margin-bottom: 10px;
     align-items: center;
@@ -34,12 +36,8 @@ input[type="text"], input[type="date"] {
 }
 
 .table-responsive.fixed-height {
-    overflow-y: auto;
-    position: relative;
     border-radius: 8px;
     border: 2px solid black;
-    width: 100%;
-    table-layout: fixed;
     background-color: white;
 }
 
@@ -49,25 +47,42 @@ input[type="text"], input[type="date"] {
     padding: 0;
 }
 
-.table-responsive.fixed-height tbody {
+.table-responsive.fixed-height tbody td {
     background-color: white;
+    padding: 4px 5px;
 }
 
-#primer, #sekunder, #tritier {
+.fixed-width {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0;
+}
+
+.table-responsive.fixed-height #tableData.dataTable {
+    table-layout: fixed;
+    width: 150%;
+}
+
+#primer,
+#sekunder,
+#tritier {
     /* width: 30px; */
     padding: 5px;
 }
 
-#no_primer, #no_sekunder, #no_tritier {
+#no_primer,
+#no_sekunder,
+#no_tritier {
     width: 50px;
     padding: 5px;
 }
 
-.col-sm-3, .col-sm-4 {
+.col-sm-3,
+.col-sm-4 {
     padding-left: 0;
 }
-
-#table_list th, 
+#table_list th,
 #table_list td {
     padding-top: 0;
     padding-bottom: 0;

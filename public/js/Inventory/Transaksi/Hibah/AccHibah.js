@@ -40,7 +40,21 @@ $(document).ready(function () {
             { title: 'Sekunder' },
             { title: 'Tritier' },
             { title: 'Acc' },
-        ]
+        ],
+        scrollY: '300px',
+        autoWidth: false,
+        scrollX: '100%',
+        columnDefs: [{ targets: [0], width: '12%', className: 'fixed-width' },
+        { targets: [1], width: '25%', className: 'fixed-width' },
+        { targets: [2], width: '20%', className: 'fixed-width' },
+        { targets: [3], width: '8%', className: 'fixed-width' },
+        { targets: [4], width: '8%', className: 'fixed-width' },
+        { targets: [5], width: '8%', className: 'fixed-width' },
+        { targets: [6], width: '8%', className: 'fixed-width' },
+        { targets: [7], width: '8%', className: 'fixed-width' },
+        { targets: [8], width: '8%', className: 'fixed-width' },
+        { targets: [9], width: '8%', className: 'fixed-width' },
+        { targets: [10], width: '8%', className: 'fixed-width'}]
     });
 });
 

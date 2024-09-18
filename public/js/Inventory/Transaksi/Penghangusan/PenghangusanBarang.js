@@ -1032,7 +1032,22 @@ $(document).ready(function () {
             { title: 'Sub Kelompok' },
             { title: 'Kode Type' },
             { title: 'Kode Barang' }
-        ]
+        ],
+        scrollY: '300px',
+        autoWidth: false,
+        scrollX: true,
+        columnDefs: [{ targets: [0], width: '10%', className: 'fixed-width' },
+        { targets: [1], width: '25%', className: 'fixed-width' },
+        { targets: [2], width: '25%', className: 'fixed-width' },
+        { targets: [3], width: '10%', className: 'fixed-width' },
+        { targets: [4], width: '10%', className: 'fixed-width' },
+        { targets: [5], width: '10%', className: 'fixed-width' },
+        { targets: [6], width: '10%', className: 'fixed-width' },
+        { targets: [7], width: '10%', className: 'fixed-width' },
+        { targets: [8], width: '10%', className: 'fixed-width' },
+        { targets: [9], width: '10%', className: 'fixed-width' },
+        { targets: [10], width: '10%', className: 'fixed-width' },
+        { targets: [11], width: '10%', className: 'fixed-width' }]
     });
 });
 

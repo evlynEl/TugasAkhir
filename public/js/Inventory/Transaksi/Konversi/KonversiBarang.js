@@ -108,7 +108,12 @@ $(document).ready(function () {
         columns: [
             { title: 'Kode Konversi' },
             { title: 'Tgl. Transaksi' },
-        ]
+        ],
+        scrollY: '600px',
+        autoWidth: false,
+        scrollX: '100%',
+        columnDefs: [{ targets: [0], width: '50%', className: 'fixed-width' },
+        { targets: [1], width: '50%', className: 'fixed-width'}]
     });
 
     $('#tableAsal').DataTable({
@@ -125,7 +130,18 @@ $(document).ready(function () {
             { title: 'Kelompok' },
             { title: 'Sub Kelompok' },
             { title: 'Pemohon' },
-        ]
+        ],
+        scrollY: '200px',
+        autoWidth: false,
+        scrollX: '100%',
+        columnDefs: [{ targets: [0], width: '12%', className: 'fixed-width' },
+        { targets: [1], width: '12%', className: 'fixed-width' },
+        { targets: [2], width: '20%', className: 'fixed-width' },
+        { targets: [3], width: '8%', className: 'fixed-width' },
+        { targets: [4], width: '8%', className: 'fixed-width' },
+        { targets: [5], width: '8%', className: 'fixed-width' },
+        { targets: [6], width: '8%', className: 'fixed-width' },
+        { targets: [7], width: '8%', className: 'fixed-width'}]
     });
 
     $('#tableTujuan').DataTable({
@@ -142,7 +158,18 @@ $(document).ready(function () {
             { title: 'Kelompok' },
             { title: 'Sub Kelompok' },
             { title: 'Pemohon' },
-        ]
+        ],
+        scrollY: '200px',
+        autoWidth: false,
+        scrollX: '100%',
+        columnDefs: [{ targets: [0], width: '12%', className: 'fixed-width' },
+        { targets: [1], width: '12%', className: 'fixed-width' },
+        { targets: [2], width: '20%', className: 'fixed-width' },
+        { targets: [3], width: '8%', className: 'fixed-width' },
+        { targets: [4], width: '8%', className: 'fixed-width' },
+        { targets: [5], width: '8%', className: 'fixed-width' },
+        { targets: [6], width: '8%', className: 'fixed-width' },
+        { targets: [7], width: '8%', className: 'fixed-width'}]
     });
 
     primerKonversiAsal.value = 0;

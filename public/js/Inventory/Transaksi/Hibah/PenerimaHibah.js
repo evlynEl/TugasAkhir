@@ -39,7 +39,18 @@ $(document).ready(function () {
             { title: 'Tritier' },
             { title: 'Id Transaksi' },
             { title: 'Pemohon' },
-        ]
+        ],
+        scrollY: '300px',
+        autoWidth: false,
+        scrollX: '100%',
+        columnDefs: [{ targets: [0], width: '8%', className: 'fixed-width' },
+        { targets: [1], width: '25%', className: 'fixed-width' },
+        { targets: [2], width: '10%', className: 'fixed-width' },
+        { targets: [3], width: '10%', className: 'fixed-width' },
+        { targets: [4], width: '10%', className: 'fixed-width' },
+        { targets: [5], width: '10%', className: 'fixed-width' },
+        { targets: [6], width: '10%', className: 'fixed-width' },
+        { targets: [7], width: '10%', className: 'fixed-width'}]
     });
 });
 

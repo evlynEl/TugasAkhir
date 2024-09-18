@@ -101,7 +101,7 @@ table.dataTable {
     width: 100%;            /* Ensure the table takes up the full width */
 }
 
-#table_list th, 
+#table_list th,
 #table_list td {
     padding-top: 0;
     padding-bottom: 0;

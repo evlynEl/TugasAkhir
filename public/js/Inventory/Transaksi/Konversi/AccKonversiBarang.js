@@ -83,7 +83,10 @@ $(document).ready(function () {
         columns: [
             { title: 'Kode Konversi' },
         ],
-        order: [[0, 'asc']]
+        order: [[0, 'asc']],
+        scrollY: '400px',
+        autoWidth: false,
+        scrollX: '100%',
     });
 
     var table = $('#tableData').DataTable({
@@ -112,6 +115,7 @@ $(document).ready(function () {
             {
                 targets: 0,
                 orderable: false,
+                width: '3%',
                 className: 'select-checkbox',
                 render: function (data, type, row, meta) {
                     return `<input type="checkbox" class="row-checkbox"
@@ -121,8 +125,25 @@ $(document).ready(function () {
                                     data-sekunder="${row[14]}"
                                     data-tritier="${row[15]}">`;
                 }
-            }
+            },
+            { targets: [1], width: '10%', className: 'fixed-width' },
+            { targets: [2], width: '10%', className: 'fixed-width' },
+            { targets: [3], width: '10%', className: 'fixed-width' },
+            { targets: [4], width: '20%', className: 'fixed-width' },
+            { targets: [5], width: '10%', className: 'fixed-width' },
+            { targets: [6], width: '10%', className: 'fixed-width' },
+            { targets: [7], width: '10%', className: 'fixed-width' },
+            { targets: [8], width: '10%', className: 'fixed-width' },
+            { targets: [9], width: '10%', className: 'fixed-width' },
+            { targets: [10], width: '10%', className: 'fixed-width' },
+            { targets: [11], width: '10%', className: 'fixed-width' },
+            { targets: [12], width: '10%', className: 'fixed-width' },
+            { targets: [13], width: '10%', className: 'fixed-width' },
+            { targets: [14], width: '10%', className: 'fixed-width' }
         ],
+        scrollY: '400px',
+        autoWidth: false,
+        scrollX: '150%',
         order: [[1, 'asc']],
         select: {
             style: 'os',

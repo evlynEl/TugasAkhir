@@ -108,7 +108,20 @@ $(document).ready(function () {
             { title: 'Kel. Utama' },
             { title: 'Kelompok' },
             { title: 'Sub Kelompok' }
-        ]
+        ],
+        scrollY: '400px',
+        autoWidth: false,
+        scrollX: '100%',
+        columnDefs: [{ targets: [0], width: '10%', className: 'fixed-width' },
+        { targets: [1], width: '35%', className: 'fixed-width' },
+        { targets: [2], width: '35%', className: 'fixed-width' },
+        { targets: [3], width: '10%', className: 'fixed-width' },
+        { targets: [4], width: '10%', className: 'fixed-width' },
+        { targets: [5], width: '10%', className: 'fixed-width' },
+        { targets: [6], width: '10%', className: 'fixed-width' },
+        { targets: [7], width: '10%', className: 'fixed-width' },
+        { targets: [8], width: '10%', className: 'fixed-width' },
+        { targets: [9], width: '10%', className: 'fixed-width' }]
     });
 });
 
@@ -1122,19 +1135,19 @@ $('#tableData tbody').on('click', 'tr', function () {
     var data = table.row(this).data();
     console.log(data);
 
-    kodeTransaksi.value = data[1];
-    namaBarang.value = decodeHtmlEntities(data[2]);
-    alasan.value = decodeHtmlEntities(data[3]);
-    var originalDate = data[5];
+    kodeTransaksi.value = data[0];
+    namaBarang.value = decodeHtmlEntities(data[1]);
+    alasan.value = decodeHtmlEntities(data[2]);
+    var originalDate = data[4];
     var parts = originalDate.split('/');
     var formattedDate = parts[2] + '-' + parts[0].padStart(2, '0') + '-' + parts[1].padStart(2, '0');
     tanggal.value = formattedDate;
-    divisiNama.value = decodeHtmlEntities(data[6]);
-    objekNama.value = decodeHtmlEntities(data[7]);
-    kelutNama.value = decodeHtmlEntities(data[8]);
-    kelompokNama.value = decodeHtmlEntities(data[9]);
-    subkelNama.value = decodeHtmlEntities(data[10]);
-    pemohon.value = data[11];
+    divisiNama.value = decodeHtmlEntities(data[5]);
+    objekNama.value = decodeHtmlEntities(data[6]);
+    kelutNama.value = decodeHtmlEntities(data[7]);
+    kelompokNama.value = decodeHtmlEntities(data[8]);
+    subkelNama.value = decodeHtmlEntities(data[9]);
+    pemohon.value = data[10];
 
     $.ajax({
         type: 'GET',

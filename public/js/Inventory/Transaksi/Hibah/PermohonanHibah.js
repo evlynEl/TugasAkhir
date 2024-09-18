@@ -157,7 +157,12 @@ $(document).ready(function () {
         columns: [
             { title: 'NoTrans' },
             { title: 'Nama Type' },
-        ]
+        ],
+        scrollY: '400px',
+        autoWidth: false,
+        scrollX: '100%',
+        columnDefs: [{ targets: [0], width: '30%', className: 'fixed-width' },
+        { targets: [1], width: '70%', className: 'fixed-width'}]
     });
 });
 

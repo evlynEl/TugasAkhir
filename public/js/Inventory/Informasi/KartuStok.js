@@ -128,10 +128,10 @@ btn_divisi.addEventListener("click", function (e) {
                         serverSide: true,
                         paging: false,
                         scrollY: '400px',
-                        scrollCollapse: true, 
+                        scrollCollapse: true,
                         paging: false,
                         scrollY: '400px',
-                        scrollCollapse: true, 
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "KartuStok/getDivisi",
@@ -146,7 +146,7 @@ btn_divisi.addEventListener("click", function (e) {
                             { data: "NamaDivisi" },
                         ],
                         columnDefs: [
-                            { 
+                            {
                                 targets: 0,
                                 width: '100px',
                             }
@@ -216,7 +216,7 @@ btn_objek.addEventListener("click", function (e) {
                         serverSide: true,
                         paging: false,
                         scrollY: '400px',
-                        scrollCollapse: true, 
+                        scrollCollapse: true,
                         order: [0, "asc"],
                         ajax: {
                             url: "KartuStok/getObjek",
@@ -232,7 +232,7 @@ btn_objek.addEventListener("click", function (e) {
                             { data: "NamaObjek" },
                         ],
                         columnDefs: [
-                            { 
+                            {
                                 targets: 0,
                                 width: '100px',
                             }
@@ -301,7 +301,7 @@ btn_kelut.addEventListener("click", function (e) {
                         serverSide: true,
                         paging: false,
                         scrollY: '400px',
-                        scrollCollapse: true, 
+                        scrollCollapse: true,
                         order: [0, "asc"],
                         ajax: {
                             url: "KartuStok/getKelUt",
@@ -317,7 +317,7 @@ btn_kelut.addEventListener("click", function (e) {
                             { data: "NamaKelompokUtama" }
                         ],
                         columnDefs: [
-                            { 
+                            {
                                 targets: 0,
                                 width: '100px',
                             }
@@ -386,7 +386,7 @@ btn_kelompok.addEventListener("click", function (e) {
                         serverSide: true,
                         paging: false,
                         scrollY: '400px',
-                        scrollCollapse: true, 
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "KartuStok/getKelompok",
@@ -402,7 +402,7 @@ btn_kelompok.addEventListener("click", function (e) {
                             { data: "namakelompok" }
                         ],
                         columnDefs: [
-                            { 
+                            {
                                 targets: 0,
                                 width: '100px',
                             }
@@ -471,7 +471,7 @@ btn_subkel.addEventListener("click", function (e) {
                         serverSide: true,
                         paging: false,
                         scrollY: '400px',
-                        scrollCollapse: true, 
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "KartuStok/getSubkel",
@@ -487,7 +487,7 @@ btn_subkel.addEventListener("click", function (e) {
                             { data: "NamaSubKelompok" }
                         ],
                         columnDefs: [
-                            { 
+                            {
                                 targets: 0,
                                 width: '100px',
                             }
@@ -831,9 +831,6 @@ $(document).ready(function () {
         searching: false,
         info: false,
         ordering: false,
-        scrollY: '400px',
-        autoWidth: false,
-        scrollX: '100%',
         columns: [
             { title: 'IdType' },
             { title: 'Kel. Utama' },
@@ -848,6 +845,9 @@ $(document).ready(function () {
             { title: 'Saldo Tritier' },
             { title: 'SatTritier' },
         ],
+        scrollY: '400px',
+        autoWidth: false,
+        scrollX: '100%',
         columnDefs: [{ targets: [0], width: '12%', className: 'fixed-width' },
         { targets: [1], width: '8%', className: 'fixed-width' },
         { targets: [2], width: '8%', className: 'fixed-width' },

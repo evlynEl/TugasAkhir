@@ -138,7 +138,7 @@
 
                         <div class="row" style="margin-top: 0.5%">
                             <div class="col-sm-12">
-                                <div class="table-responsive fixed-height" style="height: 300px">
+                                <div class="table-responsive fixed-height">
                                     <table class="table table-bordered no-wrap-header" id="tableData">
                                         <thead>
                                         </thead>
@@ -148,7 +148,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="row">
                             <div class="col-sm-2 offset-sm-8">
                                 <button type="button" id="btn_proses" class="btn btn-info" style="width: 100%" disabled>PROSES</button>
