@@ -40,6 +40,7 @@ class PenghangusanBarangController extends Controller
         $kelompokId = $request->input('kelompokId');
         $kelutId = $request->input('kelutId');
         $subkelId = $request->input('subkelId');
+        $kodeBarang = $request->input('kodeBarang');
 
         $kodeTransaksi = $request->input('kodeTransaksi');
         $kodeType = $request->input('kodeType');
@@ -216,6 +217,39 @@ class PenghangusanBarangController extends Controller
             }
             // dd($data_allData);
             return response()->json($data_allData);
+
+        } else if ($id === 'fillKodeBarang') {
+            $fill = DB::connection('ConnInventory')->select('exec SP_1003_INV_cekkodebarang_type @XKodeBarang = ?, @XIdSubKelompok = ?', [$kodeBarang, $subkelId]);
+
+            if (count($fill) > 0) {
+                return response()->json(['success' => true]);
+            } else {
+                return response()->json([
+                    'error' => true,
+                    'message' => 'Tidak Ada Kode Barang : '.$kodeBarang.' Pada sub kel : '.$subkelId
+                ]);
+            }
+
+        } else if ($id === 'cekKodeBarang') {
+            // cek kode barang dari input
+            $barang = DB::connection('ConnInventory')->select( 'exec SP_1273_INV_kodebarang_type1 @XKodeBarang = ?, @XIdSubKelompok = ?', [$kodeBarang, $subkelId]);
+
+            $data_barang = [];
+            foreach ($barang as $detail_barang) {
+                $data_barang[] = [
+                    'IdType' => $detail_barang->IdType,
+                    'NamaType' => $detail_barang->NamaType,
+                    'KodeBarang' => $detail_barang->KodeBarang,
+                    'SaldoPrimer' => $detail_barang->SaldoPrimer,
+                    'SaldoSekunder' => $detail_barang->SaldoSekunder,
+                    'SaldoTritier' => $detail_barang->SaldoTritier,
+                    'Satuan_Primer' => $detail_barang->Satuan_Primer,
+                    'Satuan_Sekunder' => $detail_barang->Satuan_Sekunder,
+                    'Satuan_Tritier' => $detail_barang->Satuan_Tritier,
+                ];
+            }
+            // dd($request->all(), $data_barang);
+            return response()->json($data_barang);
         }
     }
 

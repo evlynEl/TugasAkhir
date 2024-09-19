@@ -99,6 +99,12 @@ inputs.forEach((masuk, index) => {
                     btn_proses.focus();
                 } else if (masuk.id === 'tritier2') {
                     btn_proses.focus();
+                } else if (masuk.id === 'kodeBarang') {
+                    if (subkelId.value !== '' && kodeBarang.value !== '') {
+                        tmpKode = formatKdBarang(kodeBarang.value)
+                        fillKodeBarang(tmpKode);
+                    }
+
                 } else {
                     inputs[index + 1].focus();
                 }
@@ -112,6 +118,93 @@ inputs.forEach((masuk, index) => {
         }
     })
 });
+
+// format kode barang
+function formatKdBarang(kdBarang) {
+    kdBarang = kdBarang.trim();
+    return kdBarang.padStart(9, '0');
+}
+
+function fillKodeBarang(tmpKode) {
+    $.ajax({
+        url: "PenghangusanBarang/fillKodeBarang",
+        type: "GET",
+        data: {
+            _token: csrfToken,
+            kodeBarang: tmpKode,
+            subkelId: subkelId.value
+        },
+        timeout: 30000,
+        success: function (response) {
+            if (response.success) {
+                cekKodeBarang(tmpKode);
+
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    html: response.message,
+                    returnFocus: false
+                });
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('AJAX Error:', error);
+        }
+    });
+}
+
+function cekKodeBarang(tmpKode) {
+    $.ajax({
+        type: 'GET',
+        url: 'PenyesuaianBarang/cekKodeBarang',
+        data: {
+            _token: csrfToken,
+            kodeBarang: tmpKode,
+            subkelId: subkelId.value
+        },
+        success: function (response) {
+            if (response.length > 0) {
+                kodeType.value = result.IdType !== null ? decodeHtmlEntities(result.IdType.trim()) : "-";
+                namaBarang.value = result.NamaType !== null ? decodeHtmlEntities(result.NamaType.trim()) : "-";
+                kodeBarang.value = decodeHtmlEntities(result.KodeBarang.trim());
+                primer.value = result.SaldoPrimer !== null ? formatNumber(result.SaldoPrimer) : "0";
+                sekunder.value = result.SaldoSekunder !== null ? formatNumber(result.SaldoSekunder) : "0";
+                tritier.value = result.SaldoTritier !== null ? formatNumber(result.SaldoTritier) : "0";
+                no_primer.value = result.Satuan_Primer !== null ? decodeHtmlEntities(result.Satuan_Primer.trim()) : "";
+                no_sekunder.value = result.Satuan_Sekunder !== null ? decodeHtmlEntities(result.Satuan_Sekunder.trim()) : "";
+                no_tritier.value = result.Satuan_Tritier !== null ? decodeHtmlEntities(result.Satuan_Tritier.trim()) : "";
+
+                handleChange();
+                no_primer.addEventListener('change', handleChange);
+                no_sekunder.addEventListener('change', handleChange);
+                no_tritier.addEventListener('change', handleChange);
+
+                alasan.focus();
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
+
+}
+
+function handleChange() {
+    primerValue = no_primer.value.trim();
+    sekunderValue = no_sekunder.value.trim();
+    tritierValue = no_tritier.value.trim();
+
+    if (primerValue === 'NULL' && sekunderValue === 'NULL') {
+        primer2.disabled = true;
+        sekunder2.disabled = true;
+        tritier2.select();
+    } else if (primerValue === 'NULL' && sekunderValue !== 'NULL') {
+        primer2.disabled = true;
+        // sekunder2.disabled = false;
+        // sekunder2.select();
+    }
+}
 
 // fungsi swal select pake arrow
 function handleTableKeydown(e, tableId) {
@@ -240,6 +333,11 @@ btn_divisi.addEventListener("click", function (e) {
                         $(this).addClass("selected");
                     });
 
+                    const searchInput = $('#table_list_filter input');
+                    if (searchInput.length > 0) {
+                        searchInput.focus();
+                    }
+
                     currentIndex = null;
                     Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
                 });
@@ -346,6 +444,11 @@ btn_objek.addEventListener("click", function (e) {
                         $(this).addClass("selected");
                     });
 
+                    const searchInput = $('#table_list_filter input');
+                    if (searchInput.length > 0) {
+                        searchInput.focus();
+                    }
+                    
                     currentIndex = null;
                     Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
                 });
@@ -429,6 +532,11 @@ btn_kelut.addEventListener("click", function (e) {
                         table.$("tr.selected").removeClass("selected");
                         $(this).addClass("selected");
                     });
+
+                    const searchInput = $('#table_list_filter input');
+                    if (searchInput.length > 0) {
+                        searchInput.focus();
+                    }
 
                     currentIndex = null;
                     Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
@@ -514,6 +622,11 @@ btn_kelompok.addEventListener("click", function (e) {
                         $(this).addClass("selected");
                     });
 
+                    const searchInput = $('#table_list_filter input');
+                    if (searchInput.length > 0) {
+                        searchInput.focus();
+                    }
+
                     currentIndex = null;
                     Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
                 });
@@ -597,6 +710,11 @@ btn_subkel.addEventListener("click", function (e) {
                         table.$("tr.selected").removeClass("selected");
                         $(this).addClass("selected");
                     });
+
+                    const searchInput = $('#table_list_filter input');
+                    if (searchInput.length > 0) {
+                        searchInput.focus();
+                    }
 
                     currentIndex = null;
                     Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
