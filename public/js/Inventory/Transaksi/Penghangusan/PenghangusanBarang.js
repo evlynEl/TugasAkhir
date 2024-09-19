@@ -104,7 +104,6 @@ inputs.forEach((masuk, index) => {
                         tmpKode = formatKdBarang(kodeBarang.value)
                         fillKodeBarang(tmpKode);
                     }
-
                 } else {
                     inputs[index + 1].focus();
                 }
@@ -118,6 +117,14 @@ inputs.forEach((masuk, index) => {
         }
     })
 });
+
+kodeBarang.addEventListener('input', function() {
+    if (subkelId.value !== '' && kodeBarang.value !== '') {
+        const tmpKode = formatKdBarang(kodeBarang.value);
+        fillKodeBarang(tmpKode);
+    }
+});
+
 
 // format kode barang
 function formatKdBarang(kdBarang) {
@@ -928,12 +935,12 @@ function handleTypeSelection() {
                                     $(this).addClass("selected");
                                     scrollRowIntoView(this);
                                 });
-            
+
                                 const searchInput = $('#table_list_filter input');
                                 if (searchInput.length > 0) {
                                     searchInput.focus();
                                 }
-            
+
                                 currentIndex = null;
                                 Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
                             });
@@ -1038,12 +1045,12 @@ function handleTypeSelection() {
                                     $(this).addClass("selected");
                                     scrollRowIntoView(this);
                                 });
-            
+
                                 const searchInput = $('#table_list_filter input');
                                 if (searchInput.length > 0) {
                                     searchInput.focus();
                                 }
-            
+
                                 currentIndex = null;
                                 Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
                             });
@@ -1142,12 +1149,12 @@ function handleTypeSelection() {
                                 $(this).addClass("selected");
                                 scrollRowIntoView(this);
                             });
-        
+
                             const searchInput = $('#table_list_filter input');
                             if (searchInput.length > 0) {
                                 searchInput.focus();
                             }
-        
+
                             currentIndex = null;
                             Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
                         });
