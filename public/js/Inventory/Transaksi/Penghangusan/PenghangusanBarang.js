@@ -207,8 +207,7 @@ function handleChange() {
         // sekunder2.select();
     }
 }
-
-// fungsi swal select pake arrow
+// Function to handle keydown events for table navigation
 function handleTableKeydown(e, tableId) {
     const table = $(`#${tableId}`).DataTable();
     const rows = $(`#${tableId} tbody tr`);
@@ -226,40 +225,60 @@ function handleTableKeydown(e, tableId) {
                 Swal.getConfirmButton().click();
             }
         }
-    } else if (e.key === "ArrowDown") {
+    }
+    else if (e.key === "ArrowDown") {
         e.preventDefault();
-        if (currentIndex === null) {
+        if (currentIndex === null || currentIndex >= rowCount - 1) {
             currentIndex = 0;
         } else {
-            currentIndex = (currentIndex + 1) % rowCount;
+            currentIndex++;
         }
         rows.removeClass("selected");
-        $(rows[currentIndex]).addClass("selected");
-    } else if (e.key === "ArrowUp") {
+        const selectedRow = $(rows[currentIndex]).addClass("selected");
+        scrollRowIntoView(selectedRow[0]);
+    }
+    else if (e.key === "ArrowUp") {
         e.preventDefault();
-        if (currentIndex === null) {
+        if (currentIndex === null || currentIndex <= 0) {
             currentIndex = rowCount - 1;
         } else {
-            currentIndex = (currentIndex - 1 + rowCount) % rowCount;
+            currentIndex--;
         }
         rows.removeClass("selected");
-        $(rows[currentIndex]).addClass("selected");
-    } else if (e.key === "ArrowRight") {
+        const selectedRow = $(rows[currentIndex]).addClass("selected");
+        scrollRowIntoView(selectedRow[0]);
+    }
+    else if (e.key === "ArrowRight") {
         e.preventDefault();
-        currentIndex = null;
         const pageInfo = table.page.info();
         if (pageInfo.page < pageInfo.pages - 1) {
-            table.page('next').draw('page');
+            table.page('next').draw('page').on('draw', function () {
+                currentIndex = 0;
+                const newRows = $(`#${tableId} tbody tr`);
+                const selectedRow = $(newRows[currentIndex]).addClass("selected");
+                scrollRowIntoView(selectedRow[0]);
+            });
         }
-    } else if (e.key === "ArrowLeft") {
+    }
+    else if (e.key === "ArrowLeft") {
         e.preventDefault();
-        currentIndex = null;
         const pageInfo = table.page.info();
         if (pageInfo.page > 0) {
-            table.page('previous').draw('page');
+            table.page('previous').draw('page').on('draw', function () {
+                currentIndex = 0;
+                const newRows = $(`#${tableId} tbody tr`);
+                const selectedRow = $(newRows[currentIndex]).addClass("selected");
+                scrollRowIntoView(selectedRow[0]);
+            });
         }
     }
 }
+
+// Helper function to scroll selected row into view
+function scrollRowIntoView(rowElement) {
+    rowElement.scrollIntoView({ block: 'nearest' });
+}
+
 
 // fungsi unk menampilkan '&'
 function decodeHtmlEntities(str) {
@@ -333,6 +352,7 @@ btn_divisi.addEventListener("click", function (e) {
                     $("#table_list tbody").on("click", "tr", function () {
                         table.$("tr.selected").removeClass("selected");
                         $(this).addClass("selected");
+                        scrollRowIntoView(this);
                     });
 
                     const searchInput = $('#table_list_filter input');
@@ -440,10 +460,10 @@ btn_objek.addEventListener("click", function (e) {
                             }
                         ]
                     });
-
                     $("#table_list tbody").on("click", "tr", function () {
                         table.$("tr.selected").removeClass("selected");
                         $(this).addClass("selected");
+                        scrollRowIntoView(this);
                     });
 
                     const searchInput = $('#table_list_filter input');
@@ -533,6 +553,7 @@ btn_kelut.addEventListener("click", function (e) {
                     $("#table_list tbody").on("click", "tr", function () {
                         table.$("tr.selected").removeClass("selected");
                         $(this).addClass("selected");
+                        scrollRowIntoView(this);
                     });
 
                     const searchInput = $('#table_list_filter input');
@@ -622,6 +643,7 @@ btn_kelompok.addEventListener("click", function (e) {
                     $("#table_list tbody").on("click", "tr", function () {
                         table.$("tr.selected").removeClass("selected");
                         $(this).addClass("selected");
+                        scrollRowIntoView(this);
                     });
 
                     const searchInput = $('#table_list_filter input');
@@ -707,10 +729,10 @@ btn_subkel.addEventListener("click", function (e) {
                             }
                         ]
                     });
-
                     $("#table_list tbody").on("click", "tr", function () {
                         table.$("tr.selected").removeClass("selected");
                         $(this).addClass("selected");
+                        scrollRowIntoView(this);
                     });
 
                     const searchInput = $('#table_list_filter input');
@@ -901,12 +923,17 @@ function handleTypeSelection() {
                                         }
                                     ]
                                 });
-
                                 $("#table_list tbody").on("click", "tr", function () {
                                     table.$("tr.selected").removeClass("selected");
                                     $(this).addClass("selected");
+                                    scrollRowIntoView(this);
                                 });
-
+            
+                                const searchInput = $('#table_list_filter input');
+                                if (searchInput.length > 0) {
+                                    searchInput.focus();
+                                }
+            
                                 currentIndex = null;
                                 Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
                             });
@@ -1009,8 +1036,14 @@ function handleTypeSelection() {
                                 $("#table_list tbody").on("click", "tr", function () {
                                     table.$("tr.selected").removeClass("selected");
                                     $(this).addClass("selected");
+                                    scrollRowIntoView(this);
                                 });
-
+            
+                                const searchInput = $('#table_list_filter input');
+                                if (searchInput.length > 0) {
+                                    searchInput.focus();
+                                }
+            
                                 currentIndex = null;
                                 Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
                             });
@@ -1107,8 +1140,14 @@ function handleTypeSelection() {
                             $("#table_list tbody").on("click", "tr", function () {
                                 table.$("tr.selected").removeClass("selected");
                                 $(this).addClass("selected");
+                                scrollRowIntoView(this);
                             });
-
+        
+                            const searchInput = $('#table_list_filter input');
+                            if (searchInput.length > 0) {
+                                searchInput.focus();
+                            }
+        
                             currentIndex = null;
                             Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
                         });
