@@ -306,6 +306,7 @@ function formatNumber(value) {
     }
     return value;
 }
+
 // Function to handle keydown events for table navigation
 function handleTableKeydown(e, tableId) {
     const table = $(`#${tableId}`).DataTable();
@@ -372,6 +373,12 @@ function handleTableKeydown(e, tableId) {
         }
     }
 }
+
+// Helper function to scroll selected row into view
+function scrollRowIntoView(rowElement) {
+    rowElement.scrollIntoView({ block: 'nearest' });
+}
+
 
 // Button click to show divisi selection modal
 btn_divisi.addEventListener("click", function (e) {
@@ -461,11 +468,6 @@ btn_divisi.addEventListener("click", function (e) {
         console.error(error);
     }
 });
-
-// Helper function to scroll selected row into view
-function scrollRowIntoView(rowElement) {
-    rowElement.scrollIntoView({ block: 'nearest' });
-}
 
 // button list objek
 btn_objek.addEventListener("click", function (e) {
