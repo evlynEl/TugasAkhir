@@ -157,7 +157,7 @@ function fillKodeBarang(tmpKode) {
 function cekKodeBarang(tmpKode) {
     $.ajax({
         type: 'GET',
-        url: 'PenyesuaianBarang/cekKodeBarang',
+        url: 'PenghangusanBarang/cekKodeBarang',
         data: {
             _token: csrfToken,
             kodeBarang: tmpKode,
@@ -165,15 +165,17 @@ function cekKodeBarang(tmpKode) {
         },
         success: function (response) {
             if (response.length > 0) {
+                const result = response[0];
+
                 kodeType.value = result.IdType !== null ? decodeHtmlEntities(result.IdType.trim()) : "-";
                 namaBarang.value = result.NamaType !== null ? decodeHtmlEntities(result.NamaType.trim()) : "-";
                 kodeBarang.value = decodeHtmlEntities(result.KodeBarang.trim());
                 primer.value = result.SaldoPrimer !== null ? formatNumber(result.SaldoPrimer) : "0";
                 sekunder.value = result.SaldoSekunder !== null ? formatNumber(result.SaldoSekunder) : "0";
                 tritier.value = result.SaldoTritier !== null ? formatNumber(result.SaldoTritier) : "0";
-                no_primer.value = result.Satuan_Primer !== null ? decodeHtmlEntities(result.Satuan_Primer.trim()) : "";
-                no_sekunder.value = result.Satuan_Sekunder !== null ? decodeHtmlEntities(result.Satuan_Sekunder.trim()) : "";
-                no_tritier.value = result.Satuan_Tritier !== null ? decodeHtmlEntities(result.Satuan_Tritier.trim()) : "";
+                no_primer.value = result.satuan_primer !== null ? decodeHtmlEntities(result.satuan_primer.trim()) : "";
+                no_sekunder.value = result.satuan_sekunder !== null ? decodeHtmlEntities(result.satuan_sekunder.trim()) : "";
+                no_tritier.value = result.satuan_tritier !== null ? decodeHtmlEntities(result.satuan_tritier.trim()) : "";
 
                 handleChange();
                 no_primer.addEventListener('change', handleChange);
@@ -448,7 +450,7 @@ btn_objek.addEventListener("click", function (e) {
                     if (searchInput.length > 0) {
                         searchInput.focus();
                     }
-                    
+
                     currentIndex = null;
                     Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
                 });
