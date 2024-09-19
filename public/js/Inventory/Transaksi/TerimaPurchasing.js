@@ -117,75 +117,48 @@ $(document).ready(function () {
         { targets: [6], width: '10%', className: 'fixed-width' },
         { targets: [7], width: '10%', className: 'fixed-width' },]
     });
-});
 
-function formatDateToMMDDYYYY(date) {
-    let dateObj = new Date(date);
-    if (isNaN(dateObj)) {
-        return '';
-    }
-
-    let month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
-    let day = dateObj.getDate().toString().padStart(2, '0');
-    let year = dateObj.getFullYear();
-
-    return `${month}/${day}/${year}`;
-}
-
-function decodeHtmlEntities(text) {
-    var txt = document.createElement("textarea");
-    txt.innerHTML = text;
-    return txt.value;
-}
-
-function escapeHtml(text) {
-    var map = {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#039;'
-    };
-    return text.replace(/[&<>"']/g, function (m) { return map[m]; });
-}
-
-function updateDataTable(data) {
     var table = $('#tableData').DataTable();
-    table.clear();
 
-    data.forEach(function (item) {
-        table.row.add([
-            formatDateToMMDDYYYY(item.SaatAwalTransaksi),
-            escapeHtml(item.IdType),
-            escapeHtml(item.NamaType),
-            formatNumber(item.JumlahPemasukanPrimer),
-            formatNumber(item.JumlahPemasukanSekunder),
-            formatNumber(item.JumlahPemasukanTritier),
-            escapeHtml(item.IdTransaksi),
-            escapeHtml(item.PIB),
-            escapeHtml(item.SatPrimer),
-            escapeHtml(item.SatSekunder),
-            escapeHtml(item.SatTritier),
-            escapeHtml(item.KodeBarang),
-        ]);
+    // Handle row click
+    $('#tableData tbody').on('click', 'tr', function () {
+        selectRow($(this));
     });
 
-    table.draw();
-}
+    // Handle arrow key navigation for row selection
+    $(document).keydown(function (e) {
+        var $selected = $('#tableData tbody tr.selected'); // Get the currently selected row
+        if ($selected.length) {
+            var $next;
 
-function formatNumber(value) {
-    if (!isNaN(parseFloat(value)) && isFinite(value)) {
-        return parseFloat(value).toFixed(2);
-    }
-    return value;
-}
+            switch (e.which) {
+                case 38: // Up arrow key
+                    $next = $selected.prev('tr'); // Select the previous row
+                    break;
+                case 40: // Down arrow key
+                    $next = $selected.next('tr'); // Select the next row
+                    break;
+                default:
+                    return; // Exit if it's not an up or down arrow key
+            }
 
+            if ($next.length) {
+                selectRow($next); // Apply the row selection to the next or previous row
+                e.preventDefault(); // Prevent default action (scroll / move cursor)
+            }
+        }
+    });
 
-$('#tableData tbody').on('click', 'tr', function () {
+});
+
+function selectRow($row) {
     var table = $('#tableData').DataTable();
-    table.$('tr.selected').removeClass('selected');
-    $(this).addClass('selected');
-    var data = table.row(this).data();
+    table.$('tr.selected').removeClass('selected'); // Remove the "selected" class from any previously selected row
+    $row.addClass('selected'); // Add the "selected" class to the clicked or navigated row
+
+    var data = table.row($row).data(); // Get data from the selected row
+
+    $row[0].scrollIntoView({ block: 'nearest' });
 
     let XIdType = decodeHtmlEntities(data[1]);
 
@@ -265,9 +238,75 @@ $('#tableData tbody').on('click', 'tr', function () {
             console.error('Error:', error);
         }
     });
-});
+}
 
-// fungsi swal select pake arrow
+function formatDateToMMDDYYYY(date) {
+    let dateObj = new Date(date);
+    if (isNaN(dateObj)) {
+        return '';
+    }
+
+    let month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+    let day = dateObj.getDate().toString().padStart(2, '0');
+    let year = dateObj.getFullYear();
+
+    return `${month}/${day}/${year}`;
+}
+
+function decodeHtmlEntities(text) {
+    var txt = document.createElement("textarea");
+    txt.innerHTML = text;
+    return txt.value;
+}
+
+function escapeHtml(text) {
+    var map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, function (m) { return map[m]; });
+}
+
+function updateDataTable(data) {
+    return new Promise(function (resolve, reject) {
+        var table = $('#tableData').DataTable();
+        table.clear();
+
+        data.forEach(function (item) {
+            table.row.add([
+                formatDateToMMDDYYYY(item.SaatAwalTransaksi),
+                escapeHtml(item.IdType),
+                escapeHtml(item.NamaType),
+                formatNumber(item.JumlahPemasukanPrimer),
+                formatNumber(item.JumlahPemasukanSekunder),
+                formatNumber(item.JumlahPemasukanTritier),
+                escapeHtml(item.IdTransaksi),
+                escapeHtml(item.PIB),
+                escapeHtml(item.SatPrimer),
+                escapeHtml(item.SatSekunder),
+                escapeHtml(item.SatTritier),
+                escapeHtml(item.KodeBarang),
+            ]);
+        });
+
+        table.draw();
+
+        // Resolve promise after table is drawn
+        resolve();
+    });
+}
+
+
+function formatNumber(value) {
+    if (!isNaN(parseFloat(value)) && isFinite(value)) {
+        return parseFloat(value).toFixed(2);
+    }
+    return value;
+}
+// Function to handle keydown events for table navigation
 function handleTableKeydown(e, tableId) {
     const table = $(`#${tableId}`).DataTable();
     const rows = $(`#${tableId} tbody tr`);
@@ -285,45 +324,57 @@ function handleTableKeydown(e, tableId) {
                 Swal.getConfirmButton().click();
             }
         }
-    } else if (e.key === "ArrowDown") {
+    }
+    else if (e.key === "ArrowDown") {
         e.preventDefault();
-        if (currentIndex === null) {
+        if (currentIndex === null || currentIndex >= rowCount - 1) {
             currentIndex = 0;
         } else {
-            currentIndex = (currentIndex + 1) % rowCount;
+            currentIndex++;
         }
         rows.removeClass("selected");
-        $(rows[currentIndex]).addClass("selected");
-    } else if (e.key === "ArrowUp") {
+        const selectedRow = $(rows[currentIndex]).addClass("selected");
+        scrollRowIntoView(selectedRow[0]);
+    }
+    else if (e.key === "ArrowUp") {
         e.preventDefault();
-        if (currentIndex === null) {
+        if (currentIndex === null || currentIndex <= 0) {
             currentIndex = rowCount - 1;
         } else {
-            currentIndex = (currentIndex - 1 + rowCount) % rowCount;
+            currentIndex--;
         }
         rows.removeClass("selected");
-        $(rows[currentIndex]).addClass("selected");
-    } else if (e.key === "ArrowRight") {
+        const selectedRow = $(rows[currentIndex]).addClass("selected");
+        scrollRowIntoView(selectedRow[0]);
+    }
+    else if (e.key === "ArrowRight") {
         e.preventDefault();
-        currentIndex = null;
         const pageInfo = table.page.info();
         if (pageInfo.page < pageInfo.pages - 1) {
-            table.page('next').draw('page');
+            table.page('next').draw('page').on('draw', function () {
+                currentIndex = 0;
+                const newRows = $(`#${tableId} tbody tr`);
+                const selectedRow = $(newRows[currentIndex]).addClass("selected");
+                scrollRowIntoView(selectedRow[0]);
+            });
         }
-    } else if (e.key === "ArrowLeft") {
+    }
+    else if (e.key === "ArrowLeft") {
         e.preventDefault();
-        currentIndex = null;
         const pageInfo = table.page.info();
         if (pageInfo.page > 0) {
-            table.page('previous').draw('page');
+            table.page('previous').draw('page').on('draw', function () {
+                currentIndex = 0;
+                const newRows = $(`#${tableId} tbody tr`);
+                const selectedRow = $(newRows[currentIndex]).addClass("selected");
+                scrollRowIntoView(selectedRow[0]);
+            });
         }
     }
 }
 
-
-// button list divisi
+// Button click to show divisi selection modal
 btn_divisi.addEventListener("click", function (e) {
-
     try {
         Swal.fire({
             title: 'Divisi',
@@ -362,7 +413,7 @@ btn_divisi.addEventListener("click", function (e) {
                         serverSide: true,
                         paging: false,
                         scrollY: '400px',
-                        scrollCollapse: true, 
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "TerimaPurchasing/getDivisi",
@@ -377,7 +428,7 @@ btn_divisi.addEventListener("click", function (e) {
                             { data: "NamaDivisi" },
                         ],
                         columnDefs: [
-                            { 
+                            {
                                 targets: 0,
                                 width: '100px',
                             }
@@ -387,7 +438,13 @@ btn_divisi.addEventListener("click", function (e) {
                     $("#table_list tbody").on("click", "tr", function () {
                         table.$("tr.selected").removeClass("selected");
                         $(this).addClass("selected");
+                        scrollRowIntoView(this);
                     });
+
+                    const searchInput = $('#table_list_filter input');
+                    if (searchInput.length > 0) {
+                        searchInput.focus();
+                    }
 
                     currentIndex = null;
                     Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
@@ -404,6 +461,11 @@ btn_divisi.addEventListener("click", function (e) {
         console.error(error);
     }
 });
+
+// Helper function to scroll selected row into view
+function scrollRowIntoView(rowElement) {
+    rowElement.scrollIntoView({ block: 'nearest' });
+}
 
 // button list objek
 btn_objek.addEventListener("click", function (e) {
@@ -446,7 +508,7 @@ btn_objek.addEventListener("click", function (e) {
                         serverSide: true,
                         paging: false,
                         scrollY: '400px',
-                        scrollCollapse: true, 
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "TerimaPurchasing/getObjek",
@@ -462,7 +524,7 @@ btn_objek.addEventListener("click", function (e) {
                             { data: "NamaObjek" },
                         ],
                         columnDefs: [
-                            { 
+                            {
                                 targets: 0,
                                 width: '100px',
                             }
@@ -472,7 +534,12 @@ btn_objek.addEventListener("click", function (e) {
                     $("#table_list tbody").on("click", "tr", function () {
                         table.$("tr.selected").removeClass("selected");
                         $(this).addClass("selected");
+                        scrollRowIntoView(this);
                     });
+                    const searchInput = $('#table_list_filter input');
+                    if (searchInput.length > 0) {
+                        searchInput.focus();
+                    }
 
                     currentIndex = null;
                     Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
@@ -533,7 +600,7 @@ btn_kelut.addEventListener("click", function (e) {
                         serverSide: true,
                         paging: false,
                         scrollY: '400px',
-                        scrollCollapse: true, 
+                        scrollCollapse: true,
                         order: [0, "asc"],
                         ajax: {
                             url: "TerimaPurchasing/getKelUt",
@@ -550,12 +617,16 @@ btn_kelut.addEventListener("click", function (e) {
                             { data: "NamaKelompokUtama" }
                         ],
                         columnDefs: [
-                            { 
+                            {
                                 targets: 0,
                                 width: '100px',
                             }
                         ]
                     });
+                    const searchInput = $('#table_list_filter input');
+                    if (searchInput.length > 0) {
+                        searchInput.focus();
+                    }
 
                     $("#table_list tbody").on("click", "tr", function () {
                         table.$("tr.selected").removeClass("selected");
@@ -627,7 +698,7 @@ btn_kelompok.addEventListener("click", function (e) {
                         serverSide: true,
                         paging: false,
                         scrollY: '400px',
-                        scrollCollapse: true, 
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "TerimaPurchasing/getKelompok",
@@ -644,7 +715,7 @@ btn_kelompok.addEventListener("click", function (e) {
                             { data: "NamaKelompok" }
                         ],
                         columnDefs: [
-                            { 
+                            {
                                 targets: 0,
                                 width: '100px',
                             }
@@ -655,6 +726,10 @@ btn_kelompok.addEventListener("click", function (e) {
                         table.$("tr.selected").removeClass("selected");
                         $(this).addClass("selected");
                     });
+                    const searchInput = $('#table_list_filter input');
+                    if (searchInput.length > 0) {
+                        searchInput.focus();
+                    }
 
                     currentIndex = null;
                     Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
@@ -720,7 +795,7 @@ btn_subkel.addEventListener("click", function (e) {
                         serverSide: true,
                         paging: false,
                         scrollY: '400px',
-                        scrollCollapse: true, 
+                        scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
                             url: "TerimaPurchasing/getSubkel",
@@ -738,7 +813,7 @@ btn_subkel.addEventListener("click", function (e) {
                             { data: "IdType" },
                         ],
                         columnDefs: [
-                            { 
+                            {
                                 targets: 0,
                                 width: '100px',
                             }
@@ -749,6 +824,10 @@ btn_subkel.addEventListener("click", function (e) {
                         table.$("tr.selected").removeClass("selected");
                         $(this).addClass("selected");
                     });
+                    const searchInput = $('#table_list_filter input');
+                    if (searchInput.length > 0) {
+                        searchInput.focus();
+                    }
 
                     currentIndex = null;
                     Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
@@ -831,7 +910,9 @@ btn_proses.addEventListener("click", function (e) {
                                         icon: 'success',
                                         title: 'Success',
                                         text: response.success,
+                                        returnFocus: false,
                                     }).then(() => {
+                                        prosesCount += 1;
                                         callAllData();
                                         clearProses();
 
@@ -868,7 +949,7 @@ btn_proses.addEventListener("click", function (e) {
         return;
     }
 });
-
+var prosesCount = 0;
 function callAllData() {
     $.ajax({
         type: 'GET',
@@ -880,13 +961,23 @@ function callAllData() {
         },
         success: function (result) {
             if (result.length !== 0) {
-                updateDataTable(result);
+                if (prosesCount !== 0) {
+                    updateDataTable(result).then(function () {
+                        var $firstRow = $('#tableData tbody tr:first');
+                        if ($firstRow.length) {
+                            selectRow($firstRow); // Call your row selection function
+                        }
+                    });
+                }
+                else {
+                    updateDataTable(result);
+                }
 
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: 'Data di tabel sudah diupdate.',
-                });
+                // Swal.fire({
+                //     icon: 'success',
+                //     title: 'Success',
+                //     text: 'Data di tabel sudah diupdate.',
+                // });
                 btn_proses.disabled = false;
                 btn_batal.disabled = false;
             }
