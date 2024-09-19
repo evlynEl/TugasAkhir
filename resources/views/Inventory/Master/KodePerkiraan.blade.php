@@ -13,7 +13,7 @@
                             </div>
                             <div class="form-group col-md-5">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="kode" name="kode" required>
+                                    <input type="text" class="form-control" id="kode" name="kode">
                                 </div>
                             </div>
                         </div>

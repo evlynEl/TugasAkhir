@@ -195,7 +195,7 @@ btn_objek.addEventListener("click", function (e) {
                         serverSide: true,
                         paging: false,
                         scrollY: '400px',
-                        scrollCollapse: true, 
+                        scrollCollapse: true,
                         order: [0, "asc"],
                         ajax: {
                             url: "CariKodeBarang/getObjek",
@@ -210,7 +210,7 @@ btn_objek.addEventListener("click", function (e) {
                             { data: "NamaObjek" },
                         ],
                         columnDefs: [
-                            { 
+                            {
                                 targets: 0,
                                 width: '100px',
                             }
@@ -220,7 +220,13 @@ btn_objek.addEventListener("click", function (e) {
                     $("#table_list tbody").on("click", "tr", function () {
                         table.$("tr.selected").removeClass("selected");
                         $(this).addClass("selected");
+                        scrollRowIntoView(this);
                     });
+
+                    const searchInput = $('#table_list_filter input');
+                    if (searchInput.length > 0) {
+                        searchInput.focus();
+                    }
 
                     currentIndex = null;
                     Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));

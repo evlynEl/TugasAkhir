@@ -75,6 +75,21 @@ class KodePerkiraanController extends Controller
             }
             // dd($dataPerkiraan);
             return datatables($dataPerkiraan)->make(true);
+
+        } else if ($id === 'cekKode') {
+            $dataPerkiraan = DB::connection('ConnInventory')->select('exec SP_1003_INV_checkno_perkiraan @XNoKodePerkiraan = ?', [$kode]);
+            $jumlah = (int)$dataPerkiraan[0]->Jumlah;
+            // dd($jumlah, $request->all());
+
+            if ($jumlah === 0) {
+                return response()->json(['success' => true]);
+
+            } else {
+                return response()->json([
+                    'error' => true,
+                    'message' => 'Kode Perkiraan sudah ada !'
+                ]);
+            }
         }
     }
 

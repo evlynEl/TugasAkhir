@@ -20,11 +20,48 @@ inputs.forEach((masuk, index) => {
         if (event.key === 'Enter') {
             if (masuk.id === 'keterangan') {
                 btn_proses.focus();
-            } else { inputs[index + 1].focus(); }
-
+            }
+            else if (masuk.id === 'kode') {
+                if (kode.value !== '') {
+                    cekKode(kode.value);
+                }
+            }
+            else { inputs[index + 1].focus(); }
         }
     })
 });
+
+function cekKode(tmpKode) {
+    $.ajax({
+        url: "KodePerkiraan/cekKode",
+        type: "GET",
+        data: {
+            _token: csrfToken,
+            kode: tmpKode
+        },
+        timeout: 30000,
+        success: function (response) {
+            if (response.success) {
+                keterangan.focus();
+
+            } else if (response.error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    html: response.message,
+                    returnFocus: false
+                }).then(() => {
+                    kode.value = '';
+                    kode.focus();
+                });
+
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('AJAX Error:', error);
+        }
+    });
+}
 
 // button list kode perkiraan
 btn_lihat.addEventListener("click", function (e) {
@@ -91,7 +128,13 @@ btn_lihat.addEventListener("click", function (e) {
                     $("#table_list tbody").on("click", "tr", function () {
                         table.$("tr.selected").removeClass("selected");
                         $(this).addClass("selected");
+                        scrollRowIntoView(this);
                     });
+
+                    const searchInput = $('#table_list_filter input');
+                    if (searchInput.length > 0) {
+                        searchInput.focus();
+                    }
 
                     currentIndex = null;
                     Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
@@ -131,39 +174,58 @@ function handleTableKeydown(e, tableId) {
                 Swal.getConfirmButton().click();
             }
         }
-    } else if (e.key === "ArrowDown") {
+    }
+    else if (e.key === "ArrowDown") {
         e.preventDefault();
-        if (currentIndex === null) {
+        if (currentIndex === null || currentIndex >= rowCount - 1) {
             currentIndex = 0;
         } else {
-            currentIndex = (currentIndex + 1) % rowCount;
+            currentIndex++;
         }
         rows.removeClass("selected");
-        $(rows[currentIndex]).addClass("selected");
-    } else if (e.key === "ArrowUp") {
+        const selectedRow = $(rows[currentIndex]).addClass("selected");
+        scrollRowIntoView(selectedRow[0]);
+    }
+    else if (e.key === "ArrowUp") {
         e.preventDefault();
-        if (currentIndex === null) {
+        if (currentIndex === null || currentIndex <= 0) {
             currentIndex = rowCount - 1;
         } else {
-            currentIndex = (currentIndex - 1 + rowCount) % rowCount;
+            currentIndex--;
         }
         rows.removeClass("selected");
-        $(rows[currentIndex]).addClass("selected");
-    } else if (e.key === "ArrowRight") {
+        const selectedRow = $(rows[currentIndex]).addClass("selected");
+        scrollRowIntoView(selectedRow[0]);
+    }
+    else if (e.key === "ArrowRight") {
         e.preventDefault();
-        currentIndex = null;
         const pageInfo = table.page.info();
         if (pageInfo.page < pageInfo.pages - 1) {
-            table.page('next').draw('page');
-        }
-    } else if (e.key === "ArrowLeft") {
-        e.preventDefault();
-        currentIndex = null;
-        const pageInfo = table.page.info();
-        if (pageInfo.page > 0) {
-            table.page('previous').draw('page');
+            table.page('next').draw('page').on('draw', function () {
+                currentIndex = 0;
+                const newRows = $(`#${tableId} tbody tr`);
+                const selectedRow = $(newRows[currentIndex]).addClass("selected");
+                scrollRowIntoView(selectedRow[0]);
+            });
         }
     }
+    else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        const pageInfo = table.page.info();
+        if (pageInfo.page > 0) {
+            table.page('previous').draw('page').on('draw', function () {
+                currentIndex = 0;
+                const newRows = $(`#${tableId} tbody tr`);
+                const selectedRow = $(newRows[currentIndex]).addClass("selected");
+                scrollRowIntoView(selectedRow[0]);
+            });
+        }
+    }
+}
+
+// Helper function to scroll selected row into view
+function scrollRowIntoView(rowElement) {
+    rowElement.scrollIntoView({ block: 'nearest' });
 }
 
 // button proses
@@ -275,7 +337,6 @@ btn_batal.addEventListener('click', function () {
 btn_koreksi.addEventListener('click', function () {
     a = 2;
     enableKetik();
-    kode.disabled = true;
     btn_lihat.disabled = false;
     btn_lihat.focus();
     btn_hapus.disabled = true;
