@@ -221,7 +221,9 @@ class PenghangusanBarangController extends Controller
         } else if ($id === 'fillKodeBarang') {
             $fill = DB::connection('ConnInventory')->select('exec SP_1003_INV_cekkodebarang_type @XKodeBarang = ?, @XIdSubKelompok = ?', [$kodeBarang, $subkelId]);
 
-            if (count($fill) > 0) {
+            $jumlah = (int)$fill[0]->Jumlah;
+
+            if ($jumlah > 0) {
                 return response()->json(['success' => true]);
             } else {
                 return response()->json([
@@ -240,12 +242,12 @@ class PenghangusanBarangController extends Controller
                     'IdType' => $detail_barang->IdType,
                     'NamaType' => $detail_barang->NamaType,
                     'KodeBarang' => $detail_barang->KodeBarang,
-                    'SaldoPrimer' => $detail_barang->SaldoPrimer,
-                    'SaldoSekunder' => $detail_barang->SaldoSekunder,
-                    'SaldoTritier' => $detail_barang->SaldoTritier,
-                    'Satuan_Primer' => $detail_barang->Satuan_Primer,
-                    'Satuan_Sekunder' => $detail_barang->Satuan_Sekunder,
-                    'Satuan_Tritier' => $detail_barang->Satuan_Tritier,
+                    'SaldoPrimer' => (float)$detail_barang->SaldoPrimer,
+                    'SaldoSekunder' => (float)$detail_barang->SaldoSekunder,
+                    'SaldoTritier' => (float)$detail_barang->SaldoTritier,
+                    'satuan_primer' => $detail_barang->satuan_primer,
+                    'satuan_sekunder' => $detail_barang->satuan_sekunder,
+                    'satuan_tritier' => $detail_barang->satuan_tritier,
                 ];
             }
             // dd($request->all(), $data_barang);
