@@ -303,7 +303,7 @@ class PenghangusanBarangController extends Controller
                         'exec SP_1003_INV_update_TmpTransaksi
                         @XIdTransaksi = ?, @XUraianDetailTransaksi = ?, @XJumlahKeluarPrimer = ?,
                         @XJumlahKeluarSekunder = ?, @XJumlahKeluarTritier = ?, @XTujuanSubKelompok = ?',
-                        [ $kodeTransaksi, $alasan, $primer2,
+                        [ $kodeTransaksi, $uraian, $primer2,
                         $sekunder2, $tritier2, $subkelId]
                     );
                     // dd($request->all());
