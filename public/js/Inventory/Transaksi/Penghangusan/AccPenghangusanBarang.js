@@ -37,6 +37,7 @@ var keluarTritier;
 // button
 var btn_divisi = document.getElementById('btn_divisi');
 var btn_proses = document.getElementById('btn_proses');
+var btn_batal = document.getElementById('btn_batal');
 
 var table;
 var idTransaksi;
@@ -612,6 +613,37 @@ function allData() {
         }
     });
 }
+
+function Cleartext_Header() {
+    objekNama.value = '';
+    objekId.value = '';
+    kelutNama.value = '';
+    kelutId.value = '';
+    kelompokNama.value = '';
+    kelompokId.value = '';
+    subkelId.value = '';
+    subkelNama.value = '';
+}
+
+function ClearText() {
+    primer.value = '';
+    sekunder.value = '';
+    tritier.value = '';
+    no_primer.value = '';
+    no_sekunder.value = '';
+    no_tritier.value = '';
+    alasan.value = '';
+    tritier2.value = formatNumber(0);
+    sekunder2.value = formatNumber(0);
+    primer2.value = formatNumber(0);
+}
+
+btn_batal.addEventListener('click', function () {
+    Cleartext_Header();
+    ClearText();
+    table = $('#tableData').DataTable();
+    table.clear().draw();
+});
 
 // button proses event listener
 btn_proses.addEventListener('click', function () {
