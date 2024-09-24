@@ -62,6 +62,7 @@ var selectedNo;
 
 let a; // isi = 1, koreksi = 2, hapus = 3
 let impor = 0;
+let tmpKode = '';
 const divKonversiPS = document.getElementById('konvPS');
 const divKonversiST = document.getElementById('konvST');
 const inputs = Array.from(document.querySelectorAll('.card-body input[type="text"]:not([readonly]), .card-body input[type="date"]:not([readonly])'));
@@ -621,6 +622,7 @@ btn_subkel.addEventListener("click", function (e) {
                 if (a === 1) {
                     btn_katUtama.focus();
                 } else {
+                    btn_kodeType.disabled = false;
                     btn_kodeType.focus();
                 }
             }
@@ -1831,6 +1833,10 @@ btn_proses.addEventListener("click", function (e) {
                 kdBarang.focus();
             });
         } else {
+            if (tmpKode === '') {
+                tmpKode = kdBarang.value;
+            }
+
             $.ajax({
                 type: 'GET',
                 url: 'MaintenanceType/proses',
@@ -2018,7 +2024,13 @@ btn_koreksi.addEventListener('click', function () {
     btn_jenis.disabled = true;
     btn_barang.disabled = true;
 
-    btn_divisi.focus();
+    toggleKonversiInputs();
+
+    if (divisiNama.value === '') {
+        btn_divisi.focus();
+    } else {
+        btn_kodeType.focus();
+    }
 });
 
 // button hapus event listener
@@ -2031,6 +2043,8 @@ btn_hapus.addEventListener('click', function () {
 
     btn_koreksi.style.display = 'none';
     btn_batal.style.display = 'inline-block';
+
+    toggleKonversiInputs();
 
     btn_hapus.disabled = true;
     if (divisiNama.value === '') {

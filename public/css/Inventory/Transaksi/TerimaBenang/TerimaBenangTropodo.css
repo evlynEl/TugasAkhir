@@ -68,7 +68,21 @@ input[type="text"] {
 
 .table-responsive.fixed-height tbody td {
     background-color: white;
+    padding: 4px 5px;
 }
+
+.fixed-width {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0;
+}
+
+table.dataTable {
+    table-layout: fixed;
+    width: 100%;
+}
+
 #table_list th,
 #table_list td {
     padding-top: 0;
