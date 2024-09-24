@@ -32,6 +32,8 @@ var btnBatal = document.getElementById('btnBatal');
 
 document.addEventListener('DOMContentLoaded', function () {
 
+
+    // fungsi swal select pake arrow
     function handleTableKeydown(e, tableId) {
         const table = $(`#${tableId}`).DataTable();
         const rows = $(`#${tableId} tbody tr`);
@@ -174,13 +176,14 @@ document.addEventListener('DOMContentLoaded', function () {
                             ]
                         });
 
-                        $("table_divisitbody").on("click", "tr", function () {
+                        // Use the correct ID selector for the table body
+                        $("#table_divisi tbody").on("click", "tr", function () {
                             table.$("tr.selected").removeClass("selected");
                             $(this).addClass("selected");
                             scrollRowIntoView(this);
                         });
 
-                        const searchInput = $('table_divisiinput');
+                        const searchInput = $('#table_divisi_filter input');
                         if (searchInput.length > 0) {
                             searchInput.focus();
                         }
@@ -202,22 +205,24 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error("An error occurred:", error);
         }
     });
+
     //#endregion
 
+    //#region Button Objek
     //#region Button Objek
     btnObjek.addEventListener("click", function (e) {
         try {
             Swal.fire({
                 title: "Pilih Objek",
                 html: `<table id="table_Objek" class="display" style="width:100%">
-                            <thead>
-                                <tr>
-                                    <th>Id Objek</th>
-                                    <th>Nama Objek</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>`,
+                        <thead>
+                            <tr>
+                                <th>Id Objek</th>
+                                <th>Nama Objek</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>`,
                 width: '40%',
                 showCancelButton: true,
                 confirmButtonText: 'Pilih',
@@ -233,58 +238,51 @@ document.addEventListener('DOMContentLoaded', function () {
                     return selectedData;
                 },
                 didOpen: () => {
-                    $(document).ready(function () {
-                        const table = $("#table_Objek").DataTable({
-                            responsive: true,
-                            processing: true,
-                            serverSide: true,
-                            paging: false,
-                            scrollY: '400px',
-                            scrollCollapse: true,
-                            order: [[1, "asc"]],
-                            ajax: {
-                                url: "MaintenanceObjek/getObjek",
-                                dataType: "json",
-                                type: "GET",
-                                data: {
-                                    _token: csrfToken,
-                                    idDivisi: divisi.value
-                                },
-                                error: function (xhr, error, thrown) {
-                                    console.error("Error fetching data: ", thrown);
-                                }
+                    const table = $("#table_Objek").DataTable({
+                        responsive: true,
+                        processing: true,
+                        serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
+                        order: [[1, "asc"]],
+                        ajax: {
+                            url: "MaintenanceObjek/getObjek",
+                            dataType: "json",
+                            type: "GET",
+                            data: {
+                                _token: csrfToken,
+                                idDivisi: divisi.value
                             },
-                            columns: [
-                                {
-                                    data: "IdObjek",
-                                },
-                                {
-                                    data: "NamaObjek",
-                                }
-                            ],
-                            columnDefs: [
-                                {
-                                    targets: 0,
-                                    width: '100px',
-                                }
-                            ]
-                        });
-
-                        $("table_Objek tbody").on("click", "tr", function () {
-                            table.$("tr.selected").removeClass("selected");
-                            $(this).addClass("selected");
-                            scrollRowIntoView(this);
-                        });
-
-                        const searchInput = $('table_Objek_filter input');
-                        if (searchInput.length > 0) {
-                            searchInput.focus();
-                        }
-
-                        currentIndex = null;
-                        Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_Objek'));
-
+                            error: function (xhr, error, thrown) {
+                                console.error("Error fetching data: ", thrown);
+                            }
+                        },
+                        columns: [
+                            { data: "IdObjek" },
+                            { data: "NamaObjek" }
+                        ],
+                        columnDefs: [
+                            { targets: 0, width: '100px' }
+                        ]
                     });
+
+                    // Handle row click event
+                    $("#table_Objek tbody").on("click", "tr", function () {
+                        table.$("tr.selected").removeClass("selected");
+                        $(this).addClass("selected");
+                        scrollRowIntoView(this); // Ensure the clicked row scrolls into view
+                    });
+
+                    // Set focus to search input after the table has loaded
+                    const searchInput = $('#table_Objek_filter input');
+                    if (searchInput.length > 0) {
+                        searchInput.focus();
+                    }
+
+                    // Reset current index and bind keydown events for navigation
+                    currentIndex = null;
+                    Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_Objek'));
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -299,6 +297,8 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error("An error occurred:", error);
         }
     });
+    //#endregion
+
     //#endregion
 
     //#region Button Kelompok Utama
@@ -330,58 +330,52 @@ document.addEventListener('DOMContentLoaded', function () {
                     return selectedData;
                 },
                 didOpen: () => {
-                    $(document).ready(function () {
-                        const table = $("#table_kelUtama").DataTable({
-                            responsive: true,
-                            processing: true,
-                            serverSide: true,
-                            paging: false,
-                            scrollY: '400px',
-                            scrollCollapse: true,
-                            order: [[1, "asc"]],
-                            ajax: {
-                                url: "MaintenanceObjek/getKelUtama",
-                                dataType: "json",
-                                type: "GET",
-                                data: {
-                                    _token: csrfToken,
-                                    idObjek: objek.value
-                                },
-                                error: function (xhr, error, thrown) {
-                                    console.error("Error fetching data: ", thrown);
-                                }
+                    // Initialize DataTable without document.ready
+                    const table = $("#table_kelUtama").DataTable({
+                        responsive: true,
+                        processing: true,
+                        serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
+                        order: [[1, "asc"]],
+                        ajax: {
+                            url: "MaintenanceObjek/getKelUtama",
+                            dataType: "json",
+                            type: "GET",
+                            data: {
+                                _token: csrfToken,
+                                idObjek: objek.value
                             },
-                            columns: [
-                                {
-                                    data: "IdKelompokUtama",
-                                },
-                                {
-                                    data: "NamaKelompokUtama",
-                                }
-                            ],
-                            columnDefs: [
-                                {
-                                    targets: 0,
-                                    width: '100px',
-                                }
-                            ]
-                        });
-
-                        $("table_kelUtama tbody").on("click", "tr", function () {
-                            table.$("tr.selected").removeClass("selected");
-                            $(this).addClass("selected");
-                            scrollRowIntoView(this);
-                        });
-
-                        const searchInput = $('table_subKel_kelUtama input');
-                        if (searchInput.length > 0) {
-                            searchInput.focus();
-                        }
-
-                        currentIndex = null;
-                        Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_kelUtama'));
-
+                            error: function (xhr, error, thrown) {
+                                console.error("Error fetching data: ", thrown);
+                            }
+                        },
+                        columns: [
+                            { data: "IdKelompokUtama" },
+                            { data: "NamaKelompokUtama" }
+                        ],
+                        columnDefs: [
+                            { targets: 0, width: '100px' }
+                        ]
                     });
+
+                    // Fix the tbody selector for row selection
+                    $("#table_kelUtama tbody").on("click", "tr", function () {
+                        table.$("tr.selected").removeClass("selected");
+                        $(this).addClass("selected");
+                        scrollRowIntoView(this); // Optional: Scroll the clicked row into view
+                    });
+
+                    // Focus on search input after DataTable is loaded
+                    const searchInput = $('#table_kelUtama_filter input');
+                    if (searchInput.length > 0) {
+                        searchInput.focus();
+                    }
+
+                    // Handle keyboard navigation for the table
+                    currentIndex = null;
+                    Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_kelUtama'));
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -389,13 +383,14 @@ document.addEventListener('DOMContentLoaded', function () {
                     namaKelompokUtama.value = selectedRow.NamaKelompokUtama ? decodeHtmlEntities(selectedRow.NamaKelompokUtama.trim()) : '';
                     kelompokUtama.value = selectedRow.IdKelompokUtama ? decodeHtmlEntities(selectedRow.IdKelompokUtama.trim()) : '';
 
-                    btnKelompok.focus();
+                    btnKelompok.focus(); // Focus on the next button after selection
                 }
             });
         } catch (error) {
             console.error("An error occurred:", error);
         }
     });
+
     //#endregion
 
     //#region Button Kelompok
@@ -427,58 +422,51 @@ document.addEventListener('DOMContentLoaded', function () {
                     return selectedData;
                 },
                 didOpen: () => {
-                    $(document).ready(function () {
-                        const table = $("#table_kel").DataTable({
-                            responsive: true,
-                            processing: true,
-                            serverSide: true,
-                            paging: false,
-                            scrollY: '400px',
-                            scrollCollapse: true,
-                            order: [[1, "asc"]],
-                            ajax: {
-                                url: "MaintenanceObjek/getKel",
-                                dataType: "json",
-                                type: "GET",
-                                data: {
-                                    _token: csrfToken,
-                                    idKelUtama: kelompokUtama.value
-                                },
-                                error: function (xhr, error, thrown) {
-                                    console.error("Error fetching data: ", thrown);
-                                }
+                    const table = $("#table_kel").DataTable({
+                        responsive: true,
+                        processing: true,
+                        serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
+                        order: [[1, "asc"]],
+                        ajax: {
+                            url: "MaintenanceObjek/getKel",
+                            dataType: "json",
+                            type: "GET",
+                            data: {
+                                _token: csrfToken,
+                                idKelUtama: kelompokUtama.value
                             },
-                            columns: [
-                                {
-                                    data: "idkelompok",
-                                },
-                                {
-                                    data: "namakelompok",
-                                }
-                            ],
-                            columnDefs: [
-                                {
-                                    targets: 0,
-                                    width: '100px',
-                                }
-                            ]
-                        });
-
-                        $("table_kel tbody").on("click", "tr", function () {
-                            table.$("tr.selected").removeClass("selected");
-                            $(this).addClass("selected");
-                            scrollRowIntoView(this);
-                        });
-
-                        const searchInput = $('table_kel_filter input');
-                        if (searchInput.length > 0) {
-                            searchInput.focus();
-                        }
-
-                        currentIndex = null;
-                        Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_kel'));
-
+                            error: function (xhr, error, thrown) {
+                                console.error("Error fetching data: ", thrown);
+                            }
+                        },
+                        columns: [
+                            { data: "idkelompok" },
+                            { data: "namakelompok" }
+                        ],
+                        columnDefs: [
+                            { targets: 0, width: '100px' }
+                        ]
                     });
+
+                    // Event listener for row selection
+                    $('#table_kel tbody').on('click', 'tr', function () {
+                        table.$('tr.selected').removeClass('selected');
+                        $(this).addClass('selected');
+                        scrollRowIntoView(this);
+                    });
+
+                    // Focusing on the search field
+                    const searchInput = $('#table_kel_filter input');
+                    if (searchInput.length > 0) {
+                        searchInput.focus();
+                    }
+
+                    // Keydown event handling
+                    currentIndex = null;
+                    Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_kel'));
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -493,6 +481,7 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error("An error occurred:", error);
         }
     });
+
     //#endregion
 
     //#region Button subKelompok
@@ -524,58 +513,50 @@ document.addEventListener('DOMContentLoaded', function () {
                     return selectedData;
                 },
                 didOpen: () => {
-                    $(document).ready(function () {
-                        const table = $("#table_subKel").DataTable({
-                            responsive: true,
-                            processing: true,
-                            serverSide: true,
-                            paging: false,
-                            scrollY: '400px',
-                            scrollCollapse: true,
-                            order: [[1, "asc"]],
-                            ajax: {
-                                url: "MaintenanceObjek/getSubKel",
-                                dataType: "json",
-                                type: "GET",
-                                data: {
-                                    _token: csrfToken,
-                                    idKel: kelompok.value
-                                },
-                                error: function (xhr, error, thrown) {
-                                    console.error("Error fetching data: ", thrown);
-                                }
+                    const table = $("#table_subKel").DataTable({
+                        responsive: true,
+                        processing: true,
+                        serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
+                        order: [[1, "asc"]],
+                        ajax: {
+                            url: "MaintenanceObjek/getSubKel",
+                            dataType: "json",
+                            type: "GET",
+                            data: {
+                                _token: csrfToken,
+                                idKel: kelompok.value
                             },
-                            columns: [
-                                {
-                                    data: "IdSubkelompok",
-                                },
-                                {
-                                    data: "NamaSubKelompok",
-                                }
-                            ],
-                            columnDefs: [
-                                {
-                                    targets: 0,
-                                    width: '100px',
-                                }
-                            ]
-                        });
-
-                        $("table_subKel tbody").on("click", "tr", function () {
-                            table.$("tr.selected").removeClass("selected");
-                            $(this).addClass("selected");
-                            scrollRowIntoView(this);
-                        });
-
-                        const searchInput = $('table_subKel_filter input');
-                        if (searchInput.length > 0) {
-                            searchInput.focus();
-                        }
-
-                        currentIndex = null;
-                        Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_subKel'));
-
+                            error: function (xhr, error, thrown) {
+                                console.error("Error fetching data: ", thrown);
+                            }
+                        },
+                        columns: [
+                            { data: "IdSubkelompok" },
+                            { data: "NamaSubKelompok" }
+                        ],
+                        columnDefs: [
+                            { targets: 0, width: '100px' }
+                        ]
                     });
+
+                    // Event listener for row selection
+                    $('#table_subKel tbody').on('click', 'tr', function () {
+                        table.$('tr.selected').removeClass('selected');
+                        $(this).addClass('selected');
+                        scrollRowIntoView(this);
+                    });
+
+                    // Focusing on the search field
+                    const searchInput = $('#table_subKel_filter input');
+                    if (searchInput.length > 0) {
+                        searchInput.focus();
+                    }
+
+                    currentIndex = null;
+                    Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_subKel'));
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -583,26 +564,22 @@ document.addEventListener('DOMContentLoaded', function () {
                     namaSubKelompok.value = selectedRow.NamaSubKelompok ? decodeHtmlEntities(selectedRow.NamaSubKelompok.trim()) : '';
                     subKelompok.value = selectedRow.IdSubkelompok ? decodeHtmlEntities(selectedRow.IdSubkelompok.trim()) : '';
 
+                    // First AJAX call to get Kode Perkiraan
                     $.ajax({
                         url: "MaintenanceObjek/getIdPerkiraan",
                         dataType: "json",
                         type: "GET",
-                        data: {
-                            _token: csrfToken,
-                            idSubKel: subKelompok.value
-                        },
+                        data: { _token: csrfToken, idSubKel: subKelompok.value },
                         success: function (result) {
                             let selectedRow = result.data;
                             kodePerkiraan.value = selectedRow[0].KodePerkiraan_Subkelompok ?? "";
 
+                            // Second AJAX call to get No Kode Perkiraan
                             $.ajax({
                                 url: "MaintenanceObjek/getNoKodePerkiraan",
                                 dataType: "json",
                                 type: "GET",
-                                data: {
-                                    _token: csrfToken,
-                                    idPerkiraan: kodePerkiraan.value
-                                },
+                                data: { _token: csrfToken, idPerkiraan: kodePerkiraan.value },
                                 success: function (result) {
                                     let selectedRow = result.data;
                                     namaKodePerkiraan.value = selectedRow[0].Keterangan ?? "";
@@ -611,7 +588,6 @@ document.addEventListener('DOMContentLoaded', function () {
                                     console.error("Error fetching data: ", thrown);
                                 }
                             });
-
                         },
                         error: function (xhr, error, thrown) {
                             console.error("Error fetching data: ", thrown);
@@ -625,6 +601,7 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error("An error occurred:", error);
         }
     });
+
     //#endregion
 
     //#region Perkiraan
@@ -677,12 +654,8 @@ document.addEventListener('DOMContentLoaded', function () {
                                 }
                             },
                             columns: [
-                                {
-                                    data: "NoKodePerkiraan",
-                                },
-                                {
-                                    data: "Keterangan",
-                                }
+                                { data: "NoKodePerkiraan" },
+                                { data: "Keterangan" }
                             ],
                             columnDefs: [
                                 {
@@ -692,20 +665,22 @@ document.addEventListener('DOMContentLoaded', function () {
                             ]
                         });
 
-                        $("table_Perkiraan tbody").on("click", "tr", function () {
+                        // Event listener for row selection
+                        $("#table_Perkiraan tbody").on("click", "tr", function () {
                             table.$("tr.selected").removeClass("selected");
                             $(this).addClass("selected");
-                            scrollRowIntoView(this);
+                            scrollRowIntoView(this);  // If you have scroll functionality defined for the row
                         });
 
-                        const searchInput = $('table_Perkiraan_filter input');
+                        // Autofocus on search input if it exists
+                        const searchInput = $('#table_Perkiraan_filter input');
                         if (searchInput.length > 0) {
                             searchInput.focus();
                         }
 
+                        // Initialize key event handling
                         currentIndex = null;
                         Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_Perkiraan'));
-
                     });
                 }
             }).then((result) => {
@@ -713,14 +688,14 @@ document.addEventListener('DOMContentLoaded', function () {
                     const selectedRow = result.value;
                     kodePerkiraan.value = selectedRow.NoKodePerkiraan ? decodeHtmlEntities(selectedRow.NoKodePerkiraan.trim()) : '';
                     namaKodePerkiraan.value = selectedRow.Keterangan ? decodeHtmlEntities(selectedRow.Keterangan.trim()) : '';
-
-                    btnProses.focus();
+                    btnProses.focus();  // Focus on the 'Proses' button after selection
                 }
             });
         } catch (error) {
             console.error("An error occurred:", error);
         }
     });
+
     //#endregion
 
     function enableInputs() {
