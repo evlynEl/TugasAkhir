@@ -32,7 +32,36 @@ class PermohonanPenerimaController extends Controller
     //Display the specified resource.
     public function show($id, Request $request)
     {
-        if ($id === 'getSelect') {
+        $user = Auth::user()->NomorUser;
+
+        if ($id === 'getDivisi') {
+            $divisi = DB::connection('ConnInventory')->select('exec SP_1003_INV_userdivisi @XKdUser = ?', [$user]);
+            $data_divisi = [];
+            foreach ($divisi as $detail_divisi) {
+                $data_divisi[] = [
+                    'NamaDivisi' => $detail_divisi->NamaDivisi,
+                    'IdDivisi' => $detail_divisi->IdDivisi,
+                    'KodeUser' => $detail_divisi->KodeUser
+                ];
+            }
+            return datatables($divisi)->make(true);
+
+            // mendapatkan daftar objek
+        } else if ($id === 'getObjek') {
+            $objek = DB::connection('ConnInventory')->select('exec SP_1003_INV_User_Objek @XKdUser = ?, @XIdDivisi = ?', [$user, $request->input('divisiId')]);
+            $data_objek = [];
+            foreach ($objek as $detail_objek) {
+                $data_objek[] = [
+                    'NamaObjek' => $detail_objek->NamaObjek,
+                    'IdObjek' => $detail_objek->IdObjek,
+                    'IdDivisi' => $detail_objek->IdDivisi
+                ];
+            }
+            return datatables($objek)->make(true);
+
+            // mendapatkan daftar kelompok utama
+        }
+        else if ($id === 'getSelect') {
             // mendapatkan saldo, satuan, pemasukan unk selected data table
             $kodeTransaksi = $request->input('kodeTransaksi');
 

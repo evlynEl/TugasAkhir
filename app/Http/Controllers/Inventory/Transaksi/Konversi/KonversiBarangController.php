@@ -452,7 +452,7 @@ class KonversiBarangController extends Controller
 
             try {
                 DB::connection('ConnInventory')
-                    ->statement('exec [SP_PROSES_ASALKONVTMPTRANSAKSI2]
+                    ->statement('exec [SP_PROSES_ASALKONVTMPTRANSAKSI]
                 @XIdTypeTransaksi = ?,
                 @XUraianDetailTransaksi = ?,
                 @XIdType = ?,
@@ -486,29 +486,29 @@ class KonversiBarangController extends Controller
                     $XIdKonversiFormatted = null;
                 }
 
-                DB::connection('ConnInventory')
-                    ->statement('exec [SP_1003_INV_Insert_04_AsalTmpTransaksi]
-                @XIdTypeTransaksi = ?,
-                @XUraianDetailTransaksi = ?,
-                @XIdType = ?,
-                @XIdPemohon = ?,
-                @XSaatAwalTransaksi = ?,
-                @XJumlahKeluarPrimer = ?,
-                @XJumlahKeluarSekunder = ?,
-                @XJumlahKeluarTritier = ?,
-                @XAsalSubKel = ?,
-                @XIdKonversi = ?', [
-                        '04',
-                        $XUraianDetailTransaksi,
-                        $XIdType,
-                        $UserInput,
-                        $XSaatAwalTransaksi,
-                        $XJumlahKeluarPrimer,
-                        $XJumlahKeluarSekunder,
-                        $XJumlahKeluarTritier,
-                        $XAsalSubKel,
-                        trim($XIdKonversiFormatted),
-                    ]);
+                // DB::connection('ConnInventory')
+                //     ->statement('exec [SP_1003_INV_Insert_04_AsalTmpTransaksi]
+                // @XIdTypeTransaksi = ?,
+                // @XUraianDetailTransaksi = ?,
+                // @XIdType = ?,
+                // @XIdPemohon = ?,
+                // @XSaatAwalTransaksi = ?,
+                // @XJumlahKeluarPrimer = ?,
+                // @XJumlahKeluarSekunder = ?,
+                // @XJumlahKeluarTritier = ?,
+                // @XAsalSubKel = ?,
+                // @XIdKonversi = ?', [
+                //         '04',
+                //         $XUraianDetailTransaksi,
+                //         $XIdType,
+                //         $UserInput,
+                //         $XSaatAwalTransaksi,
+                //         $XJumlahKeluarPrimer,
+                //         $XJumlahKeluarSekunder,
+                //         $XJumlahKeluarTritier,
+                //         $XAsalSubKel,
+                //         trim($XIdKonversiFormatted),
+                //     ]);
                 return response()->json(['success' => 'Data sudah diSIMPAN'], 200);
             } catch (\Exception $e) {
                 return response()->json(['error' => 'Data gagal diSIMPAN: ' . $e->getMessage()], 500);

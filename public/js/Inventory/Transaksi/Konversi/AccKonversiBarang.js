@@ -495,6 +495,9 @@ function Proses_Acc() {
                     returnFocus: false,
                 }).then(() => {
                     console.log('sukses');
+                    clearText1();
+                    Load_Transaksi_Asal(divisiId.value);
+                    Load_DataKonversi();
                 });
             } else if (response.error) {
                 Swal.fire({
