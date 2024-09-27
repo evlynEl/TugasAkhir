@@ -5,14 +5,13 @@ input {
 
 input[type="text"],
 input[type="date"] {
-    height: 30px;
+    height: 25px;
     font-size: 14px;
 }
 
 .input-group-append .btn {
-    padding: 10% 60%;
-    font-size: 14px;
-    margin-top: 3px;
+    padding: 5% 60%;
+    font-size: 12px;
 }
 
 .baris-1,

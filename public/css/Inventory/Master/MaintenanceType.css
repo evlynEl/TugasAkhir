@@ -1,7 +1,3 @@
-/* .baris-1 {
-    margin-right: 30px;
-    padding: 1px;
-} */
 
 .col-md-1, .col-md-9{
     padding-left: 0;
@@ -37,9 +33,6 @@
     padding: 5px 0;
 }
 
-
-
-
 #btn_isi,
 #btn_proses,
 #btn_batal,
@@ -49,18 +42,23 @@
 }
 
 input[type="text"] {
-    height: 30px;
+    height: 25px;
     font-size: 14px;
+}
+
+#satuan {
+    font-size: 14px;
+    height: 25px;
 }
 
 .input-group-append .btn {
-    padding: 15% 60%;
-    font-size: 14px;
+    padding: 5% 60%;
+    font-size: 12px;
 }
 
-#table_list th, 
+#table_list th,
 #table_list td {
     padding-top: 0;
     padding-bottom: 0;
-    font-size: 16px;
+    font-size: 14px;
 }

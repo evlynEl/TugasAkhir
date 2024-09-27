@@ -153,14 +153,16 @@ function fillKodeBarang(tmpKode) {
 
                 namaType.select();
 
-                let a = kdBarang.charAt(0);
-                let b = kdBarang.charAt(1);
+                let kdBarangStr = String(kdBarang);
+                let a = kdBarangStr.charAt(0);
+                let b = kdBarangStr.charAt(1);
 
                 if (a === '1' || a === '4') {
                     if (b !== '0' || b !== '1') {
                         impor = 1;
                     }
                 }
+
 
 
             } else {
@@ -1069,6 +1071,8 @@ function populateDropdownFromValues(dropdownId, triterValue, sekunderValue, prim
     }).join('');
 }
 
+var selectedNo;
+
 // fungsi unk retrieve dropdown satuan umum dari database & pilih ulang
 function populateDropdownWithSatuanUmum(dropdownId, response, triterValue, sekunderValue, primerValue, noTritier, noSekunder, noPrimer) {
     // console.log(triter.value, sekunder.value, primer.value, no_tritier, no_sekunder, no_primer);
@@ -1098,7 +1102,7 @@ function populateDropdownWithSatuanUmum(dropdownId, response, triterValue, sekun
     for (var i = 0; i < dropdown.options.length; i++) {
         var option = dropdown.options[i];
         if (option.value.trim() === response.trim()) {
-            var selectedNo = option.getAttribute('data-no');
+            selectedNo = option.getAttribute('data-no');
             console.log('Matching option found with data-no:', selectedNo, option.value);
             dropdown.selectedIndex = i;
             break;
@@ -1837,6 +1841,7 @@ btn_proses.addEventListener("click", function (e) {
                 tmpKode = kdBarang.value;
             }
 
+
             $.ajax({
                 type: 'GET',
                 url: 'MaintenanceType/proses',
@@ -1868,34 +1873,15 @@ btn_proses.addEventListener("click", function (e) {
                     no_tritier: no_tritier,
                     no_sekunder: no_sekunder,
                     no_primer: no_primer,
-                    satuan: satuan.value,
-                    satuanChange: selectedNo,
+                    satuan: selectedNo,
                     primerSekunder: primerSekunder.value,
                     sekunderTritier: sekunderTritier.value
                 },
                 timeout: 30000,
                 success: function (response) {
-                    if (response.error) {
-                        if (response.errorType === 'subkelIdEmpty') {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'ID Sub Kelompok Kosong!',
-                                text: 'Isi Sub Kelompok Dahulu!'
-                            });
-                        } else if (response.errorType === 'kodeBarangExists') {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Data Tidak ter-SIMPAN.',
-                                text: `Kode Barang: ${response.data[0].KodeBarang.trim()} yang terletak pada Sub Kelompok: ${response.data[0].IdSubkelompok_Type.trim()} Sudah ADA.`
-                            });
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error!',
-                                text: 'Terjadi kesalahan yang tidak terduga.'
-                            });
-                        }
-                    } else if (response.success) {
+                    console.log(response);
+
+                    if (response.success) {
                         if (a === 1) {
                             // ISI
                             idtype = response.data && response.data[0] ? response.data[0].idtype : '';
@@ -1927,8 +1913,37 @@ btn_proses.addEventListener("click", function (e) {
                     }
                 },
                 error: function (xhr, status, error) {
-                    console.error('Error:', error);
+                    let response = xhr.responseJSON;
+
+                    if (response && response.error) {
+                        if (response.errorType === 'subkelIdEmpty') {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'ID Sub Kelompok Kosong!',
+                                text: 'Isi Sub Kelompok Dahulu!'
+                            });
+                        } else if (response.errorType === 'kodeBarangExists') {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Data Tidak ter-SIMPAN.',
+                                text: `Kode Barang: ${response.data[0].KodeBarang.trim()} yang terletak pada Sub Kelompok: ${response.data[0].IdSubkelompok_Type.trim()} Sudah ADA.`
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Terjadi kesalahan yang tidak terduga.'
+                            });
+                        }
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Terjadi kesalahan pada permintaan.'
+                        });
+                    }
                 }
+
             });
         }
     } catch (error) {
@@ -2005,6 +2020,12 @@ btn_isi.addEventListener('click', function () {
     btn_hapus.disabled = true;
     btn_kodeType.disabled = true;
     btn_namaType.disabled = true;
+
+    if (subkelNama.value !== '') {
+        kdBarang.readOnly = false;
+        kdBarang.focus();
+        satuan.value = '';
+    }
 });
 
 // button batal event listener

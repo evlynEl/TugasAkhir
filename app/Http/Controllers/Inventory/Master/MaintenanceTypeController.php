@@ -52,8 +52,7 @@ class MaintenanceTypeController extends Controller
         $kategori = $request->input('kategori');
         $kodeType = $request->input('kodeType');
         $satuan = $request->input('satuan');
-        $satuanChange = $request->input('satuanChange');
-        $satuanUmum = trim($satuanChange) === '' ? '' : trim($satuanChange);
+        $satuanUmum = trim($satuan) === '' ? '' : trim($satuan);
 
         $primerSekunder = $request->input('primerSekunder');
         $sekunderTritier = $request->input('sekunderTritier');
@@ -277,9 +276,9 @@ class MaintenanceTypeController extends Controller
             // daftar kode barang untuk koreksi
             $cekSatuanType = DB::connection('ConnInventory')->select('exec SP_1003_INV_satumum_type @idtype = ?', [$idtype]);
             $satuan_umum = $cekSatuanType[0]->SatuanUmum;
-            // dd($satuan_umum);
+            // dd($request->all(), $satuan_umum);
 
-            if (isset($satuan_umum) && $satuan_umum !== "") {
+            if (!empty($satuan_umum)) {
                 // dd('masuk');
                 $satuanFinal = DB::connection('ConnInventory')->select('exec SP_1003_INV_nama_satumum @no_satumum = ?', [$satuan_umum]);
                 $satuan_final = trim($satuanFinal[0]->nama_satuan);
@@ -334,6 +333,8 @@ class MaintenanceTypeController extends Controller
             // proses terjadi
             if ($a === 1) { // ISI
                 // cek id kode barang
+                // dd($request->all());
+
                 if ($impor === 1) {
                     // Jika impor bernilai 1, jalankan query dengan @kd dan @noPIB
                     $cekKodeBarang = DB::connection('ConnInventory')->select(
@@ -347,7 +348,7 @@ class MaintenanceTypeController extends Controller
                         [$kdBarang, $subkelId]
                     );
                 }
-                
+
                 // dd($cekKodeBarang);
 
                 if (count($cekKodeBarang) > 0) {
@@ -389,20 +390,34 @@ class MaintenanceTypeController extends Controller
                 }
             } else if ($a === 2) { // KOREKSI
 
-                DB::connection('ConnInventory')->statement(
-                    'exec SP_1003_INV_update_type
+                $query = 'exec SP_1003_INV_update_type
                     @XIdType = ?, @XNamaType = ?, @XUraianType = ?, @XIdSubKelompok_Type = ?, @XKodeBarang = ?,
                     @XUnitPrimer = ?, @XUnitSekunder = ?, @XUnitTritier = ?, @XPakaiAturanKonversi = ?,
-                    @XKonvSekunderKePrimer = ?, @XKonvTritierkeSekunder = ?, @Xno_satuan_umum = ?,  @noPIB = ?, @noPEB = ?',
-                    [$kodeType, $namaType, $uraianType, $subkelId, $kdBarang,
+                    @XKonvSekunderKePrimer = ?, @XKonvTritierkeSekunder = ?, @Xno_satuan_umum = ?';
+
+                $params = [
+                    $kodeType, $namaType, $uraianType, $subkelId, $kdBarang,
                     $no_primer, $no_sekunder, $no_tritier, $konversi,
-                    $primerSekunder, $sekunderTritier, $satuanUmum, $user, $PIB, $PEB]
-                );
-                // dd($request->all());
+                    $primerSekunder, $sekunderTritier, $satuanUmum
+                ];
+
+                if ($PIB !== null) {
+                    $query .= ', @noPIB = ?';
+                    $params[] = $PIB;
+                }
+
+                if ($PEB !== null) {
+                    $query .= ', @noPEB = ?';
+                    $params[] = $PEB;
+                }
+
+                // dd($request->all(), $params);
+
+                DB::connection('ConnInventory')->statement($query, $params);
 
                 return response()->json(['success' => 'Data updated successfully'], 200);
-
             }
+
         }
     }
 

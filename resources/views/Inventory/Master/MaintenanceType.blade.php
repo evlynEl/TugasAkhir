@@ -4,7 +4,7 @@
         <div class="row justify-content-center">
             <div class="col-md-10 RDZMobilePaddingLR0">
                 <div class="card">
-                    <div class="card-header" style="">Maintenance Type Barang Per Divisi</div>
+                    <div class="card-header">Maintenance Type Barang Per Divisi</div>
                     <div class="card-body RDZOverflow RDZMobilePaddingLR0">
 
                         {{-- ATAS --}}
@@ -268,7 +268,7 @@
 
                         <div class="baris-4 p-1">
                             <div class="row align-items-center">
-                                <div class="col-md-2 d-flex align-items-center mt-2 mb-2">
+                                <div class="col-md-2 d-flex align-items-center">
                                     <input type="checkbox" name="konversi" id="konversi" style="margin: 0 5%;">
                                     <label for="konversi" id="konversiLabel">Aturan Konversi</label>
                                 </div>
