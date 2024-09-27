@@ -262,7 +262,7 @@ function formatNumber(value) {
 function getUserId() {
     $.ajax({
         type: 'GET',
-        url: 'MhnPenerima/getUserId',
+        url: 'PermohonanPenerima/getUserId',
         data: {
             _token: csrfToken
         },
@@ -477,7 +477,7 @@ btn_divisi.addEventListener("click", function (e) {
                         scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
-                            url: "MhnPenerima/getDivisi",
+                            url: "PermohonanPenerima/getDivisi",
                             dataType: "json",
                             type: "GET",
                             data: {
@@ -567,7 +567,7 @@ btn_objek.addEventListener("click", function (e) {
                         scrollCollapse: true,
                         order: [1, "asc"],
                         ajax: {
-                            url: "MhnPenerima/getObjek",
+                            url: "PermohonanPenerima/getObjek",
                             dataType: "json",
                             type: "GET",
                             data: {

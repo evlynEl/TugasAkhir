@@ -109,7 +109,7 @@ $(document).ready(function () {
             { title: 'Kode Konversi' },
             { title: 'Tgl. Transaksi' },
         ],
-        scrollY: '600px',
+        scrollY: '300px',
         autoWidth: false,
         scrollX: '100%',
         columnDefs: [{ targets: [0], width: '50%', className: 'fixed-width' },
@@ -157,7 +157,7 @@ $(document).ready(function () {
                 return data != null ? JSON.parse(data) : null;
             }
         },
-        scrollY: '200px',
+        scrollY: '100px',
         autoWidth: false,
         scrollX: '100%',
         columnDefs: [{ targets: [0], width: '12%', className: 'fixed-width' },
@@ -211,7 +211,7 @@ $(document).ready(function () {
                 return data != null ? JSON.parse(data) : null;
             }
         },
-        scrollY: '200px',
+        scrollY: '100px',
         autoWidth: false,
         scrollX: '100%',
         columnDefs: [{ targets: [0], width: '12%', className: 'fixed-width' },
