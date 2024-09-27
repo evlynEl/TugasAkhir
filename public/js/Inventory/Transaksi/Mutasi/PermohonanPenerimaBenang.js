@@ -347,6 +347,14 @@ btn_refresh.addEventListener('click', function () {
     showTable();
 });
 
+btn_batal.addEventListener('click', function () {
+    btn_ok.disabled = false;
+    clearInputs();
+    var table = $('#tableData').DataTable();
+    table.clear().draw();
+    btn_ok.focus();
+});
+
 btn_typeKonv.addEventListener('click', function () {
     try {
         Swal.fire({
@@ -440,7 +448,9 @@ function TmpNama(sNama) {
     let k = 0;  // JavaScript strings are 0-based indexed
     let l = 0;
 
-    if (!sNama.endsWith("-DB")) {
+    if (sNama.slice(-3) !== "-DB") {
+        console.log('asdasda', sNama);
+
         while (k < sNama.length) {
             if (sNama[k] === '-') {
                 l += 1;
@@ -456,7 +466,8 @@ function TmpNama(sNama) {
 
         return tmpNama;
     } else {
-        return "";
+        tmpNama = '';
+        return tmpNama;
     }
 }
 
@@ -532,6 +543,8 @@ function cekPenerima(Yidtransaksi, kodeBarang) {
 }
 
 function cekKonversi(namaBarang) {
+    // console.log(namaBarang);
+
     return new Promise((resolve, reject) => {
         $.ajax({
             type: 'GET',
@@ -541,6 +554,8 @@ function cekKonversi(namaBarang) {
                 namaBarang: namaBarang
             },
             success: function (response) {
+                // console.log(response);
+
                 if (response[0] && response[0].Result.trim() === 'True') {
                     resolve(true);
                 } else {
@@ -588,17 +603,21 @@ async function cekPenyesuaianKonversi(YIdTypeKonv) {
     });
 }
 
-function cariType(namaBarang, subkel) {
+function cariType(brg, sbke) {
+    console.log(brg, sbke);
+
     $.ajax({
         type: 'GET',
         url: 'PermohonanPenerimaBenang/getType',
         data: {
             _token: csrfToken,
-            namaBarang: namaBarang,
-            subkel: subkel
+            namaBarang: brg ?? '',
+            subkel: sbke
         },
         success: function (response) {
-            idKonv.value = response[0].IdType.trim();
+            if (response.length !== 0) {
+                idKonv.value = response[0].IdType ? response[0].IdType.trim() : '';
+            }
         },
         error: function (xhr, status, error) {
             console.error('Error:', error);
@@ -624,7 +643,7 @@ async function getIdKonv() {
                     success: function (result) {
                         if (result.length !== 0) {
                             sIdKonv = result.IDKonversi.trim();
-                            console.log(sIdKonv);
+                            // console.log('masok', sIdKonv);
                             resolve(sIdKonv);
                         }
                         else {
@@ -647,6 +666,8 @@ async function getIdKonv() {
 }
 
 async function saveDataAsal(sIdKonv) {
+    console.log(sIdKonv, YidTypePenerima, pprimer, ssekunder, ttritier, subkel, idTrans);
+
     return new Promise((resolve, reject) => {
         $.ajax({
             type: 'PUT',
@@ -655,11 +676,11 @@ async function saveDataAsal(sIdKonv) {
                 _token: csrfToken,
                 YisIdKonv: sIdKonv,
                 YidTypePenerima: YidTypePenerima,
-                primer: (pprimer), // keluar primer
-                sekunder: (ssekunder), // keluar sekunder
-                tritier: (ttritier), // keluar tritier
-                subkel: (subkel),
-                idTrans: idTrans
+                primer: pprimer, // keluar primer
+                sekunder: ssekunder, // keluar sekunder
+                tritier: ttritier, // keluar tritier
+                subkel: subkel,
+                idTrans: idTrans.value
             },
             success: function (response) {
                 resolve(true);
@@ -685,7 +706,7 @@ async function saveDataTujuan(sIdKonv) {
                 sekunder: (ssekunder), // keluar sekunder
                 tritier: (ttritier), // keluar tritier
                 subkel: (subkel),
-                idTrans: idTrans
+                idTrans: idTrans.value
             },
             success: function (response) {
                 resolve(true);
@@ -736,18 +757,22 @@ btn_proses.addEventListener('click', function () {
                         title: 'Success',
                         text: 'Data Sudah Disimpan Untuk Penerimaan Benang!!',
                         returnFocus: false,
-                    }).then(() => {
-                        if (!cekKonversi(namaBarang.value) && sError === 'BENAR') {
+                    }).then(async () => {
+                        const isKonversi = await cekKonversi(namaBarang.value);
+
+                        if (!isKonversi && sError === 'BENAR') {
                             Swal.fire({
                                 icon: 'question',
                                 text: `Apakah Data Ini Akan Di Konversi ?`,
                                 returnFocus: false,
-                                showCancelButton: true,
-                                confirmButtonText: 'Ya',
-                                cancelButtonText: 'Tidak'
+                                // showCancelButton: true,
+                                confirmButtonText: 'OK',
+                                // cancelButtonText: 'Tidak'
                             }).then((result) => {
                                 if (result.isConfirmed) {
                                     cariType(TmpNama(namaBarang.value), subkel);
+                                    btn_konversi.disabled = false;
+                                    btn_typeKonv.disabled = false;
                                     btn_refresh.disabled = true;
                                     btn_proses.disabled = true;
                                     btn_konversi.focus();
@@ -791,85 +816,85 @@ btn_proses.addEventListener('click', function () {
 });
 
 btn_konversi.addEventListener('click', async function () {
-    try {
-        let sIdKonv = '';
+    let sIdKonv = '';
 
-        if (idKonv.value !== '') {
-            YIdTypeKonv = idKonv.value;
-        }
-
-        if (YIdTypeKonv === '') {
-            await Swal.fire({
-                icon: 'warning',
-                title: 'Warning!',
-                text: `Isikan Dulu Type Benang Tujuan Konversi Pada Subkel : ${subkelNama}`,
-                returnFocus: false
-            });
-            return;
-        }
-
-        const isPenyesuaianValid = await cekPenyesuaianKonversi(YIdTypeKonv);
-        if (!isPenyesuaianValid) {
-            await Swal.fire({
-                icon: 'warning',
-                title: 'Warning!',
-                text: `Tidak Bisa Dikonversi Karena type tujuan konversi ada penyesuaian`,
-                returnFocus: false
-            });
-            return;
-        }
-
-        sIdKonv = await getIdKonv();
-        if (sIdKonv === '') {
-            await Swal.fire({
-                icon: 'warning',
-                title: 'Warning!',
-                text: `Klik Kembali Tombol Proses Konversi`,
-                returnFocus: false
-            });
-            clearInputs();
-            showTable();
-            return;
-        }
-
-        const isDataAsalSaved = await saveDataAsal(sIdKonv);
-        if (!isDataAsalSaved) {
-            await Swal.fire({
-                icon: 'warning',
-                title: 'Warning!',
-                text: `Klik Kembali Tombol Proses Konversi`,
-                returnFocus: false
-            });
-            return;
-        }
-
-        const isDataTujuanSaved = await saveDataTujuan(sIdKonv);
-        if (!isDataTujuanSaved) {
-            await Swal.fire({
-                icon: 'warning',
-                title: 'Warning!',
-                text: `Klik Kembali Tombol Proses Konversi`,
-                returnFocus: false
-            });
-            return;
-        }
-
-        await Swal.fire({
-            icon: 'success',
-            title: 'Success!',
-            text: `Data Konversi Sudah Tersimpan`,
-            returnFocus: false
-        });
-
-    } catch (error) {
-        console.error('Error:', error);
-        await Swal.fire({
-            icon: 'error',
-            title: 'Error!',
-            text: 'Gagal Proses.',
-            returnFocus: false
-        });
+    if (idKonv.value !== '') {
+        YIdTypeKonv = idKonv.value;
     }
+
+    if (idKonv.value === '') {
+        await Swal.fire({
+            icon: 'warning',
+            title: 'Warning!',
+            text: `Isikan Dulu Type Benang Tujuan Konversi Pada Subkel : ${subkelNama.value}`,
+            returnFocus: false
+        });
+        return;
+    }
+
+    const isPenyesuaianValid = await cekPenyesuaianKonversi(YIdTypeKonv);
+    if (!isPenyesuaianValid) {
+        await Swal.fire({
+            icon: 'warning',
+            title: 'Warning!',
+            text: `Tidak Bisa Dikonversi Karena type tujuan konversi ada penyesuaian`,
+            returnFocus: false
+        });
+        return;
+    }
+
+    sIdKonv = await getIdKonv();
+    if (sIdKonv === '') {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Warning!',
+            text: `Klik Kembali Tombol Proses Konversi`,
+            returnFocus: false
+        });
+        clearInputs();
+        showTable();
+        return;
+    }
+
+    const isDataAsalSaved = await saveDataAsal(sIdKonv);
+    if (!isDataAsalSaved) {
+        await Swal.fire({
+            icon: 'warning',
+            title: 'Warning!',
+            text: `Klik Kembali Tombol Proses Konversi`,
+            returnFocus: false
+        });
+        return;
+    }
+
+    const isDataTujuanSaved = await saveDataTujuan(sIdKonv);
+    if (!isDataTujuanSaved) {
+        await Swal.fire({
+            icon: 'warning',
+            title: 'Warning!',
+            text: `Klik Kembali Tombol Proses Konversi`,
+            returnFocus: false
+        });
+        return;
+    }
+
+    await Swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: `Data Konversi Sudah Tersimpan`,
+        returnFocus: false
+    }).then(() => {
+        clearInputs(); // Call your clearInputs function here
+        showTable();
+        idKonv.value = '';
+        typeKonv.value = '';
+        idTrans.value = '';
+        btn_typeKonv.disabled = true;
+        btn_konversi.disabled = true;
+        btn_refresh.disabled = false;
+        btn_proses.disabled = false;
+        btn_batal.disabled = false;
+    });
 })
 
 function clearInputs() {

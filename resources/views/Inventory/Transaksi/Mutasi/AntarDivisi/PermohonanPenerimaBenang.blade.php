@@ -186,7 +186,7 @@
                                         <div class="input-group">
                                             <input type="text" class="form-control" id="idKonv" name="idKonv">
                                             <div class="input-group-append">
-                                                <button type="button" id="btn_typeKonv" class="btn btn-info">...</button>
+                                                <button disabled type="button" id="btn_typeKonv" class="btn btn-info">...</button>
                                             </div>
                                         </div>
                                     </div>
@@ -200,17 +200,22 @@
                                     </div>
                                 </div>
 
-                                <button type="button" id="btn_konversi" class="btn btn-info btn-sm">Proses Konversi</button>
+                                <button type="button" id="btn_konversi" disabled class="btn btn-info btn-sm">Proses Konversi</button>
                             </div>
 
                             <div class="col-sm-6">
                                 <div class="button-container">
-                                    <div class="button-group">
-                                        <button type="button" id="btn_refresh" class="btn btn-info">Refresh</button>
-                                    </div>
-                                    <div class="button-group">
-                                        <button type="button" id="btn_proses" class="btn btn-info">Proses</button>
-                                        <button type="button" id="btn_batal" class="btn btn-info">Batal</button>
+                                    <div class="row">
+                                        <div class="col-sm-1">
+                                            <div class="button-group">
+                                                <button type="button" id="btn_refresh" class="btn btn-info">Refresh</button>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-1 offset-sm-7 d-flex">
+                                            <button type="button" id="btn_proses" class="btn btn-info">Proses</button>
+                                            <div class="col-sm-1"></div>
+                                            <button type="button" id="btn_batal" class="btn btn-info">Batal</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

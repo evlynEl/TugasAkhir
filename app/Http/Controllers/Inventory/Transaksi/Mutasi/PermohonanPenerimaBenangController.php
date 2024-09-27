@@ -95,6 +95,7 @@ class PermohonanPenerimaBenangController extends Controller
             return response()->json($data_selectData);
         } else if ($id === 'getTypeKonv') {
             $typeKonv = DB::connection('ConnInventory')->select('exec SP_1003_INV_idsubkelompok_type @XIdSubKelompok_Type = ?', [$subkel]);
+            // dd($typeKonv);
             $data_typeKonv = [];
             foreach ($typeKonv as $detail_typeKonv) {
                 $data_typeKonv[] = [
@@ -104,7 +105,7 @@ class PermohonanPenerimaBenangController extends Controller
             }
 
             // dd($request->all(), $data_selectData);
-            return response()->json($typeKonv);
+            return datatables($typeKonv)->make(true);
         } else if ($id === 'getPemberi') {
             $pemberi = DB::connection('ConnInventory')->select('exec SP_1003_INV_check_penyesuaian_pemberi @idtransaksi = ?, @idtypetransaksi = 06', [$Yidtransaksi]);
 
@@ -151,15 +152,17 @@ class PermohonanPenerimaBenangController extends Controller
 
             return response()->json($konv);
         } else if ($id === 'getType') {
-            $type = DB::connection('ConnInventory')->select('exec SP_1003_INV_LIST_TYPE_BENANG @Nama = ?, @idSubKel = ?', [$namaBarang, $subkel]);
+            // dd($namaBarang ?? '', $subkel);
+            $type = DB::connection('ConnInventory')->select('exec SP_1003_INV_LIST_TYPE_BENANG @Nama = ?, @IDSubkel = ?', [$namaBarang, $subkel]);
             $data_type = [];
             foreach ($type as $detail_type) {
                 $data_type[] = [
                     'IdType' => $detail_type->IdType
                 ];
             }
+            // dd($type);
 
-            return response()->json($type);
+            return response()->json($data_type);
         }
     }
 
