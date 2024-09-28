@@ -1125,7 +1125,7 @@ btn_isi.addEventListener("click", function (e) {
                 pil = 1;
                 btn_isi.disabled = true;
                 btn_proses.disabled = true;
-                $('.divTable').hide();
+                // $('.divTable').hide();
                 clearText();
                 btn_kelut.disabled = false;
                 btn_kelut.focus();
@@ -1176,7 +1176,7 @@ btn_isi.addEventListener("click", function (e) {
                                     pil = 1;
                                     btn_isi.disabled = true;
                                     btn_proses.disabled = true;
-                                    $('.divTable').hide();
+                                    // $('.divTable').hide();
                                     clearText();
                                     btn_kelut.disabled = false;
                                     btn_kelut.focus();
@@ -1185,7 +1185,7 @@ btn_isi.addEventListener("click", function (e) {
                                     pil = 1;
                                     btn_isi.disabled = true;
                                     btn_proses.disabled = true;
-                                    $('.divTable').hide();
+                                    // $('.divTable').hide();
                                     clearText();
                                     btn_kelut.disabled = false;
                                     btn_kelut.focus();
@@ -1203,7 +1203,7 @@ btn_isi.addEventListener("click", function (e) {
                                     pil = 1;
                                     btn_isi.disabled = true;
                                     btn_proses.disabled = true;
-                                    $('.divTable').hide();
+                                    // $('.divTable').hide();
                                     clearText();
                                     btn_kelut.disabled = false;
                                     btn_kelut.focus();
@@ -1212,7 +1212,7 @@ btn_isi.addEventListener("click", function (e) {
                                     pil = 1;
                                     btn_isi.disabled = true;
                                     btn_proses.disabled = true;
-                                    $('.divTable').hide();
+                                    // $('.divTable').hide();
                                     clearText();
                                     btn_kelut.disabled = false;
                                     btn_kelut.focus();
@@ -1223,7 +1223,7 @@ btn_isi.addEventListener("click", function (e) {
                                     pil = 1;
                                     btn_isi.disabled = true;
                                     btn_proses.disabled = true;
-                                    $('.divTable').hide();
+                                    // $('.divTable').hide();
                                     clearText();
                                     btn_kelut.disabled = false;
                                     btn_kelut.focus();
@@ -1234,7 +1234,7 @@ btn_isi.addEventListener("click", function (e) {
                                     pil = 1;
                                     btn_isi.disabled = true;
                                     btn_proses.disabled = true;
-                                    $('.divTable').hide();
+                                    // $('.divTable').hide();
                                     clearText();
                                     btn_kelut.disabled = false;
                                     btn_kelut.focus();
@@ -1243,7 +1243,7 @@ btn_isi.addEventListener("click", function (e) {
                                     pil = 1;
                                     btn_isi.disabled = true;
                                     btn_proses.disabled = true;
-                                    $('.divTable').hide();
+                                    // $('.divTable').hide();
                                     clearText();
                                     btn_kelut.disabled = false;
                                     btn_kelut.focus();
@@ -1252,7 +1252,7 @@ btn_isi.addEventListener("click", function (e) {
                                     pil = 1;
                                     btn_isi.disabled = true;
                                     btn_proses.disabled = true;
-                                    $('.divTable').hide();
+                                    // $('.divTable').hide();
                                     clearText();
                                     btn_kelut.disabled = false;
                                     btn_kelut.focus();
@@ -1261,7 +1261,7 @@ btn_isi.addEventListener("click", function (e) {
                                     pil = 1;
                                     btn_isi.disabled = true;
                                     btn_proses.disabled = true;
-                                    $('.divTable').hide();
+                                    // $('.divTable').hide();
                                     clearText();
                                     btn_kelut.disabled = false;
                                     btn_kelut.focus();
@@ -1272,7 +1272,7 @@ btn_isi.addEventListener("click", function (e) {
                                     pil = 1;
                                     btn_isi.disabled = true;
                                     btn_proses.disabled = true;
-                                    $('.divTable').hide();
+                                    // $('.divTable').hide();
                                     clearText();
                                     btn_kelut.disabled = false;
                                     btn_kelut.focus();
@@ -1281,7 +1281,7 @@ btn_isi.addEventListener("click", function (e) {
                                     pil = 1;
                                     btn_isi.disabled = true;
                                     btn_proses.disabled = true;
-                                    $('.divTable').hide();
+                                    // $('.divTable').hide();
                                     clearText();
                                     btn_kelut.disabled = false;
                                     btn_kelut.focus();
@@ -1290,7 +1290,7 @@ btn_isi.addEventListener("click", function (e) {
                                     pil = 1;
                                     btn_isi.disabled = true;
                                     btn_proses.disabled = true;
-                                    $('.divTable').hide();
+                                    // $('.divTable').hide();
                                     clearText();
                                     btn_kelut.disabled = false;
                                     btn_kelut.focus();
@@ -1299,7 +1299,7 @@ btn_isi.addEventListener("click", function (e) {
                                     pil = 1;
                                     btn_isi.disabled = true;
                                     btn_proses.disabled = true;
-                                    $('.divTable').hide();
+                                    // $('.divTable').hide();
                                     clearText();
                                     btn_kelut.disabled = false;
                                     btn_kelut.focus();
@@ -1308,7 +1308,7 @@ btn_isi.addEventListener("click", function (e) {
                                     pil = 1;
                                     btn_isi.disabled = true;
                                     btn_proses.disabled = true;
-                                    $('.divTable').hide();
+                                    // $('.divTable').hide();
                                     clearText();
                                     btn_kelut.disabled = false;
                                     btn_kelut.focus();
@@ -1319,7 +1319,7 @@ btn_isi.addEventListener("click", function (e) {
                                     pil = 1;
                                     btn_isi.disabled = true;
                                     btn_proses.disabled = true;
-                                    $('.divTable').hide();
+                                    // $('.divTable').hide();
                                     clearText();
                                     btn_kelut.disabled = false;
                                     btn_kelut.focus();
@@ -1330,7 +1330,7 @@ btn_isi.addEventListener("click", function (e) {
                                     pil = 1;
                                     btn_isi.disabled = true;
                                     btn_proses.disabled = true;
-                                    $('.divTable').hide();
+                                    // $('.divTable').hide();
                                     clearText();
                                     btn_kelut.disabled = false;
                                     btn_kelut.focus();
@@ -1339,7 +1339,7 @@ btn_isi.addEventListener("click", function (e) {
                                     pil = 1;
                                     btn_isi.disabled = true;
                                     btn_proses.disabled = true;
-                                    $('.divTable').hide();
+                                    // $('.divTable').hide();
                                     clearText();
                                     btn_kelut.disabled = false;
                                     btn_kelut.focus();
@@ -1348,7 +1348,7 @@ btn_isi.addEventListener("click", function (e) {
                                     pil = 1;
                                     btn_isi.disabled = true;
                                     btn_proses.disabled = true;
-                                    $('.divTable').hide();
+                                    // $('.divTable').hide();
                                     clearText();
                                     btn_kelut.disabled = false;
                                     btn_kelut.focus();
@@ -1357,7 +1357,7 @@ btn_isi.addEventListener("click", function (e) {
                                     pil = 1;
                                     btn_isi.disabled = true;
                                     btn_proses.disabled = true;
-                                    $('.divTable').hide();
+                                    // $('.divTable').hide();
                                     clearText();
                                     btn_kelut.disabled = false;
                                     btn_kelut.focus();
@@ -1377,7 +1377,7 @@ btn_isi.addEventListener("click", function (e) {
                                         pil = 1;
                                         btn_isi.disabled = true;
                                         btn_proses.disabled = true;
-                                        $('.divTable').hide();
+                                        // $('.divTable').hide();
                                         clearText();
                                         btn_kelut.disabled = false;
                                         btn_kelut.focus();
@@ -1386,7 +1386,7 @@ btn_isi.addEventListener("click", function (e) {
                                         pil = 1;
                                         btn_isi.disabled = true;
                                         btn_proses.disabled = true;
-                                        $('.divTable').hide();
+                                        // $('.divTable').hide();
                                         clearText();
                                         btn_kelut.disabled = false;
                                         btn_kelut.focus();
@@ -1395,7 +1395,7 @@ btn_isi.addEventListener("click", function (e) {
                                         pil = 1;
                                         btn_isi.disabled = true;
                                         btn_proses.disabled = true;
-                                        $('.divTable').hide();
+                                        // $('.divTable').hide();
                                         clearText();
                                         btn_kelut.disabled = false;
                                         btn_kelut.focus();
@@ -1404,7 +1404,7 @@ btn_isi.addEventListener("click", function (e) {
                                         pil = 1;
                                         btn_isi.disabled = true;
                                         btn_proses.disabled = true;
-                                        $('.divTable').hide();
+                                        // $('.divTable').hide();
                                         clearText();
                                         btn_kelut.disabled = false;
                                         btn_kelut.focus();
@@ -1413,7 +1413,7 @@ btn_isi.addEventListener("click", function (e) {
                                         pil = 1;
                                         btn_isi.disabled = true;
                                         btn_proses.disabled = true;
-                                        $('.divTable').hide();
+                                        // $('.divTable').hide();
                                         clearText();
                                         btn_kelut.disabled = false;
                                         btn_kelut.focus();
@@ -1424,7 +1424,7 @@ btn_isi.addEventListener("click", function (e) {
                                         pil = 1;
                                         btn_isi.disabled = true;
                                         btn_proses.disabled = true;
-                                        $('.divTable').hide();
+                                        // $('.divTable').hide();
                                         clearText();
                                         btn_kelut.disabled = false;
                                         btn_kelut.focus();
@@ -1435,7 +1435,7 @@ btn_isi.addEventListener("click", function (e) {
                                         pil = 1;
                                         btn_isi.disabled = true;
                                         btn_proses.disabled = true;
-                                        $('.divTable').hide();
+                                        // $('.divTable').hide();
                                         clearText();
                                         btn_kelut.disabled = false;
                                         btn_kelut.focus();
@@ -1444,7 +1444,7 @@ btn_isi.addEventListener("click", function (e) {
                                         pil = 1;
                                         btn_isi.disabled = true;
                                         btn_proses.disabled = true;
-                                        $('.divTable').hide();
+                                        // $('.divTable').hide();
                                         clearText();
                                         btn_kelut.disabled = false;
                                         btn_kelut.focus();
@@ -1453,7 +1453,7 @@ btn_isi.addEventListener("click", function (e) {
                                         pil = 1;
                                         btn_isi.disabled = true;
                                         btn_proses.disabled = true;
-                                        $('.divTable').hide();
+                                        // $('.divTable').hide();
                                         clearText();
                                         btn_kelut.disabled = false;
                                         btn_kelut.focus();
@@ -1462,7 +1462,7 @@ btn_isi.addEventListener("click", function (e) {
                                         pil = 1;
                                         btn_isi.disabled = true;
                                         btn_proses.disabled = true;
-                                        $('.divTable').hide();
+                                        // $('.divTable').hide();
                                         clearText();
                                         btn_kelut.disabled = false;
                                         btn_kelut.focus();
@@ -1473,7 +1473,7 @@ btn_isi.addEventListener("click", function (e) {
                                         pil = 1;
                                         btn_isi.disabled = true;
                                         btn_proses.disabled = true;
-                                        $('.divTable').hide();
+                                        // $('.divTable').hide();
                                         clearText();
                                         btn_kelut.disabled = false;
                                         btn_kelut.focus();
@@ -1482,7 +1482,7 @@ btn_isi.addEventListener("click", function (e) {
                                         pil = 1;
                                         btn_isi.disabled = true;
                                         btn_proses.disabled = true;
-                                        $('.divTable').hide();
+                                        // $('.divTable').hide();
                                         clearText();
                                         btn_kelut.disabled = false;
                                         btn_kelut.focus();
@@ -1491,7 +1491,7 @@ btn_isi.addEventListener("click", function (e) {
                                         pil = 1;
                                         btn_isi.disabled = true;
                                         btn_proses.disabled = true;
-                                        $('.divTable').hide();
+                                        // $('.divTable').hide();
                                         clearText();
                                         btn_kelut.disabled = false;
                                         btn_kelut.focus();
@@ -1500,7 +1500,7 @@ btn_isi.addEventListener("click", function (e) {
                                         pil = 1;
                                         btn_isi.disabled = true;
                                         btn_proses.disabled = true;
-                                        $('.divTable').hide();
+                                        // $('.divTable').hide();
                                         clearText();
                                         btn_kelut.disabled = false;
                                         btn_kelut.focus();
@@ -1509,7 +1509,7 @@ btn_isi.addEventListener("click", function (e) {
                                         pil = 1;
                                         btn_isi.disabled = true;
                                         btn_proses.disabled = true;
-                                        $('.divTable').hide();
+                                        // $('.divTable').hide();
                                         clearText();
                                         btn_kelut.disabled = false;
                                         btn_kelut.focus();
@@ -1520,7 +1520,7 @@ btn_isi.addEventListener("click", function (e) {
                                         pil = 1;
                                         btn_isi.disabled = true;
                                         btn_proses.disabled = true;
-                                        $('.divTable').hide();
+                                        // $('.divTable').hide();
                                         clearText();
                                         btn_kelut.disabled = false;
                                         btn_kelut.focus();
@@ -1531,7 +1531,7 @@ btn_isi.addEventListener("click", function (e) {
                                         pil = 1;
                                         btn_isi.disabled = true;
                                         btn_proses.disabled = true;
-                                        $('.divTable').hide();
+                                        // $('.divTable').hide();
                                         clearText();
                                         btn_kelut.disabled = false;
                                         btn_kelut.focus();
@@ -1540,7 +1540,7 @@ btn_isi.addEventListener("click", function (e) {
                                         pil = 1;
                                         btn_isi.disabled = true;
                                         btn_proses.disabled = true;
-                                        $('.divTable').hide();
+                                        // $('.divTable').hide();
                                         clearText();
                                         btn_kelut.disabled = false;
                                         btn_kelut.focus();
@@ -1549,7 +1549,7 @@ btn_isi.addEventListener("click", function (e) {
                                         pil = 1;
                                         btn_isi.disabled = true;
                                         btn_proses.disabled = true;
-                                        $('.divTable').hide();
+                                        // $('.divTable').hide();
                                         clearText();
                                         btn_kelut.disabled = false;
                                         btn_kelut.focus();
@@ -1558,7 +1558,7 @@ btn_isi.addEventListener("click", function (e) {
                                         pil = 1;
                                         btn_isi.disabled = true;
                                         btn_proses.disabled = true;
-                                        $('.divTable').hide();
+                                        // $('.divTable').hide();
                                         clearText();
                                         btn_kelut.disabled = false;
                                         btn_kelut.focus();
@@ -1573,7 +1573,7 @@ btn_isi.addEventListener("click", function (e) {
                                 pil = 1;
                                 btn_isi.disabled = true;
                                 btn_proses.disabled = true;
-                                $('.divTable').hide();
+                                // $('.divTable').hide();
                                 clearText();
                                 btn_kelut.disabled = false;
                                 btn_kelut.focus();
@@ -1582,7 +1582,7 @@ btn_isi.addEventListener("click", function (e) {
                                 pil = 1;
                                 btn_isi.disabled = true;
                                 btn_proses.disabled = true;
-                                $('.divTable').hide();
+                                // $('.divTable').hide();
                                 clearText();
                                 btn_kelut.disabled = false;
                                 btn_kelut.focus();
@@ -1591,7 +1591,7 @@ btn_isi.addEventListener("click", function (e) {
                                 pil = 1;
                                 btn_isi.disabled = true;
                                 btn_proses.disabled = true;
-                                $('.divTable').hide();
+                                // $('.divTable').hide();
                                 clearText();
                                 btn_kelut.disabled = false;
                                 btn_kelut.focus();
@@ -1600,7 +1600,7 @@ btn_isi.addEventListener("click", function (e) {
                                 pil = 1;
                                 btn_isi.disabled = true;
                                 btn_proses.disabled = true;
-                                $('.divTable').hide();
+                                // $('.divTable').hide();
                                 clearText();
                                 btn_kelut.disabled = false;
                                 btn_kelut.focus();
@@ -1609,7 +1609,7 @@ btn_isi.addEventListener("click", function (e) {
                                 pil = 1;
                                 btn_isi.disabled = true;
                                 btn_proses.disabled = true;
-                                $('.divTable').hide();
+                                // $('.divTable').hide();
                                 clearText();
                                 btn_kelut.disabled = false;
                                 btn_kelut.focus();
@@ -1618,7 +1618,7 @@ btn_isi.addEventListener("click", function (e) {
                                 pil = 1;
                                 btn_isi.disabled = true;
                                 btn_proses.disabled = true;
-                                $('.divTable').hide();
+                                // $('.divTable').hide();
                                 clearText();
                                 btn_kelut.disabled = false;
                                 btn_kelut.focus();
@@ -1627,7 +1627,7 @@ btn_isi.addEventListener("click", function (e) {
                                 pil = 1;
                                 btn_isi.disabled = true;
                                 btn_proses.disabled = true;
-                                $('.divTable').hide();
+                                // $('.divTable').hide();
                                 clearText();
                                 btn_kelut.disabled = false;
                                 btn_kelut.focus();
@@ -1637,7 +1637,7 @@ btn_isi.addEventListener("click", function (e) {
                             pil = 1;
                             btn_isi.disabled = true;
                             btn_proses.disabled = true;
-                            $('.divTable').hide();
+                            // $('.divTable').hide();
                             clearText();
                             btn_kelut.disabled = false;
                             btn_kelut.focus();
