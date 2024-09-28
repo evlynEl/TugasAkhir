@@ -353,12 +353,12 @@ btn_divisi.addEventListener("click", function (e) {
                             $(this).addClass("selected");
                             scrollRowIntoView(this);
                         });
-    
+
                         const searchInput = $('#table_list_filter input');
                         if (searchInput.length > 0) {
                             searchInput.focus();
                         }
-    
+
                         currentIndex = null;
                         Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
                     });
@@ -371,7 +371,8 @@ btn_divisi.addEventListener("click", function (e) {
                     btn_isi.focus();
                     uraian.disabled = false;
 
-                    if (a === 1 || a === 3) {
+                    if (a !== null) {
+                        btn_objek.disabled = false;
                         btn_objek.focus();
                     }
                 }
@@ -423,50 +424,50 @@ btn_objek.addEventListener("click", function (e) {
                 showConfirmButton: true,
                 confirmButtonText: 'Select',
                 didOpen: () => {
-                    $(document).ready(function () {
-                        const table = $("#table_list").DataTable({
-                            responsive: true,
-                            processing: true,
-                            serverSide: true,
-                            paging: false,
-                            scrollY: '400px',
-                            scrollCollapse: true,
-                            order: [1, "asc"],
-                            ajax: {
-                                url: "MhnMasukKeluar/getObjek",
-                                dataType: "json",
-                                type: "GET",
-                                data: {
-                                    _token: csrfToken,
-                                    divisiId: divisiId.value
-                                }
-                            },
-                            columns: [
-                                { data: "IdObjek" },
-                                { data: "NamaObjek" }
-                            ],
-                            columnDefs: [
-                                {
-                                    targets: 0,
-                                    width: '100px',
-                                }
-                            ]
-                        });
-
-                        $("#table_list tbody").on("click", "tr", function () {
-                            table.$("tr.selected").removeClass("selected");
-                            $(this).addClass("selected");
-                            scrollRowIntoView(this);
-                        });
-    
-                        const searchInput = $('#table_list_filter input');
-                        if (searchInput.length > 0) {
-                            searchInput.focus();
-                        }
-    
-                        currentIndex = null;
-                        Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
+                    const table = $("#table_list").DataTable({
+                        responsive: true,
+                        processing: true,
+                        serverSide: true,
+                        paging: false,
+                        scrollY: '400px',
+                        scrollCollapse: true,
+                        order: [1, "asc"],
+                        ajax: {
+                            url: "MhnMasukKeluar/getObjek",
+                            dataType: "json",
+                            type: "GET",
+                            data: {
+                                _token: csrfToken,
+                                divisiId: divisiId.value
+                            }
+                        },
+                        columns: [
+                            { data: "IdObjek" },
+                            { data: "NamaObjek" }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                width: '100px',
+                            }
+                        ]
                     });
+
+                    // Row selection logic
+                    $("#table_list tbody").on("click", "tr", function () {
+                        table.$("tr.selected").removeClass("selected");
+                        $(this).addClass("selected");
+                        scrollRowIntoView(this);
+                    });
+
+                    // Focus on search input if it exists
+                    const searchInput = $('#table_list_filter input');
+                    if (searchInput.length > 0) {
+                        searchInput.focus();
+                    }
+
+                    currentIndex = null;
+                    Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -475,6 +476,8 @@ btn_objek.addEventListener("click", function (e) {
                     btn_kelut.focus();
 
                     if (objekNama.value !== '') {
+                        $('#tableData').show();
+
                         showTable();
 
                         btn_kelut.disabled = false;
@@ -487,6 +490,8 @@ btn_objek.addEventListener("click", function (e) {
         }
     }
 });
+
+
 
 // button list kelompok utama
 btn_kelut.addEventListener("click", function (e) {
@@ -564,12 +569,12 @@ btn_kelut.addEventListener("click", function (e) {
                             $(this).addClass("selected");
                             scrollRowIntoView(this);
                         });
-    
+
                         const searchInput = $('#table_list_filter input');
                         if (searchInput.length > 0) {
                             searchInput.focus();
                         }
-    
+
                         currentIndex = null;
                         Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
                     });
@@ -668,12 +673,12 @@ btn_kelompok.addEventListener("click", function (e) {
                             $(this).addClass("selected");
                             scrollRowIntoView(this);
                         });
-    
+
                         const searchInput = $('#table_list_filter input');
                         if (searchInput.length > 0) {
                             searchInput.focus();
                         }
-    
+
                         currentIndex = null;
                         Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
                     });
@@ -771,12 +776,12 @@ btn_subkel.addEventListener("click", function (e) {
                             $(this).addClass("selected");
                             scrollRowIntoView(this);
                         });
-    
+
                         const searchInput = $('#table_list_filter input');
                         if (searchInput.length > 0) {
                             searchInput.focus();
                         }
-    
+
                         currentIndex = null;
                         Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
                     });
@@ -880,12 +885,12 @@ function handleTypeSelection() {
                                     $(this).addClass("selected");
                                     scrollRowIntoView(this);
                                 });
-            
+
                                 const searchInput = $('#table_list_filter input');
                                 if (searchInput.length > 0) {
                                     searchInput.focus();
                                 }
-            
+
                                 currentIndex = null;
                                 Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
                             });
@@ -993,12 +998,12 @@ function handleTypeSelection() {
                                     $(this).addClass("selected");
                                     scrollRowIntoView(this);
                                 });
-            
+
                                 const searchInput = $('#table_list_filter input');
                                 if (searchInput.length > 0) {
                                     searchInput.focus();
                                 }
-            
+
                                 currentIndex = null;
                                 Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
                             });
@@ -1096,12 +1101,12 @@ function handleTypeSelection() {
                                 $(this).addClass("selected");
                                 scrollRowIntoView(this);
                             });
-        
+
                             const searchInput = $('#table_list_filter input');
                             if (searchInput.length > 0) {
                                 searchInput.focus();
                             }
-        
+
                             currentIndex = null;
                             Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
                         });
@@ -1203,6 +1208,8 @@ function handleChange() {
 
 // fungsi unk update isi tabel
 function updateDataTable(data) {
+    console.log(data);
+
     var table = $('#tableData').DataTable();
     table.clear();
 
@@ -1212,25 +1219,30 @@ function updateDataTable(data) {
             escapeHtml(item.NamaType.trim())
         ];
 
+        // Handle Mutasi Masuk
         if (uraian.value === 'Mutasi Masuk') {
             rowData.push(
-                escapeHtml(formatNumber(item.JumlahPemasukanPrimer.trim())),
-                escapeHtml(formatNumber(item.JumlahPemasukanSekunder.trim())),
-                escapeHtml(formatNumber(item.JumlahPemasukanTritier.trim()))
+                escapeHtml(formatNumber(item.JumlahPemasukanPrimer)),
+                escapeHtml(formatNumber(item.JumlahPemasukanSekunder)),
+                escapeHtml(formatNumber(item.JumlahPemasukanTritier))
             );
-        } else if (uraian.value === 'Mutasi Keluar') {
+        }
+        // Handle Mutasi Keluar
+        else if (uraian.value === 'Mutasi Keluar') {
             rowData.push(
-                escapeHtml(formatNumber(item.JumlahPengeluaranPrimer.trim())),
-                escapeHtml(formatNumber(item.JumlahPengeluaranSekunder.trim())),
-                escapeHtml(formatNumber(item.JumlahPengeluaranTritier.trim()))
+                escapeHtml(formatNumber(item.JumlahPengeluaranPrimer)),
+                escapeHtml(formatNumber(item.JumlahPengeluaranSekunder)),
+                escapeHtml(formatNumber(item.JumlahPengeluaranTritier))
             );
         }
 
+        // Add common fields
         rowData.push(
             escapeHtml(item.idtype.trim()),
             escapeHtml(item.UraianDetailTransaksi.trim()),
             escapeHtml(item.SaatAwalTransaksi.trim()),
             escapeHtml(item.idpemberi.trim()),
+            escapeHtml(item.IdDivisi.trim()),
             escapeHtml(item.IdObjek.trim()),
             escapeHtml(item.NamaObjek.trim()),
             escapeHtml(item.IdKelompokUtama.trim()),
@@ -1242,16 +1254,15 @@ function updateDataTable(data) {
             escapeHtml(item.Satuan_primer.trim()),
             escapeHtml(item.Satuan_Sekunder.trim()),
             escapeHtml(item.Satuan_Tritier.trim()),
-            escapeHtml(item.UraianDetailTransaksi.trim()),
-            escapeHtml(item.SaatAwalTransaksi.trim()),
-            escapeHtml(item.idpemberi.trim()),
             escapeHtml(item.kodebarang.trim())
         );
 
         table.row.add(rowData);
     });
+
     table.draw();
 }
+
 
 $('#tableData tbody').on('click', 'tr', function () {
     if (a === 1) {
@@ -1260,9 +1271,8 @@ $('#tableData tbody').on('click', 'tr', function () {
             title: 'Tidak Bisa Pilih!',
             text: 'Proses Isi TIdak boleh pilih data di tabel ini!!',
             returnFocus: false,
-        }).then(() => {
-            return;
         });
+        return;
     }
 
     var table = $('#tableData').DataTable();
@@ -1278,27 +1288,24 @@ $('#tableData tbody').on('click', 'tr', function () {
     tritier2.value = formatNumber(data[4]);
     kodeType.value = data[5];
     uraian.value = decodeHtmlEntities(data[6]);
-    kodeBarang.value = data[7];
+    var originalDate = data[7];
+    var parts = originalDate.split('/');
+    var formattedDate = parts[2] + '-' + parts[0].padStart(2, '0') + '-' + parts[1].padStart(2, '0');
+    tanggal.value = formattedDate;
 
     kelompokNama.value = decodeHtmlEntities(data[10]);
     kelutNama.value = decodeHtmlEntities(data[12]);
     subkelNama.value = decodeHtmlEntities(data[14]);
-    divisiId.value = data[8];
-    objekId.value = data[9];
-    kelompokId.value = data[11];
-    kelutId.value = data[13];
-    subkelId.value = data[15];
+    divisiId.value = data[9];
+    objekId.value = data[10];
+    kelompokId.value = data[12];
+    kelutId.value = data[14];
+    subkelId.value = data[16];
 
-    no_primer.textContent = data[17] || '';
-    no_sekunder.textContent = data[18] || '';
-    no_tritier.textContent = data[19] || '';
-    uraian.value = decodeHtmlEntities(data[20]);
-    var originalDate = data[21];
-    var parts = originalDate.split('/');
-    var formattedDate = parts[2] + '-' + parts[0].padStart(2, '0') + '-' + parts[1].padStart(2, '0');
-    tanggal.value = formattedDate;
-    user.value = data[22];
-    kodeBarang.value = data[23];
+    no_primer.textContent = data[18] || '';
+    no_sekunder.textContent = data[19] || '';
+    no_tritier.textContent = data[20] || '';
+    kodeBarang.value = data[21];
 
     if (a === 1 || a === 2) {
         primer2.select();
@@ -1309,8 +1316,6 @@ $('#tableData tbody').on('click', 'tr', function () {
 
 // menampilkan semua data
 function showTable() {
-    $('.divTable').show();
-
     $.ajax({
         type: 'GET',
         url: 'MhnMasukKeluar/getData',
@@ -1370,6 +1375,7 @@ btn_proses.addEventListener("click", function (e) {
                         returnFocus: false,
                     }).then(() => {
                         clearInputs();
+                        $('#tableData').show();
                         showTable();
                     });
 
@@ -1422,6 +1428,7 @@ btn_proses.addEventListener("click", function (e) {
                         sekunder2.value = 0;
                         tritier2.value = 0;
 
+                        $('#tableData').show();
                         showTable();
 
                         allInputs.forEach(function (input) {
@@ -1442,6 +1449,7 @@ btn_proses.addEventListener("click", function (e) {
                         text: response.success,
                         returnFocus: false,
                     }).then(() => {
+                        $('#tableData').show();
                         showTable();
                         clearInputs();
                     });
@@ -1583,8 +1591,12 @@ btn_hapus.addEventListener('click', function () {
     sekunder.value = 0;
     tritier.value = 0;
 
-    btn_objek.disabled = false;
-    btn_objek.focus();
+    if (divisiId.value === '') {
+        btn_divisi.focus();
+    } else {
+        btn_objek.disabled = false;
+        btn_objek.focus();
+    }
 
     enableKetik();
     btn_hapus.disabled = true;

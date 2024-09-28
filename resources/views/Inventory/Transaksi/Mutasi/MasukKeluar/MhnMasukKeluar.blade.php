@@ -104,10 +104,12 @@
                             </div>
                         </div>
 
-                        <div class="row" id="ids" style="display:none;">
-                            <div class="col-md-5 d-flex">
+                        <div class="row" style="display:none;">
+                            <div class="col-md-2 d-flex" id="ids">
                                 <input type="text" id="divisiId" name="divisiId" class="form-control" readonly>
                                 <input type="text" id="objekId" name="objekId" class="form-control" readonly>
+                            </div>
+                            <div class="col-md-2 d-flex">
                                 <input type="text" id="kelompokId" name="kelompokId" class="form-control" readonly>
                                 <input type="text" id="kelutId" name="kelutId" class="form-control" readonly>
                                 <input type="text" id="subkelId" name="subkelId" class="form-control" readonly>
@@ -127,8 +129,8 @@
                                         <label for="kodeTransaksi">Kode Transaksi</label>
                                     </div>
                                     <div class="col-sm-3">
-                                        <input type="text" class="form-control" id="kodeTransaksi" name="kodeTransaksi"
-                                            readonly>
+                                        <input type="text" class="form-control" id="kodeTransaksi"
+                                            name="kodeTransaksi" readonly>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -140,7 +142,8 @@
                                             <input type="text" class="form-control" id="kodeType" name="kodeType"
                                                 readonly>
                                             <div class="input-group-append">
-                                                <button type="button" id="btn_kodeType" class="btn btn-info">...</button>
+                                                <button type="button" id="btn_kodeType"
+                                                    class="btn btn-info">...</button>
                                             </div>
                                         </div>
                                     </div>
@@ -158,7 +161,8 @@
 
                             <div class="col-sm-4">
                                 <div class="row">
-                                    <label><strong>Stok Akhir</strong></label><div class="col-sm-1 mr-3"></div>
+                                    <label><strong>Stok Akhir</strong></label>
+                                    <div class="col-sm-1 mr-3"></div>
                                     <label>Primer</label>
                                     <div class="col-sm-5">
                                         <input type="text" class="form-control" id="primer" name="primer">
