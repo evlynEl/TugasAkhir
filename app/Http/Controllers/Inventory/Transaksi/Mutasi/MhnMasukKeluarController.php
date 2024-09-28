@@ -62,6 +62,7 @@ class MhnMasukKeluarController extends Controller
         else if ($id === 'getObjek') {
             // mendapatkan daftar objek
             $objek = DB::connection('ConnInventory')->select('exec SP_1003_INV_User_Objek @XKdUser = ?, @XIdDivisi = ?', [$user, $divisiId]);
+            // dd($request->all());
             $data_objek = [];
             foreach ($objek as $detail_objek) {
                 $data_objek[] = [
