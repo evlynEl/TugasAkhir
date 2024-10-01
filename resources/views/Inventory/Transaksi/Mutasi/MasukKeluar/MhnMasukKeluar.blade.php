@@ -137,13 +137,12 @@
                                     <div class="col-sm-2">
                                         <label for="kodeType">Kode Type</label>
                                     </div>
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-6">
                                         <div class="input-group">
                                             <input type="text" class="form-control" id="kodeType" name="kodeType"
                                                 readonly>
                                             <div class="input-group-append">
-                                                <button type="button" id="btn_kodeType"
-                                                    class="btn btn-info">...</button>
+                                                <button type="button" id="btn_kodeType" class="btn btn-info">...</button>
                                             </div>
                                         </div>
                                     </div>

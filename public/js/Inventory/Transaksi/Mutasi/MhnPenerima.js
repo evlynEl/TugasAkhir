@@ -101,7 +101,10 @@ baris3.forEach(function (input) {
 inputs.forEach((masuk, index) => {
     masuk.addEventListener('keypress', function (event) {
         if (event.key === 'Enter') {
-            if (masuk.id === 'primer3') {
+            if (masuk.id === 'kodeBarang' && kodeBarang.value !== '') {
+                cekBarang(kodeBarang.value);
+            }
+             else if (masuk.id === 'primer3') {
                 if (parseFloat(primer3.value) > parseFloat(primer.value)) {
                     Swal.fire({
                         icon: 'warning',
@@ -323,6 +326,7 @@ function getUserId() {
 $(document).ready(function () {
     getUserId();
 });
+
 
 btn_objek.disabled = true;
 btn_kelut.disabled = true;
@@ -1338,17 +1342,16 @@ function cekPIB(PIB) {
     });
 }
 
-function loadType(kodeBarang, kodeType, PIB) {
+function loadType(barang, subkel, pib) {
     return new Promise((resolve, reject) => {
         $.ajax({
             type: 'GET',
             url: 'MhnPenerima/cekType',
             data: {
                 _token: csrfToken,
-                kodeBarang: kodeBarang,
-                subkelId: subkelId.value,
-                PIB: PIB,
-                kodeType: kodeType
+                kodeBarang: barang,
+                subkelId: subkel,
+                PIB: pib
             },
             success: function (response) {
                 console.log(response);
@@ -1357,7 +1360,7 @@ function loadType(kodeBarang, kodeType, PIB) {
 
                     kodeType.value = data.IdType ? decodeHtmlEntities(data.IdType.trim()) : "-";
                     namaBarang.value = data.NamaType ? decodeHtmlEntities(data.NamaType.trim()) : "-";
-                    kodeBarang.value = data.KodeBarang ? decodeHtmlEntities(data.KodeBarang.trim()) : "-";
+                    kodeBarang.value = decodeHtmlEntities(data.KodeBarang.trim());
                     primer.value = data.SaldoPrimer ? formatNumber(data.SaldoPrimer) : "0";
                     sekunder.value = data.SaldoSekunder ? formatNumber(data.SaldoSekunder) : "0";
                     tritier.value = data.SaldoTritier ? formatNumber(data.SaldoTritier) : "0";
@@ -1383,6 +1386,85 @@ function loadType(kodeBarang, kodeType, PIB) {
         });
     });
 }
+
+// fungsi cek kode barang dari inputan
+function cekBarang(barang) {
+    kodeBarangPadded = barang.trim().padStart(9, '0');
+
+    $.ajax({
+        type: 'GET',
+        url: 'MhnPenerima/cekKodeBarang',
+        data: {
+            _token: csrfToken,
+            kodeBarang: kodeBarangPadded,
+            subkelId: subkelId.value,
+            subkelNama: subkelNama.value
+        },
+        success: function (response) {
+            console.log('Server response:', response); // Check the response
+            kodeBarang.value = kodeBarangPadded;
+
+            if (response.warning) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Kode Barang Tidak Ada!',
+                    html: response.warning,
+                    returnFocus: false,
+                }).then(() => {
+                    kodeBarang.select();
+                });
+            } else if (response.success) {
+                console.log('Response is successful, loading type...');
+                loadType(kodeBarangPadded, subkelId.value, PIB.value)
+                .then(loadTypeResult => {
+                    if (loadTypeResult) {
+                        return terimaKodeBarang(kodeBarang.value, PIB.value);
+                    }
+                })
+                .then(terimaResult => {
+                    if (terimaResult) {
+                        console.log(konvBeri, konvTerima, terima);
+
+                        if (terima) {
+                            alasan.disabled = false;
+
+                                const primerValue = no_primer3.value.trim();
+                                const sekunderValue = no_sekunder3.value.trim();
+
+                                if (primerValue === 'NULL' && sekunderValue === 'NULL') {
+                                    primer3.disabled = true;
+                                    sekunder3.disabled = true;
+                                    tritier3.disabled = false;
+                                    tritier3.select();
+                                } else if (primerValue === 'NULL' && sekunderValue !== 'NULL') {
+                                    primer3.disabled = true;
+                                    sekunder3.disabled = false;
+                                    sekunder3.select();
+                                } else {
+                                    primer3.select();
+                                }
+                            } else {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'Warning',
+                                    html: `Satuan Pemberi dan Penerima Tidak sama <br> Atau Tidak ada Type tersebut Pada Divisi Penerima`,
+                                    returnFocus: false
+                                }).then(() => {
+                                    kodeType.value = selectedType.IdType.trim();
+                                    namaBarang.value = selectedType.NamaType.trim();
+                                    btn_namaBarang.focus();
+                                });
+                            }
+                        }
+                    })
+                    .catch(function (error) {
+                        console.error('Error occurred:', error);
+                    });
+                }
+            }
+    });
+}
+
 
 function terimaKodeBarang(kodeBarang, PIB) {
     return new Promise((resolve, reject) => {
@@ -1533,7 +1615,7 @@ btn_namaBarang.addEventListener("click", function (e) {
                         return null;
                     })
                     .then(() => {
-                        return loadType(kodeBarang.value, kodeType.value, PIB.value);
+                        return loadType(kodeBarang.value, subkelId.value, PIB.value);
                     })
                     .then(loadTypeResult => {
                         if (loadTypeResult) {
@@ -1785,7 +1867,7 @@ $('#tableData tbody').on('click', 'tr', function () {
                 subkelId.value = response.identityData[0].IdSubkelompok.trim();
                 subkelNama.value = response.identityData[0].NamaSubKelompok.trim();
 
-                loadType(kodeBarang.value, kodeType.value, PIB.value)
+                loadType(kodeBarang.value, subkelId.value, PIB.value)
                     .catch((error) => {
                         console.error('Error in loadType:', error);
                     });

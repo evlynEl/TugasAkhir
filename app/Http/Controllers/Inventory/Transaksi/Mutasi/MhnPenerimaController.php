@@ -54,9 +54,7 @@ class MhnPenerimaController extends Controller
 
         if ($id === 'getUserId') {
             return response()->json(['user' => $user]);
-        }
-
-        else if ($id === 'getDivisi2') {
+        } else if ($id === 'getDivisi2') {
             // mendapatkan daftar divisi penerima
             $divisi = DB::connection('ConnInventory')->select('exec SP_1003_INV_userdivisi @XKdUser = ?', [$user]);
             $data_divisi = [];
@@ -67,9 +65,7 @@ class MhnPenerimaController extends Controller
                 ];
             }
             return datatables($divisi)->make(true);
-        }
-
-        else if ($id === 'getObjek2') {
+        } else if ($id === 'getObjek2') {
             // mendapatkan daftar objek penerima
             $objek = DB::connection('ConnInventory')->select('exec SP_1003_INV_User_Objek @XKdUser = ?, @XIdDivisi = ?', [$user, $divisiId2]);
             $data_objek = [];
@@ -81,9 +77,7 @@ class MhnPenerimaController extends Controller
             }
             // dd($objek, $request->all());
             return datatables($objek)->make(true);
-        }
-
-        else if ($id === 'getKelUt2') {
+        } else if ($id === 'getKelUt2') {
             // mendapatkan daftar kelompok utama penerima
             $kelut = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdObjek_KelompokUtama @XIdObjek_KelompokUtama = ?', [$objekId2]);
             $data_kelut = [];
@@ -94,9 +88,7 @@ class MhnPenerimaController extends Controller
                 ];
             }
             return datatables($kelut)->make(true);
-        }
-
-        else if ($id === 'getKelompok2') {
+        } else if ($id === 'getKelompok2') {
             // mendapatkan daftar kelompok penerima
             $kelompok = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdKelompokUtama_Kelompok @XIdKelompokUtama_Kelompok = ?', [$kelutId2]);
             $data_kelompok = [];
@@ -107,9 +99,7 @@ class MhnPenerimaController extends Controller
                 ];
             }
             return datatables($kelompok)->make(true);
-        }
-
-        else if ($id === 'getSubkel2') {
+        } else if ($id === 'getSubkel2') {
             // mendapatkan daftar sub kelompok penerima
             $subkel = DB::connection('ConnInventory')->select('exec SP_1003_INV_IDKELOMPOK_SUBKELOMPOK @XIdKelompok_SubKelompok = ?', [$kelompokId2]);
             $data_subkel = [];
@@ -120,9 +110,7 @@ class MhnPenerimaController extends Controller
                 ];
             }
             return datatables($subkel)->make(true);
-        }
-
-        else if ($id === 'getDivisi') {
+        } else if ($id === 'getDivisi') {
             // mendapatkan daftar divisi pemberi
             $divisi = DB::connection('ConnInventory')->select('exec SP_1003_INV_UserDivisi_Diminta @XKdUser = ?', [$user]);
             $data_divisi = [];
@@ -133,8 +121,7 @@ class MhnPenerimaController extends Controller
                 ];
             }
             return datatables($divisi)->make(true);
-        }
-        else if ($id === 'getObjek') {
+        } else if ($id === 'getObjek') {
             // mendapatkan daftar objek penerima
             $objek = DB::connection('ConnInventory')->select('exec SP_1003_INV_UserObjek_Diminta @XKdUser = ?, @XIdDivisi = ?', [$user, $divisiId]);
             $data_objek = [];
@@ -146,9 +133,7 @@ class MhnPenerimaController extends Controller
             }
             // dd($objek, $request->all());
             return datatables($objek)->make(true);
-        }
-
-        else if ($id === 'getKelUt') {
+        } else if ($id === 'getKelUt') {
             // mendapatkan daftar kelompok utama penerima
             $kelut = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdObjek_KelompokUtama @XIdObjek_KelompokUtama = ?', [$objekId]);
             $data_kelut = [];
@@ -159,9 +144,7 @@ class MhnPenerimaController extends Controller
                 ];
             }
             return datatables($kelut)->make(true);
-        }
-
-        else if ($id === 'getKelompok') {
+        } else if ($id === 'getKelompok') {
             // mendapatkan daftar kelompok penerima
             $kelompok = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdKelompokUtama_Kelompok @XIdKelompokUtama_Kelompok = ?', [$kelutId]);
             $data_kelompok = [];
@@ -172,9 +155,7 @@ class MhnPenerimaController extends Controller
                 ];
             }
             return datatables($kelompok)->make(true);
-        }
-
-        else if ($id === 'getSubkel') {
+        } else if ($id === 'getSubkel') {
             // mendapatkan daftar sub kelompok penerima
             $subkel = DB::connection('ConnInventory')->select('exec SP_1003_INV_IDKELOMPOK_SUBKELOMPOK @XIdKelompok_SubKelompok = ?', [$kelompokId]);
             $data_subkel = [];
@@ -185,9 +166,7 @@ class MhnPenerimaController extends Controller
                 ];
             }
             return datatables($subkel)->make(true);
-        }
-
-        else if ($id === 'getSubkelType') {
+        } else if ($id === 'getSubkelType') {
             // mendapatkan daftar sub kelompok type
             $subkeltype = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdSubKelompok_Type @XIdSubKelompok_Type = ?', [$subkelId]);
             $data_subkeltype = [];
@@ -199,9 +178,7 @@ class MhnPenerimaController extends Controller
             }
 
             return datatables($subkeltype)->make(true);
-        }
-
-        else if ($id === 'getType') {
+        } else if ($id === 'getType') {
             // get type
             $subkel = DB::connection('ConnInventory')->select('exec SP_1003_INV_NamaType_Type @IdType = ?, @IdSubKel = ?', [$kodeType, $subkelId]);
             $data_subkel = [];
@@ -214,9 +191,7 @@ class MhnPenerimaController extends Controller
             }
             // dd($data_subkel, $request->all());
             return response()->json($data_subkel);
-        }
-
-        else if ($id === 'cekPIB') {
+        } else if ($id === 'cekPIB') {
             $divisiNama2 = $request->input('divisiNama2');
             $subkelNama2 = $request->input('subkelNama2');
 
@@ -226,16 +201,13 @@ class MhnPenerimaController extends Controller
                 return response()->json(['success' => true], 200);
             } else {
                 $warningMessage = 'Lakukan maintenance type sebelum melanjutkan proses mutasi!<br>'
-                                . 'Kode Barang: ' . htmlspecialchars($kodeBarang, ENT_QUOTES, 'UTF-8') . '<br>'
-                                . 'Divisi: ' . htmlspecialchars($divisiNama2, ENT_QUOTES, 'UTF-8') . '<br>'
-                                . 'Sub Kelompok: ' . htmlspecialchars($subkelNama2, ENT_QUOTES, 'UTF-8');
+                    . 'Kode Barang: ' . htmlspecialchars($kodeBarang, ENT_QUOTES, 'UTF-8') . '<br>'
+                    . 'Divisi: ' . htmlspecialchars($divisiNama2, ENT_QUOTES, 'UTF-8') . '<br>'
+                    . 'Sub Kelompok: ' . htmlspecialchars($subkelNama2, ENT_QUOTES, 'UTF-8');
 
                 return response()->json(['warning' => $warningMessage], 200);
             }
-        }
-
-
-        else if ($id === 'cekType') {
+        } else if ($id === 'cekType') {
             // get saldo, satuan & total pengeluaran
             $type = DB::connection('ConnInventory')->select('exec SP_1273_INV_kodebarang_type1 @XKodeBarang = ?, @XIdSubKelompok = ?, @XPIB = ?', [$kodeBarang, $subkelId, $PIB]);
 
@@ -274,9 +246,8 @@ class MhnPenerimaController extends Controller
 
             // dd($request->all(), $response_data);
             return response()->json($response_data);
-        }
 
-        else if ($id === 'kodeBarangTerima') {
+        } else if ($id === 'kodeBarangTerima') {
             // ambil satuan
             $satuan = DB::connection('ConnInventory')->select('exec SP_1003_INV_KodeBarang_Type @XKodeBarang = ?, @XIdSubKelompok = ?, @XPIB = ?', [$kodeBarang, $subkelId2, $PIB]);
 
@@ -291,9 +262,8 @@ class MhnPenerimaController extends Controller
             }
             // dd($request->all(), $data_satuan);
             return response()->json($data_satuan);
-        }
 
-        else if ($id === 'getSelect') {
+        } else if ($id === 'getSelect') {
             // mendapatkan saldo, satuan, pemasukan unk selected data table
             $selectData = DB::connection('ConnInventory')->select('exec SP_1003_INV_TujuanSubKelompok_TmpTransaksi @XIdTransaksi = ?', [$kodeTransaksi]);
             $data_selectData = [];
@@ -331,10 +301,7 @@ class MhnPenerimaController extends Controller
             ];
 
             return response()->json($response_data);
-        }
-
-
-        else if ($id === 'getAllData') {
+        } else if ($id === 'getAllData') {
             // menampilkan semua data di data table
             if (str_contains($objekNama2, 'Sparepart') || $objekNama2 === 'Bahan produksi' || $objekNama2 === 'Bahan Pembantu') {
                 $kode = 11;
@@ -372,10 +339,7 @@ class MhnPenerimaController extends Controller
             }
             // dd($request->all(), $data_allData);
             return response()->json($data_allData);
-        }
-
-
-        else if ($id === 'getData') {
+        } else if ($id === 'getData') {
             // menampilkan pemohon data di data table
             if (str_contains($objekNama2, 'Sparepart') || $objekNama2 === 'Bahan produksi' || $objekNama2 === 'Bahan Pembantu') {
                 $kode = 12;
@@ -414,9 +378,7 @@ class MhnPenerimaController extends Controller
             // dd($request->all());
             // dd($data_justData);
             return response()->json($data_justData);
-        }
-
-        else if ($id === 'getDetailId') {
+        } else if ($id === 'getDetailId') {
             // Get id detail
             $detail = DB::connection('ConnInventory')->select('exec SP_1003_INV_IdType_Type @XIdType = ?', [$kodeType]);
             $data_detail = [];
@@ -447,14 +409,12 @@ class MhnPenerimaController extends Controller
             // dd($request->all(), $response_data);
 
             return response()->json($response_data);
-        }
-
-        else if ($id === 'getListType') {
+        } else if ($id === 'getListType') {
             $tritier3 = $request->input('tritier3');
 
             $saldo = DB::connection('ConnInventory')->select('exec SP_1003_INV_LIST_TYPE @Kode = 1, @IdType = ?', [$kodeType]);
 
-            $data_saldo = array_map(function($item) {
+            $data_saldo = array_map(function ($item) {
                 return ['SaldoTritier' => $item->SaldoTritier];
             }, $saldo);
 
@@ -468,7 +428,7 @@ class MhnPenerimaController extends Controller
                 if ($ada > 0) {
                     $data = DB::connection('ConnInventory')->select('exec SP_1003_INV_LIST_TYPE @Kode = 9, @IdType = ?', [$kodeType]);
 
-                    $arrData = array_map(function($item) {
+                    $arrData = array_map(function ($item) {
                         return [
                             'NoTerima' => $item->NoTerima,
                             'Qty' => $item->Qty,
@@ -521,6 +481,20 @@ class MhnPenerimaController extends Controller
                     return response()->json($response);
                 }
             }
+        } else if ($id === 'cekKodeBarang') {
+            $subkelNama = $request->input('subkelNama');
+
+            // cek kode barang dari input
+            $kode = DB::connection('ConnInventory')->select('exec SP_1003_INV_cekkodebarang_type @XKodeBarang = ?, @XIdSubKelompok = ?', [$kodeBarang, $subkelId]);
+
+            $jumlah = (int)$kode[0]->Jumlah;
+            // dd($jumlah);
+
+            if ($jumlah === 0) {
+                return response()->json(['warning' => 'Tidak Ada Kode Barang : ' . $kodeBarang . '<br> Pada sub kel : ' . $subkelNama], 200);
+            } else {
+                return response()->json(['success' => true], 200);
+            }
         }
     }
 
@@ -558,7 +532,7 @@ class MhnPenerimaController extends Controller
         if ($id === 'proses') {
             // proses terjadi
             if ($a === 1) { // ISI
-                try{
+                try {
                     // insert
                     // proses insert tmprtansaksi
                     if (str_contains($divisiNama, 'Warehouse') && (str_contains($objekNama, 'Gudang teknik') || str_contains($objekNama, 'Persediaan'))) {
@@ -567,31 +541,62 @@ class MhnPenerimaController extends Controller
                             @XIdTypeTransaksi = ?, @XUraianDetailTransaksi = ?, @XSaatawalTransaksi = ?, @XIdType = ?,  @XIdPenerima = ?,
                             @XJumlahKeluarPrimer = ?, @XJumlahKeluarSekunder = ?, @XJumlahKeluarTritier = ?, @XAsalIdSubKelompok = ?,
                             @XTujuanIdSubKelompok = ?, @Harga = ?, @XPIB = ?',
-                            ['02', $uraian, $tanggal, $kodeType, $pemohon,
-                             $primer3, $sekunder3, $tritier3, $subkelId, $subkelId2, $harga, $PIBTrim]
+                            [
+                                '02',
+                                $uraian,
+                                $tanggal,
+                                $kodeType,
+                                $pemohon,
+                                $primer3,
+                                $sekunder3,
+                                $tritier3,
+                                $subkelId,
+                                $subkelId2,
+                                $harga,
+                                $PIBTrim
+                            ]
                         );
-                    }
-
-                    else if (str_contains($objekNama, 'Sparepart')) {
+                    } else if (str_contains($objekNama, 'Sparepart')) {
                         // proses insert tmprtansaksi
                         DB::connection('ConnInventory')->statement(
                             'exec SP_1273_INV_Insert_02_TmpTransaksi
                             @XIdTypeTransaksi = ?, @XUraianDetailTransaksi = ?, @XSaatAwalTransaksi = ?, @XIdType = ?,  @XIdPenerima = ?,
                             @XJumlahKeluarPrimer = ?, @XJumlahKeluarSekunder = ?, @XJumlahKeluarTritier = ?, @XAsalIdSubKelompok = ?,
                             @XTujuanIdSubKelompok = ?, @Harga = ?',
-                            ['02', $uraian, $tanggal, $kodeType, $pemohon,
-                             $primer3, $sekunder3, $tritier3, $subkelId, $subkelId2, $harga]
+                            [
+                                '02',
+                                $uraian,
+                                $tanggal,
+                                $kodeType,
+                                $pemohon,
+                                $primer3,
+                                $sekunder3,
+                                $tritier3,
+                                $subkelId,
+                                $subkelId2,
+                                $harga
+                            ]
                         );
-                    }
-
-                    else {
+                    } else {
                         DB::connection('ConnInventory')->statement(
                             'exec SP_1003_INV_Insert_02_TmpTransaksi
                             @XIdTypeTransaksi = ?, @XUraianDetailTransaksi = ?, @XSaatAwalTransaksi = ?, @XIdType = ?,  @XIdPenerima = ?,
                             @XJumlahKeluarPrimer = ?, @XJumlahKeluarSekunder = ?, @XJumlahKeluarTritier = ?, @XAsalIdSubKelompok = ?,
                             @XTujuanIdSubKelompok = ?, @Harga = ?, @XPIB = ?',
-                            ['02', $uraian, $tanggal, $kodeType, $pemohon,
-                             $primer3, $sekunder3, $tritier3, $subkelId, $subkelId2, $harga, $PIBTrim]
+                            [
+                                '02',
+                                $uraian,
+                                $tanggal,
+                                $kodeType,
+                                $pemohon,
+                                $primer3,
+                                $sekunder3,
+                                $tritier3,
+                                $subkelId,
+                                $subkelId2,
+                                $harga,
+                                $PIBTrim
+                            ]
                         );
                     }
 
@@ -600,9 +605,7 @@ class MhnPenerimaController extends Controller
                 } catch (\Exception $e) {
                     return response()->json(['error' => 'Data Gagal ter-SIMPAN' . $e->getMessage()], 500);
                 }
-            }
-
-            else if ($a === 2) { // KOREKSI
+            } else if ($a === 2) { // KOREKSI
                 try {
                     // dd($request->all());
                     // update

@@ -1334,7 +1334,7 @@ function getSubkelId() {
 
 // fungsi cek kode barang dari inputan
 function cekKodeBarang(kodeBarang) {
-    kodeBarangPadded = '000000000' + kodeBarang.trim();
+    kodeBarangPadded = kodeBarang.value.trim().padStart(9, '0');
     $.ajax({
         type: 'GET',
         url: 'PenyesuaianBarang/cekKodeBarang',
