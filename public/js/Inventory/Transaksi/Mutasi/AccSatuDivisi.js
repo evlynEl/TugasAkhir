@@ -447,7 +447,14 @@ function TampilData() {
                 btn_ok.disabled = true;
             }
             else {
-                btn_ok.focus();
+                Swal.fire({
+                    icon: 'info',
+                    text: 'Tidak ada data yang diterima divisi: ' + decodeHtmlEntities(divisiNama.value),
+                }).then(() => {
+                    var table = $('#tableData').DataTable();
+                    table.clear();
+                    // btn_ok.focus();
+                });
             }
         },
         error: function (xhr, status, error) {

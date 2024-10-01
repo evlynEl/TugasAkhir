@@ -338,7 +338,53 @@ class PermohonanSatuDivisiController extends Controller
             }
             return response()->json($data_subkel);
         }
+        // cek kode
+        else if ($id === 'cekKodeBarang') {
+            $XKodeBarang = $request->input('XKodeBarang');
+            $XIdSubKelompok = $request->input('XIdSubKelompok');
 
+            $divisi = DB::connection('ConnInventory')->select('exec [SP_1003_INV_cekkodebarang_type]
+           @XKodeBarang = ?, @XIdSubKelompok = ?', [$XKodeBarang, $XIdSubKelompok]);
+
+            $data_divisi = [];
+            foreach ($divisi as $detail_divisi) {
+                $data_divisi[] = [
+                    'Jumlah' => $detail_divisi->Jumlah,
+                ];
+            }
+
+            return response()->json($data_divisi);
+        }
+
+        else if ($id === 'loadTypeBarang') {
+            $XKodeBarang = $request->input('XKodeBarang');
+            $XIdSubKelompok = $request->input('XIdSubKelompok');
+            $XPIB = $request->input('XPIB');
+
+            if ($XPIB === null) {
+                $type = DB::connection('ConnInventory')->select('exec SP_1273_INV_kodebarang_type1 @XKodeBarang = ?, @XIdSubKelompok = ?', [$XKodeBarang, $XIdSubKelompok]);
+            } else {
+                $type = DB::connection('ConnInventory')->select('exec SP_1273_INV_kodebarang_type1 @XKodeBarang = ?, @XIdSubKelompok = ?, @XPIB = ?', [$XKodeBarang, $XIdSubKelompok, $XPIB]);
+            }
+
+            $data_type = [];
+            foreach ($type as $detail_type) {
+                $data_type[] = [
+                    'IdType' => $detail_type->IdType,
+                    'NamaType' => $detail_type->NamaType,
+                    'KodeBarang' => $detail_type->KodeBarang,
+                    'SaldoPrimer' => $detail_type->SaldoPrimer,
+                    'SaldoSekunder' => $detail_type->SaldoSekunder,
+                    'SaldoTritier' => $detail_type->SaldoTritier,
+                    'satuan_primer' => $detail_type->satuan_primer,
+                    'satuan_sekunder' => $detail_type->satuan_sekunder,
+                    'satuan_tritier' => $detail_type->satuan_tritier,
+                    'PakaiAturanKonversi' => $detail_type->PakaiAturanKonversi
+                ];
+            }
+
+            return response()->json($data_type);
+        }
         // get saldo 
         else if ($id === 'tampilItem') {
             $XIdTransaksi = $request->input('XIdTransaksi');

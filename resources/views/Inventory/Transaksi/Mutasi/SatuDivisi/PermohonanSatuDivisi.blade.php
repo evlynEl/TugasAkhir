@@ -130,8 +130,7 @@
                                     <input type="text" class="form-control" id="kodeType" name="kodeType" readonly>
                                 </div>
                                 <div class="col-sm-2">
-                                    <input type="text" class="form-control" id="kodeBarang" name="kodeBarang"
-                                        readonly>
+                                    <input type="text" class="form-control" id="kodeBarang" name="kodeBarang">
                                 </div>
                                 <div class="col-sm-1">
                                     <label>PIB</label>

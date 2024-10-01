@@ -362,7 +362,7 @@ class PenyesuaianBarangController extends Controller
             // cek kode barang dari input
             $kode = DB::connection('ConnInventory')->select('exec SP_1003_INV_cekkodebarang_type @XKodeBarang = ?, @XIdSubKelompok = ?', [$kodeBarang, $subkelId]);
 
-            $jumlah = (int)$kode[0]->jumlah;
+            $jumlah = (int)$kode[0]->Jumlah;
 
             if ($jumlah > 0) {
                 return response()->json(['warning' => 'Tidak Ada Kode Barang : ' . $kodeBarang. 'Pada sub kel : '.$subkelId], 200);

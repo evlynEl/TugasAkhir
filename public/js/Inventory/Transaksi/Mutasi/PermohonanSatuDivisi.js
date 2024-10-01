@@ -772,6 +772,186 @@ function Load_Saldo(sIdtype) {
     });
 }
 
+$('#kodeBarang').on('keydown', function (e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        // prosesButton.focus();
+        if (subkelId.value !== '' && kodeBarang.value !== '') {
+            let kdbrg2 = kodeBarang.value.trim();
+            kodeBarang.value = kdbrg2.padStart(9, '0');
+            primer2.disabled = false;
+            sekunder2.disabled = false;
+
+            $.ajax({
+                url: "PermohonanSatuDivisi/cekKodeBarang",
+                type: "GET",
+                data: {
+                    _token: csrfToken,
+                    XKodeBarang: kodeBarang.value,
+                    XIdSubKelompok: subkelId.value
+                },
+                timeout: 30000,
+                success: function (result) {
+                    // console.log();
+                    if (result.length !== 0) {
+                        if (parseInt(result[0].Jumlah) === 0) {
+                            // console.log(result[0]);
+                            Swal.fire({
+                                icon: 'info',
+                                html: 'Tidak Ada Kode Barang : ' + kodeBarang.value + ' Pada sub kel : ' + subkelNama.value,
+                                returnFocus: false
+                            });
+                        }
+
+                        else {
+                            $.ajax({
+                                url: "PermohonanSatuDivisi/loadTypeBarang",
+                                type: "GET",
+                                data: {
+                                    _token: csrfToken,
+                                    XKodeBarang: kodeBarang.value,
+                                    XIdSubKelompok: subkelId.value,
+                                    XPIB: pib.value,
+                                },
+                                timeout: 30000,
+                                success: function (response) {
+                                    if (response.length > 0) {
+                                        let result = response[0];
+
+                                        kodeType.value = result.IdType !== null ? decodeHtmlEntities(result.IdType.trim()) : "-";
+                                        namaBarang.value = result.NamaType !== null ? decodeHtmlEntities(result.NamaType.trim()) : "-";
+                                        kodeBarang.value = decodeHtmlEntities(result.KodeBarang.trim());
+                                        primer.value = result.SaldoPrimer !== null ? formatNumber(result.SaldoPrimer) : "0";
+                                        sekunder.value = result.SaldoSekunder !== null ? formatNumber(result.SaldoSekunder) : "0";
+                                        tritier.value = result.SaldoTritier !== null ? formatNumber(result.SaldoTritier) : "0";
+                                        satuanPrimer.value = result.satuan_primer !== null ? decodeHtmlEntities(result.satuan_primer.trim()) : "";
+                                        satuanSekunder.value = result.satuan_sekunder !== null ? decodeHtmlEntities(result.satuan_sekunder.trim()) : "";
+                                        satuanTritier.value = result.satuan_tritier !== null ? decodeHtmlEntities(result.satuan_tritier.trim()) : "";
+                                        satuanPrimer2.value = result.satuan_primer !== null ? decodeHtmlEntities(result.satuan_primer.trim()) : "";
+                                        satuanSekunder2.value = result.satuan_sekunder !== null ? decodeHtmlEntities(result.satuan_sekunder.trim()) : "";
+                                        satuanTritier2.value = result.satuan_tritier !== null ? decodeHtmlEntities(result.satuan_tritier.trim()) : "";
+
+                                        LoadTypeBarang = true;
+
+                                        if (satuanPrimer.value === 'NULL' && satuanSekunder.value === 'NULL') {
+                                            primer2.disabled = true;
+                                            sekunder2.disabled = true;
+                                        }
+                                        else if (satuanPrimer.value === 'NULL' && satuanSekunder.value !== 'NULL') {
+                                            primer2.disabled = true;
+                                        }
+
+                                        btn_objek2.disabled = false;
+                                        btn_objek2.focus();
+                                    }
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error('AJAX Error:', error);
+                                }
+                            });
+                        }
+                    }
+
+                },
+                error: function (xhr, status, error) {
+                    console.error('AJAX Error:', error);
+                }
+            });
+        }
+    }
+});
+// function fillKodeBarang(tmpKode) {
+//     $.ajax({
+//         url: "PenyesuaianBarang/fillKodeBarang",
+//         type: "GET",
+//         data: {
+//             _token: csrfToken,
+//             kodeBarang: tmpKode,
+//             subkelId: subkelId.value
+//         },
+//         timeout: 30000,
+//         success: function (response) {
+//             if (response.success) {
+//                 cekKodeBarang(tmpKode);
+
+//             } else {
+//                 Swal.fire({
+//                     icon: 'error',
+//                     title: 'Error!',
+//                     html: response,
+//                     returnFocus: false
+//                 });
+//             }
+//         },
+//         error: function (xhr, status, error) {
+//             console.error('AJAX Error:', error);
+//         }
+//     });
+// }
+
+// function cekKodeBarang(tmpKode) {
+//     let kdbrg2 = tmpKode.trim();
+//     kodeBarang.value = kdbrg2.padStart(9, '0');
+//     // tmpKode = 
+//     $.ajax({
+//         type: 'GET',
+//         url: 'PenyesuaianBarang/cekKodeBarang',
+//         data: {
+//             _token: csrfToken,
+//             kodeBarang: kodeBarang.value,
+//             subkelId: subkelId.value
+//         },
+//         success: function (response) {
+//             if (response.length > 0) {
+//                 const result = response[0];
+
+//                 kodeType.value = result.IdType !== null ? decodeHtmlEntities(result.IdType.trim()) : "-";
+//                 namaBarang.value = result.NamaType !== null ? decodeHtmlEntities(result.NamaType.trim()) : "-";
+//                 kodeBarang.value = decodeHtmlEntities(result.KodeBarang.trim());
+//                 primer.value = result.SaldoPrimer !== null ? formatNumber(result.SaldoPrimer) : "0";
+//                 sekunder.value = result.SaldoSekunder !== null ? formatNumber(result.SaldoSekunder) : "0";
+//                 tritier.value = result.SaldoTritier !== null ? formatNumber(result.SaldoTritier) : "0";
+//                 satuanPrimer.value = result.satuan_primer !== null ? decodeHtmlEntities(result.satuan_primer.trim()) : "";
+//                 satuanSekunder.value = result.satuan_sekunder !== null ? decodeHtmlEntities(result.satuan_sekunder.trim()) : "";
+//                 satuanTritier.value = result.satuan_tritier !== null ? decodeHtmlEntities(result.satuan_tritier.trim()) : "";
+//                 satuanPrimer2.value = result.satuan_primer !== null ? decodeHtmlEntities(result.satuan_primer.trim()) : "";
+//                 satuanSekunder2.value = result.satuan_sekunder !== null ? decodeHtmlEntities(result.satuan_sekunder.trim()) : "";
+//                 satuanTritier2.value = result.satuan_tritier !== null ? decodeHtmlEntities(result.satuan_tritier.trim()) : "";
+
+//                 // handleChange();
+//                 // satuanPrimer.addEventListener('change', handleChange);
+//                 // satuanSekunder.addEventListener('change', handleChange);
+//                 // satuanTritier.addEventListener('change', handleChange);
+//                 // satuanPrimer2.addEventListener('change', handleChange);
+//                 // satuanSekunder2.addEventListener('change', handleChange);
+//                 // satuanTritier2.addEventListener('change', handleChange);
+
+//                 // alasan.focus();
+//             }
+//         },
+//         error: function (xhr, status, error) {
+//             console.error('Error:', error);
+//         }
+//     });
+
+// }
+
+// function handleChange() {
+//     primerValue = no_primer.value.trim();
+//     sekunderValue = no_sekunder.value.trim();
+//     tritierValue = no_tritier.value.trim();
+
+//     if (primerValue === 'NULL' && sekunderValue === 'NULL') {
+//         primer2.disabled = true;
+//         sekunder2.disabled = true;
+//         tritier2.select();
+//     } else if (primerValue === 'NULL' && sekunderValue !== 'NULL') {
+//         primer2.disabled = true;
+//         // sekunder2.disabled = false;
+//         // sekunder2.select();
+//     }
+// }
+
 var loadPenerima;
 
 function LoadPenerima() {

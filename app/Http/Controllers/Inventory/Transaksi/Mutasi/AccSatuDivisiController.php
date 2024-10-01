@@ -168,7 +168,7 @@ class AccSatuDivisiController extends Controller
             foreach ($divisi as $detail_divisi) {
                 $data_divisi[] = [
                     'jumlah' => $detail_divisi->jumlah,
-                    'IdType' => $detail_divisi->IdType,
+                    // 'IdType' => $detail_divisi->IdType,
                 ];
             }
 
