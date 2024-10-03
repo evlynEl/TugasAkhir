@@ -113,7 +113,7 @@ $(document).ready(function () {
         autoWidth: false,
         scrollX: '100%',
         columnDefs: [{ targets: [0], width: '50%', className: 'fixed-width' },
-        { targets: [1], width: '50%', className: 'fixed-width'}]
+        { targets: [1], width: '50%', className: 'fixed-width' }]
     });
 
     $('#tableAsal').DataTable({
@@ -167,7 +167,7 @@ $(document).ready(function () {
         { targets: [4], width: '8%', className: 'fixed-width' },
         { targets: [5], width: '8%', className: 'fixed-width' },
         { targets: [6], width: '8%', className: 'fixed-width' },
-        { targets: [7], width: '8%', className: 'fixed-width'}]
+        { targets: [7], width: '8%', className: 'fixed-width' }]
     });
 
     $('#tableTujuan').DataTable({
@@ -221,7 +221,7 @@ $(document).ready(function () {
         { targets: [4], width: '8%', className: 'fixed-width' },
         { targets: [5], width: '8%', className: 'fixed-width' },
         { targets: [6], width: '8%', className: 'fixed-width' },
-        { targets: [7], width: '8%', className: 'fixed-width'}]
+        { targets: [7], width: '8%', className: 'fixed-width' }]
     });
 
     primerKonversiAsal.value = 0;
@@ -1590,7 +1590,7 @@ btnNamaType.addEventListener("click", function (e) {
     }
 });
 
-
+var asalAtauTujuan = document.getElementById('asalAtauTujuan');
 btnIsiAsal.addEventListener("click", function (e) {
 
     StKonversi = 1;
@@ -1614,7 +1614,9 @@ btnIsiAsal.addEventListener("click", function (e) {
             $('#modalAsalKonversi').modal('show');
             $('#modalAsalKonversi').on('shown.bs.modal', function () {
                 btn_objek.focus();
+                asalAtauTujuan.innerHTML = 'Asal Konversi';
                 $('.kodeTujuan').hide();
+                $('.kodeAsal').show();
             });
         }
         else if (result.dismiss === Swal.DismissReason.backdrop) {
@@ -1652,7 +1654,9 @@ btnIsiAsal.addEventListener("click", function (e) {
                     $('#modalAsalKonversi').modal('show');
                     $('#modalAsalKonversi').on('shown.bs.modal', function () {
                         btn_objek.focus();
+                asalAtauTujuan.innerHTML = 'Asal Konversi';
                         $('.kodeTujuan').hide();
+                        $('.kodeAsal').show();
                     });
                 });
             }
@@ -1712,6 +1716,7 @@ btnIsiTujuan.addEventListener("click", function (e) {
             $('#modalAsalKonversi').modal('show');
             $('#modalAsalKonversi').on('shown.bs.modal', function () {
                 btn_objek.focus();
+                asalAtauTujuan.innerHTML = 'Tujuan Konversi';
                 $('.kodeTujuan').show();
                 $('.kodeAsal').hide();
             });
@@ -1791,7 +1796,9 @@ btnKoreksiAsal.addEventListener("click", function (e) {
         $('#modalAsalKonversi').modal('show');
 
         $('#modalAsalKonversi').on('shown.bs.modal', function () {
+            asalAtauTujuan.innerHTML = 'Asal Konversi';
             $('.kodeTujuan').hide();
+            $('.kodeAsal').show();
             $('#primerKonversiAsal').focus();
         });
 
@@ -1868,7 +1875,9 @@ btnKoreksiTujuan.addEventListener("click", function (e) {
         $('#modalAsalKonversi').modal('show');
 
         $('#modalAsalKonversi').on('shown.bs.modal', function () {
-            $('.kodeTujuan').hide();
+            asalAtauTujuan.innerHTML = 'Tujuan Konversi';
+            $('.kodeAsal').hide();
+            $('.kodeTujuan').show();
             $('#primerKonversiAsal').focus();
         });
 
@@ -1945,7 +1954,10 @@ btnHapusAsal.addEventListener("click", function (e) {
         $('#modalAsalKonversi').modal('show');
 
         $('#modalAsalKonversi').on('shown.bs.modal', function () {
+            asalAtauTujuan.innerHTML = 'Asal Konversi';
+
             $('.kodeTujuan').hide();
+            $('.kodeAsal').show();
             btn_prosesAsal.disabled = false;
             btn_prosesAsal.focus();
         });
@@ -2025,7 +2037,9 @@ btnHapusTujuan.addEventListener("click", function (e) {
         $('#modalAsalKonversi').modal('show');
 
         $('#modalAsalKonversi').on('shown.bs.modal', function () {
-            $('.kodeTujuan').hide();
+            asalAtauTujuan.innerHTML = 'Tujuan Konversi';
+            $('.kodeAsal').hide();
+            $('.kodeTujuan').show();
             btn_prosesAsal.disabled = false;
             btn_prosesAsal.focus();
         });
