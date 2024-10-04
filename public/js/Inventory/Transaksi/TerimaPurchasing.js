@@ -8,6 +8,7 @@ var btn_objek = document.getElementById("btn_objek");
 var btn_kelompok = document.getElementById("btn_kelompok");
 var btn_kelut = document.getElementById("btn_kelut");
 var btn_subkel = document.getElementById("btn_subkel");
+var keterangan = document.getElementById("keterangan");
 
 // Divisi section
 var divisiNama = document.getElementById("divisiNama");
@@ -232,6 +233,26 @@ function selectRow($row) {
                         console.error('Error:', error);
                     }
                 });
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
+
+    $.ajax({
+        type: 'GET',
+        url: 'TerimaPurchasing/getKeterangan',
+        data: {
+            kodeTrans: kodeTransaksi.value,
+            // KodeBarang: kodeBarang.value,
+            _token: csrfToken
+        },
+        success: function (result) {
+            // console.log(result);
+            
+            if (result.length !== 0) {
+                keterangan.value = result[0].UraianDetailTransaksi ? decodeHtmlEntities(result[0].UraianDetailTransaksi) : ''
             }
         },
         error: function (xhr, status, error) {

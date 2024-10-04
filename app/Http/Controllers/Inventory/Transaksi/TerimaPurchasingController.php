@@ -166,6 +166,25 @@ class TerimaPurchasingController extends Controller
             return response()->json($data_objek);
         }
 
+        // get id detail
+        else if ($id === 'getKeterangan') {
+            $kodeTrans = $request->input('kodeTrans');
+
+            $objek = DB::connection('ConnInventory')
+                ->table('tmp_transaksi')
+                ->where('IdTransaksi', $kodeTrans)
+                ->get('UraianDetailTransaksi');
+            // dd($objek);
+            $data_objek = [];
+            foreach ($objek as $detail_objek) {
+                $data_objek[] = [
+                    'UraianDetailTransaksi' => $detail_objek->UraianDetailTransaksi,
+                ]
+                ;
+            }
+            return response()->json($data_objek);
+        }
+
         // get nama detail
         else if ($id === 'getDetailNama') {
             $IdObjek = $request->input('IdObjek');
