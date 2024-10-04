@@ -368,12 +368,12 @@ btn_divisi.addEventListener("click", function (e) {
                     divisiId.value = result.value.IdDivisi.trim();
                     divisiNama.value = decodeHtmlEntities(result.value.NamaDivisi.trim());
 
-                    btn_isi.focus();
-                    uraian.disabled = false;
-
-                    if (a !== null) {
+                    if (a !== undefined) {
                         btn_objek.disabled = false;
                         btn_objek.focus();
+                    } else {
+                        btn_isi.focus();
+                        uraian.disabled = false;
                     }
                 }
             });

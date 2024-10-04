@@ -64,7 +64,6 @@ var btn_objek2 = document.getElementById('btn_objek2');
 var btn_kelompok2 = document.getElementById('btn_kelompok2');
 var btn_kelut2 = document.getElementById('btn_kelut2');
 var btn_subkel2 = document.getElementById('btn_subkel2');
-var btn_kodeType = document.getElementById('btn_kodeType');
 
 var btn_namaBarang = document.getElementById('btn_namaBarang');
 var btn_isi = document.getElementById('btn_isi');

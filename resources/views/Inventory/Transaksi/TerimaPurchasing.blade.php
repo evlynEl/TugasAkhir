@@ -188,6 +188,15 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row mt-1 pb-2">
+                                <div class="col-sm-2">
+                                    <label for="keterangan">Keterangan Pembelian</label>
+                                </div>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="keterangan" name="keterangan"
+                                        readonly>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="col-sm-12">
