@@ -1947,13 +1947,14 @@ async function simpan_isi() {
     try {
         await cekKodeBarang();
 
-        cekPr = primer3.value + primer2.value;
-        cekSek = sekunder3.value + sekunder2.value;
-        cekTr = tritier3.value + tritier2.value;
+        cekPr = Number(primer3.value) + Number(primer2.value);
+        cekSek = Number(sekunder3.value) + Number(sekunder2.value);
+        const cekTr = Number(tritier3.value) + Number(tritier2.value);
+
 
         console.log('primer: ', primer.value, cekPr);
         console.log('sekunder: ', sekunder.value, cekSek);
-        console.log('tritier: ', tritier.value, cekTr);
+        console.log('tritier: ', tritier.value, cekTr, tritier3.value, tritier2.value);
 
         console.log('beri: ', konvBeri, 'terima: ', konvTerima);
 
