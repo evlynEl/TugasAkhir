@@ -84,9 +84,9 @@ class KeluarBarangUntukPenjualanController extends Controller
                     'IdTransaksi' => $detail_divisi->IdTransaksi, // dbo.Tmp_Transaksi.IdTransaksi
                     'IdType' => $detail_divisi->IdType, // dbo.Tmp_Transaksi.IdType
                     'NamaType' => $detail_divisi->NamaType, // dbo.Type.NamaType
-                    'Primer' => $detail_divisi->JumlahPengeluaranPrimer, // dbo.Tmp_Transaksi.JumlahPengeluaranPrimer
-                    'Sekunder' => $detail_divisi->JumlahPengeluaranSekunder, // dbo.Tmp_Transaksi.JumlahPengeluaranSekunder
-                    'Tritier' => $detail_divisi->JumlahPengeluaranTritier, // dbo.Tmp_Transaksi.JumlahPengeluaranTritier
+                    'Primer' => $detail_divisi->Primer, // dbo.Tmp_Transaksi.JumlahPengeluaranPrimer
+                    'Sekunder' => $detail_divisi->Sekunder, // dbo.Tmp_Transaksi.JumlahPengeluaranSekunder
+                    'Tritier' => $detail_divisi->Tritier, // dbo.Tmp_Transaksi.JumlahPengeluaranTritier
                     'satuanPrimer' => $detail_divisi->satuanPrimer, // SatuanPrimer.nama_satuan
                     'satuanSekunder' => $detail_divisi->satuanSekunder, // SatuanSekunder.nama_satuan
                     'SatuanTritier' => $detail_divisi->SatuanTritier, // SatuanTritier.nama_satuan

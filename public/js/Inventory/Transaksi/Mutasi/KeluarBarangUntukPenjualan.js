@@ -150,12 +150,12 @@ $('#tableData tbody').on('click', 'tr', function () {
 
     Tampil_Data(sIdTrans);
 
-    transaksi.value = decodeHtmlEntities(data[1]);
-    kode.value = decodeHtmlEntities(data[6]);
-    type.value = decodeHtmlEntities(data[2]);
-    primer.value = formatNumber(data[3]);
-    sekunder.value = formatNumber(data[4]);
-    triter.value = formatNumber(data[5]);
+    // transaksi.value = decodeHtmlEntities(data[1]);
+    // kode.value = decodeHtmlEntities(data[6]);
+    // type.value = decodeHtmlEntities(data[2]);
+    // primer.value = formatNumber(data[3]);
+    // sekunder.value = formatNumber(data[4]);
+    // triter.value = formatNumber(data[5]);
 });
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -266,7 +266,7 @@ function proses() {
             JumlahKeluartritier: tritier1.value,
             JumlahKonversi: decodeHtmlEntities(konversi.value),
         },
-        success: function (result) {
+        success: function (response) {
             if (response.success) {
                 Swal.fire({
                     icon: 'success',
@@ -409,7 +409,7 @@ $('#sekunder1').on('keydown', function (e) {
 $('#tritier1').on('keydown', function (e) {
     if (e.key === 'Enter') {
         e.preventDefault();
-        if (!konversi.disabled) {
+        if (konversi.disabled === true) {
             konversi.focus();
         }
         else {
