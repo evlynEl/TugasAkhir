@@ -240,10 +240,8 @@ btnProses.addEventListener("click", function (e) {
 
     if ((satPrimer.value.trim() !== "NULL" && parseFloat(primer1.value) > 0) ||
         (satPrimer.value.trim() === "NULL" && parseFloat(primer1.value) === 0)) {
-
         if ((satSekunder.value.trim() !== "NULL" && parseFloat(sekunder1.value) > 0) ||
             (satSekunder.value.trim() === "NULL" && parseFloat(sekunder1.value) === 0)) {
-
             if ((satTritier.value.trim() !== "NULL" && parseFloat(tritier1.value) > 0) ||
                 (satTritier.value.trim() === "NULL" && parseFloat(tritier1.value) === 0)) {
                 Cek_Sesuai_Pemberi(transaksi.value);
@@ -254,13 +252,13 @@ btnProses.addEventListener("click", function (e) {
 
 });
 
-function proses() {
+function proses(sIdTrans) {
     $.ajax({
         type: 'PUT',
         url: 'AccKeluarPenjualan/proses',
         data: {
             _token: csrfToken,
-            IDtransaksi: sIdtrans,
+            IDtransaksi: sIdTrans,
             JumlahKeluarPrimer: primer1.value,
             JumlahKeluarSekunder: sekunder1.value,
             JumlahKeluartritier: tritier1.value,
@@ -286,6 +284,7 @@ function proses() {
 }
 
 function Cek_Sesuai_Pemberi(sIdtrans) {
+
     $.ajax({
         type: 'GET',
         url: 'AccKeluarPenjualan/cekSesuaiPemberi',
@@ -302,7 +301,7 @@ function Cek_Sesuai_Pemberi(sIdtrans) {
                 });
             }
             else {
-                proses();
+                proses(sIdtrans);
             }
         },
         error: function (xhr, status, error) {

@@ -147,7 +147,7 @@ class KeluarBarangUntukPenjualanController extends Controller
                 @IDPemberi = ?,
                 @JumlahKeluarPrimer = ?,
                 @JumlahKeluarSekunder = ?,
-                @JumlahKeluartritier = ?,
+                @JumlahKeluarTritier = ?,
                 @JumlahKonversi = ?
                 ', [
                         $IDtransaksi,
