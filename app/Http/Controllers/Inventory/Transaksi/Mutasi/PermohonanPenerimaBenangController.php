@@ -45,6 +45,7 @@ class PermohonanPenerimaBenangController extends Controller
 
         if ($id === 'getUserId') {
             return response()->json(['user' => $user]);
+            
         } else if ($id === 'getData') {
             // menampilkan data di data table
             $justData = DB::connection('ConnInventory')->select('

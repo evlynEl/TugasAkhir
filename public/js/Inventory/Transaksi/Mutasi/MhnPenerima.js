@@ -1639,6 +1639,7 @@ btn_namaBarang.addEventListener("click", function (e) {
                                 } else if (primerValue === 'NULL' && sekunderValue !== 'NULL') {
                                     primer3.disabled = true;
                                     sekunder3.disabled = false;
+                                    tritier3.disabled = false;
                                     sekunder3.select();
                                 } else {
                                     primer3.select();

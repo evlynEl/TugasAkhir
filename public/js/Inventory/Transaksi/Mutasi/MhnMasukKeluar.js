@@ -818,6 +818,7 @@ function handleTypeSelection() {
     if ((divisiId.value === 'ABM' && objekId.value === '022') || (divisiId.value === 'CIR' && objekId.value === '043') ||
         (divisiId.value === 'JBB' && objekId.value === '042') || (divisiId.value === 'EXT' && ((objekId.value === '1259' || objekId.value === '1283')))) {
         if (divisiId.value === 'ABM' && objekId.value === '022' && kelompokId.value !== '0292') {
+
             if (divisiId.value !== '') {
                 try {
                     Swal.fire({
@@ -1146,6 +1147,150 @@ function handleTypeSelection() {
     }
 }
 
+primer2.addEventListener("keypress", function (event) {
+    if (event.key === "Enter") {
+        if (numeral(primer2.value).value() > numeral(primer.value).value() && keluar.checked) {
+            Swal.fire({
+                icon: 'error',
+                text: 'Saldo Primer Tinggal: ' + numeral(numeral(primer.value).value()).format("0,0.00"),
+                returnFocus: false
+            }).then(() => {
+                primer2.focus();
+            });
+        } else {
+            sekunder2.focus();
+        }
+    }
+});
+
+sekunder2.addEventListener("keypress", function (event) {
+    if (event.key === "Enter") {
+        if (numeral(sekunder2.value).value() > numeral(sekunder.value).value() && keluar.checked) {
+            Swal.fire({
+                icon: 'error',
+                text: 'Saldo Sekunder Tinggal: ' + numeral(numeral(sekunder.value).value()).format("0,0.00"),
+                returnFocus: false
+            }).then(() => {
+                sekunder2.focus();
+            });
+        } else {
+            tritier2.focus();
+        }
+    }
+});
+
+tritier2.addEventListener("keypress", function (event) {
+    if (event.key === "Enter") {
+        if ((divisiId.value === 'ABM' && objekId.value === '022') || (divisiId.value === 'CIR' && objekId.value === '043') ||
+        (divisiId.value === 'JBB' && objekId.value === '042') || (divisiId.value === 'EXT' && ((objekId.value === '1259' || objekId.value === '1283')))) {
+            if (numeral(tritier2.value).value() > numeral(tritier.value).value() && keluar.checked) {
+                Swal.fire({
+                    icon: 'error',
+                    text: 'Saldo Tritier Tinggal : ' + numeral(numeral(tritier.value).value()).format("0,0.00"),
+                    returnFocus: false
+                }).then(() => {
+                    tritier2.focus();
+                });
+
+            } else {
+                if (a === 1) {
+                    sekunder2.value = Hitung_Hsl_Mtr() * parseFloat(tritier3.value);
+                    btn_proses.focus();
+                } else if (a === 2) {
+                    sekunder2.value = Hitung_Hsl_Mtr_koreksi() * parseFloat(tritier3.value);
+                    btn_proses.focus();
+                }
+            }
+        }
+
+        else {
+            if (numeral(tritier2.value).value() > numeral(tritier.value).value() && keluar.checked) {
+                Swal.fire({
+                    icon: 'error',
+                    text: 'Saldo Tritier Tinggal : ' + numeral(numeral(tritier.value).value()).format("0,0.00"),
+                    returnFocus: false
+                }).then(() => {
+                    tritier2.focus();
+                });
+
+            } else {
+                if (a === 1) {
+                    btn_proses.focus();
+                } else if (a === 2) {
+                    btn_proses.focus();
+                }
+            }
+        }
+    }
+});
+
+function Hitung_Hsl_Mtr() {
+    let jum = 0;
+    let lebar = 0, waft = 0, weft = 0, denier = 0;
+
+    for (let i = 0; i < namaBarang.value.trim().length; i++) {
+        if (namaBarang.value.charAt(i) === '/') {
+            jum++;
+            switch (jum) {
+                case 1:
+                    lebar = parseFloat(namaBarang.value.substr(i + 1, 6));
+                    break;
+                case 2:
+                    waft = parseFloat(namaBarang.value.substr(i + 1, 5));
+                    weft = parseFloat(namaBarang.value.substr(i + 9, 5));
+                    break;
+                case 3:
+                    denier = parseFloat(namaBarang.value.substr(i + 1, 5));
+                    break;
+            }
+        }
+    }
+
+    let hitungHslMtr;
+
+    if (subkelId.value === "0629" || subkelId.value === "0633" || subkelNama.value.startsWith("KAIN") || subkelNama.value.startsWith("KAIN NO LAMI")) {
+        hitungHslMtr = (10 / (lebar / 2)) / ((waft + weft) / 20) / (denier * 2 / 2000) / 0.0175;
+    } else {
+        hitungHslMtr = (10 / lebar) / ((waft + weft) / 20) / (denier * 2 / 2000) / 0.0175;
+    }
+
+    return hitungHslMtr;
+}
+
+function Hitung_Hsl_Mtr_koreksi() {
+    let jum = 0;
+    let lebar = 0, waft = 0, weft = 0, denier = 0;
+
+    for (let i = 0; i < data[1].trim().length; i++) {
+        if (data[1].value.charAt(i) === '/') {
+            jum++;
+            switch (jum) {
+                case 1:
+                    lebar = parseFloat(data[1].substr(i + 1, 6));
+                    break;
+                case 2:
+                    waft = parseFloat(data[1].substr(i + 1, 5));
+                    weft = parseFloat(data[1].substr(i + 9, 5));
+                    break;
+                case 3:
+                    denier = parseFloat(data[1].substr(i + 1, 5));
+                    break;
+            }
+        }
+    }
+
+    let hitungHslMtrKoreksi;
+
+    if (subkelId.value === "0629" || subkelId.value === "0633" || subkelNama.value.startsWith("KAIN") || subkelNama.value.startsWith("KAIN NO LAMI")) {
+        hitungHslMtrKoreksi = (10 / (lebar / 2)) / ((waft + weft) / 20) / (denier * 2 / 2000) / 0.0175;
+    } else {
+        hitungHslMtrKoreksi = (10 / lebar) / ((waft + weft) / 20) / (denier * 2 / 2000) / 0.0175;
+    }
+
+    return hitungHslMtrKoreksi;
+}
+
+
 // fungsi unk dapatkan saldo primer, sekunder, tritier
 function getSaldo(kodeType) {
     $.ajax({
@@ -1236,7 +1381,6 @@ function updateDataTable(data) {
             );
         }
 
-        // Add common fields
         rowData.push(
             escapeHtml(item.idtype.trim()),
             escapeHtml(item.UraianDetailTransaksi.trim()),
@@ -1258,6 +1402,9 @@ function updateDataTable(data) {
         );
 
         table.row.add(rowData);
+
+        // console.log(rowData);
+
     });
 
     table.draw();
@@ -1325,6 +1472,8 @@ function showTable() {
             uraian: uraian.value
         },
         success: function (result) {
+            console.log('tampil tabel', result);
+
             updateDataTable(result);
         },
         error: function (xhr, status, error) {
@@ -1396,7 +1545,6 @@ btn_proses.addEventListener("click", function (e) {
             }
         });
     } else {
-
         $.ajax({
             type: 'PUT',
             url: 'MhnMasukKeluar/proses',

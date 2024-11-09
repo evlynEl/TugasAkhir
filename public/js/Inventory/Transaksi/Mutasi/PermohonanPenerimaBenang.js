@@ -518,6 +518,8 @@ function cekPenerima(Yidtransaksi, kodeBarang) {
                 kodeBarang: kodeBarang
             },
             success: function (response) {
+                console.log(response);
+
                 jumlah = parseFloat(response[0].jumlah.trim());
                 YidTypePenerima = response[0].IdType.trim();
 
@@ -787,15 +789,17 @@ btn_proses.addEventListener('click', function () {
                             showTable();
                         }
                     });
-                } else if (!ada) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Warning!',
-                        text: 'Tidak Ada Data Yang DiTerima!!!!....., Untuk Menerima Barang pilih data pada tabel tersedia ',
-                        returnFocus: false
-                    }).then(() => {
-                        return;
-                    });
+                } else {
+                    if (!ada) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Warning!',
+                            text: 'Tidak Ada Data Yang DiTerima!!!!....., Untuk Menerima Barang pilih data pada tabel tersedia ',
+                            returnFocus: false
+                        }).then(() => {
+                            return;
+                        });
+                    }
                 }
             } else {
                 Swal.fire({
