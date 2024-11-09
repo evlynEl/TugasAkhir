@@ -987,6 +987,7 @@ function Load_Type_ABM(sFld_1, sFld_2) {
                 namaTypeAsal.value = decodeHtmlEntities(result5);
 
                 Get_Type(kodeTypeAsal.value, subkelIdAsal.value);
+                getKodeBarang(kodeTypeAsal.value);
             }
         });
     } catch (error) {
@@ -1086,6 +1087,7 @@ function Load_Type_CIR(sFld_1, sFld_2) {
                 namaTypeAsal.value = decodeHtmlEntities(result6);
 
                 Get_Type(kodeTypeAsal.value, subkelIdAsal.value);
+                getKodeBarang(kodeTypeAsal.value);
             }
         });
     } catch (error) {
@@ -1274,6 +1276,7 @@ function buttonIdTypeClick() {
                     namaTypeAsal.value = decodeHtmlEntities(result.value.NamaType.trim());
 
                     Get_Saldo(kodeTypeAsal.value);
+                    getKodeBarang(kodeTypeAsal.value);
                 }
             });
         } catch (error) {
@@ -1398,6 +1401,7 @@ function buttonIdTypeClick2() {
                     namaTypeAsal.value = decodeHtmlEntities(result.value.NamaType.trim());
 
                     Get_Saldo(kodeTypeTujuan.value);
+                    getKodeBarang(kodeTypeTujuan.value);
                 }
             });
         } catch (error) {
@@ -1405,6 +1409,24 @@ function buttonIdTypeClick2() {
         }
     }
     primerKonversiAsal.focus();
+}
+
+function getKodeBarang(sType) {
+    $.ajax({
+        type: 'GET',
+        url: 'KonversiBarang/getKdBrgByType',
+        data: {
+            sTypeVal: sType,
+            _token: csrfToken
+        },
+        success: function (result) {
+            console.log(result);
+            kodeBarangAsal.value = result.KodeBarang.trim();
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
 }
 
 function only_BKL() {
@@ -1491,6 +1513,7 @@ function only_BKL() {
                 kodeTypeTujuan.value = decodeHtmlEntities(result.value.IdType.trim());
                 namaTypeAsal.value = decodeHtmlEntities(result.value.NamaType.trim());
                 primerKonversiAsal.focus();
+                getKodeBarang(kodeTypeTujuan.value);
             }
         });
     } catch (error) {
@@ -1583,6 +1606,7 @@ btnNamaType.addEventListener("click", function (e) {
                 namaTypeAsal.value = decodeHtmlEntities(result.value.NamaType.trim());
 
                 Get_Saldo(kodeTypeAsal.value);
+                getKodeBarang(kodeTypeAsal.value);
             }
         });
     } catch (error) {
@@ -1654,7 +1678,7 @@ btnIsiAsal.addEventListener("click", function (e) {
                     $('#modalAsalKonversi').modal('show');
                     $('#modalAsalKonversi').on('shown.bs.modal', function () {
                         btn_objek.focus();
-                asalAtauTujuan.innerHTML = 'Asal Konversi';
+                        asalAtauTujuan.innerHTML = 'Asal Konversi';
                         $('.kodeTujuan').hide();
                         $('.kodeAsal').show();
                     });

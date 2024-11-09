@@ -256,6 +256,20 @@ class KonversiBarangController extends Controller
             return response()->json($data_divisi);
         }
 
+        // get kode konversi
+        else if ($id === 'getKdBrgByType') {
+            $sTypeVal = $request->input('sTypeVal');
+
+            $divisiConn = DB::connection('ConnInventory')
+            ->table('Type')
+            ->select('KodeBarang')
+            ->where('IdType', $sTypeVal)
+            ->first();
+
+            // dd($divisiConn);
+            return response()->json($divisiConn);
+        }
+
         // get data asal
         else if ($id === 'loadAllDataAsal') {
             $XIdDivisi = $request->input('XIdDivisi');

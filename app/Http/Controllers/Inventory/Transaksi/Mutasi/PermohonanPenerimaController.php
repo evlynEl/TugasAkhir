@@ -60,8 +60,7 @@ class PermohonanPenerimaController extends Controller
             return datatables($objek)->make(true);
 
             // mendapatkan daftar kelompok utama
-        }
-        else if ($id === 'getSelect') {
+        } else if ($id === 'getSelect') {
             // mendapatkan saldo, satuan, pemasukan unk selected data table
             $kodeTransaksi = $request->input('kodeTransaksi');
 
@@ -103,6 +102,11 @@ class PermohonanPenerimaController extends Controller
             }
 
             return response()->json($data_divisi);
+        }
+
+        // pemberi
+        else if ($id === 'getUserId') {
+            return response()->json($user);
         }
 
         // cek Penerima

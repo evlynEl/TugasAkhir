@@ -267,17 +267,13 @@ function getUserId() {
             _token: csrfToken
         },
         success: function (result) {
-            user.value = result.user.trim();
+            user.value = result.trim();
         },
         error: function (xhr, status, error) {
             console.error('Error:', error);
         }
     });
 }
-
-$(document).ready(function () {
-    getUserId();
-});
 
 // Function to check 'Cek_Sesuai_Pemberi'
 async function Cek_Sesuai_Pemberi(sIdtrans) {
@@ -415,7 +411,7 @@ btn_proses.addEventListener('click', async function () {
     }
 });
 
-function clearInputs(){
+function clearInputs() {
     kelutNama.value = '';
     kelompokNama.value = '';
     subkelNama.value = '';
@@ -679,7 +675,7 @@ $(document).ready(function () {
         { targets: [8], width: '12%', className: 'fixed-width' },
         { targets: [9], width: '12%', className: 'fixed-width' },
         { targets: [10], width: '12%', className: 'fixed-width' },
-        { targets: [11], width: '12%', className: 'fixed-width'}
-    ]
+        { targets: [11], width: '12%', className: 'fixed-width' }
+        ]
     });
 });
