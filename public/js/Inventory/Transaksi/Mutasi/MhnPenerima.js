@@ -2055,6 +2055,8 @@ function pengecekkan() {
             return;
         }
         if (subkelId2.value === subkelId.value) {
+            console.log(subkelId2.value, subkelId.value);
+
             Swal.fire({
                 icon: 'warning',
                 title: 'ASAL SubKelompok dan TUJUAN SubKelompok SAMA, TIDAK DAPAT DIPROSES !!',
