@@ -359,7 +359,7 @@ btn_proses.addEventListener('click', async function () {
         if (isPenerimaValid) {
             $.ajax({
                 type: 'PUT',
-                url: 'PermohonanPenerimaBenang/proses',
+                url: 'PermohonanPenerima/proses',
                 data: {
                     _token: csrfToken,
                     Yidtransaksi: Yidtransaksi,
