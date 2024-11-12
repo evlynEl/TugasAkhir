@@ -120,35 +120,42 @@ class PermohonanPenerimaBenangController extends Controller
             // Return the structured data as JSON
             return response()->json($data_pemberi);
         } else if ($id === 'getPenerima') {
-            // $penerima = DB::connection('ConnInventory')->select('exec SP_1003_INV_check_penyesuaian_penerima @Idtransaksi = ?, @idtypetransaksi = ?, @kodeBarang = ?', [$Yidtransaksi, '06', $kodeBarang]);
+            $penerima = DB::connection('ConnInventory')->select('exec SP_1003_INV_check_penyesuaian_penerima @idtransaksi = ?, @idtypetransaksi = 06, @KodeBarang = ?', [$Yidtransaksi, $kodeBarang]);
+            $data_penerima = [];
+            foreach ($penerima as $detail_penerima) {
+                $data_penerima[] = [
+                    'IdType' => $detail_penerima->IdType,
+                    'jumlah' => $detail_penerima->jumlah
+                ];
+            }
 
-            $subkel = DB::connection('ConnInventory')->table('Tmp_Transaksi')
-                ->where('idtransaksi', $Yidtransaksi)
-                ->value('tujuanidsubkelompok');
+            // $subkel = DB::connection('ConnInventory')->table('Tmp_Transaksi')
+            //     ->where('idtransaksi', $Yidtransaksi)
+            //     ->value('tujuanidsubkelompok');
 
-            $idtype = DB::connection('ConnInventory')->table('Type')
-                ->where('kodebarang', $kodeBarang)
-                ->where('IdSubkelompok_type', $subkel)
-                ->where('NonAktif', 'Y')
-                ->value('IdType');
+            // $idtype = DB::connection('ConnInventory')->table('Type')
+            //     ->where('kodebarang', $kodeBarang)
+            //     ->where('IdSubkelompok_type', $subkel)
+            //     ->where('NonAktif', 'Y')
+            //     ->value('IdType');
 
-            $exists = DB::connection('ConnInventory')->table('Transaksi')
-                ->whereNull('SaatLog')
-                ->where('idtype', $idtype)
-                ->where('IdTypeTransaksi', '06')
-                ->exists();
+            // $exists = DB::connection('ConnInventory')->table('Transaksi')
+            //     ->whereNull('SaatLog')
+            //     ->where('idtype', $idtype)
+            //     ->where('IdTypeTransaksi', '06')
+            //     ->exists();
 
-            $jumlah = $exists ? 1 : 0;
+            // $jumlah = $exists ? 1 : 0;
 
-            $result = [
-                'IdType' => $idtype,
-                'jumlah' => $jumlah,
-            ];
+            // $result = [
+            //     'IdType' => $idtype,
+            //     'jumlah' => $jumlah,
+            // ];
 
-            dd($subkel, $idtype, $result, $request->all());
+            // dd($subkel, $idtype, $result, $request->all());
 
 
-            return response()->json($result);
+            return response()->json($detail_penerima);
         } else if ($id === 'getKonversi') {
             $konv = DB::connection('ConnInventory')->select('exec SP_1003_INV_CEK_BENANG @NamaType = ?', [$namaBarang]);
             $data_konv = [];
@@ -699,11 +706,13 @@ class PermohonanPenerimaBenangController extends Controller
                 DB::connection('ConnInventory')->rollBack();
                 return response()->json(['Nmerror' => $e->getMessage()]);
             }
+
         } else if ($id === 'getIdKonv') {
             $results = DB::connection('ConnInventory')->statement('exec SP_1003_INV_IDKONVERSI');
             // $idKonversi = $results[0]->IDKonversi;
 
             return response()->json(['success' => 'ada'], 200);
+            
         } else if ('getIdKonvNumber') {
             $currentId = DB::connection('ConnInventory')->table('counter')->value('idkonversi');
 

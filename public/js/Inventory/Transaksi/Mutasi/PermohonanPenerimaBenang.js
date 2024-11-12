@@ -218,8 +218,8 @@ $(document).ready(function () {
         scrollY: '400px',
         autoWidth: false,
         scrollX: '100%',
-        columnDefs: [{ targets: [0], width: '12%', className: 'fixed-width' },
-        { targets: [1], width: '25%', className: 'fixed-width' },
+        columnDefs: [{ targets: [0], width: '20%', className: 'fixed-width' },
+        { targets: [1], width: '30%', className: 'fixed-width' },
         { targets: [2], width: '25%', className: 'fixed-width' },
         { targets: [3], width: '12%', className: 'fixed-width' },
         { targets: [4], width: '10%', className: 'fixed-width' },
@@ -520,8 +520,8 @@ function cekPenerima(Yidtransaksi, kodeBarang) {
             success: function (response) {
                 console.log(response);
 
-                jumlah = parseFloat(response[0].jumlah.trim());
-                YidTypePenerima = response[0].IdType.trim();
+                jumlah = parseFloat(response.jumlah.trim());
+                YidTypePenerima = response.IdType.trim();
 
                 if (jumlah >= 1) {
                     Swal.fire({
@@ -556,7 +556,7 @@ function cekKonversi(namaBarang) {
                 namaBarang: namaBarang
             },
             success: function (response) {
-                // console.log(response);
+                console.log(response);
 
                 if (response[0] && response[0].Result.trim() === 'True') {
                     resolve(true);
@@ -747,7 +747,7 @@ btn_proses.addEventListener('click', function () {
             // console.log(result);
 
             sError = result.Nmerror.trim();
-            // console.log(sError);
+            console.log(sError);
 
             if (sError === 'BENAR') {
                 simpan = true;
