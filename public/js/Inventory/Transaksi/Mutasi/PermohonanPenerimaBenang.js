@@ -618,6 +618,8 @@ function cariType(brg, sbke) {
         },
         success: function (response) {
             if (response.length !== 0) {
+                console.log(response);
+
                 idKonv.value = response[0].IdType ? response[0].IdType.trim() : '';
             }
         },
@@ -636,28 +638,9 @@ async function getIdKonv() {
                 _token: csrfToken,
             },
             success: function (response) {
-                $.ajax({
-                    type: 'PUT',
-                    url: 'PermohonanPenerimaBenang/getIdKonvNumber',
-                    data: {
-                        _token: csrfToken,
-                    },
-                    success: function (result) {
-                        if (result.length !== 0) {
-                            sIdKonv = result.IDKonversi.trim();
-                            // console.log('masok', sIdKonv);
-                            resolve(sIdKonv);
-                        }
-                        else {
-                            console.log('gaonok');
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.error('Error:', error);
-                        reject(error);
-                    }
-                });
-
+                sIdKonv = response.IDKonversi.trim();
+                console.log(sIdKonv);
+                resolve(sIdKonv);
             },
             error: function (xhr, status, error) {
                 console.error('Error:', error);
@@ -667,8 +650,8 @@ async function getIdKonv() {
     });
 }
 
-async function saveDataAsal(sIdKonv) {
-    console.log(sIdKonv, YidTypePenerima, pprimer, ssekunder, ttritier, subkel, idTrans);
+async function saveDataAsal(konv) {
+    console.log(konv, YidTypePenerima, pprimer, ssekunder, ttritier, subkel, idTrans.value);
 
     return new Promise((resolve, reject) => {
         $.ajax({
@@ -676,7 +659,7 @@ async function saveDataAsal(sIdKonv) {
             url: 'PermohonanPenerimaBenang/saveDataAsal',
             data: {
                 _token: csrfToken,
-                YisIdKonv: sIdKonv,
+                sIdKonv: konv,
                 YidTypePenerima: YidTypePenerima,
                 primer: pprimer, // keluar primer
                 sekunder: ssekunder, // keluar sekunder
@@ -696,6 +679,7 @@ async function saveDataAsal(sIdKonv) {
 }
 
 async function saveDataTujuan(sIdKonv) {
+
     return new Promise((resolve, reject) => {
         $.ajax({
             type: 'PUT',

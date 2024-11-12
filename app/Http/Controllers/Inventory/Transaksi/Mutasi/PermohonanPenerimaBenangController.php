@@ -209,6 +209,7 @@ class PermohonanPenerimaBenangController extends Controller
         $user = Auth::user()->NomorUser;
         $idTrans = $request->input('idTrans');
         $sIdKonv = $request->input('sIdKonv');
+        $subkel = $request->input('subkel');
         $NmError = null;
         // dd($request->all());
 
@@ -510,7 +511,7 @@ class PermohonanPenerimaBenangController extends Controller
                 // dd($result, $saldo);
 
                 $data = [
-                    'IdTransaksi' => $result->IdTransaksi,
+                    'IdTransaksi' => $YidTransaksi2,
                     'IdTypeTransaksi' => $result->IdTypeTransaksi,
                     'UraianDetailTransaksi' => $result->UraianDetailTransaksi,
                     'IdType' => $result->IdType,
@@ -639,12 +640,12 @@ class PermohonanPenerimaBenangController extends Controller
                     'KomfirmasiPemberi' => $result->KomfirmasiPemberi,
                     'SaatAwalKomfirmasi' => $result->SaatAwalKomfirmasi,
                     'SaatAkhirKomfirmasi' => now()->format('Y-m-d H:i:s'),
-                    'JumlahPengeluaranPrimer' => $primer,
-                    'JumlahPengeluaranSekunder' => $sekunder,
-                    'JumlahPengeluaranTritier' => $tritier,
-                    'JumlahPemasukanPrimer' => $result->JumlahPemasukanPrimer,
-                    'JumlahPemasukanSekunder' => $result->JumlahPemasukanSekunder,
-                    'JumlahPemasukanTritier' => $result->JumlahPemasukanTritier,
+                    'JumlahPemasukanPrimer' => $primer,
+                    'JumlahPemasukanSekunder' => $sekunder,
+                    'JumlahPemasukanTritier' => $tritier,
+                    'JumlahPengeluaranPrimer' => $result->JumlahPemasukanPrimer,
+                    'JumlahPengeluaranSekunder' => $result->JumlahPemasukanSekunder,
+                    'JumlahPengeluaranTritier' => $result->JumlahPemasukanTritier,
                     'AsalIdSubKelompok' => $result->AsalIdSubKelompok,
                     'TujuanIdSubKelompok' => $result->TujuanIdSubKelompok,
                     'Posisi' => $result->Posisi,
@@ -707,20 +708,23 @@ class PermohonanPenerimaBenangController extends Controller
                 return response()->json(['Nmerror' => $e->getMessage()]);
             }
 
-        } else if ($id === 'getIdKonv') {
-            $results = DB::connection('ConnInventory')->statement('exec SP_1003_INV_IDKONVERSI');
-            // $idKonversi = $results[0]->IDKonversi;
+        }
 
-            return response()->json(['success' => 'ada'], 200);
-            
-        } else if ('getIdKonvNumber') {
+        // ambil id konv
+        else if ($id === 'getIdKonv') {
+            $results = DB::connection('ConnInventory')->statement('exec SP_1003_INV_IDKONVERSI');
             $currentId = DB::connection('ConnInventory')->table('counter')->value('idkonversi');
 
             $newId = $currentId + 1;
             $idKonversi = str_pad($newId, 9, '0', STR_PAD_LEFT);
 
             return response()->json(['IDKonversi' => $idKonversi]);
-        } else if ($id === 'saveDataAsal') {
+        }
+
+        // save data asal
+        else if ($id === 'saveDataAsal') {
+            // dd($request->all());
+
             try {
                 DB::connection('ConnInventory')->statement(
                     'exec SP_1003_INV_TRANSFER_BENANG_CL
@@ -735,7 +739,8 @@ class PermohonanPenerimaBenangController extends Controller
                         $primer,
                         $sekunder,
                         $tritier,
-                        $idTrans
+                        $subkel,
+                        $idTrans,
                     ]
                 );
 
@@ -743,7 +748,11 @@ class PermohonanPenerimaBenangController extends Controller
             } catch (\Exception $e) {
                 return response()->json(['error' => 'Gagal diProses. ' . $e->getMessage()], 500);
             }
-        } else if ($id === 'saveDataTujuan') {
+        }
+
+        // // save data tujuan
+        else if ($id === 'saveDataTujuan') {
+            // dd($request->all());
             try {
                 DB::connection('ConnInventory')->statement(
                     'exec SP_1003_INV_TRANSFER_BENANG_CL
@@ -757,6 +766,7 @@ class PermohonanPenerimaBenangController extends Controller
                         $primer,
                         $sekunder,
                         $tritier,
+                        $subkel,
                         $idTrans
                     ]
                 );
