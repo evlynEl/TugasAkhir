@@ -95,20 +95,20 @@
                                     <label>Jumlah Barang</label>
                                 </div>
                                 <div class="col-sm-2 pr-1 pl-0">
-                                    <input type="text" class="form-control" id="primer" name="primer">
+                                    <input type="text" class="form-control" id="primer" name="primer" readonly>
                                 </div>
                                 <div class="col-sm-1 pl-1">
                                     <input type="text" class="form-control" id="no_primer" name="no_primer" readonly>
                                 </div>
                                 <div class="col-sm-2 pr-1 pl-0">
-                                    <input type="text" class="form-control" id="sekunder" name="sekunder">
+                                    <input type="text" class="form-control" id="sekunder" name="sekunder" readonly>
                                 </div>
                                 <div class="col-sm-1 pl-1">
                                     <input type="text" class="form-control" id="no_sekunder" name="no_sekunder"
                                         readonly>
                                 </div>
                                 <div class="col-sm-2 pr-1 pl-0">
-                                    <input type="text" class="form-control" id="tritier" name="tritier">
+                                    <input type="text" class="form-control" id="tritier" name="tritier" readonly>
                                 </div>
                                 <div class="col-sm-1 pl-1">
                                     <input type="text" class="form-control" id="no_tritier" name="no_tritier"

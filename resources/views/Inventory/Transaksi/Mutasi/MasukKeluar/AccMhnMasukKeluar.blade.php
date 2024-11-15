@@ -93,13 +93,13 @@
                                     <label for="kodeTransaksi">Kode Transaksi</label>
                                 </div>
                                 <div class="col-sm-2">
-                                    <input type="text" class="form-control" id="kodeTransaksi" name="kodeTransaksi">
+                                    <input type="text" class="form-control" id="kodeTransaksi" name="kodeTransaksi" readonly>
                                 </div>
                                 <div class="col-sm-1">
                                     <label for="uraian">Uraian</label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <input type="text" class="form-control" id="uraian" name="uraian">
+                                    <input type="text" class="form-control" id="uraian" name="uraian" readonly>
                                 </div>
                             </div>
 
@@ -110,21 +110,21 @@
                                 <label>Primer</label>
                                 <div style="width: 3%"></div>
                                 <div class="col-sm-1 p-0">
-                                    <input type="text" class="form-control" id="primer" name="primer">
+                                    <input type="text" class="form-control" id="primer" name="primer" readonly>
                                 </div>
                                 <label for="no_primer" id="no_primer"></label>
 
                                 <label>Sekunder</label>
                                 <div style="width: 1.5%"></div>
                                 <div class="col-sm-1 p-0">
-                                    <input type="text" class="form-control" id="sekunder" name="sekunder">
+                                    <input type="text" class="form-control" id="sekunder" name="sekunder" readonly>
                                 </div>
                                 <label for="no_sekunder" id="no_sekunder"></label>
 
                                 <label>Tritier</label>
                                 <div style="width: 2%"></div>
                                 <div class="col-sm-1 p-0">
-                                    <input type="text" class="form-control" id="tritier" name="tritier">
+                                    <input type="text" class="form-control" id="tritier" name="tritier" readonly    >
                                 </div>
                                 <label for="no_tritier" id="no_tritier"></label>
                             </div>

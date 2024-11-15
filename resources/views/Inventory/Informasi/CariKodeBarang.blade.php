@@ -12,7 +12,7 @@
                                 <label for="divisiId">Divisi</label>
                             </div>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" id="divisiNama" name="divisiNama">
+                                <input type="text" class="form-control" id="divisiNama" name="divisiNama" readonly>
                             </div>
                             <div class="col-sm-1">
                                 <input type="text" id="divisiId" name="divisiId" class="form-control"
@@ -26,14 +26,14 @@
                             </div>
                             <div class="col-sm-4">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="objekNama" name="objekNama">
+                                    <input type="text" class="form-control" id="objekNama" name="objekNama" readonly>
                                     <div class="input-group-append">
                                         <button type="button" id="btn_objek" class="btn btn-info">...</button>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-sm-1">
-                                <input type="text" id="objekId" name="objekId" class="form-control">
+                                <input type="text" id="objekId" name="objekId" class="form-control" readonly>
                             </div>
                         </div>
 
@@ -42,7 +42,7 @@
                                 <label for="namaBarang">Nama Barang</label>
                             </div>
                             <div class="col-sm-8">
-                                <input type="text" id="namaBarang" name="namaBarang" class="form-control">
+                                <input type="text" id="namaBarang" name="namaBarang" class="form-control" readonly>
                             </div>
                             <div class="col-sm-1">
                                 <button type="button" id="btn_ok" class="btn btn-info" style="height: 100%">OK</button>

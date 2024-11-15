@@ -164,21 +164,21 @@
                                     <div class="col-sm-1 mr-3"></div>
                                     <label>Primer</label>
                                     <div class="col-sm-5">
-                                        <input type="text" class="form-control" id="primer" name="primer">
+                                        <input type="text" class="form-control" id="primer" name="primer" readonly>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-3"></div>
                                     <label>Sekunder</label>
                                     <div class="col-sm-5">
-                                        <input type="text" class="form-control" id="sekunder" name="sekunder">
+                                        <input type="text" class="form-control" id="sekunder" name="sekunder" readonly>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-3 mr-4"></div>
                                     <label>Tritier</label>
                                     <div class="col-sm-5">
-                                        <input type="text" class="form-control" id="tritier" name="tritier">
+                                        <input type="text" class="form-control" id="tritier" name="tritier" readonly>
                                     </div>
                                 </div>
                             </div>

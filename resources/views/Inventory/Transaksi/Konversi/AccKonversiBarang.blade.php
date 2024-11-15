@@ -12,11 +12,11 @@
                                 <label for="divisiId">Divisi</label>
                             </div>
                             <div class="col-sm-1">
-                                <input type="text" id="divisiId" name="divisiId" class="form-control">
+                                <input type="text" id="divisiId" name="divisiId" class="form-control" readonly>
                             </div>
                             <div class="col-sm-4">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="divisiNama" name="divisiNama">
+                                    <input type="text" class="form-control" id="divisiNama" name="divisiNama" readonly>
                                     <div class="input-group-append">
                                         <button type="button" id="btn_divisi" class="btn btn-info">...</button>
                                     </div>

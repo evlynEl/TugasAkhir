@@ -16,7 +16,7 @@
                                 </div>
                                 <div class="col-sm-3 pl-2 mr-3">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="divisiNama" name="divisiNama">
+                                        <input type="text" class="form-control" id="divisiNama" name="divisiNama" readonly>
                                         <div class="input-group-append">
                                             <button type="button" id="btn_divisi" class="btn btn-info">...</button>
                                         </div>
@@ -40,7 +40,7 @@
                                 </div>
                                 <div class="col-sm-3">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="objekNama" name="objekNama">
+                                        <input type="text" class="form-control" id="objekNama" name="objekNama" readonly>
                                         <div class="input-group-append">
                                             <button type="button" id="btn_objek" class="btn btn-info">...</button>
                                         </div>
@@ -67,13 +67,13 @@
                                     <label for="kelutId">Kelompok Utama</label>
                                 </div>
                                 <div class="col-sm-3">
-                                    <input type="text" class="form-control" id="kelutNama" name="kelutNama">
+                                    <input type="text" class="form-control" id="kelutNama" name="kelutNama" readonly>
                                 </div>
                                 <div class="col-sm-2 pl-5">
                                     <label for="kelompokId">&nbsp;Kelompok</label>
                                 </div>
                                 <div class="col-sm-3">
-                                    <input type="text" class="form-control" id="kelompokNama" name="kelompokNama">
+                                    <input type="text" class="form-control" id="kelompokNama" name="kelompokNama" readonly>
                                 </div>
                             </div>
 
@@ -82,13 +82,13 @@
                                     <label>Kode Transaksi</label>
                                 </div>
                                 <div class="col-sm-3">
-                                    <input type="text" class="form-control" id="kodeTransaksi" name="kodeTransaksi">
+                                    <input type="text" class="form-control" id="kodeTransaksi" name="kodeTransaksi" readonly>
                                 </div>
                                 <div class="col-sm-2 pl-5">
                                     <label for="subkelId">&nbsp;Sub Kelompok</label>
                                 </div>
                                 <div class="col-sm-3">
-                                    <input type="text" class="form-control" id="subkelNama" name="subkelNama">
+                                    <input type="text" class="form-control" id="subkelNama" name="subkelNama" readonly>
                                 </div>
                             </div>
 
@@ -97,7 +97,7 @@
                                     <label for="namaBarang">Nama Barang</label>
                                 </div>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="namaBarang" name="namaBarang">
+                                    <input type="text" class="form-control" id="namaBarang" name="namaBarang" readonly>
                                 </div>
                             </div>
 
@@ -106,22 +106,22 @@
                                     <label>Jumlah Barang</label>
                                 </div>
                                 <div class="col-sm-2 pr-1 pl-0">
-                                    <input type="text" class="form-control" id="primer" name="primer">
+                                    <input type="text" class="form-control" id="primer" name="primer" readonly>
                                 </div>
                                 <div class="col-sm-1 pl-1">
-                                    <input type="text" class="form-control" id="no_primer" name="no_primer">
+                                    <input type="text" class="form-control" id="no_primer" name="no_primer" readonly>
                                 </div>
                                 <div class="col-sm-2 pr-1 pl-0">
-                                    <input type="text" class="form-control" id="sekunder" name="sekunder">
+                                    <input type="text" class="form-control" id="sekunder" name="sekunder" readonly>
                                 </div>
                                 <div class="col-sm-1 pl-1">
-                                    <input type="text" class="form-control" id="no_sekunder" name="no_sekunder">
+                                    <input type="text" class="form-control" id="no_sekunder" name="no_sekunder" readonly>
                                 </div>
                                 <div class="col-sm-2 pr-1 pl-0">
-                                    <input type="text" class="form-control" id="tritier" name="tritier">
+                                    <input type="text" class="form-control" id="tritier" name="tritier" readonly>
                                 </div>
                                 <div class="col-sm-1 pl-1">
-                                    <input type="text" class="form-control" id="no_tritier" name="no_tritier">
+                                    <input type="text" class="form-control" id="no_tritier" name="no_tritier" readonly>
                                 </div>
                             </div>
                         </div>
@@ -134,7 +134,7 @@
                                     <label for="kelutId">Kelompok Utama</label>
                                 </div>
                                 <div class="col-sm-3">
-                                    <input type="text" class="form-control" id="kelutNama2" name="kelutNama2">
+                                    <input type="text" class="form-control" id="kelutNama2" name="kelutNama2" readonly>
 
                                 </div>
                             </div>
@@ -144,14 +144,14 @@
                                     <label for="divisiId">Divisi</label>
                                 </div>
                                 <div class="col-sm-3 pl-2">
-                                    <input type="text" class="form-control" id="divisiNama2" name="divisiNama2">
+                                    <input type="text" class="form-control" id="divisiNama2" name="divisiNama2" readonly>
 
                                 </div>
                                 <div class="col-sm-2 pl-5">
                                     <label for="kelompokId">&nbsp;Kelompok</label>
                                 </div>
                                 <div class="col-sm-3">
-                                    <input type="text" class="form-control" id="kelompokNama2" name="kelompokNama2">
+                                    <input type="text" class="form-control" id="kelompokNama2" name="kelompokNama2" readonly>
 
                                 </div>
                             </div>
@@ -161,14 +161,14 @@
                                     <label for="objekId">Objek</label>
                                 </div>
                                 <div class="col-sm-3 pl-1 pr-0">
-                                    <input type="text" class="form-control" id="objekNama2" name="objekNama2">
+                                    <input type="text" class="form-control" id="objekNama2" name="objekNama2" readonly>
 
                                 </div>
                                 <div class="col-sm-2 mr-3" style="padding-left: 5%;">
                                     <label for="subkelId">Sub Kelompok</label>
                                 </div>
                                 <div class="col-sm-3 pr-0">
-                                    <input type="text" class="form-control" id="subkelNama2" name="subkelNama2">
+                                    <input type="text" class="form-control" id="subkelNama2" name="subkelNama2" readonly>
 
                                 </div>
                             </div>

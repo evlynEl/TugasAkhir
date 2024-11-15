@@ -200,7 +200,7 @@
                                     <div class="input-group">
                                         <input type="text" id="objekId2" name="objekId2" style="display: none"
                                             class="form-control">
-                                        <input type="text" class="form-control" id="objekNama2" name="objekNama2">
+                                        <input type="text" class="form-control" id="objekNama2" name="objekNama2" readonly>
                                         <div class="input-group-append">
                                             <button type="button" id="btn_objek2" class="btn btn-info"
                                                 disabled>...</button>
@@ -211,7 +211,7 @@
                                     <label>Id Transaksi</label>
                                 </div>
                                 <div class="col-sm-2">
-                                    <input type="text" class="form-control" id="transaksiId" name="transaksiId">
+                                    <input type="text" class="form-control" id="transaksiId" name="transaksiId" readonly>
                                 </div>
                             </div>
                             <div class="row mt-1 pr-5">
@@ -220,9 +220,9 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="input-group">
-                                        <input type="text" style="display: none" id="kelutId2" name="kelutId2"
+                                        <input type="text" style="display: none" id="kelutId2" name="kelutId2" readonly
                                             class="form-control">
-                                        <input type="text" class="form-control" id="kelutNama2" name="kelutNama2">
+                                        <input type="text" class="form-control" id="kelutNama2" name="kelutNama2" readonly>
                                         <div class="input-group-append">
                                             <button type="button" id="btn_kelut2" class="btn btn-info"
                                                 disabled>...</button>
@@ -234,9 +234,9 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="input-group">
-                                        <input type="text" style="display: none" id="kelompokId2" name="kelompokId2"
+                                        <input type="text" style="display: none" id="kelompokId2" name="kelompokId2" readonly
                                             class="form-control">
-                                        <input type="text" class="form-control" id="kelompokNama2"
+                                        <input type="text" class="form-control" id="kelompokNama2" readonly
                                             name="kelompokNama2">
                                         <div class="input-group-append">
                                             <button type="button" id="btn_kelompok2" class="btn btn-info"
@@ -253,9 +253,9 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="input-group">
-                                        <input type="text" style="display: none" id="subkelId2" name="subkelId2"
+                                        <input type="text" style="display: none" id="subkelId2" name="subkelId2" readonly
                                             class="form-control">
-                                        <input type="text" class="form-control" id="subkelNama2" name="subkelNama2">
+                                        <input type="text" class="form-control" id="subkelNama2" name="subkelNama2" readonly>
                                         <div class="input-group-append">
                                             <button type="button" id="btn_subkel2" class="btn btn-info"
                                                 disabled>...</button>
