@@ -31,11 +31,35 @@ function fetchKwhData() {
         dataType: 'json',
         success: function (response) {
             if (response.length > 0) {
-
                 response.sort((a, b) => new Date(a.Date) - new Date(b.Date));
-                aggregatedData = {}; // Reset aggregated data
 
-                response.forEach(data => {
+                // Determine max date in the data
+                const latestDate = new Date(response[response.length - 1].Date);
+                let cutoffDate = new Date(latestDate); // Clone latest date
+
+                // Set max period based on filter type
+                switch (filterType) {
+                    case '30m':
+                    case '1h':
+                        cutoffDate.setDate(latestDate.getDate() - 3);
+                        break;
+                    case 'day':
+                        cutoffDate.setDate(latestDate.getDate() - 7);
+                        break;
+                    case 'month':
+                        cutoffDate.setMonth(latestDate.getMonth() - 3);
+                        break;
+                    case 'year':
+                        cutoffDate.setFullYear(latestDate.getFullYear() - 2);
+                        break;
+                }
+
+                // Filter data based on cutoffDate
+                let filteredData = response.filter(data => new Date(data.Date) >= cutoffDate);
+
+                aggregatedData = {}; // Reset
+
+                filteredData.forEach(data => {
                     let dataDate = new Date(data.Date);
                     let formattedDate = getAggregationKey(dataDate, filterType);
                     let power = parseFloat(data.Power) || 0;
@@ -49,8 +73,8 @@ function fetchKwhData() {
                     aggregatedData[formattedDate] += power;
                 });
 
-                let latestDate = Object.keys(aggregatedData).pop();
-                totalPower = aggregatedData[latestDate] || 0;
+                let latestAggDate = Object.keys(aggregatedData).pop();
+                totalPower = aggregatedData[latestAggDate] || 0;
 
                 updateChart('dataChart1', totalPower, new Date());
                 updateLineChart(aggregatedData);
@@ -63,6 +87,7 @@ function fetchKwhData() {
         }
     });
 }
+
 
 function getAggregationKey(date, filter) {
     let year = date.getFullYear();

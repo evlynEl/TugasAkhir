@@ -99,7 +99,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/home', 'App\Http\Controllers\HomeController@index')->name('home');
 
-    // tugas akhir
+    #region TA
     Route::get('SDP', 'App\Http\Controllers\HomeController@SDP');
     Route::resource('MonitorListrik', MonitorListrikController::class);
     Route::resource('JadwalMesin', JadwalMesinController::class);

@@ -1,0 +1,6 @@
+pandas
+flask
+flask_cors
+openpyxl
+
+# pip install -r requirements.txt

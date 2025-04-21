@@ -21,13 +21,28 @@
                                 <div id="dropArea" class="border border-secondary rounded-3 p-4 text-center bg-light">
                                     <p class="text-muted">Drag & Drop file di sini atau</p>
                                     <input type="file" id="fileUpload" class="d-none" accept=".csv, .xls, .xlsx">
-                                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('fileUpload').click()">Pilih File</button>
+                                    <button type="button" class="btn btn-secondary" id="btn_fileUpload" onclick="document.getElementById('fileUpload').click()">Pilih File</button>
                                     <p id="fileName" class="mt-2 text-secondary"></p>
                                 </div>
                             </div>
                             <div class="col-md-2"></div>
                             <div class="col-md-10 text-center mt-1">
-                                <button type="button" class="btn btn-primary" id="jalankanBtn">Jalankan</button>
+                                <button type="button" class="btn btn-primary" id="btn_proses">Proses</button>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2 pl-0">
+                            <label for="hasil">Data Order</label>
+                        </div>
+
+                        <div class="col-sm-12 pb-2">
+                            <div class="table-responsive fixed-height">
+                                <table class="table table-bordered no-wrap-header" id="tableData">
+                                    <thead>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
 
@@ -46,9 +61,14 @@
     </div>
     </div>
     <script type="text/javascript" src="{{ asset('js\Monitor\JadwalMesin.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('css/Inventory/Informasi/TransaksiBulanan.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="{{ asset('css/sweetalert2.min.css') }}">
     <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> --}}
     <script src="{{ asset('js/chart.js') }}"></script>
+
+    <link rel="stylesheet" href="{{ asset('css/colResizeDatatable.css') }}">
+    <script src="{{ asset('js/colResizeDatatable.js') }}"></script>
+
 @endsection
