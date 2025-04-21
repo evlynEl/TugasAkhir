@@ -245,7 +245,7 @@ class LaporanStokController extends Controller
                             $item['AwalPrimer'] = isset($item['AwalPrimer']) ? $item['AwalPrimer'] : 0;
                             $item['AwalSekunder'] = isset($item['AwalSekunder']) ? $item['AwalSekunder'] : 0;
                             $item['AwalTritier'] = isset($item['AwalTritier']) ? $item['AwalTritier'] : 0;
-                 
+
                         }
 
                         // dd($allArrayWithSaldoUpdated);

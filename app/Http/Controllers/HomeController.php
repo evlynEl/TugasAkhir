@@ -93,4 +93,15 @@ class HomeController extends Controller
             return redirect('home')->with('status','Anda Tidak Memiliki Hak Akses Program Contoh!');
         }
     }
+
+    public function SDP()
+    {
+        $result = (new HakAksesController)->HakAksesProgram('SDP');
+        $access = (new HakAksesController)->HakAksesFiturMaster('SDP');
+        if ($result > 0) {
+            return view('layouts.appMonitor', compact('access'));
+        } else {
+            return redirect('home')->with('status','Anda Tidak Memiliki Hak Akses Program Contoh!');
+        }
+    }
 }

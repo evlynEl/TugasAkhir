@@ -68,6 +68,9 @@ use App\Http\Controllers\Inventory\Transaksi\Mutasi\KeluarBarangUntukPenjualanCo
 use App\Http\Controllers\Inventory\Transaksi\Mutasi\PengembalianPascaPenjualanController;
 use App\Http\Controllers\Inventory\Transaksi\Penghangusan\AccPenghangusanBarangController;
 
+use App\Http\Controllers\Monitor\MonitorListrikController;
+use App\Http\Controllers\Monitor\JadwalMesinController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -95,6 +98,11 @@ Route::post('/logout', 'App\Http\Controllers\LoginController@logout')->name('log
 Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/home', 'App\Http\Controllers\HomeController@index')->name('home');
+
+    // tugas akhir
+    Route::get('SDP', 'App\Http\Controllers\HomeController@SDP');
+    Route::resource('MonitorListrik', MonitorListrikController::class);
+    Route::resource('JadwalMesin', JadwalMesinController::class);
 
     #region Laporan Stok
     Route::resource('LaporanStok', LaporanStokController::class);
@@ -172,4 +180,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('MhnMasukKeluar', MhnMasukKeluarController::class);
     Route::resource('AccMhnMasukKeluar', AccMhnMasukKeluarController::class);
     #endregion
+
+
+
 });
