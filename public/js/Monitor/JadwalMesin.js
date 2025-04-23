@@ -1,10 +1,12 @@
 document.addEventListener("DOMContentLoaded", function() {
 
-    // var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     var fileInput = document.getElementById("fileUpload");
     var fileNameDisplay = document.getElementById("fileName");
     var btn_proses = document.getElementById("btn_proses");
     var btn_fileUpload = document.getElementById("btn_fileUpload");
+    var btn_ok = document.getElementById("btn_ok");
+    var dataUpload;
 
     btn_fileUpload.focus();
 
@@ -39,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    // Ketika tombol Proses diklik
+    // Ketika tombol Proses diklik preproses dijalankan
     btn_proses.addEventListener("click", function() {
         var file = fileInput.files[0];
 
@@ -47,6 +49,14 @@ document.addEventListener("DOMContentLoaded", function() {
             alert("Pilih file terlebih dahulu!");
             return;
         }
+
+        Swal.fire({
+            title: 'Loading...',
+            allowOutsideClick: false,
+            didOpen: () => {
+              Swal.showLoading();
+            }
+          });
 
         var formData = new FormData();
         formData.append("file", file);
@@ -58,24 +68,234 @@ document.addEventListener("DOMContentLoaded", function() {
             processData: false,
             contentType: false,
             success: function(response) {
-                console.log("Response from Flask:", response);
+                // console.log("Response from Flask:", response);
                 // alert("Proses berhasil!");
-                if (response && Array.isArray(response.data)) {
-                    updateDataTable(response.data);
+
+                dataUpload = response.data;
+
+                if (response && Array.isArray(dataUpload)) {
+                    let completed = 0;
+
+                    dataUpload.forEach(function(item, index) {
+                        $.ajax({
+                            type: 'GET',
+                            url: 'JadwalMesin/getCocok',
+                            data: {
+                                _token: csrfToken,
+                                Lebar: item.Lebar,
+                                RjtWA: item.RjtWA,
+                                Denier: item.Denier,
+                                Corak: item.Corak
+                            },
+                            success: function(result) {
+                                // console.log(result);
+
+                                if (result && result.NoOrder) {
+                                    dataUpload[index].NoOrder = result.NoOrder;
+                                }
+                                completed++;
+
+                                if (completed === dataUpload.length) {
+                                    updateDataTable(dataUpload);
+                                    fileInput.value = '';
+                                    fileNameDisplay.textContent = '';
+                                }
+                                btn_ok.focus();
+                            },
+                            error: function(xhr, status, error) {
+                                console.error('Error:', error);
+                                completed++;
+
+                                if (completed === dataUpload.length) {
+                                    updateDataTable(dataUpload);
+                                    fileInput.value = '';
+                                    fileNameDisplay.textContent = '';
+                                }
+                            }
+                        });
+                    });
+
                 } else {
                     alert("Data kosong atau format salah.");
                 }
-                updateDataTable(response);
 
                 fileInput.value = '';
                 fileNameDisplay.textContent= '';
             },
             error: function(xhr, status, error) {
+                Swal.close();
                 console.error("Error:", error);
                 alert("Gagal memproses file.");
             }
         });
     });
+
+    // fungsi swal select pake arrow
+    function handleTableKeydown(e, tableId) {
+        const table = $(`#${tableId}`).DataTable();
+        const rows = $(`#${tableId} tbody tr`);
+        const rowCount = rows.length;
+
+        if (e.key === "Enter") {
+            e.preventDefault();
+            const selectedRow = table.row(".selected").data();
+            if (selectedRow) {
+                Swal.getConfirmButton().click();
+            } else {
+                const firstRow = $(`#${tableId} tbody tr:first-child`);
+                if (firstRow.length) {
+                    firstRow.click();
+                    Swal.getConfirmButton().click();
+                }
+            }
+        }
+        else if (e.key === "ArrowDown") {
+            e.preventDefault();
+            if (currentIndex === null || currentIndex >= rowCount - 1) {
+                currentIndex = 0;
+            } else {
+                currentIndex++;
+            }
+            rows.removeClass("selected");
+            const selectedRow = $(rows[currentIndex]).addClass("selected");
+            scrollRowIntoView(selectedRow[0]);
+        }
+        else if (e.key === "ArrowUp") {
+            e.preventDefault();
+            if (currentIndex === null || currentIndex <= 0) {
+                currentIndex = rowCount - 1;
+            } else {
+                currentIndex--;
+            }
+            rows.removeClass("selected");
+            const selectedRow = $(rows[currentIndex]).addClass("selected");
+            scrollRowIntoView(selectedRow[0]);
+        }
+        else if (e.key === "ArrowRight") {
+            e.preventDefault();
+            const pageInfo = table.page.info();
+            if (pageInfo.page < pageInfo.pages - 1) {
+                table.page('next').draw('page').on('draw', function () {
+                    currentIndex = 0;
+                    const newRows = $(`#${tableId} tbody tr`);
+                    const selectedRow = $(newRows[currentIndex]).addClass("selected");
+                    scrollRowIntoView(selectedRow[0]);
+                });
+            }
+        }
+        else if (e.key === "ArrowLeft") {
+            e.preventDefault();
+            const pageInfo = table.page.info();
+            if (pageInfo.page > 0) {
+                table.page('previous').draw('page').on('draw', function () {
+                    currentIndex = 0;
+                    const newRows = $(`#${tableId} tbody tr`);
+                    const selectedRow = $(newRows[currentIndex]).addClass("selected");
+                    scrollRowIntoView(selectedRow[0]);
+                });
+            }
+        }
+    }
+
+    // Helper function to scroll selected row into view
+    function scrollRowIntoView(rowElement) {
+        rowElement.scrollIntoView({ block: 'nearest' });
+    }
+
+    // muncul swal fire unk user pilih no order
+    $('#tableData tbody').on('dblclick', 'td', function () {
+        var table = $('#tableData').DataTable();
+        const cellIndex = table.cell(this).index();
+        const colIndex = cellIndex.column;
+        const rowIndex = cellIndex.row;
+        const headerText = table.column(colIndex).header().textContent;
+
+        if (headerText === 'No Order') {
+            console.log("Double click detected on NoOrder");
+            const data = table.row(rowIndex).data();
+
+            try {
+                Swal.fire({
+                    title: 'No Order',
+                    html: `
+                        <table id="table_list" class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">No Order</th>
+                                    <th scope="col">Nama Barang</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    `,
+                    preConfirm: () => {
+                        const selectedData = $("#table_list")
+                            .DataTable()
+                            .row(".selected")
+                            .data();
+                        if (!selectedData) {
+                            Swal.showValidationMessage("Please select a row");
+                            return false;
+                        }
+                        return selectedData;
+                    },
+                    width: '55%',
+                    returnFocus: false,
+                    showCloseButton: true,
+                    showConfirmButton: true,
+                    confirmButtonText: 'Select',
+                    didOpen: () => {
+                        const tablePopup = $("#table_list").DataTable({
+                            responsive: true,
+                            processing: true,
+                            serverSide: true,
+                            paging: false,
+                            scrollY: '400px',
+                            scrollCollapse: true,
+                            order: [1, "asc"],
+                            ajax: {
+                                url: "JadwalMesin/getNoorder",
+                                dataType: "json",
+                                type: "GET",
+                                data: {
+                                    _token: csrfToken
+                                }
+                            },
+                            columns: [
+                                { data: "D_TEK0" },
+                                { data: "NAMA_BRG" },
+                            ],
+                            columnDefs: [
+                                { targets: 0, width: '100px' }
+                            ]
+                        });
+
+                        $("#table_list tbody").on("click", "tr", function () {
+                            tablePopup.$("tr.selected").removeClass("selected");
+                            $(this).addClass("selected");
+                            scrollRowIntoView(this);
+                        });
+
+                        const searchInput = $('#table_list_filter input');
+                        if (searchInput.length > 0) {
+                            searchInput.focus();
+                        }
+                        currentIndex = null;
+                        Swal.getPopup().addEventListener('keydown', (e) => handleTableKeydown(e, 'table_list'));
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Update data di DataTable
+                        data[0] = result.value.D_TEK0; // NoOrder assumed di kolom pertama
+                        table.row(rowIndex).data(data).draw(false); // update baris
+                    }
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    });
+
 
     function formatDate(dateString) {
         if (!dateString) return '';
@@ -90,8 +310,6 @@ document.addEventListener("DOMContentLoaded", function() {
         return `${month}/${day}/${year}`;
     }
 
-
-
     $(document).ready(function () {
         $('#tableData').DataTable({
             paging: false,
@@ -99,7 +317,7 @@ document.addEventListener("DOMContentLoaded", function() {
             info: false,
             ordering: false,
             columns: [
-                { title: 'NoOrder' },
+                { title: 'No Order' },
                 { title: 'Lebar' },
                 { title: 'RjtWA' },
                 { title: 'RjtWE' },
@@ -139,7 +357,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     return data != null ? JSON.parse(data) : null;
                 }
             },
-            scrollY: '200px',
+            scrollY: '250px',
             autoWidth: false,
             scrollX: '100%',
             columnDefs: [{ targets: [0], width: '5%', className: 'fixed-width'},
@@ -185,21 +403,22 @@ document.addEventListener("DOMContentLoaded", function() {
         data.forEach(function (item) {
             table.row.add([
                 escapeHtml(item.NoOrder),
-                escapeHtml(item.Lebar),
-                escapeHtml(item.RjtWA),
-                escapeHtml(item.RjtWE),
+                formatNumber(item.Lebar),
+                formatNumber(item.RjtWA),
+                formatNumber(item.RjtWE),
                 escapeHtml(item.Denier),
-                formatNumber(item.Corak),
-                formatNumber(item.BngWA),
-                formatNumber(item.BngWE),
-                formatNumber(item.Jumlah),
+                escapeHtml(item.Corak),
+                escapeHtml(item.BngWA),
+                escapeHtml(item.BngWE),
+                escapeHtml(item.Jumlah),
                 formatDate(item.TglMulai),
-                formatNumber(item.Mesin),
+                escapeHtml(item.Mesin),
                 formatNumber(item.PnjPotong),
-                formatNumber(item.Keterangan),
+                escapeHtml(item.Keterangan),
             ]);
         });
 
+        Swal.close();
         table.draw();
     }
 
@@ -209,4 +428,31 @@ document.addEventListener("DOMContentLoaded", function() {
         }
         return value;
     }
+
+    // button unk menghasilkan jadwal
+    btn_ok.addEventListener("click", function() {
+        $.ajax({
+            url: "http://127.0.0.1:5000/model",
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                console.log("Response from Flask:", response);
+                alert("Proses berhasil!");
+
+                dataUpload = response.data;
+
+
+                fileInput.value = '';
+                fileNameDisplay.textContent= '';
+            },
+            error: function(xhr, status, error) {
+                Swal.close();
+                console.error("Error:", error);
+                alert("Gagal memproses file.");
+            }
+        });
+    });
+
 })

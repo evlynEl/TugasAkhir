@@ -28,6 +28,7 @@
                             <div class="col-md-2"></div>
                             <div class="col-md-10 text-center mt-1">
                                 <button type="button" class="btn btn-primary" id="btn_proses">Proses</button>
+                                <button type="button" class="btn btn-primary" id="btn_ok">OK</button>
                             </div>
                         </div>
 
@@ -35,7 +36,7 @@
                             <label for="hasil">Data Order</label>
                         </div>
 
-                        <div class="col-sm-12 pb-2">
+                        <div class="col-sm-12">
                             <div class="table-responsive fixed-height">
                                 <table class="table table-bordered no-wrap-header" id="tableData">
                                     <thead>
@@ -46,7 +47,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2 pl-0">
+                        <div class="col-md-2 pl-0 pt-4">
                             <label for="hasil">Hasil Jadwal</label>
                         </div>
                         <div class="col-md-12" id="chart">

@@ -1,9 +1,9 @@
-# pip install openpyxl
-# pip install pandas
-
 import pandas as pd
 import sys
 import numpy as np
+import unicodedata
+import re
+
 
 def main(file_stream):
 
@@ -17,6 +17,12 @@ def main(file_stream):
 
     for sheet in sheet_names:
         df = pd.read_excel(file_stream, sheet_name=sheet, skiprows=5)
+
+        # Batasi kolom hanya sampai 'Unnamed: 37' (jika kolom ini ada)
+        if 'Unnamed: 37' in df.columns:
+            idx = df.columns.get_loc('Unnamed: 37')
+            df = df.iloc[:, :idx+1]
+
 
         # Hapus kolom A jika semua nilainya kosong
         if df.iloc[:, 0].isna().all():
@@ -84,14 +90,58 @@ def main(file_stream):
     # Set header kolom
     df_final.columns = ['Lebar', 'RjtWA', 'RjtWE', 'Denier', 'Corak', 'BngWA', 'BngWE', 'Jumlah', 'TglMulai', 'Mesin', 'PnjPotong', 'Keterangan']
 
+    # # Set data type numerik
+    # numerik_kolom = ['Lebar', 'RjtWA', 'RjtWE']
+    # for kolom in numerik_kolom:
+    #     df_final[kolom] = df_final[kolom].astype(float).round(2).map(lambda x: f"{x:.2f}")
+
     # Tambahkan kolom 'NoOrder' paling kiri
     df_final.insert(0, 'NoOrder', '')
 
-    # df_final.to_excel("C:/Users/Evelyn/Downloads/12 2024.xlsx", index=False)
+    for kol in ['Corak']:
+        df_final[kol] = df_final[kol].astype(str).str.upper()
+
+    # Fungsi untuk membersihkan teks pada kolom 'Jumlah'
+    def bersihkan_jumlah(jumlah):
+        if pd.isnull(jumlah): return ''  # Jika NaN, kembalikan string kosong
+        jumlah = re.sub(r'[\s]', '', str(jumlah))  # Hapus semua spasi
+        jumlah = re.sub(r'(?<=\+|\-)\s*', '', jumlah)  # Hapus spasi setelah tanda + atau -
+        jumlah = re.sub(r'\b(mesin|mesim|msn|mesn)\b', lambda m: 'MESIN', jumlah, flags=re.IGNORECASE)  # Ganti mesin, mesim, msn jadi uppercase
+
+        # Coba cari angka di awal string, dan format dengan koma
+        match = re.match(r'([+-]?\d+)(MESIN)?', jumlah)
+        if match:
+            angka = int(match.group(1))
+            formatted = f"{angka:,}"
+            if match.group(2):  # Kalau ada 'MESIN' setelah angka
+                formatted += match.group(2)
+            return formatted
+
+        return jumlah
+
+    def bersihkan_mesin(mesin):
+        if pd.isnull(mesin): return ''
+        mesin = str(mesin)
+
+        # Gabungkan dan perbaiki pola: + mesn -> +MESIN, -msn -> -MESIN
+        mesin = re.sub(r'(?<=[\+\-])\s*(mesin|mesim|msn|mesn)\b', 'MESIN', mesin, flags=re.IGNORECASE)
+
+        # Ganti berdiri sendiri (tanpa + atau -) menjadi MESIN
+        mesin = re.sub(r'\b(mesin|mesim|msn|mesn)\b', 'MESIN', mesin, flags=re.IGNORECASE)
+
+        # Ganti variasi 'order' ke ORDER
+        mesin = re.sub(r'\b(0rder|orde|ord|order)\b', 'ORDER', mesin, flags=re.IGNORECASE)
+
+        return mesin.strip()
+
+
+    df_final['Jumlah'] = df_final['Jumlah'].apply(bersihkan_jumlah)
+    df_final['Mesin'] = df_final['Mesin'].apply(bersihkan_mesin)
 
     # Replace NaN with None before returning
     df_final = df_final.replace({np.nan: None})
     return df_final.to_dict(orient='records')
+
 
 if __name__ == "__main__":
     main(sys.argv[1])
