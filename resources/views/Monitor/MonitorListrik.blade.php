@@ -15,18 +15,22 @@
                             <div class="col-md-3">
                                 <h5 style="text-align: center;">SDP CL 1</h5>
                                 <canvas class='bordered align-items-center justify-content-center' id="dataChart1"></canvas>
+                                <p id="totalPower1" style="text-align: center; margin-top: 5px; font-weight: bold;"></p>
                             </div>
                             <div class="col-md-3">
                                 <h5 style="text-align: center;">SDP CL 2</h5>
                                 <canvas class='bordered align-items-center justify-content-center' id="dataChart2"></canvas>
+                                <p id="totalPower2" style="text-align: center; margin-top: 5px; font-weight: bold;"></p>
                             </div>
                             <div class="col-md-3">
                                 <h5 style="text-align: center;">SDP CL 3</h5>
                                 <canvas class='bordered align-items-center justify-content-center' id="dataChart3"></canvas>
+                                <p id="totalPower3" style="text-align: center; margin-top: 5px; font-weight: bold;"></p>
                             </div>
                             <div class="col-md-3">
                                 <h5 style="text-align: center;">SDP CL 4</h5>
                                 <canvas class='bordered align-items-center justify-content-center' id="dataChart4"></canvas>
+                                <p id="totalPower4" style="text-align: center; margin-top: 5px; font-weight: bold;"></p>
                             </div>
 
 

@@ -2,5 +2,6 @@ pandas
 flask
 flask_cors
 openpyxl
+pulp
 
 # pip install -r requirements.txt

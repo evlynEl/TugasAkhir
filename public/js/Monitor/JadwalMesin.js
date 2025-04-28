@@ -360,16 +360,16 @@ document.addEventListener("DOMContentLoaded", function() {
             scrollY: '250px',
             autoWidth: false,
             scrollX: '100%',
-            columnDefs: [{ targets: [0], width: '5%', className: 'fixed-width'},
-            { targets: [1], width: '3%', className: 'fixed-width' },
+            columnDefs: [{ targets: [0], width: '8%', className: 'fixed-width'},
+            { targets: [1], width: '5%', className: 'fixed-width' },
             { targets: [2], width: '5%', className: 'fixed-width' },
             { targets: [3], width: '5%', className: 'fixed-width' },
             { targets: [4], width: '5%', className: 'fixed-width' },
-            { targets: [5], width: '12%', className: 'fixed-width' },
+            { targets: [5], width: '10%', className: 'fixed-width' },
             { targets: [6], width: '5%', className: 'fixed-width' },
             { targets: [7], width: '5%', className: 'fixed-width' },
-            { targets: [8], width: '12%', className: 'fixed-width' },
-            { targets: [9], width: '12%', className: 'fixed-width' },
+            { targets: [8], width: '10%', className: 'fixed-width' },
+            { targets: [9], width: '10%', className: 'fixed-width' },
             { targets: [10], width: '10%', className: 'fixed-width' },
             { targets: [11], width: '10%', className: 'fixed-width' },
             { targets: [12], width: '10%', className: 'fixed-width' },]
@@ -431,28 +431,35 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // button unk menghasilkan jadwal
     btn_ok.addEventListener("click", function() {
-        $.ajax({
-            url: "http://127.0.0.1:5000/model",
-            type: "POST",
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(response) {
-                console.log("Response from Flask:", response);
-                alert("Proses berhasil!");
+        Swal.fire({
+            text: 'Apakah Anda ingin memproses data?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'OK',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Ambil semua data dari DataTable
+                const allData = $('#tableData').DataTable().rows().data().toArray();
 
-                dataUpload = response.data;
-
-
-                fileInput.value = '';
-                fileNameDisplay.textContent= '';
-            },
-            error: function(xhr, status, error) {
-                Swal.close();
-                console.error("Error:", error);
-                alert("Gagal memproses file.");
+                // Kirim ke Flask
+                $.ajax({
+                    url: "http://127.0.0.1:5000/model",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({ data: allData }),
+                    success: function(response) {
+                        console.log("Hasil dari model:", response);
+                        Swal.fire('Berhasil!', 'Data berhasil diproses.', 'success');
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error:", error);
+                        Swal.fire('Gagal', 'Ada kesalahan saat mengirim data.', 'error');
+                    }
+                });
             }
         });
+
     });
 
 })

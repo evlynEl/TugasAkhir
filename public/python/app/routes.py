@@ -1,12 +1,13 @@
 from flask import request, jsonify, Blueprint
 # from app import app
 from app.preprocess import main
+from app.model import main
 from io import BytesIO
 import json
 import subprocess
 
-
 app_routes = Blueprint('app_routes', __name__)
+
 @app_routes.route('/', methods=['GET'])
 def index():
     return jsonify({"message": "Hello from Flask!"})
@@ -29,3 +30,15 @@ def process_excel_route():
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+@app_routes.route('/model', methods=['POST'])
+def model_endpoint():
+    data = request.get_json()
+
+    if not data or 'data' not in data:
+        return jsonify({'error': 'No data received'}), 400
+
+    # Panggil fungsi main() dari model.py
+    hasil = main(data['data'])
+
+    return jsonify({'message': 'Data processed successfully', 'result': hasil}), 200

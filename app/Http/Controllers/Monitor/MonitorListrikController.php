@@ -31,27 +31,27 @@ class MonitorListrikController extends Controller
     {
         // if ($id == 'getKwh') {
         //     $kwh = DB::connection('ConnCircular')
-        //         ->table('dbo.VW_4384_PANEL_SDP_LARAVEL')
+        //         ->table('dbo.KWH')
         //         ->select('*')
-        //         ->whereIn('dbo.VW_4384_PANEL_SDP_LARAVEL.NoProduksi', [14, 2, 4, 7])
-        //         ->where('dbo.VW_4384_PANEL_SDP_LARAVEL.Tanggal', '>=', '2022-01-01')
         //         ->get();
 
 
         //     $data_kwh = [];
         //     foreach ($kwh as $detailRef) {
         //         $data_kwh[] = [
-        //             'Produksi'   => $detailRef->Produksi,
-        //             'NoProduksi' => $detailRef->NoProduksi,
-        //             'Tanggal'    => $detailRef->Tanggal,
-        //             'KWH'        => $detailRef->KWH
+        //             'Tanggal'   => $detailRef->Tanggal,
+        //             'CL1_Jml'   => $detailRef->CL1_Jml,
+        //             'CL2_Jml'   => $detailRef->CL2_Jml,
+        //             'CL3_Jml'   => $detailRef->CL3_Jml,
+        //             'CL4_Jml'   => $detailRef->CL4_Jml
         //         ];
         //     }
-        //     // dd($data_kwh);
+        //     dd($data_kwh);
         //     return response()->json($data_kwh);
         // }
 
-        if ($id == 'getKwh') {
+        // else
+        if ($id == 'getKwh2') {
             $kwh = DB::connection('ConnCircular')
                 ->table('dbo.MikroCL1')
                 ->select(DB::raw('[Power (kWatt)] as Power'), 'Date')
