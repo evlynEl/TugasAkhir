@@ -210,7 +210,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const rowIndex = cellIndex.row;
         const headerText = table.column(colIndex).header().textContent;
 
-        if (headerText === 'No Order') {
+        if (headerText === 'NoOrder') {
             console.log("Double click detected on NoOrder");
             const data = table.row(rowIndex).data();
 
@@ -266,7 +266,8 @@ document.addEventListener("DOMContentLoaded", function() {
                                 { data: "NAMA_BRG" },
                             ],
                             columnDefs: [
-                                { targets: 0, width: '100px' }
+                                { targets: 0, width: '100px' },
+                                { targets: 1, className: 'text-start' }
                             ]
                         });
 
@@ -317,7 +318,7 @@ document.addEventListener("DOMContentLoaded", function() {
             info: false,
             ordering: false,
             columns: [
-                { title: 'No Order' },
+                { title: 'NoOrder' },
                 { title: 'Lebar' },
                 { title: 'RjtWA' },
                 { title: 'RjtWE' },
@@ -326,9 +327,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 { title: 'BngWA' },
                 { title: 'BngWE' },
                 { title: 'Jumlah' },
-                { title: 'Tgl Mulai' },
+                { title: 'TglMulai' },
                 { title: 'Mesin' },
-                { title: 'PnjPot' },
+                { title: 'PnjPotong' },
                 { title: 'Keterangan' },
             ],
             colResize: {
@@ -365,7 +366,7 @@ document.addEventListener("DOMContentLoaded", function() {
             { targets: [2], width: '5%', className: 'fixed-width' },
             { targets: [3], width: '5%', className: 'fixed-width' },
             { targets: [4], width: '5%', className: 'fixed-width' },
-            { targets: [5], width: '10%', className: 'fixed-width' },
+            { targets: [5], width: '12%', className: 'fixed-width' },
             { targets: [6], width: '5%', className: 'fixed-width' },
             { targets: [7], width: '5%', className: 'fixed-width' },
             { targets: [8], width: '10%', className: 'fixed-width' },
@@ -429,6 +430,9 @@ document.addEventListener("DOMContentLoaded", function() {
         return value;
     }
 
+
+
+
     // button unk menghasilkan jadwal
     btn_ok.addEventListener("click", function() {
         Swal.fire({
@@ -440,14 +444,32 @@ document.addEventListener("DOMContentLoaded", function() {
         }).then((result) => {
             if (result.isConfirmed) {
                 // Ambil semua data dari DataTable
-                const allData = $('#tableData').DataTable().rows().data().toArray();
+                var allData = $('#tableData').DataTable().rows().data().toArray();
+
+                // Ambil header dari DataTable
+                var header = [];
+                $('#tableData thead th').each(function () {
+                    header.push($(this).text().trim());
+                });
+
+                // Ubah array menjadi array of object
+                var formattedData = allData.map(function(row) {
+                    var obj = {};
+                    for (var i = 0; i < header.length; i++) {
+                        obj[header[i]] = row[i];
+                    }
+                    return obj;
+                });
+
+                // console.log(allData);
+
 
                 // Kirim ke Flask
                 $.ajax({
                     url: "http://127.0.0.1:5000/model",
                     type: "POST",
                     contentType: "application/json",
-                    data: JSON.stringify({ data: allData }),
+                    data: JSON.stringify({ data: formattedData }),
                     success: function(response) {
                         console.log("Hasil dari model:", response);
                         Swal.fire('Berhasil!', 'Data berhasil diproses.', 'success');

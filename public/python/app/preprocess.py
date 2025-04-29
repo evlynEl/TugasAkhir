@@ -1,7 +1,6 @@
 import pandas as pd
 import sys
 import numpy as np
-import unicodedata
 import re
 
 
@@ -17,12 +16,28 @@ def main(file_stream):
 
     for sheet in sheet_names:
         df = pd.read_excel(file_stream, sheet_name=sheet, skiprows=5)
+        df.columns = df.columns.map(lambda x: str(x).strip())
 
-        # Batasi kolom hanya sampai 'Unnamed: 37' (jika kolom ini ada)
-        if 'Unnamed: 37' in df.columns:
-            idx = df.columns.get_loc('Unnamed: 37')
-            df = df.iloc[:, :idx+1]
+        # Cek apakah kolom Unnamed: 38 ada
+        if 'Unnamed: 38' in df.columns:
+            last_col = df.columns.get_loc('Unnamed: 38')
+            mesin_col = 'Unnamed: 22'
+            potong_col = 'Unnamed: 37'
+            keterangan_col = 'Unnamed: 38'
+        elif 'Unnamed: 37' in df.columns:
+            last_col = df.columns.get_loc('Unnamed: 37')
+            mesin_col = 'Unnamed: 21'
+            potong_col = 'Unnamed: 36'
+            keterangan_col = 'Unnamed: 37'
 
+        if last_col is not None:
+            # Potong dataframe hanya sampai idx jika ditemukan
+            df = df.iloc[:, :last_col + 1]
+
+        # Pastikan kolom Potong dan Keterangan tetap ada
+        for col in [potong_col, keterangan_col]:
+            if col not in df.columns:
+                df[col] = pd.NA
 
         # Hapus kolom A jika semua nilainya kosong
         if df.iloc[:, 0].isna().all():
@@ -33,11 +48,6 @@ def main(file_stream):
         # Hapus kolom kosong antar kolom yang memiliki data
         df = df.dropna(axis=1, how='all')
 
-        # Pastikan kolom 'Unnamed: 36' (Potong) dan 'Unnamed: 37' (Keterangan) ada
-        for col in ['Unnamed: 36', 'Unnamed: 37']:
-            if col not in df.columns:
-                df[col] = pd.NA  # atau "" jika kamu lebih suka string kosong
-
         def is_kosong(val):
             return pd.isna(val) or str(val).strip() == ""
 
@@ -47,25 +57,27 @@ def main(file_stream):
                 if i + 1 < len(df):
                     # Ambil nilai jika kolom tersedia, jika tidak isi None
                     tanggal = df.at[i, 'MULAI'] if 'MULAI' in df.columns else None
-                    mesin   = df.at[i, 'Unnamed: 21'] if 'Unnamed: 21' in df.columns else None
-                    potong  = df.at[i, 'Unnamed: 36'] if 'Unnamed: 36' in df.columns else None
-                    ket     = df.at[i, 'Unnamed: 37'] if 'Unnamed: 37' in df.columns else None
+                    mesin   = df.at[i, mesin_col] if mesin_col in df.columns else None
+                    potong  = df.at[i, potong_col] if potong_col in df.columns else None
+                    ket     = df.at[i, keterangan_col] if keterangan_col in df.columns else None
 
                     # Isi ke baris bawahnya
                     if is_kosong(df.at[i+1, 'MULAI']):
                         df.at[i+1, 'MULAI'] = tanggal
-                    if is_kosong(df.at[i+1, 'Unnamed: 21']):
-                        df.at[i+1, 'Unnamed: 21'] = mesin
-                    if is_kosong(df.at[i+1, 'Unnamed: 36']):
-                        df.at[i+1, 'Unnamed: 36'] = potong
-                    if is_kosong(df.at[i+1, 'Unnamed: 37']):
-                        df.at[i+1, 'Unnamed: 37'] = ket
+                    if is_kosong(df.at[i+1, mesin_col]):
+                        df.at[i+1, mesin_col] = mesin
+                    if potong_col in df.columns:
+                        if is_kosong(df.at[i+1, potong_col]):
+                            df.at[i+1, potong_col] = potong
+                    if keterangan_col in df.columns:
+                        if is_kosong(df.at[i+1, keterangan_col]):
+                            df.at[i+1, keterangan_col] = ket
 
                     # Kosongkan isi baris 'AWAL
-                    df.at[i, 'MULAI'] = ""
-                    df.at[i, 'Unnamed: 21'] = ""
-                    df.at[i, 'Unnamed: 36'] = ""
-                    df.at[i, 'Unnamed: 37'] = ""
+                    df.at[i, 'MULAI'] = np.nan
+                    df.at[i, mesin_col] = np.nan
+                    df.at[i, potong_col] = np.nan
+                    df.at[i, keterangan_col] = np.nan
 
         # Hapus kolom dengan header 'x'
         if 'x' in df.columns:
@@ -90,11 +102,6 @@ def main(file_stream):
     # Set header kolom
     df_final.columns = ['Lebar', 'RjtWA', 'RjtWE', 'Denier', 'Corak', 'BngWA', 'BngWE', 'Jumlah', 'TglMulai', 'Mesin', 'PnjPotong', 'Keterangan']
 
-    # # Set data type numerik
-    # numerik_kolom = ['Lebar', 'RjtWA', 'RjtWE']
-    # for kolom in numerik_kolom:
-    #     df_final[kolom] = df_final[kolom].astype(float).round(2).map(lambda x: f"{x:.2f}")
-
     # Tambahkan kolom 'NoOrder' paling kiri
     df_final.insert(0, 'NoOrder', '')
 
@@ -103,21 +110,24 @@ def main(file_stream):
 
     # Fungsi untuk membersihkan teks pada kolom 'Jumlah'
     def bersihkan_jumlah(jumlah):
+        # Pastikan jumlah dalam format string
         if pd.isnull(jumlah): return ''  # Jika NaN, kembalikan string kosong
-        jumlah = re.sub(r'[\s]', '', str(jumlah))  # Hapus semua spasi
+        jumlah = str(jumlah)  # Pastikan menjadi string
+        jumlah = re.sub(r'[\s]', '', jumlah)  # Hapus semua spasi
         jumlah = re.sub(r'(?<=\+|\-)\s*', '', jumlah)  # Hapus spasi setelah tanda + atau -
         jumlah = re.sub(r'\b(mesin|mesim|msn|mesn)\b', lambda m: 'MESIN', jumlah, flags=re.IGNORECASE)  # Ganti mesin, mesim, msn jadi uppercase
 
         # Coba cari angka di awal string, dan format dengan koma
-        match = re.match(r'([+-]?\d+)(MESIN)?', jumlah)
+        match = re.match(r'([+-]?\d+)(\s*(MESIN|MSN|MESIM|MESN))?', jumlah, re.IGNORECASE)
         if match:
             angka = int(match.group(1))
             formatted = f"{angka:,}"
-            if match.group(2):  # Kalau ada 'MESIN' setelah angka
-                formatted += match.group(2)
+            if match.group(3):  # Kalau ada 'MESIN', 'MSN', dll setelah angka
+                formatted += ' ' + match.group(3).upper()
             return formatted
 
         return jumlah
+
 
     def bersihkan_mesin(mesin):
         if pd.isnull(mesin): return ''
@@ -133,7 +143,6 @@ def main(file_stream):
         mesin = re.sub(r'\b(0rder|orde|ord|order)\b', 'ORDER', mesin, flags=re.IGNORECASE)
 
         return mesin.strip()
-
 
     df_final['Jumlah'] = df_final['Jumlah'].apply(bersihkan_jumlah)
     df_final['Mesin'] = df_final['Mesin'].apply(bersihkan_mesin)

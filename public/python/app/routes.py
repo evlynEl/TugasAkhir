@@ -1,7 +1,7 @@
 from flask import request, jsonify, Blueprint
 # from app import app
-from app.preprocess import main
-from app.model import main
+from app.preprocess import main as preprocess_main
+from app.model import merge_orders, main as model_main, buat_model
 from io import BytesIO
 import json
 import subprocess
@@ -24,7 +24,7 @@ def process_excel_route():
         file_stream = BytesIO(file.read())
 
         # Panggil fungsi process_excel dari preprocess.py
-        processed_data = main(file_stream)
+        processed_data = preprocess_main(file_stream)
 
         return jsonify({'status': 'success', 'data': processed_data})
 
@@ -38,7 +38,15 @@ def model_endpoint():
     if not data or 'data' not in data:
         return jsonify({'error': 'No data received'}), 400
 
-    # Panggil fungsi main() dari model.py
-    hasil = main(data['data'])
+    # Merge orders terlebih dahulu
+    merged_data = merge_orders(data['data'])  # Panggil merge_orders terlebih dahulu
 
-    return jsonify({'message': 'Data processed successfully', 'result': hasil}), 200
+    # Panggil fungsi main() dari model.py dengan data yang sudah digabung
+    hasil = model_main(merged_data)
+    orders = hasil['orders']
+    order_specs = hasil['order_specs']
+
+    # >>> Kirim ke model.py
+    result_model = buat_model(orders, order_specs)
+
+    return jsonify({'message': 'Data processed successfully', 'result': result_model}), 200
