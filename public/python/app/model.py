@@ -6,37 +6,37 @@ from datetime import datetime, timedelta
 import pandas as pd
 
 # function unk update jumlah mesin kalau +mesin
-def merge_orders(data):
-    print("Data:", data)
-    
-    merged = {}
+# def merge_orders(data):
+#     # print("Data:", data)
 
-    for item in data:
-        no_order = item["NoOrder"]
-        jumlah = item["Jumlah"]
-        mesin = item["Mesin"]
+#     merged = {}
 
-        if no_order not in merged:
-            merged[no_order] = item.copy()
-            # Pastikan Jumlah angka, jika bukan (seperti '+mesin'), default 0
-            merged[no_order]["Jumlah"] = jumlah if isinstance(jumlah, (int, float)) else 0
-            merged[no_order]["Mesin"] = mesin
-        else:
-            # Update mesin
-            merged[no_order]["Mesin"] += mesin
-            # Jumlah hanya diisi jika belum diset dan input jumlah bukan '+mesin'
-            if isinstance(jumlah, (int, float)) and merged[no_order]["Jumlah"] == 0:
-                merged[no_order]["Jumlah"] = jumlah
+#     for item in data:
+#         no_order = item["NoOrder"]
+#         jumlah = item["Jumlah"]
+#         mesin = item["Mesin"]
 
-    return list(merged.values())
+#         if no_order not in merged:
+#             merged[no_order] = item.copy()
+#             # Pastikan Jumlah angka, jika bukan (seperti '+mesin'), default 0
+#             merged[no_order]["Jumlah"] = jumlah if isinstance(jumlah, (int, float)) else 0
+#             merged[no_order]["Mesin"] = mesin
+#         else:
+#             # Update mesin
+#             merged[no_order]["Mesin"] += mesin
+#             # Jumlah hanya diisi jika belum diset dan input jumlah bukan '+mesin'
+#             if isinstance(jumlah, (int, float)) and merged[no_order]["Jumlah"] == 0:
+#                 merged[no_order]["Jumlah"] = jumlah
+
+#     return list(merged.values())
 
 def main(data_list):
-    merged_data = merge_orders(data_list)
+    # merged_data = merge_orders(data_list)
 
     orders = []
     order_specs = {}
 
-    for item in merged_data:
+    for item in data_list:
         NoOrder = item['NoOrder']
         orders.append(NoOrder)
         order_specs[NoOrder] = {
@@ -66,8 +66,8 @@ def generate_intervals(start_hour=7):
         return intervals
 
 def buat_model(orders, order_specs):
-    print("Orders:", orders)
-    print("Order Specs:", order_specs)
+    # print("Orders:", orders)
+    # print("Order Specs:", order_specs)
 
     # SET
     days = range(7)
@@ -188,16 +188,25 @@ def buat_model(orders, order_specs):
 
     # Durasi pengerjaan pesanan dihitung berdasarkan kapasitas mesin
     durasi_pekerjaan = {}
+    valid_orders = []
 
     for o in orders:
-        Jumlah = order_specs[o]['Jumlah']
-        kapasitas = kapasitas_mesin[o]
+        jumlah_str = order_specs[o]['Jumlah']
 
-        # Durasi pekerjaan dalam jam untuk setiap order
-        durasi_pekerjaan[o] = Jumlah / kapasitas
+        if 'MESIN' not in jumlah_str.upper():
+            try:
+                Jumlah = float(jumlah_str.replace(',', '').strip())
+                kapasitas = kapasitas_mesin[o]
+                durasi_pekerjaan[o] = Jumlah / kapasitas
+                valid_orders.append(o)  # simpan hanya order valid
+            except (ValueError, KeyError):
+                print(f"[SKIP] Order {o} gagal dikonversi atau kapasitas tidak ditemukan.")
+        else:
+            print(f"[SKIP] Order {o} mengandung kata 'MESIN', tidak dihitung durasinya.")
+
 
     # Menambahkan constraint untuk durasi pekerjaan
-    for o in orders:
+    for o in valid_orders:
         durasi = durasi_pekerjaan[o]  # Durasi pekerjaan per order (jam)
         for m in machines:
             for d in days:
@@ -215,7 +224,7 @@ def buat_model(orders, order_specs):
 
     # Constraint untuk memindahkan pekerjaan ke hari berikutnya
     for m in machines:
-        for o in orders:
+        for o in valid_orders:
             for d in days:
                 if d < 6:
                     kerja_hari_ini = pulp.lpSum(x[m][o][d][interval] for interval in all_intervals)
@@ -223,13 +232,13 @@ def buat_model(orders, order_specs):
 
     # Mengalokasikan sisa pekerjaan pada hari berikutnya
     for m in machines:
-        for o in orders:
+        for o in valid_orders:
             for d in days:
                 prob += pulp.lpSum(x[m][o][d][interval] for interval in all_intervals) + sisa_pekerjaan[m][o][d] >= durasi_pekerjaan[o]  # Pastikan pekerjaan selesai
 
 
     # Jumlah mesin yang mengerjakan setiap order
-    for o in orders:
+    for o in valid_orders:
         prob += jumlah_mesin_order[o] == pulp.lpSum(x[m][o][d][s] for m in machines for d in days for s in all_intervals)
 
 
@@ -250,6 +259,35 @@ def buat_model(orders, order_specs):
             for interval in all_intervals:
                 prob += pulp.lpSum(x[m][o][d][interval] for o in orders) <= (1 - r[m][d])  # Mesin tidak mengerjakan order jika diistirahatkan
 
+    # Constraint: Mesin tidak boleh mengerjakan lebih dari satu order pada waktu yang bersamaan
+    for m in machines:
+        for d in days:
+            for s in intervals:
+                model += pulp.lpSum([x[m][o][d][s] for o in orders]) <= 1, f"SingleOrderPerMachine_{m}_{d}_{s}"
+
+
+    # Constraint agar mesin terus mengerjakan order yang sama tanpa berganti
+    # Untuk tiap mesin, order, hari, dan shift
+    start_time_value = {}
+    finish_time_value = {}
+
+    for m in machines:
+        for o in orders:
+            for d in days:
+                for s in shift_intervals:  # Iterasi berdasarkan shift pagi, sore, malam
+                    for interval in shift_intervals[s]:  # Iterasi berdasarkan interval waktu dalam shift
+                        # Ambil jam mulai shift dari interval (misal '07:00-08:00' -> jam mulai 07:00)
+                        start_hour = int(interval.split('-')[0].split(':')[0])
+
+                        # Tentukan waktu mulai berdasarkan shift
+                        start_time_value[m, o, d, s] = start_hour
+
+                        # Durasi pekerjaan untuk order o
+                        durasi_pekerjaan_order = durasi_pekerjaan[o]
+
+                        # Tentukan waktu selesai berdasarkan durasi pekerjaan
+                        finish_time_value[m, o, d, s] = start_time_value[m, o, d, s] + durasi_pekerjaan_order
+
 
 
     # SOLVE
@@ -259,49 +297,46 @@ def buat_model(orders, order_specs):
     durasi_per_shift = 8
     jadwal_produksi = []
 
-    # Waktu kerja setiap shift dalam format jam (menggunakan angka, tetapi kita juga bisa memberikan format waktu)
-    waktu_kerja = {
-        'pagi': 7,  # Shift pagi mulai jam 07:00
-        'sore': 15,  # Shift sore mulai jam 15:00
-        'malam': 23  # Shift malam mulai jam 23:00
-    }
-
     # Loop untuk mengambil hasil dari variabel x dan menyusun jadwal produksi
     for d in days:
-        for s in intervals:
-            for o in orders:
-                for m in machines:
-                    # Jika mesin m mengerjakan order o pada hari d dan shift s
-                    if pulp.value(x[m][o][d][s]) == 1:
-                        tgl_mulai = order_specs[o]['TglMulai']  # Ambil tanggal mulai dari order_specs
+        for o in orders:
+            for m in machines:
+                for shift, interval_list in shift_intervals.items():  # Iterasi menggunakan interval yang sudah didefinisikan
+                    for interval in interval_list:
+                        # Jika mesin m mengerjakan order o pada hari d dan interval waktu tertentu
+                        if pulp.value(x[m][o][d][interval]) == 1:
+                            tgl_mulai = order_specs[o]['TglMulai']  # Ambil tanggal mulai dari order_specs
 
-                        # Hitung jam mulai berdasarkan shift dan hari ke-d
-                        jam_mulai = datetime.strptime(tgl_mulai, "%Y-%m-%d") + timedelta(days=d, hours=waktu_kerja[s])
-                        sisa_waktu = durasi_pekerjaan[o]  # Durasi pekerjaan untuk order ini
+                            # Hitung jam mulai berdasarkan tanggal mulai dan interval shift
+                            jam_mulai = datetime.strptime(tgl_mulai, "%m/%d/%Y") + timedelta(days=d, hours=int(interval.split(":")[0]))
+                            sisa_waktu = durasi_pekerjaan[o]  # Durasi pekerjaan untuk order ini
 
-                        # Alokasikan waktu kerja per shift, jika melebihi batas shift
-                        while sisa_waktu > 0:
-                            durasi = min(durasi_per_shift, sisa_waktu)
-                            jam_selesai = jam_mulai + timedelta(hours=durasi)
+                            # Alokasikan waktu kerja per shift
+                            while sisa_waktu > 0:
+                                durasi = min(durasi_per_shift, sisa_waktu)
+                                jam_selesai = jam_mulai + timedelta(hours=durasi)
 
-                            # Simpan ke jadwal produksi dengan format hh:mm
-                            jadwal_produksi.append({
-                                'Order': o,
-                                'Mesin': m,
-                                'Hari': d,
-                                'Shift': s,
-                                'Jam Mulai': jam_mulai.strftime("%H:%M"),
-                                'Jam Selesai': jam_selesai.strftime("%H:%M"),
-                                'Durasi (jam)': durasi,
-                                'Waktu Istirahat': '19:00 - 21:00' if (s == 'sore' and pulp.value(r[m][d]) == 1) else None
-                            })
+                                # Simpan ke jadwal produksi dengan format hh:mm
+                                jadwal_produksi.append({
+                                    'Order': o,
+                                    'Mesin': m,
+                                    'Hari': d,
+                                    'Shift': interval,  # Gunakan interval waktu yang lebih spesifik
+                                    'Jam Mulai': jam_mulai.strftime("%H:%M"),
+                                    'Jam Selesai': jam_selesai.strftime("%H:%M"),
+                                    'Durasi (jam)': durasi,
+                                    'Waktu Istirahat': '19:00 - 21:00' if (interval == '15:00-16:00' and pulp.value(r[m][d]) == 1) else None
+                                })
 
-                            # Update sisa waktu dan jam mulai berikutnya
-                            sisa_waktu -= durasi
-                            jam_mulai = jam_selesai
+                                # Update sisa waktu dan jam mulai berikutnya
+                                sisa_waktu -= durasi
+                                jam_mulai = jam_selesai
+
+
 
     # Konversi ke DataFrame untuk kemudahan manipulasi dan visualisasi
     df_jadwal = pd.DataFrame(jadwal_produksi)
+    # print(df_jadwal)
 
     # Menampilkan DataFrame dalam format tabel
     return df_jadwal.to_dict(orient='records')

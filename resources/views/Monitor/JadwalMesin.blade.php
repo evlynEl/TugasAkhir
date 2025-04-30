@@ -50,8 +50,7 @@
                         <div class="col-md-2 pl-0 pt-4">
                             <label for="hasil">Hasil Jadwal</label>
                         </div>
-                        <div class="col-md-12" id="chart">
-
+                        <div class="col-md-12" id="ganttChart" style="width: 100%; height: 600px;">
                         </div>
 
 
@@ -66,8 +65,12 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="{{ asset('css/sweetalert2.min.css') }}">
     <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>
-    {{-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> --}}
-    <script src="{{ asset('js/chart.js') }}"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <!-- Script kamu -->
+    {{-- <script src="{{ asset('js/chart.js') }}"></script> --}}
+
+
 
     <link rel="stylesheet" href="{{ asset('css/colResizeDatatable.css') }}">
     <script src="{{ asset('js/colResizeDatatable.js') }}"></script>

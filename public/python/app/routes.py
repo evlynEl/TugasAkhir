@@ -1,7 +1,7 @@
 from flask import request, jsonify, Blueprint
 # from app import app
 from app.preprocess import main as preprocess_main
-from app.model import merge_orders, main as model_main, buat_model
+from app.model import main as model_main, buat_model
 from io import BytesIO
 import json
 import subprocess
@@ -39,10 +39,10 @@ def model_endpoint():
         return jsonify({'error': 'No data received'}), 400
 
     # Merge orders terlebih dahulu
-    merged_data = merge_orders(data['data'])  # Panggil merge_orders terlebih dahulu
+    # merged_data = merge_orders(data['data'])  # Panggil merge_orders terlebih dahulu
 
     # Panggil fungsi main() dari model.py dengan data yang sudah digabung
-    hasil = model_main(merged_data)
+    hasil = model_main(data['data'])
     orders = hasil['orders']
     order_specs = hasil['order_specs']
 

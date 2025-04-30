@@ -396,7 +396,6 @@ document.addEventListener("DOMContentLoaded", function() {
         return text.replace(/[&<>"']/g, function (m) { return map[m]; });
     }
 
-
     function updateDataTable(data) {
         var table = $('#tableData').DataTable();
         table.clear();
@@ -431,8 +430,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
 
-
-
     // button unk menghasilkan jadwal
     btn_ok.addEventListener("click", function() {
         Swal.fire({
@@ -443,6 +440,14 @@ document.addEventListener("DOMContentLoaded", function() {
             cancelButtonText: 'Batal'
         }).then((result) => {
             if (result.isConfirmed) {
+                Swal.fire({
+                    title: 'Loading...',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                      Swal.showLoading();
+                    }
+                  });
+
                 // Ambil semua data dari DataTable
                 var allData = $('#tableData').DataTable().rows().data().toArray();
 
@@ -463,7 +468,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 // console.log(allData);
 
-
                 // Kirim ke Flask
                 $.ajax({
                     url: "http://127.0.0.1:5000/model",
@@ -471,14 +475,72 @@ document.addEventListener("DOMContentLoaded", function() {
                     contentType: "application/json",
                     data: JSON.stringify({ data: formattedData }),
                     success: function(response) {
-                        console.log("Hasil dari model:", response);
-                        Swal.fire('Berhasil!', 'Data berhasil diproses.', 'success');
+
+                        // console.log(response);
+
+                        Swal.close();
+                        Swal.fire('Berhasil!', 'Jadwal sudah jadi', 'success');
+
+                        function timeToDateString(time) {
+                            const today = new Date().toISOString().split("T")[0];
+                            return `${today}T${time}:00`; // format: "2025-04-30T02:24:00"
+                        }
+
+                        const result = response.result;
+
+                        // Buat map warna untuk setiap Order
+                        const orderColors = {};
+                        const colorList = ["#007bff", "#ff5733", "#28a745", "#f39c12", "#8e44ad"];  // Daftar warna untuk dibagikan
+                        let colorIndex = 0;
+
+                        const ganttPlotData = result.map(item => {
+                            const order = item["Order"] || "No Order";
+                            // Jika warna untuk order ini belum ada, buatkan dan simpan
+                            if (!orderColors[order]) {
+                                orderColors[order] = colorList[colorIndex % colorList.length];
+                                colorIndex++;
+                            }
+
+                            return {
+                                x: [
+                                    new Date(timeToDateString(item["Jam Mulai"])),
+                                    new Date(timeToDateString(item["Jam Selesai"]))
+                                ],
+                                y: [item["Mesin"]],
+                                name: order, // Menyederhanakan nama untuk legend
+                                type: "bar",
+                                orientation: "h",
+                                width: 0.4,
+                                marker: { color: orderColors[order] }, // Gunakan warna unik berdasarkan Order
+                                hovertemplate:
+                                    `Mesin: ${item["Mesin"]}<br>` +
+                                    `Order: ${order}<br>` +
+                                    `Jam: ${item["Jam Mulai"]} - ${item["Jam Selesai"]}<br>` +
+                                    `Durasi: ${item["Durasi (jam)"]?.toFixed(2)} jam<extra></extra>`
+                            };
+                        });
+
+                        Plotly.newPlot("ganttChart", ganttPlotData, {
+                            title: "Gantt Chart Jadwal Mesin",
+                            xaxis: {
+                                type: "date",
+                                title: "Waktu"
+                            },
+                            yaxis: {
+                                title: "Mesin",
+                                automargin: true
+                            },
+                            barmode: "stack", // Bar stacked per mesin
+                            showlegend: true, // Menampilkan legend
+                        });
+
                     },
                     error: function(xhr, status, error) {
                         console.error("Error:", error);
                         Swal.fire('Gagal', 'Ada kesalahan saat mengirim data.', 'error');
                     }
                 });
+
             }
         });
 
