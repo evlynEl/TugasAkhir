@@ -476,7 +476,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     data: JSON.stringify({ data: formattedData }),
                     success: function(response) {
 
-                        // console.log(response);
+                        console.log(response);
 
                         Swal.close();
                         Swal.fire('Berhasil!', 'Jadwal sudah jadi', 'success');

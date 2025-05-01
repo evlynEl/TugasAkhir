@@ -126,14 +126,9 @@ def buat_model(orders, order_specs):
     }
 
     r = pulp.LpVariable.dicts("rest", (machines, days), cat="Binary")
-
-    from datetime import datetime, timedelta
-
+    start = pulp.LpVariable.dicts("start", (machines, orders, days, intervals), cat="Binary")
     all_intervals = generate_intervals()
-
-
     jumlah_mesin_order = pulp.LpVariable.dicts("jumlah_mesin_order", orders, cat="Integer", lowBound=0)
-
     # Per hari, daya listrik maksimum SDP
     max_load_per_day = pulp.LpVariable.dicts("max_load", days, cat="Continuous", lowBound=0)
 
@@ -144,13 +139,6 @@ def buat_model(orders, order_specs):
     prob += pulp.lpSum(max_load_per_day[d] for d in days)
 
     # CONSTRAINTS
-
-    # Mesin hanya bisa kerjakan 1 order dalam 1 waktu
-    for m in machines:
-        for d in days:
-            for s in intervals:
-                prob += pulp.lpSum(x[m][o][d][s] for o in orders) <= 1
-
     # Mesin khusus ST07, ST08, ST25-32 hanya boleh kerjakan order Lebar > 110 dan Denier > 1000
     for m in special_machines:
         for o in orders:
@@ -158,7 +146,6 @@ def buat_model(orders, order_specs):
                 for d in days:
                     for s in intervals:
                         prob += x[m][o][d][s] == 0
-
 
     # Mesin dari SDP CL1-CL4 bisa istirahat, jika mesin beristirahat mulai jam 19.00, update r[m][d] menjadi 1
     for m in SDP_rest_allowed:
@@ -204,6 +191,24 @@ def buat_model(orders, order_specs):
         else:
             print(f"[SKIP] Order {o} mengandung kata 'MESIN', tidak dihitung durasinya.")
 
+    # satu start point per mesin-order-hari
+    for m in machines:
+        for o in valid_orders:
+            for d in days:
+                prob += pulp.lpSum(start[m][o][d][s] for s in intervals) <= 1
+
+    # antrian order per mesin
+    order_queue = {
+        m: [o for o in valid_orders]  # Menyimpan urutan order valid yang harus dikerjakan oleh mesin m
+        for m in machines
+    }
+
+    # Mesin mesin mengerjakan satu order per shift
+    for m in machines:
+        for d in days:
+            for shift in shifts:
+                prob += pulp.lpSum(x[m][o][d][s] for o in order_queue[m] for s in shift_intervals[shift]) == 1
+
 
     # Menambahkan constraint untuk durasi pekerjaan
     for o in valid_orders:
@@ -212,6 +217,24 @@ def buat_model(orders, order_specs):
             for d in days:
                 # Memastikan mesin hanya mengerjakan pekerjaan sesuai dengan durasi yang diperlukan
                 prob += pulp.lpSum(x[m][o][d][interval] for interval in all_intervals) >= durasi
+
+    # Waktu order harus dikerjakan seterusnya berdasarkan durasi setelah start
+    interval_index = {s: i for i, s in enumerate(intervals)}
+
+    for m in machines:
+        for o in valid_orders:
+            durasi = int(round(durasi_pekerjaan[o]))  # pembulatan jam
+            for d in days:
+                for s in intervals:
+                    i = interval_index[s]
+                    if i + durasi <= len(intervals):
+                        involved_slots = intervals[i:i+durasi]
+                        for si in involved_slots:
+                            prob += x[m][o][d][si] >= start[m][o][d][s]
+                    else:
+                        # Jika s terlalu akhir untuk mulai, maka tidak boleh start di situ
+                        prob += start[m][o][d][s] == 0
+
 
     # Alokasikan mesin dan order untuk interval tertentu
     for m in machines:
@@ -263,31 +286,43 @@ def buat_model(orders, order_specs):
     for m in machines:
         for d in days:
             for s in intervals:
-                model += pulp.lpSum([x[m][o][d][s] for o in orders]) <= 1, f"SingleOrderPerMachine_{m}_{d}_{s}"
+                prob += pulp.lpSum([x[m][o][d][s] for o in orders]) <= 1
 
 
-    # Constraint agar mesin terus mengerjakan order yang sama tanpa berganti
-    # Untuk tiap mesin, order, hari, dan shift
     start_time_value = {}
     finish_time_value = {}
 
     for m in machines:
-        for o in orders:
+        for o in valid_orders:
             for d in days:
-                for s in shift_intervals:  # Iterasi berdasarkan shift pagi, sore, malam
-                    for interval in shift_intervals[s]:  # Iterasi berdasarkan interval waktu dalam shift
-                        # Ambil jam mulai shift dari interval (misal '07:00-08:00' -> jam mulai 07:00)
-                        start_hour = int(interval.split('-')[0].split(':')[0])
+                for interval in all_intervals:  # interval seperti '07:00-08:00'
+                    start_hour = int(interval.split('-')[0].split(':')[0])
+                    start_time_value[m, o, d, interval] = start_hour
+                    durasi = durasi_pekerjaan[o]
+                    finish_time_value[m, o, d, interval] = start_hour + durasi
 
-                        # Tentukan waktu mulai berdasarkan shift
-                        start_time_value[m, o, d, s] = start_hour
+    # Constraint agar mesin terus mengerjakan order yang sama tanpa berganti
+    for m in machines:
+        for o in valid_orders:
+            for d in days:
+                for i, interval in enumerate(all_intervals):
+                    durasi = durasi_pekerjaan[o]
+                    jam_mulai = int(interval.split('-')[0].split(':')[0])
+                    jam_selesai = jam_mulai + durasi
+                    interval_aktif = []
 
-                        # Durasi pekerjaan untuk order o
-                        durasi_pekerjaan_order = durasi_pekerjaan[o]
+                    for next_interval in all_intervals[i:]:
+                        next_jam = int(next_interval.split('-')[0].split(':')[0])
+                        if next_jam < jam_selesai:
+                            interval_aktif.append(next_interval)
 
-                        # Tentukan waktu selesai berdasarkan durasi pekerjaan
-                        finish_time_value[m, o, d, s] = start_time_value[m, o, d, s] + durasi_pekerjaan_order
+                    interval_key = interval.replace(':', '').replace('-', '')
+                    constraint_name = f"ContinueOrder_{m}_{o}_{d}_{i}_{interval_key}"
 
+                    prob += (
+                        pulp.lpSum([x[m][o][d][intv] for intv in interval_aktif])
+                        >= durasi * x[m][o][d][interval]
+                    ), constraint_name
 
 
     # SOLVE
