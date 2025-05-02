@@ -420,6 +420,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         Swal.close();
         table.draw();
+        btn_ok.focus();
     }
 
     function formatNumber(value) {
@@ -466,7 +467,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     return obj;
                 });
 
-                // console.log(allData);
+                // console.log(formattedData);
 
                 // Kirim ke Flask
                 $.ajax({
@@ -476,64 +477,107 @@ document.addEventListener("DOMContentLoaded", function() {
                     data: JSON.stringify({ data: formattedData }),
                     success: function(response) {
 
-                        console.log(response);
+                        const result = response.result;
+
+                        // Urutkan berdasarkan Hari, Order, dan Jam Mulai
+                        result.sort((a, b) => {
+                            if (a["Hari"] !== b["Hari"]) {
+                                return a["Hari"] - b["Hari"];
+                            }
+                            if (a["Order"] !== b["Order"]) {
+                                return a["Order"].localeCompare(b["Order"]);
+                            }
+                            return a["Jam Mulai"].localeCompare(b["Jam Mulai"]);
+                        });
+
+                        // console.table(result);
 
                         Swal.close();
                         Swal.fire('Berhasil!', 'Jadwal sudah jadi', 'success');
 
-                        function timeToDateString(time) {
-                            const today = new Date().toISOString().split("T")[0];
-                            return `${today}T${time}:00`; // format: "2025-04-30T02:24:00"
+                        // Fungsi untuk mengonversi waktu ke menit sejak 07:00
+                        function timeToMinutes(timeStr) {
+                            const [hours, minutes] = timeStr.split(":").map(Number);
+                            return (hours - 7) * 60 + minutes;
                         }
 
-                        const result = response.result;
+                        // Kelompokkan data berdasarkan Hari
+                        const groupedByDay = {};
+                        result.forEach(item => {
+                            if (!groupedByDay[item.Hari]) groupedByDay[item.Hari] = [];
+                            groupedByDay[item.Hari].push(item);
+                        });
 
-                        // Buat map warna untuk setiap Order
-                        const orderColors = {};
-                        const colorList = ["#007bff", "#ff5733", "#28a745", "#f39c12", "#8e44ad"];  // Daftar warna untuk dibagikan
-                        let colorIndex = 0;
+                        // Menentukan jumlah hari yang unik
+                        const days = Object.keys(groupedByDay);
 
-                        const ganttPlotData = result.map(item => {
-                            const order = item["Order"] || "No Order";
-                            // Jika warna untuk order ini belum ada, buatkan dan simpan
-                            if (!orderColors[order]) {
-                                orderColors[order] = colorList[colorIndex % colorList.length];
-                                colorIndex++;
+                        // Buat div untuk setiap hari, jika belum ada
+                        days.forEach(day => {
+                            // Pastikan ada elemen div di HTML untuk setiap hari
+                            const chartContainerId = `gantt-chart-hari-${day}`;
+                            if (!document.getElementById(chartContainerId)) {
+                                const div = document.createElement('div');
+                                div.id = chartContainerId;
+                                div.style.marginBottom = '20px'; // Jarak antar chart
+                                document.getElementById('charts-container').appendChild(div); // Asumsi container utama adalah 'charts-container'
                             }
 
-                            return {
-                                x: [
-                                    new Date(timeToDateString(item["Jam Mulai"])),
-                                    new Date(timeToDateString(item["Jam Selesai"]))
-                                ],
-                                y: [item["Mesin"]],
-                                name: order, // Menyederhanakan nama untuk legend
-                                type: "bar",
-                                orientation: "h",
-                                width: 0.4,
-                                marker: { color: orderColors[order] }, // Gunakan warna unik berdasarkan Order
-                                hovertemplate:
-                                    `Mesin: ${item["Mesin"]}<br>` +
-                                    `Order: ${order}<br>` +
-                                    `Jam: ${item["Jam Mulai"]} - ${item["Jam Selesai"]}<br>` +
-                                    `Durasi: ${item["Durasi (jam)"]?.toFixed(2)} jam<extra></extra>`
+                            const dayData = groupedByDay[day];
+                            const y = [];
+                            const x = [];
+                            const base = [];
+                            const text = [];
+
+                            dayData.forEach(item => {
+                                y.push(`${item.Order} (${item.Mesin})`);
+                                const start = timeToMinutes(item["Jam Mulai"]);
+                                const end = timeToMinutes(item["Jam Selesai"]);
+                                x.push(end - start);
+                                base.push(start);
+                                text.push(`${item["Jam Mulai"]} - ${item["Jam Selesai"]}`);
+                            });
+
+                            // Buat trace untuk setiap hari
+                            const trace = {
+                                type: 'bar',
+                                x: x,
+                                y: y,
+                                base: base,
+                                orientation: 'h',
+                                name: `Hari ${day}`,
+                                text: text,
+                                hoverinfo: 'text',
+                                marker: {
+                                    color: 'rgba(50, 171, 96, 0.6)',
+                                    line: {
+                                        color: 'rgba(50, 171, 96, 1.0)',
+                                        width: 1
+                                    }
+                                },
+                                showlegend: true,
+                                legendgroup: `Hari ${day}`,  // Mengelompokkan legend berdasarkan hari
                             };
-                        });
 
-                        Plotly.newPlot("ganttChart", ganttPlotData, {
-                            title: "Gantt Chart Jadwal Mesin",
-                            xaxis: {
-                                type: "date",
-                                title: "Waktu"
-                            },
-                            yaxis: {
-                                title: "Mesin",
-                                automargin: true
-                            },
-                            barmode: "stack", // Bar stacked per mesin
-                            showlegend: true, // Menampilkan legend
-                        });
+                            // Layout chart
+                            const layout = {
+                                title: `Gantt Chart Hari ${day}`,
+                                barmode: 'stack',
+                                xaxis: {
+                                    title: 'Jam',
+                                    range: [0, (23 - 7 + 1) * 60], // dari 07:00 hingga 23:59
+                                    tickvals: Array.from({ length: 17 }, (_, i) => i * 60),
+                                    ticktext: Array.from({ length: 17 }, (_, i) => `${String(i + 7).padStart(2, '0')}:00`)
+                                },
+                                yaxis: {
+                                    automargin: true
+                                },
+                                height: 400, // Sesuaikan tinggi chart
+                                showlegend: true
+                            };
 
+                            // Render Gantt chart untuk setiap Hari
+                            Plotly.newPlot(`gantt-chart-hari-${day}`, [trace], layout);
+                        });
                     },
                     error: function(xhr, status, error) {
                         console.error("Error:", error);

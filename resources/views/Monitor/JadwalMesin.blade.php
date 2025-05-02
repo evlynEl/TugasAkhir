@@ -50,7 +50,7 @@
                         <div class="col-md-2 pl-0 pt-4">
                             <label for="hasil">Hasil Jadwal</label>
                         </div>
-                        <div class="col-md-12" id="ganttChart" style="width: 100%; height: 600px;">
+                        <div class="col-md-12" id="charts-container">
                         </div>
 
 
