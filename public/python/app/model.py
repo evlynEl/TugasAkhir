@@ -1,33 +1,9 @@
 import pulp
+import numpy as np
 import pandas as pd
 from datetime import datetime, timedelta
-from collections import defaultdict, OrderedDict
+from collections import defaultdict
 import re
-
-# function unk update jumlah mesin kalau +mesin
-# def merge_orders(data):
-#     # print("Data:", data)
-
-#     merged = {}
-
-#     for item in data:
-#         no_order = item["NoOrder"]
-#         jumlah = item["Jumlah"]
-#         mesin = item["Mesin"]
-
-#         if no_order not in merged:
-#             merged[no_order] = item.copy()
-#             # Pastikan Jumlah angka, jika bukan (seperti '+mesin'), default 0
-#             merged[no_order]["Jumlah"] = jumlah if isinstance(jumlah, (int, float)) else 0
-#             merged[no_order]["Mesin"] = mesin
-#         else:
-#             # Update mesin
-#             merged[no_order]["Mesin"] += mesin
-#             # Jumlah hanya diisi jika belum diset dan input jumlah bukan '+mesin'
-#             if isinstance(jumlah, (int, float)) and merged[no_order]["Jumlah"] == 0:
-#                 merged[no_order]["Jumlah"] = jumlah
-
-#     return list(merged.values())
 
 def main(data_list):
     # merged_data = merge_orders(data_list)
@@ -74,7 +50,7 @@ def proses_jumlah_orders(orders, order_specs):
             jumlah_str = spec['Jumlah'].upper()
             jumlah_all[o].append(jumlah_str)
 
-            if o not in jumlah_order and '+MESIN' not in jumlah_str:
+            if o not in jumlah_order and '+MESIN' not in jumlah_str and 'MSN' not in jumlah_str:
                 try:
                     jumlah_order[o] = float(jumlah_str.replace(',', '').strip())
                     valid_orders.append(o)
@@ -89,16 +65,101 @@ def extract_mesin(jumlah_mesin_str):
     match = re.match(r'(\d+)\s*MESIN', jumlah_mesin_str.upper())
     if match:
         return int(match.group(1))  # Ambil angka yang ditemukan
-    return 0  # Jika tidak ada angka MESIN, return 0
+    return 1  # Jika tidak ada angka MESIN, return 0
+
+# Fungsi tambah jumlah Mesin
+def add_mesin(order_specs):
+    updated_order_specs = defaultdict(list)
+
+    for no_order, specs in order_specs.items():
+        if len(specs) > 1:
+            base_spec = None
+            mesin_plus = 0
+
+            for spec in specs:
+                jumlah = str(spec['Jumlah']).strip().upper()
+                if jumlah == '+MESIN':
+                    mesin_plus += extract_mesin(spec['Mesin'])
+                else:
+                    try:
+                        _ = float(jumlah.replace(',', ''))  # pastikan valid angka
+                        base_spec = spec
+                    except ValueError:
+                        continue
+
+            if base_spec and mesin_plus > 0:
+                mesin_base = extract_mesin(base_spec['Mesin'])
+                mesin_total = mesin_base + mesin_plus
+                base_spec['Mesin'] = (f"{mesin_total} MESIN")
+                updated_order_specs[no_order].append(base_spec)
+            else:
+                # jika tidak ditemukan kombinasi valid, simpan semuanya apa adanya
+                updated_order_specs[no_order] = specs
+        else:
+            updated_order_specs[no_order] = specs
+
+    return updated_order_specs
+
+def generate_shift_intervals(start_hour, end_hour):
+    return [f"{str(h%24).zfill(2)}:00-{str((h+1)%24).zfill(2)}:00" for h in range(start_hour, end_hour)]
+
+def is_first_day(d):
+    return d == 0  # Hari pertama adalah hari dengan d == 1
+
+def is_within_first_day_interval(s):
+    # Format interval waktu: "07:00-08:00", "08:00-09:00", dll.
+    start_time = s.split('-')[0]  # Ambil waktu mulai, contoh: "07:00"
+    start_hour = int(start_time.split(':')[0])  # Ambil jam dari waktu mulai
+
+    # Membatasi interval waktu antara 07:00 dan 23:59
+    return 7 <= start_hour <= 23  # Pastikan jam mulai antara 07:00 dan 23:00 (rentang 17 jam)
+
+# def job_desc(valid_orders, order_specs, machines, jumlah_order):
+    kapasitas_mesin = {}
+    durasi_pekerjaan = {}
+    assigned_machines = {}  # Menggunakan dictionary
+    job = []
+
+    for o in valid_orders:
+        assigned_machines[o] = []  # Inisialisasi list untuk setiap order
+        for spec in order_specs[o]:
+            mesin_dibutuhkan = extract_mesin(spec["Mesin"])
+
+            for m in machines:  # Pilih mesin sesuai jumlah yang dibutuhkan
+                if len(assigned_machines[o]) < mesin_dibutuhkan:
+                    assigned_machines[o].append(m)
+
+            RjtWE = float(spec['RjtWE'])  # Ambil Weft dari order_specs
+
+            # Hitung kapasitas mesin dan durasi total pekerjaan untuk order ini
+            kapasitas_mesin[o] = ((100 * 6 * 2.54) / RjtWE) * 60  # Kapasitas mesin dalam meter/jam
+            durasi_total = jumlah_order[o] / kapasitas_mesin[o]
+            durasi_pekerjaan[o] = durasi_total / mesin_dibutuhkan  # Durasi per mesin
+
+            # Menyimpan informasi pekerjaan dalam format yang benar
+            job.append({
+                'Ord': o,
+                'JmlMesin': mesin_dibutuhkan,
+                'Durasi': durasi_pekerjaan[o],
+                'Mesin': assigned_machines[o]
+            })
+
+    return job
 
 def buat_model(orders, order_specs):
     # print("Orders:", orders)
+    order_specs = add_mesin(order_specs)
     # print("Order Specs:", order_specs)
 
     # SET
-    days = range(7)
-    shifts = ['pagi', 'sore', 'malam']
+    days = [0, 1, 2, 3, 4, 5, 6]
+    shift_intervals = {
+        'pagi': generate_shift_intervals(7, 15),
+        'sore': generate_shift_intervals(15, 23),
+        'malam': generate_shift_intervals(23, 31)
+    }
     machines = ['SO{:02d}'.format(i) for i in range(1, 41)] + ['ST{:02d}'.format(i) for i in range(1, 77)]
+    special_machines = ['ST07', 'ST08'] + ['ST{:02d}'.format(i) for i in range(25,33)]
 
     # SDP Mapping
     SDP_CL1 = ['SO{:02d}'.format(i) for i in range(1, 17)]
@@ -109,7 +170,6 @@ def buat_model(orders, order_specs):
     SDP_CL6 = ['ST{:02d}'.format(i) for i in list(range(29,33)) + list(range(69,77))]
 
     SDP_rest_allowed = SDP_CL1 + SDP_CL2 + SDP_CL3 + SDP_CL4
-    special_machines = ['ST07', 'ST08'] + ['ST{:02d}'.format(i) for i in range(25,33)]
 
     # Mesin per SDP
     SDP_mapping = {
@@ -123,14 +183,12 @@ def buat_model(orders, order_specs):
     SDP_names = list(SDP_mapping.keys())
 
     # Mengubah shift sore menjadi interval per jam
-    shift_intervals = {
-        'pagi': [f"{str(h).zfill(2)}:00-{str((h+1)%24).zfill(2)}:00" for h in range(7, 15)],
-        'sore': [f"{str(h).zfill(2)}:00-{str((h+1)%24).zfill(2)}:00" for h in range(15, 23)],
-        'malam': [f"{str(h%24).zfill(2)}:00-{str((h+1)%24).zfill(2)}:00" for h in range(23, 31)],
-    }
+
 
     jumlah_all, jumlah_order, valid_orders = proses_jumlah_orders(orders, order_specs)
-    # print(valid_orders)
+    print(valid_orders)
+    # job = job_desc(valid_orders, order_specs, machines, jumlah_order)
+    # print(job)
 
     # PROBLEM
     prob = pulp.LpProblem("Scheduling_Minimize_Max_SDP_Load", pulp.LpMinimize)
@@ -138,7 +196,7 @@ def buat_model(orders, order_specs):
     # VARIABLES
     intervals = [f"{str(h).zfill(2)}:00-{str((h+1)%24).zfill(2)}:00" for h in range(24)]
     # Menentukan jam istirahat yang relevan
-    istirahat_intervals = ['19:00-20:00', '20:00-21:00', '21:00-22:00']
+    istirahat_intervals = ['19:00-20:00', '20:00-21:00']
 
     x = {
         m: {
@@ -153,9 +211,12 @@ def buat_model(orders, order_specs):
         }
         for m in machines
     }
+    # y = pulp.LpVariable.dicts("y", (machines, valid_orders), cat="Binary")
+
 
     r = pulp.LpVariable.dicts("rest", (machines, days), cat="Binary")
-    start = pulp.LpVariable.dicts("start", (machines, orders, days, intervals), cat="Binary")
+    # start = pulp.LpVariable.dicts("start", (machines, orders, days, intervals), cat="Binary")
+
     # waktu 24 jam
     all_intervals = [
         f"{str(h % 24).zfill(2)}:00-{str((h + 1) % 24).zfill(2)}:00"
@@ -166,22 +227,48 @@ def buat_model(orders, order_specs):
     max_load_per_day = pulp.LpVariable.dicts("max_load", days, cat="Continuous", lowBound=0)
 
     # INTERNAL: total aktif mesin di setiap SDP setiap hari
-    load_SDP_day = pulp.LpVariable.dicts("load_SDP_day", (SDP_names, days), cat="Continuous", lowBound=0)
+    # load_SDP_day = pulp.LpVariable.dicts("load_SDP_day", (SDP_names, days), cat="Continuous", lowBound=0)
+
+    # Tambahkan variabel sisa waktu kerja
+    # sisa_pekerjaan = pulp.LpVariable.dicts("sisa_pekerjaan", (machines, orders, days), lowBound=0)
+
+    assigned_machines = defaultdict(list)
+
+    # start_time = defaultdict(dict)
+
+    # for o in valid_orders:
+    #     for m in assigned_machines.get(o, []):
+    #         start_time[o][m] = pulp.LpVariable(f"start_time_{o}_{m}", lowBound=0, cat='Continuous')
+
+
 
     # OBJECTIVE
     prob += pulp.lpSum(max_load_per_day[d] for d in days)
 
     # CONSTRAINTS
-    # Mesin khusus ST07, ST08, ST25-32 hanya boleh kerjakan order Lebar > 110 dan Denier > 1000
+    # 1. Interval 24 jam
+    # intervals_by_day = {}
+
+    # for d in days:
+    #     if d == 0:
+    #         # Hari 0: 07:00 - 24:00
+    #         intervals_by_day[d] = [f"{str(h).zfill(2)}:00-{str((h+1)%24).zfill(2)}:00" for h in range(7, 24)]
+    #     else:
+    #         # Hari 1, 2, ...: 00:00 - 24:00
+    #         intervals_by_day[d] = [f"{str(h).zfill(2)}:00-{str((h+1)%24).zfill(2)}:00" for h in range(0, 24)]
+
+
+    # 2. Mesin khusus ST07, ST08, ST25-32 hanya boleh kerjakan order Lebar > 110 dan Denier > 1000
     for m in special_machines:
         for o in orders:
             for spec in order_specs[o]:
                 if float(spec['Lebar']) <= 110 or float(spec['Denier']) <= 1000:
+                    assigned_machines[o].append(m)
                     for d in days:
                         for s in intervals:
                             prob += x[m][o][d][s] == 0
 
-    # Mesin dari SDP CL1-CL4 bisa istirahat, jika mesin beristirahat mulai jam 19.00, update r[m][d] menjadi 1
+    # 3. Mesin dari SDP CL1-CL4 bisa istirahat, jika mesin beristirahat mulai jam 19.00, update r[m][d] menjadi 1
     for m in SDP_rest_allowed:
         for d in days:
             istirahat = [interval for interval in shift_intervals['sore'] if interval in istirahat_intervals]
@@ -191,212 +278,237 @@ def buat_model(orders, order_specs):
             prob += r[m][d] >= pulp.lpSum(x[m][o][d][s] for o in orders for s in istirahat)
 
 
-    # Mesin di SDP CL5, CL6 tidak bisa istirahat
+    # 4. Mesin di SDP CL5, CL6 tidak bisa istirahat
     for m in (SDP_CL5 + SDP_CL6):
         for d in days:
             prob += r[m][d] == 0
 
-    # Jumlah mesin istirahat per hari hanya boleh 3
+    # 5. Jumlah mesin istirahat per hari hanya boleh 3
     for d in days:
         prob += pulp.lpSum(r[m][d] for m in SDP_rest_allowed) == 3
 
-    # Kapasitas mesin dihitung berdasarkan RjtWE (Weft)
+    # Kapasitas, durasi, penyebaran mesin
     kapasitas_mesin = {}
-
-    for o in orders:
-        for spec in order_specs[o]:
-            RjtWE = float(spec['RjtWE'])  # Ambil Weft dari order_specs
-            kapasitas_mesin[o] = ((100 * 6 * 2.54) / RjtWE) * 60  # Kapasitas mesin dalam meter/jam
-
-    # Hitung durasi pekerjaan hanya untuk order yang valid
     durasi_pekerjaan = {}
+    mesin_dibutuhkan = {}
+    assigned_machines = {}  # Menggunakan dictionary
+    mesin_index = 0
 
     for o in valid_orders:
-        if o in kapasitas_mesin:
-            kapasitas = kapasitas_mesin[o]
-            durasi_pekerjaan[o] = jumlah_order[o] / kapasitas
-        else:
-            print(f"[SKIP] Tidak bisa hitung durasi untuk order {o}")
-
-    # satu start point per mesin-order-hari
-    for m in machines:
-        for o in valid_orders:
-            for d in days:
-                prob += pulp.lpSum(start[m][o][d][s] for s in intervals) <= 1
-
-    # antrian order per mesin
-    order_queue = {
-        m: [o for o in valid_orders]  # Menyimpan urutan order valid yang harus dikerjakan oleh mesin m
-        for m in machines
-    }
-
-    # Mesin mesin mengerjakan satu order per shift
-    for m in machines:
-        for d in days:
-            for shift in shifts:
-                prob += pulp.lpSum(x[m][o][d][s] for o in order_queue[m] for s in shift_intervals[shift]) == 1
-
-    # Menambahkan constraint untuk durasi pekerjaan
-    for o in valid_orders:
-        for m in machines:
-            for d in days:
-                # Memastikan mesin hanya mengerjakan pekerjaan sesuai dengan durasi yang diperlukan
-                prob += pulp.lpSum(x[m][o][d][interval] for interval in all_intervals) >=  durasi_pekerjaan[o]
-
-    # Waktu order harus dikerjakan seterusnya berdasarkan durasi setelah start
-    interval_index = {s: i for i, s in enumerate(intervals)}
-
-    # Pastikan interval berkelanjutan
-    for m in machines:
-        for o in valid_orders:
-            durasi = int(round(durasi_pekerjaan[o]))
-            for d in days:
-                for i in range(len(all_intervals) - durasi + 1):  # jaga agar tidak overflow
-                    start_interval = all_intervals[i]
-                    next_intervals = all_intervals[i:i + durasi]
-
-                    # Jika order dimulai di sini, maka semua interval berikutnya harus terpakai
-                    for j, interval in enumerate(next_intervals):
-                        prob += x[m][o][d][interval] >= start[m][o][d][start_interval]
-
-
-
-
-    # Alokasikan mesin dan order untuk interval tertentu
-    for m in machines:
-        for o in valid_orders:
-            for d in days:
-                for i in range(1, len(all_intervals)):
-                    prev = all_intervals[i - 1]
-                    curr = all_intervals[i]
-                    # Jika interval sekarang aktif, maka interval sebelumnya harus aktif juga
-                    prob += x[m][o][d][curr] <= x[m][o][d][prev] + (1 - pulp.lpSum(start[m][o][d][s] for s in all_intervals))  # allow first active block
-
-
-    # Tambahkan variabel sisa waktu kerja
-    sisa_pekerjaan = pulp.LpVariable.dicts("sisa_pekerjaan", (machines, orders, days), lowBound=0)
-
-    # Constraint untuk memindahkan pekerjaan ke hari berikutnya
-    for m in machines:
-        for o in valid_orders:
-            for d in days:
-                if d < 6:
-                    kerja_hari_ini = pulp.lpSum(x[m][o][d][interval] for interval in all_intervals)
-                    prob += sisa_pekerjaan[m][o][d+1] == sisa_pekerjaan[m][o][d] - kerja_hari_ini
-
-    # Mengalokasikan sisa pekerjaan pada hari berikutnya
-    for m in machines:
-        for o in valid_orders:
-            for d in days:
-                prob += pulp.lpSum(x[m][o][d][interval] for interval in all_intervals) + sisa_pekerjaan[m][o][d] >= durasi_pekerjaan[o]  # Pastikan pekerjaan selesai
-
-    # Jumlah mesin yang mengerjakan setiap order
-    for o in valid_orders:
+        assigned_machines[o] = []
         for spec in order_specs[o]:
-            mesin_dibutuhkan = extract_mesin(spec["Mesin"])
-            prob += pulp.lpSum(x[m][o][d][s] for m in machines for d in days for s in all_intervals) <= float(mesin_dibutuhkan) * durasi_pekerjaan[o]
+            mesin_dibutuhkan[o] = extract_mesin(spec["Mesin"])
 
-    # Menghitung beban tertinggi untuk setiap SDP pada setiap hari
-    for d in days:
-        for sdp in SDP_names:
-            max_beban = pulp.lpSum(load_SDP_day[sdp][d] for m in machines if m in SDP_rest_allowed)  # Beban tertinggi di SDP CL1-4
-            for m in machines:
-                # Jika mesin adalah mesin dengan beban tertinggi pada SDP CL
-                if pulp.lpSum(load_SDP_day[sdp][d] for m in machines if m == m) == max_beban and m in SDP_rest_allowed:
-                    prob += r[m][d] == 1  # Mesin bisa diistirahatkan
-                else:
-                    prob += r[m][d] == 0  # Mesin tetap bekerja
+            # Menyebar pemilihan mesin secara merata
+            for _ in range(mesin_dibutuhkan[o]):
+                m = machines[mesin_index % len(machines)]
+                assigned_machines[o].append(m)
+                mesin_index += 1  # Geser index agar tidak selalu dari awal
 
-    # Mengatur mesin yang diistirahatkan (r[m][d] == 1) untuk tidak mengerjakan order pada shift tertentu
+
+                RjtWE = float(spec['RjtWE'])  # Ambil Weft dari order_specs
+
+                # Hitung kapasitas mesin dan durasi total pekerjaan untuk order ini
+                kapasitas_mesin[o] = ((100 * 6 * 2.54) / RjtWE) * 60  # Kapasitas mesin dalam meter/jam
+                durasi_total = jumlah_order[o] / kapasitas_mesin[o]
+                durasi_pekerjaan[o] = durasi_total / mesin_dibutuhkan[o]  # Durasi per mesin
+
+                prob += pulp.lpSum(x[m][o][d][s] for d in days for m in assigned_machines[o] for s in all_intervals) <= durasi_pekerjaan[o]
+            print(f"Order: {o}, Mesin Dibutuhkan: {mesin_dibutuhkan[o]}, Durasi Pekerjaan: {durasi_pekerjaan[o]}, Mesin: {assigned_machines[o]}")
+
+
+    # Mesin hanya boleh 1 order per jam
     for m in machines:
         for d in days:
-            for interval in all_intervals:
-                prob += pulp.lpSum(x[m][o][d][interval] for o in orders) <= (1 - r[m][d])  # Mesin tidak mengerjakan order jika diistirahatkan
-
-    # satu hari dan satu interval Mesin tidak boleh mengerjakan lebih dari satu order
-    for m in machines:
-        for d in days:
-            for s in all_intervals:
-                prob += pulp.lpSum(x[m][o][d][s] for o in orders) <= 1
+            for h in range(24):
+                prob += pulp.lpSum(x[m][o][d][s] for o in valid_orders if m in assigned_machines[o]
+                                    for s in all_intervals if int(s.split('-')[0].split(':')[0]) == h
+                                    ) <= 1
 
 
-    start_time_value = {}
-    finish_time_value = {}
+    # #13. Alokasikan mesin dan order untuk interval tertentu
+    # for m in machines:
+    #     for o in valid_orders:
+    #         for d in days:
+    #             for i in range(1, len(all_intervals)):
+    #                 prev = all_intervals[i - 1]
+    #                 curr = all_intervals[i]
+    #                 # Jika interval sekarang aktif, maka interval sebelumnya harus aktif juga
+    #                 prob += x[m][o][d][curr] <= x[m][o][d][prev] + (1 - pulp.lpSum(start[m][o][d][s] for s in all_intervals))  # allow first active block
 
-    for m in machines:
-        for o in valid_orders:
-            for d in days:
-                for interval in all_intervals:
-                    start_hour = int(interval.split('-')[0].split(':')[0])
-                    start_time_value[m, o, d, interval] = start_hour
-                    durasi = durasi_pekerjaan[o]
-                    finish_time_value[m, o, d, interval] = start_hour + durasi
+    # Membatasi durasi hanya pada hari pertama dengan 17 jam (07:00 - 23:59)
+    # for o in valid_orders:
+    #     for m in assigned_machines[o]:
+    #         prob += pulp.lpSum(
+    #             x[m][o][0][s] for s in all_intervals if is_within_first_day_interval(s)) <= durasi_pekerjaan
+
+            # # Jika durasi pekerjaan lebih dari 17, maka sisa dikerjakan di hari berikutnya
+            # if durasi_pekerjaan > 17:
+            #     sisa = durasi_pekerjaan - 17
+            #     prob += pulp.lpSum(
+            #         x[m][o][d][s]
+            #         for d in days if d != 1  # hari ke-2 dan seterusnya
+            #         for s in all_intervals
+            #     ) >= sisa
 
 
-    # Constraint agar mesin terus mengerjakan order yang sama tanpa berganti
-    for m in machines:
-        for o in valid_orders:
-            for d in days:
-                for i, interval in enumerate(all_intervals):
-                    durasi = int(round(durasi_pekerjaan[o]))
-                    jam_mulai = int(interval.split('-')[0].split(':')[0])
-                    jam_selesai = jam_mulai + durasi
-                    interval_aktif = []
 
-                    for next_interval in all_intervals[i:]:
-                        next_jam = int(next_interval.split('-')[0].split(':')[0])
-                        if next_jam < jam_selesai:
-                            interval_aktif.append(next_interval)
+    # # 14. Constraint untuk memindahkan pekerjaan ke hari berikutnya
+    # for m in machines:
+    #     for o in valid_orders:
+    #         for d in days:
+    #             if d < max(days):
+    #                 kerja_hari_ini = pulp.lpSum(x[m][o][d][interval] for interval in intervals_by_day[d])
+    #                 prob += sisa_pekerjaan[m][o][d+1] == sisa_pekerjaan[m][o][d] - kerja_hari_ini
 
-                    prob += (
-                        pulp.lpSum([x[m][o][d][intv] for intv in interval_aktif]) >= durasi * x[m][o][d][interval]
-                    )
+    # # 15. Pastikan total pekerjaan dihitung untuk semua mesin yang mengerjakan order pada hari d
+    # for o in valid_orders:
+    #     for d in days:
+    #         total_kerja = pulp.lpSum(x[m][o][d][interval] for m in machines for interval in intervals_by_day[d])
+
+    #         # Memastikan total kerja + sisa pekerjaan dari mesin manapun lebih besar atau sama dengan durasi pekerjaan
+    #         prob += total_kerja + pulp.lpSum(sisa_pekerjaan[m][o][d] for m in machines) >= durasi_pekerjaan[o]
+
+
+    # 16. Menghitung beban tertinggi untuk setiap SDP pada setiap hari
+    # for d in days:
+    #     for sdp in SDP_names:
+    #         max_beban = pulp.lpSum(load_SDP_day[sdp][d] for m in machines if m in SDP_rest_allowed)  # Beban tertinggi di SDP CL1-4
+    #         for m in machines:
+    #             # Jika mesin adalah mesin dengan beban tertinggi pada SDP CL
+    #             if pulp.lpSum(load_SDP_day[sdp][d] for m in machines if m == m) == max_beban and m in SDP_rest_allowed:
+    #                 prob += r[m][d] == 1  # Mesin bisa diistirahatkan
+    #             else:
+    #                 prob += r[m][d] == 0  # Mesin tetap bekerja
+
+    ## 17. Mengatur mesin yang diistirahatkan (r[m][d] == 1) untuk tidak mengerjakan order pada shift tertentu
+    # for m in machines:
+    #     for d in days:
+    #         for interval in intervals_by_day[d]:
+    #             prob += pulp.lpSum(x[m][o][d][interval] for o in orders) <= (1 - r[m][d])
+
+    # # No overlap constraint
+    # for o in valid_orders:
+    #     for m in assigned_machines.get(o, []):
+    #         interval_expr = []
+    #         for d in days:
+    #             for interval in all_intervals:
+    #                 hour = int(interval.split('-')[0].split(':')[0])
+    #                 interval_expr.append(hour * start[m][o][d][interval])
+    #         prob += start_time[o][m] == pulp.lpSum(interval_expr)
+
+    # big_M = 200
+    # for m in machines:
+    #     for i, o1 in enumerate(valid_orders):
+    #         for o2 in valid_orders[i + 1:]:
+    #             if m in assigned_machines[o1] and m in assigned_machines[o2]:
+    #                 before = pulp.LpVariable(f"before_{m}_{o1}_{o2}", cat='Binary')
+
+    #                 dur1 = int(round(durasi_pekerjaan[o1]))
+    #                 dur2 = int(round(durasi_pekerjaan[o2]))
+
+    #                 prob += (
+    #                     start_time[o2][m] >= start_time[o1][m] + dur1 - (1 - before) * big_M
+    #                 )
+    #                 prob += (
+    #                     start_time[o1][m] >= start_time[o2][m] + dur2 - before * big_M
+    #                 )
+
+
+    # for o in valid_orders:
+    #     for m in assigned_machines[o]:
+    #         for d in days:
+    #             if d != 0:  # Jika hari bukan hari target (selain hari 0)
+    #                 # Pastikan shift pagi ada sebelum mengakses
+    #                 if 'malam' in shift_intervals:
+    #                     for interval in shift_intervals['malam']:  # Iterasi shift pagi
+    #                         prob += x[m][o][d][interval] == 0  # Set semua interval pada hari selain hari 0 menjadi 0
+    #             else:  # Jika hari adalah hari 0 (misalnya hari target)
+    #                 # Pastikan shift pagi ada sebelum mengakses
+    #                 if 'pagi' in shift_intervals:
+    #                     for interval in shift_intervals['pagi']:  # Tetap menggunakan semua interval di shift 'pagi'
+    #                         prob += x[m][o][0][interval] == 1  # Set semua interval di hari 0 menjadi 1 (menandakan jam mulai)
+
+    # Hanya set jam mulai di pagi hari Day 0
+    for o in valid_orders:
+        for m in assigned_machines[o]:
+            if 'pagi' in shift_intervals:
+                prob += pulp.lpSum(x[m][o][0][interval] for interval in shift_intervals['pagi']) >= 1
+
+
+    # print("Status:", pulp.LpStatus[prob.status])
 
     # SOLVE
     prob.solve()
+    print("Status:", pulp.LpStatus[prob.status])
 
     # Generate jadwal
-    durasi_per_shift = 8
     jadwal_produksi = []
 
     # Loop untuk mengambil hasil dari variabel x dan menyusun jadwal produksi
-    for d in days:
-        for o in valid_orders:
-            for m in machines:
+    for o in valid_orders:
+        print(assigned_machines)
+        for m in assigned_machines[o]:
+            aktif_slots = []
+
+            for d in days:
                 for shift in ['pagi', 'sore', 'malam']:
                     for interval in shift_intervals[shift]:
+                        if pulp.value(x[m][o][d][interval]) is not None and pulp.value(x[m][o][d][interval]) >= 0.9:
+                            aktif_slots.append((d, interval))
 
-                        # Jika mesin m mengerjakan order o pada hari d dan interval waktu tertentu
-                        if pulp.value(x[m][o][d][interval]) == 1:
-                            tgl_mulai = next(
-                                (spec['TglMulai'] for spec in order_specs[o] if '+MESIN' not in spec['Jumlah'].upper()),
-                                order_specs[o][0]['TglMulai']  # fallback jika semua "+MESIN"
-                            )
+            if not aktif_slots:
+                print(f"[WARNING] Mesin {m} tidak aktif untuk order {o}, padahal terdaftar di assigned_machines.")
+                continue
 
+            aktif_slots.sort(key=lambda x: (x[0], int(x[1].split('-')[0].split(':')[0])))
 
-                            # Hitung jam mulai berdasarkan tanggal mulai dan interval shift
-                            jam_awal = int(interval.split('-')[0].split(':')[0])
-                            jam_mulai = datetime.strptime(tgl_mulai, "%m/%d/%Y") + timedelta(days=d, hours=jam_awal)
+            d_mulai, interval_mulai = aktif_slots[0]
+            durasi_dalam_menit = int(round(durasi_pekerjaan[o] * 60))
 
-                            jam_selesai = jam_mulai + timedelta(hours=1)
+            jam_mulai = int(interval_mulai.split('-')[0].split(':')[0])
+            jadwal_mulai_menit = jam_mulai * 60
+            total_menit_selesai = jadwal_mulai_menit + durasi_dalam_menit
 
-                            jadwal_produksi.append({
-                                'Order': o,
-                                'Mesin': m,
-                                'Hari': d,
-                                'Shift': interval,
-                                'Jam Mulai': jam_mulai.strftime("%H:%M"),
-                                'Jam Selesai': jam_selesai.strftime("%H:%M"),
-                                'Durasi (jam)': 1,
-                                'Waktu Istirahat': '19:00 - 21:00' if (interval == '15:00-16:00' and pulp.value(r[m][d]) == 1) else None
-                            })
+            if total_menit_selesai <= 1440:
+                # Tidak melewati hari
+                jam_selesai = total_menit_selesai // 60
+                menit_selesai = total_menit_selesai % 60
+                jadwal_produksi.append({
+                    'Order': o,
+                    'Mesin': m,
+                    'Hari': f'Day {d_mulai}',
+                    'Jam Mulai': f"{str(jam_mulai).zfill(2)}:00",
+                    'Jam Selesai': f"{str(jam_selesai % 24).zfill(2)}:{str(menit_selesai).zfill(2)}"
+                })
+            else:
+                # Melewati hari, bagi menjadi dua entri
+                sisa_menit_hari_ini = 1440 - jadwal_mulai_menit
+                menit_hari_berikutnya = durasi_dalam_menit - sisa_menit_hari_ini
 
+                jadwal_produksi.append({
+                    'Order': o,
+                    'Mesin': m,
+                    'Hari': f'Day {d_mulai}',
+                    'Jam Mulai': f"{str(jam_mulai).zfill(2)}:00",
+                    'Jam Selesai': "24:00"
+                })
 
+                jam_selesai_berikutnya = menit_hari_berikutnya // 60
+                menit_selesai_berikutnya = menit_hari_berikutnya % 60
+
+                jadwal_produksi.append({
+                    'Order': o,
+                    'Mesin': m,
+                    'Hari': f'Day {d_mulai + 1}',
+                    'Jam Mulai': "00:00",
+                    'Jam Selesai': f"{str(jam_selesai_berikutnya).zfill(2)}:{str(menit_selesai_berikutnya).zfill(2)}"
+                })
 
 
     # Konversi ke DataFrame untuk kemudahan manipulasi dan visualisasi
     df_jadwal = pd.DataFrame(jadwal_produksi)
-    # print(df_jadwal)
+    print(df_jadwal)
 
     # Menampilkan DataFrame dalam format tabel
     return df_jadwal.to_dict(orient='records')

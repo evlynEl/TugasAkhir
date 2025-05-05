@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
 
     var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     var fileInput = document.getElementById("fileUpload");
@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function() {
     btn_fileUpload.focus();
 
     // Tampilkan nama file yang dipilih
-    fileInput.addEventListener("change", function() {
+    fileInput.addEventListener("change", function () {
         if (fileInput.files.length > 0) {
             fileNameDisplay.textContent = fileInput.files[0].name;
             btn_proses.focus();
@@ -19,17 +19,17 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     // Cegah file untuk dibuka di browser ketika di-drop
-    dropArea.addEventListener("dragover", function(event) {
+    dropArea.addEventListener("dragover", function (event) {
         event.preventDefault();
         dropArea.classList.add("dragging");  // Menambahkan efek visual (optional)
     });
 
-    dropArea.addEventListener("dragleave", function() {
+    dropArea.addEventListener("dragleave", function () {
         dropArea.classList.remove("dragging");
     });
 
     // Tangani event drop file
-    dropArea.addEventListener("drop", function(event) {
+    dropArea.addEventListener("drop", function (event) {
         event.preventDefault();
         dropArea.classList.remove("dragging");
 
@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     // Ketika tombol Proses diklik preproses dijalankan
-    btn_proses.addEventListener("click", function() {
+    btn_proses.addEventListener("click", function () {
         var file = fileInput.files[0];
 
         if (!file) {
@@ -54,9 +54,9 @@ document.addEventListener("DOMContentLoaded", function() {
             title: 'Loading...',
             allowOutsideClick: false,
             didOpen: () => {
-              Swal.showLoading();
+                Swal.showLoading();
             }
-          });
+        });
 
         var formData = new FormData();
         formData.append("file", file);
@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function() {
             data: formData,
             processData: false,
             contentType: false,
-            success: function(response) {
+            success: function (response) {
                 // console.log("Response from Flask:", response);
                 // alert("Proses berhasil!");
 
@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (response && Array.isArray(dataUpload)) {
                     let completed = 0;
 
-                    dataUpload.forEach(function(item, index) {
+                    dataUpload.forEach(function (item, index) {
                         $.ajax({
                             type: 'GET',
                             url: 'JadwalMesin/getCocok',
@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                 Denier: item.Denier,
                                 Corak: item.Corak
                             },
-                            success: function(result) {
+                            success: function (result) {
                                 // console.log(result);
 
                                 if (result && result.NoOrder) {
@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                 }
                                 btn_ok.focus();
                             },
-                            error: function(xhr, status, error) {
+                            error: function (xhr, status, error) {
                                 console.error('Error:', error);
                                 completed++;
 
@@ -120,9 +120,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
 
                 fileInput.value = '';
-                fileNameDisplay.textContent= '';
+                fileNameDisplay.textContent = '';
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 Swal.close();
                 console.error("Error:", error);
                 alert("Gagal memproses file.");
@@ -361,7 +361,7 @@ document.addEventListener("DOMContentLoaded", function() {
             scrollY: '250px',
             autoWidth: false,
             scrollX: '100%',
-            columnDefs: [{ targets: [0], width: '8%', className: 'fixed-width'},
+            columnDefs: [{ targets: [0], width: '8%', className: 'fixed-width' },
             { targets: [1], width: '5%', className: 'fixed-width' },
             { targets: [2], width: '5%', className: 'fixed-width' },
             { targets: [3], width: '5%', className: 'fixed-width' },
@@ -432,7 +432,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
     // button unk menghasilkan jadwal
-    btn_ok.addEventListener("click", function() {
+    btn_ok.addEventListener("click", function () {
         Swal.fire({
             text: 'Apakah Anda ingin memproses data?',
             icon: 'question',
@@ -445,9 +445,9 @@ document.addEventListener("DOMContentLoaded", function() {
                     title: 'Loading...',
                     allowOutsideClick: false,
                     didOpen: () => {
-                      Swal.showLoading();
+                        Swal.showLoading();
                     }
-                  });
+                });
 
                 // Ambil semua data dari DataTable
                 var allData = $('#tableData').DataTable().rows().data().toArray();
@@ -459,7 +459,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 });
 
                 // Ubah array menjadi array of object
-                var formattedData = allData.map(function(row) {
+                var formattedData = allData.map(function (row) {
                     var obj = {};
                     for (var i = 0; i < header.length; i++) {
                         obj[header[i]] = row[i];
@@ -469,120 +469,114 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 // console.log(formattedData);
 
-                // Kirim ke Flask
+                $("#charts-container").empty();
+
+                // Warna default untuk tiap Order
+                const colorList = ["#007bff", "#ff5733", "#28a745", "#f39c12", "#8e44ad", "#1abc9c", "#34495e", "#e74c3c"];
+                const orderColors = {};
+                let colorIndex = 0;
+
+                // Panggil ke backend Flask
                 $.ajax({
                     url: "http://127.0.0.1:5000/model",
                     type: "POST",
                     contentType: "application/json",
                     data: JSON.stringify({ data: formattedData }),
-                    success: function(response) {
+                    success: function (response) {
+                        const data = response.result;
 
                         const result = response.result;
-
-                        // Urutkan berdasarkan Hari, Order, dan Jam Mulai
-                        result.sort((a, b) => {
-                            if (a["Hari"] !== b["Hari"]) {
-                                return a["Hari"] - b["Hari"];
-                            }
-                            if (a["Order"] !== b["Order"]) {
-                                return a["Order"].localeCompare(b["Order"]);
-                            }
-                            return a["Jam Mulai"].localeCompare(b["Jam Mulai"]);
-                        });
-
-                        // console.table(result);
+                        console.table(result);
 
                         Swal.close();
                         Swal.fire('Berhasil!', 'Jadwal sudah jadi', 'success');
 
-                        // Fungsi untuk mengonversi waktu ke menit sejak 07:00
-                        function timeToMinutes(timeStr) {
-                            const [hours, minutes] = timeStr.split(":").map(Number);
-                            return (hours - 7) * 60 + minutes;
+                        function jamKeFloat(jamStr) {
+                            const [jam, menit] = jamStr.split(':').map(Number);
+                            return jam + (menit / 60);
                         }
 
-                        // Kelompokkan data berdasarkan Hari
+                        // 1. Kelompokkan berdasarkan Hari
                         const groupedByDay = {};
-                        result.forEach(item => {
-                            if (!groupedByDay[item.Hari]) groupedByDay[item.Hari] = [];
-                            groupedByDay[item.Hari].push(item);
+                        data.forEach(item => {
+                            const day = item.Hari;
+                            if (!groupedByDay[day]) groupedByDay[day] = [];
+                            groupedByDay[day].push(item);
                         });
 
-                        // Menentukan jumlah hari yang unik
-                        const days = Object.keys(groupedByDay);
+                        // 2. Loop setiap Hari, buat chart
+                        Object.entries(groupedByDay).forEach(([hari, items]) => {
+                            // Tambah elemen div untuk chart hari tersebut
+                            const chartId = `chart-${hari.replace(/\s+/g, '-')}`;
+                            $("#charts-container").append(`<h4>${hari}</h4><div id="${chartId}" style="height: 300px; margin-bottom: 10px;"></div>`);
 
-                        // Buat div untuk setiap hari, jika belum ada
-                        days.forEach(day => {
-                            // Pastikan ada elemen div di HTML untuk setiap hari
-                            const chartContainerId = `gantt-chart-hari-${day}`;
-                            if (!document.getElementById(chartContainerId)) {
-                                const div = document.createElement('div');
-                                div.id = chartContainerId;
-                                div.style.marginBottom = '20px'; // Jarak antar chart
-                                document.getElementById('charts-container').appendChild(div); // Asumsi container utama adalah 'charts-container'
-                            }
+                            const tracesMap = {};
 
-                            const dayData = groupedByDay[day];
-                            const y = [];
-                            const x = [];
-                            const base = [];
-                            const text = [];
+                            items.forEach(item => {
+                                const order = item.Order || "No Order";
+                                const mesin = item.Mesin;
+                                const start = jamKeFloat(item["Jam Mulai"]);
+                                const end = jamKeFloat(item["Jam Selesai"]);
 
-                            dayData.forEach(item => {
-                                y.push(`${item.Order} (${item.Mesin})`);
-                                const start = timeToMinutes(item["Jam Mulai"]);
-                                const end = timeToMinutes(item["Jam Selesai"]);
-                                x.push(end - start);
-                                base.push(start);
-                                text.push(`${item["Jam Mulai"]} - ${item["Jam Selesai"]}`);
+                                const duration = end - start;
+
+                                if (!orderColors[order]) {
+                                    orderColors[order] = colorList[colorIndex % colorList.length];
+                                    colorIndex++;
+                                }
+
+                                if (!tracesMap[order]) {
+                                    tracesMap[order] = {
+                                        x: [],
+                                        y: [],
+                                        base: [],
+                                        name: order,
+                                        type: "bar",
+                                        orientation: "h",
+                                        marker: { color: orderColors[order] },
+                                        text: [],
+                                        textposition: "inside",
+                                        insidetextanchor: "start",
+                                        hovertemplate: [],
+                                        width: 0.5,
+                                        showlegend: true
+                                    };
+                                }
+
+                                tracesMap[order].x.push(duration);           // panjang bar
+                                tracesMap[order].y.push(mesin);              // posisi vertikal (mesin)
+                                tracesMap[order].base.push(start);           // jam mulai sebagai base
+                                tracesMap[order].text.push(order);           // teks dalam bar
+                                tracesMap[order].hovertemplate.push(
+                                    `Mesin: ${mesin}<br>Order: ${order}<br>Jam: ${start.toFixed(2)} - ${end.toFixed(2)}<extra></extra>`
+                                );
                             });
 
-                            // Buat trace untuk setiap hari
-                            const trace = {
-                                type: 'bar',
-                                x: x,
-                                y: y,
-                                base: base,
-                                orientation: 'h',
-                                name: `Hari ${day}`,
-                                text: text,
-                                hoverinfo: 'text',
-                                marker: {
-                                    color: 'rgba(50, 171, 96, 0.6)',
-                                    line: {
-                                        color: 'rgba(50, 171, 96, 1.0)',
-                                        width: 1
-                                    }
-                                },
-                                showlegend: true,
-                                legendgroup: `Hari ${day}`,  // Mengelompokkan legend berdasarkan hari
-                            };
-
-                            // Layout chart
-                            const layout = {
-                                title: `Gantt Chart Hari ${day}`,
-                                barmode: 'stack',
+                            const traces = Object.values(tracesMap);
+                            Plotly.newPlot(chartId, Object.values(tracesMap), {
+                                title: `Jadwal Mesin - ${hari}`,
+                                barmode: "stack",
                                 xaxis: {
-                                    title: 'Jam',
-                                    range: [0, (23 - 7 + 1) * 60], // dari 07:00 hingga 23:59
-                                    tickvals: Array.from({ length: 17 }, (_, i) => i * 60),
-                                    ticktext: Array.from({ length: 17 }, (_, i) => `${String(i + 7).padStart(2, '0')}:00`)
+                                    title: "Jam",
+                                    tickmode: "linear",
+                                    dtick: 1, // tiap 1 jam
+                                    range: [0, 24] // bisa kamu sesuaikan jika butuh lebih dari 24 jam
                                 },
                                 yaxis: {
+                                    title: "Mesin",
                                     automargin: true
                                 },
-                                height: 400, // Sesuaikan tinggi chart
+                                margin: { l: 80, r: 20, t: 50, b: 40 },
                                 showlegend: true
-                            };
+                            });
 
-                            // Render Gantt chart untuk setiap Hari
-                            Plotly.newPlot(`gantt-chart-hari-${day}`, [trace], layout);
                         });
                     },
-                    error: function(xhr, status, error) {
+                    error: function (xhr, status, error) {
                         console.error("Error:", error);
                         Swal.fire('Gagal', 'Ada kesalahan saat mengirim data.', 'error');
                     }
+
                 });
 
             }

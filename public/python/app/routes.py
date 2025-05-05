@@ -2,6 +2,7 @@ from flask import request, jsonify, Blueprint
 # from app import app
 from app.preprocess import main as preprocess_main
 from app.model import main as model_main, buat_model
+# from app.trial import main as model_main, buat_model
 from io import BytesIO
 import json
 import subprocess
