@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", function () {
             processData: false,
             contentType: false,
             success: function (response) {
-                // console.log("Response from Flask:", response);
+                console.log("Response from Flask:", response);
                 // alert("Proses berhasil!");
 
                 dataUpload = response.data;
@@ -209,10 +209,10 @@ document.addEventListener("DOMContentLoaded", function () {
         const colIndex = cellIndex.column;
         const rowIndex = cellIndex.row;
         const headerText = table.column(colIndex).header().textContent;
+        const data = table.row(rowIndex).data();
 
         if (headerText === 'NoOrder') {
             console.log("Double click detected on NoOrder");
-            const data = table.row(rowIndex).data();
 
             try {
                 Swal.fire({
@@ -294,6 +294,24 @@ document.addEventListener("DOMContentLoaded", function () {
             } catch (error) {
                 console.error(error);
             }
+        }
+
+        else if (headerText === 'Jumlah') {
+            Swal.fire({
+                title: 'Edit Jumlah',
+                input: 'text',
+                inputValue: table.cell(this).data(), // nilai lama
+                inputLabel: 'Masukkan nilai baru untuk kolom Jumlah',
+                showCancelButton: true,
+                confirmButtonText: 'Simpan',
+                inputValidator: (value) => {
+                    if (!value) return 'Nilai tidak boleh kosong';
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    table.cell(this).data(result.value).draw(false); // hanya update sel yg diklik
+                }
+            });
         }
     });
 
@@ -508,7 +526,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         Object.entries(groupedByDay).forEach(([hari, items]) => {
                             // Tambah elemen div untuk chart hari tersebut
                             const chartId = `chart-${hari.replace(/\s+/g, '-')}`;
-                            $("#charts-container").append(`<h4>${hari}</h4><div id="${chartId}" style="height: 300px; margin-bottom: 10px;"></div>`);
+                            $("#charts-container").append(`<h4>${hari}</h4><div id="${chartId}" style="height: 400px; margin-bottom: 10px;"></div>`);
 
                             const tracesMap = {};
 
@@ -548,7 +566,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                 tracesMap[order].base.push(start);           // jam mulai sebagai base
                                 tracesMap[order].text.push(order);           // teks dalam bar
                                 tracesMap[order].hovertemplate.push(
-                                    `Mesin: ${mesin}<br>Order: ${order}<br>Jam: ${start.toFixed(2)} - ${end.toFixed(2)}<extra></extra>`
+                                    `Mesin: ${mesin}<br>Order: ${order}<br>Jam: ${item["Jam Mulai"]} - ${item["Jam Selesai"]}<extra></extra>`
                                 );
                             });
 

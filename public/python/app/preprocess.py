@@ -112,19 +112,47 @@ def main(file_stream):
     def bersihkan_jumlah(jumlah):
         # Pastikan jumlah dalam format string
         if pd.isnull(jumlah): return ''  # Jika NaN, kembalikan string kosong
-        jumlah = str(jumlah)  # Pastikan menjadi string
+        jumlah = str(jumlah).strip()
         jumlah = re.sub(r'[\s]', '', jumlah)  # Hapus semua spasi
         jumlah = re.sub(r'(?<=\+|\-)\s*', '', jumlah)  # Hapus spasi setelah tanda + atau -
         jumlah = re.sub(r'\b(mesin|mesim|msn|mesn)\b', lambda m: 'MESIN', jumlah, flags=re.IGNORECASE)  # Ganti mesin, mesim, msn jadi uppercase
 
         # Coba cari angka di awal string, dan format dengan koma
-        match = re.match(r'([+-]?\d+)(\s*(MESIN|MSN|MESIM|MESN))?', jumlah, re.IGNORECASE)
+        match = re.match(r'^([+-]?)([\d.,]+)(\s*(MESIN|MSN|MESIM|MESN))?$', jumlah, re.IGNORECASE)
+
         if match:
-            angka = int(match.group(1))
-            formatted = f"{angka:,}"
-            if match.group(3):  # Kalau ada 'MESIN', 'MSN', dll setelah angka
-                formatted += ' ' + match.group(3).upper()
-            return formatted
+            tanda = match.group(1)
+            angka_str = match.group(2)
+            label = match.group(3)
+
+            original = angka_str
+
+            # Case: Angka hanya pakai titik
+            if '.' in angka_str and ',' not in angka_str:
+                parts = angka_str.split('.')
+                if all(len(part) == 3 for part in parts[1:]):  # contoh: 1.000 atau 1.000.000
+                    angka_str = angka_str.replace('.', '')  # titik = ribuan
+
+
+            # Case: Angka hanya pakai koma
+            elif ',' in angka_str and '.' not in angka_str:
+                parts = angka_str.split(',')
+                if all(len(part) == 3 for part in parts[1:]):  # contoh: 1,000 atau 1,000,000
+                    angka_str = angka_str.replace(',', '')  # koma = ribuan
+
+            try:
+                angka_float = float(angka_str)
+                if angka_float.is_integer():
+                    formatted = f"{int(angka_float):,}"
+                else:
+                    formatted = f"{angka_float:,.2f}"
+                if tanda:
+                    formatted = tanda + formatted
+                if label:
+                    formatted += ' MESIN'
+                return formatted
+            except:
+                return original
 
         return jumlah
 
