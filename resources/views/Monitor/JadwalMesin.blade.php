@@ -47,9 +47,12 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2 pl-0 pt-4">
+                        <div class="col-md-2 pl-0 pt-4 pb-1">
                             <h5 for="hasil">Hasil Jadwal</h5>
-                            <label id="makespan"></label>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3 pl-3"><label id="makespan"></label></div>
+                            <div class="col-md-3"><label id="excTime"></label></div>
                         </div>
                         <div class="col-md-12" id="charts-container">
                         </div>

@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var fileInput = document.getElementById("fileUpload");
     var fileNameDisplay = document.getElementById("fileName");
     var makespan = document.getElementById("makespan");
+    var excTime = document.getElementById("excTime");
     var btn_proses = document.getElementById("btn_proses");
     var btn_fileUpload = document.getElementById("btn_fileUpload");
     var btn_ok = document.getElementById("btn_ok");
@@ -100,8 +101,8 @@ document.addEventListener("DOMContentLoaded", function () {
                                     updateDataTable(dataUpload);
                                     fileInput.value = '';
                                     fileNameDisplay.textContent = '';
+                                    btn_ok.focus();
                                 }
-                                btn_ok.focus();
                             },
                             error: function (xhr, status, error) {
                                 console.error('Error:', error);
@@ -314,6 +315,24 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             });
         }
+
+        else if (headerText === 'Mesin') {
+            Swal.fire({
+                title: 'Edit Mesin',
+                input: 'text',
+                inputValue: table.cell(this).data(), // nilai lama
+                inputLabel: 'Masukkan nilai baru untuk kolom Mesin',
+                showCancelButton: true,
+                confirmButtonText: 'Simpan',
+                inputValidator: (value) => {
+                    if (!value) return 'Mesin tidak boleh kosong';
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    table.cell(this).data(result.value).draw(false); // hanya update sel yg diklik
+                }
+            });
+        }
     });
 
     function formatDate(dateString) {
@@ -391,7 +410,21 @@ document.addEventListener("DOMContentLoaded", function () {
             { targets: [9], width: '10%', className: 'fixed-width' },
             { targets: [10], width: '10%', className: 'fixed-width' },
             { targets: [11], width: '10%', className: 'fixed-width' },
-            { targets: [12], width: '10%', className: 'fixed-width' },]
+            { targets: [12], width: '10%', className: 'fixed-width' },
+            {
+                targets: 8, // Kolom Jumlah
+                width: '10%',
+                className: 'fixed-width',
+                type: 'num',
+                render: function (data, type, row) {
+                    if (type === 'sort') {
+                        // Ambil angka dari string, contoh: "+3 MESIN" → 3, atau "1,500,000" → 1500000
+                        const cleaned = (data || '').toString().replace(/[^\d.-]/g, '');
+                        return parseFloat(cleaned) || 0;
+                    }
+                    return data; // untuk display tetap pakai aslinya
+                }
+            }]
         });
     });
 
@@ -438,7 +471,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         Swal.close();
         table.draw();
-        btn_ok.focus();
     }
 
     function formatNumber(value) {
@@ -502,7 +534,10 @@ document.addEventListener("DOMContentLoaded", function () {
                         Swal.close();
                         Swal.fire('Berhasil!', 'Jadwal sudah jadi', 'success');
 
+                        btn_ok.focus();
+
                         makespan.textContent = 'Makespan: ' +parseFloat(response.result[1]).toFixed(2)+ ' jam';
+                        excTime.textContent = 'Execute time: ' +parseFloat(response.result[2]).toFixed(2)+ ' s';
 
                         function jamKeFloat(jamStr) {
                             const [jam, menit] = jamStr.split(':').map(Number);

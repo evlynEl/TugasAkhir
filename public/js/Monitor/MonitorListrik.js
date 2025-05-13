@@ -1,9 +1,11 @@
 var tgl = document.getElementById('tgl');
 var filterDropdown = document.getElementById('filterDropdown');
+var powerDropdown = document.getElementById('powerDropdown');
 
 let index = 0;
 let totalPower = 0;
-let filterType = '30m'; // Default filter type
+let filterType = '30m'; // Default filter waktu
+let filterPower = 'total4CL'; // Default filter power
 let charts = {};
 let aggregatedData = {};
 
@@ -15,6 +17,7 @@ $(document).ready(function () {
     // Event listener for filter selection
     filterDropdown.addEventListener('change', function () {
         filterType = $(this).val();
+        filterPower = $(this).val();
         index = 0;
         totalPower = 0;
         aggregatedData = {}; // Reset aggregated data
@@ -23,6 +26,26 @@ $(document).ready(function () {
         fetchKwhData();
     });
 });
+
+powerDropdown.on('change', function () {
+    const selected = $(this).val();
+    updateChart5BySelection(selected);
+});
+
+
+document.getElementById("dataChart1").addEventListener("click", function () {
+    showPowerDataset("Power1");
+});
+document.getElementById("dataChart2").addEventListener("click", function () {
+    showPowerDataset("Power2");
+});
+document.getElementById("dataChart3").addEventListener("click", function () {
+    showPowerDataset("Power3");
+});
+document.getElementById("dataChart4").addEventListener("click", function () {
+    showPowerDataset("Power4");
+});
+
 
 function fetchKwhData() {
     $.ajax({
@@ -53,31 +76,6 @@ function fetchKwhData() {
                         cutoffDate.setFullYear(latestDate.getFullYear() - 2);
                         break;
                 }
-
-                // Filter data based on cutoffDate
-                let filteredData = response.filter(data => new Date(data.Date) >= cutoffDate);
-
-                aggregatedData = {}; // Reset
-
-                filteredData.forEach(data => {
-                    let dataDate = new Date(data.Date);
-                    let formattedDate = getAggregationKey(dataDate, filterType);
-                    let power = parseFloat(data.Power) || 0;
-
-                    // Update the date text
-                    tgl.textContent = `Date & Time: ${formattedDate}`;
-
-                    if (!aggregatedData[formattedDate]) {
-                        aggregatedData[formattedDate] = 0;
-                    }
-                    aggregatedData[formattedDate] += power;
-                });
-
-                let latestAggDate = Object.keys(aggregatedData).pop();
-                totalPower = aggregatedData[latestAggDate] || 0;
-
-                updateChart('dataChart1', totalPower, new Date());
-                updateLineChart(aggregatedData);
             } else {
                 console.error('Invalid data format');
             }
@@ -110,7 +108,6 @@ function getAggregationKey(date, filter) {
             return `${year}`;
     }
 }
-
 
 function formatDate(date) {
     let month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -162,6 +159,71 @@ function updateChart(chartId, dataValue) {
     });
 }
 
+function showPowerDataset(powerKey = 'Power') {
+    let aggregatedData = {};
+
+    let rawDataSorted = rawData.sort((a, b) => new Date(a.Date) - new Date(b.Date));
+
+    let latestDate = new Date(rawDataSorted[rawDataSorted.length - 1].Date);
+    let cutoffDate = new Date(latestDate);
+
+    switch (filterType) {
+        case '30m':
+        case '1h':
+            cutoffDate.setDate(latestDate.getDate() - 3);
+            break;
+        case 'day':
+            cutoffDate.setDate(latestDate.getDate() - 7);
+            break;
+        case 'month':
+            cutoffDate.setMonth(latestDate.getMonth() - 3);
+            break;
+        case 'year':
+            cutoffDate.setFullYear(latestDate.getFullYear() - 2);
+            break;
+    }
+
+    let filtered = rawDataSorted.filter(data => new Date(data.Date) >= cutoffDate);
+
+    filtered.forEach(data => {
+        let dataDate = new Date(data.Date);
+        let formattedDate = getAggregationKey(dataDate, filterType);
+        let powerVal = parseFloat(data[powerKey]) || 0;
+
+        tgl.textContent = `Date & Time: ${formattedDate}`;
+
+
+        if (!aggregatedData[formattedDate]) {
+            aggregatedData[formattedDate] = 0;
+        }
+        aggregatedData[formattedDate] += powerVal;
+    });
+
+    updateLineChart(aggregatedData, powerKey);
+}
+
+function showTotalPower1234() {
+    let aggregated = {};
+    let filtered = rawData.filter(data => new Date(data.Date) >= getCutoffDate());
+
+    filtered.forEach(data => {
+        let formattedDate = getAggregationKey(new Date(data.Date), filterType);
+        let total = (parseFloat(data.Power) || 0) +
+                    (parseFloat(data.Power2) || 0) +
+                    (parseFloat(data.Power3) || 0) +
+                    (parseFloat(data.Power4) || 0);
+
+        tgl.textContent = `Date & Time: ${formattedDate}`;
+
+        if (!aggregated[formattedDate]) aggregated[formattedDate] = 0;
+        aggregated[formattedDate] += total;
+    });
+
+    updateLineChart(aggregated, "Total Power (1-4)");
+}
+
+
+
 let lineChartData = {
     labels: [],
     datasets: [{
@@ -174,7 +236,57 @@ let lineChartData = {
     }]
 };
 
-function updateLineChart(aggregatedData) {
+// function updateLineChart(aggregatedData) {
+//     if (!charts['dataChart5']) {
+//         const ctx = document.getElementById('dataChart5').getContext('2d');
+//         charts['dataChart5'] = new Chart(ctx, {
+//             type: 'line',
+//             data: lineChartData,
+//             options: {
+//                 responsive: true,
+//                 animation: { duration: 0 }, // Completely disable animation
+//                 scales: {
+//                     x: { title: { display: true, text: "Date" } },
+//                     y: { title: { display: true, text: "Total kWatt" }, beginAtZero: true }
+//                 }
+//             }
+//         });
+//     }
+
+//     let timestamps = Object.keys(aggregatedData);
+//     let powerValues = Object.values(aggregatedData);
+
+//      // Calculate the global average power
+//      let globalAveragePower = powerValues.reduce((sum, val) => sum + val, 0) / powerValues.length;
+
+//      // Create an array with the same length as timestamps, all set to the global average
+//      let globalAvgLine = new Array(powerValues.length).fill(globalAveragePower);
+
+//     // Update dataset with actual power and average power
+//     lineChartData.labels = timestamps;
+//     lineChartData.datasets = [
+//         {
+//             label: "Total Power (kWatt)",
+//             data: powerValues,
+//             borderColor: "blue",
+//             backgroundColor: "rgba(0, 0, 255, 0.2)",
+//             borderWidth: 2,
+//             fill: true
+//         },
+//         {
+//             label: "Average Power",
+//             data: globalAvgLine,
+//             borderColor: "red",
+//             borderDash: [5, 5], // Dashed line for average power
+//             borderWidth: 2,
+//             fill: false
+//         }
+//     ];
+
+//     charts['dataChart5'].update();
+// }
+
+function updateLineChart(aggregatedData, label = "Total Power") {
     if (!charts['dataChart5']) {
         const ctx = document.getElementById('dataChart5').getContext('2d');
         charts['dataChart5'] = new Chart(ctx, {
@@ -182,7 +294,7 @@ function updateLineChart(aggregatedData) {
             data: lineChartData,
             options: {
                 responsive: true,
-                animation: { duration: 0 }, // Completely disable animation
+                animation: { duration: 0 },
                 scales: {
                     x: { title: { display: true, text: "Date" } },
                     y: { title: { display: true, text: "Total kWatt" }, beginAtZero: true }
@@ -194,17 +306,13 @@ function updateLineChart(aggregatedData) {
     let timestamps = Object.keys(aggregatedData);
     let powerValues = Object.values(aggregatedData);
 
-     // Calculate the global average power
-     let globalAveragePower = powerValues.reduce((sum, val) => sum + val, 0) / powerValues.length;
+    let avg = powerValues.reduce((sum, val) => sum + val, 0) / powerValues.length;
+    let avgLine = new Array(powerValues.length).fill(avg);
 
-     // Create an array with the same length as timestamps, all set to the global average
-     let globalAvgLine = new Array(powerValues.length).fill(globalAveragePower);
-
-    // Update dataset with actual power and average power
     lineChartData.labels = timestamps;
     lineChartData.datasets = [
         {
-            label: "Total Power (kWatt)",
+            label: label,
             data: powerValues,
             borderColor: "blue",
             backgroundColor: "rgba(0, 0, 255, 0.2)",
@@ -212,10 +320,10 @@ function updateLineChart(aggregatedData) {
             fill: true
         },
         {
-            label: "Average Power",
-            data: globalAvgLine,
+            label: "Average",
+            data: avgLine,
             borderColor: "red",
-            borderDash: [5, 5], // Dashed line for average power
+            borderDash: [5, 5],
             borderWidth: 2,
             fill: false
         }
@@ -223,6 +331,55 @@ function updateLineChart(aggregatedData) {
 
     charts['dataChart5'].update();
 }
+
+
+function updateChart5BySelection(selected) {
+    let filtered = rawData.filter(data => new Date(data.Date) >= getCutoffDate());
+    let aggregated = {};
+
+    filtered.forEach(data => {
+        let key = getAggregationKey(new Date(data.Date), filterType);
+        let value = 0;
+
+        switch (selected) {
+            case 'CL1':
+                value = parseFloat(data.Power) || 0;
+                break;
+            case 'CL2':
+                value = parseFloat(data.Power2) || 0;
+                break;
+            case 'CL3':
+                value = parseFloat(data.Power3) || 0;
+                break;
+            case 'CL4':
+                value = parseFloat(data.Power4) || 0;
+                break;
+            case 'total4CL':
+            default:
+                value =
+                    (parseFloat(data.Power) || 0) +
+                    (parseFloat(data.Power2) || 0) +
+                    (parseFloat(data.Power3) || 0) +
+                    (parseFloat(data.Power4) || 0);
+                break;
+        }
+
+        if (!aggregated[key]) aggregated[key] = 0;
+        aggregated[key] += value;
+    });
+
+    let labelText = {
+        total: "Total Power (1-4)",
+        power1: "Power 1",
+        power2: "Power 2",
+        power3: "Power 3",
+        power4: "Power 4"
+    }[selected];
+
+    updateLineChart(aggregated, labelText);
+}
+
+
 
 //Function to calculate the moving average for the selected filter.
 function calculateMovingAverage(timestamps, powerValues, filter) {

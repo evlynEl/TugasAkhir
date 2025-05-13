@@ -36,7 +36,7 @@
 
                             <div class="col-md-12 pt-4">
                                 <div class="row">
-                                    <div class="col-md-11">
+                                    <div class="col-md-10">
                                         <h5 style="text-align: center;">TOTAL POWER CL1-CL4</h5>
                                     </div>
                                     <div class="col-md-1">
@@ -46,6 +46,15 @@
                                             <option value="day">Hari</option>
                                             <option value="month">Bulan</option>
                                             <option value="year">Tahun</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <select id="powerDropdown">
+                                            <option value="total4CL">Total Power</option>
+                                            <option value="CL1">CL 1</option>
+                                            <option value="CL2">CL 2</option>
+                                            <option value="CL3">CL 3</option>
+                                            <option value="CL4">CL 4</option>
                                         </select>
                                     </div>
                                 </div>

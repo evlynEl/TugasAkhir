@@ -169,20 +169,20 @@ def clean_waktu(t):
         parts = t.split(":")
         if len(parts) == 2:
             try:
-                # Coba ubah ke int aman
                 jam = int(float(parts[0]))
                 menit = int(float(parts[1]))
                 return f"{str(jam).zfill(2)}:{str(menit).zfill(2)}"
-            except:
-                pass
+            except Exception as e:
+                print(f"[clean_waktu] Error parsing str '{t}': {e}")
     try:
-        # Coba kalau datanya langsung float
         t = float(t)
         jam = int(t)
         menit = int(round((t - jam) * 60))
         return f"{str(jam).zfill(2)}:{str(menit).zfill(2)}"
-    except:
-        return "00:00"  # fallback aman
+    except Exception as e:
+        print(f"[clean_waktu] Error parsing float '{t}': {e}")
+        return None  # ← lebih baik kembalikan None, bukan "00:00"
+
 
 def to_jam(menit_total):
     return f"{str(menit_total // 60).zfill(2)}:{str(menit_total % 60).zfill(2)}"
@@ -203,7 +203,10 @@ def jam_total(hari, jam_string):
 def buat_model(orders, order_specs):
     order_specs = add_mesin(order_specs)
     # print(order_specs)
+    jumlah_all, jumlah_order, valid_orders = proses_jumlah_orders(orders, order_specs)
+    print(valid_orders)
 
+    # SETS
     days = [0, 1, 2, 3, 4, 5, 6]
 
     # mesin berdasarkan adjusted eff
@@ -217,53 +220,10 @@ def buat_model(orders, order_specs):
     # Exclude special_machines from machines
     machines = [m for m in all_machines if m not in special_machines]
 
-    # SDP Mapping
-    CL1 = ['SO{:02d}'.format(i) for i in range(1, 17)]
-    CL2 = ['SO{:02d}'.format(i) for i in range(17, 33)]
-    CL3 = ['SO{:02d}'.format(i) for i in range(33, 41)] + ['ST{:02d}'.format(i) for i in range(1, 5)]
-    CL4 = ['ST{:02d}'.format(i) for i in list(range(5,13)) + list(range(25,29)) + list(range(33,45))]
-    CL5 = ['ST{:02d}'.format(i) for i in list(range(13,25)) + list(range(45,69))]
-    CL6 = ['ST{:02d}'.format(i) for i in list(range(29,33)) + list(range(69,77))]
+    intervals = [f"{str(h).zfill(2)}:00-{str((h+1)%24).zfill(2)}:00" for h in range(24)] # waktu 24 jam
+    istirahat_intervals = ['19:00-20:00', '20:00-21:00'] # jam istirahat
 
-    SDP_mapping = {
-        'CL1': CL1,
-        'CL2': CL2,
-        'CL3': CL3,
-        'CL4': CL4
-    }
-
-    jumlah_all, jumlah_order, valid_orders = proses_jumlah_orders(orders, order_specs)
-    print(valid_orders)
-
-    # VARIABLES
-    intervals = [f"{str(h).zfill(2)}:00-{str((h+1)%24).zfill(2)}:00" for h in range(24)]
-    istirahat_intervals = ['19:00-20:00', '20:00-21:00']
-
-    isRunning = {
-        m: {
-            t: LpVariable(f'isRunning_{m}_{t}', cat="Binary")
-            for t in intervals
-        }
-        for m in all_machines
-    }
-
-    x = {
-        m: {
-            o: {
-                d: {
-                    s: LpVariable(f"x_{m}_{o}_{d}_{s}", cat="Binary")
-                    for s in intervals
-                }
-                for d in days
-            }
-            for o in orders
-        }
-        for m in all_machines
-    }
-
-    r = LpVariable.dicts("rest", (all_machines, days), cat="Binary")
-
-    # waktu 24 jam
+    # Shift harian dimulai dari jam 07:00
     all_intervals = [
         f"{str(h % 24).zfill(2)}:00-{str((h + 1) % 24).zfill(2)}:00"
         for h in range(7, 31)
@@ -291,22 +251,42 @@ def buat_model(orders, order_specs):
 
     assigned_machines = defaultdict(list)
 
+    # VARIABLES
+    isRunning = LpVariable.dicts("isRunning",
+                             [(m, t) for m in all_machines for t in intervals],
+                             cat=LpBinary)
+    x = LpVariable.dicts("x", (all_machines, orders, days, intervals), cat=LpBinary)
+    r = LpVariable.dicts("rest", (all_machines, days), cat=LpBinary)
+
     # PROBLEM
     # Mendeklarasikan model dengan tujuan minimisasi
     prob = LpProblem("Minimize_CL1_Energy", LpMinimize)
 
+    # SDP Mapping
+    CL1 = ['SO{:02d}'.format(i) for i in range(1, 17)]
+    CL2 = ['SO{:02d}'.format(i) for i in range(17, 33)]
+    CL3 = ['SO{:02d}'.format(i) for i in range(33, 41)] + ['ST{:02d}'.format(i) for i in range(1, 5)]
+    CL4 = ['ST{:02d}'.format(i) for i in list(range(5,13)) + list(range(25,29)) + list(range(33,45))]
+    CL5 = ['ST{:02d}'.format(i) for i in list(range(13,25)) + list(range(45,69))]
+    CL6 = ['ST{:02d}'.format(i) for i in list(range(29,33)) + list(range(69,77))]
+
+    SDP_mapping = {
+        'CL1': CL1,
+        'CL2': CL2,
+        'CL3': CL3,
+        'CL4': CL4
+    }
+
     totalPower = {
-        'CL1': 167.0,
-        'CL2': 10.4,
+        'CL1': 67.0,
+        'CL2': 110.4,
         'CL3': 8.0,
         'CL4': 12.7
     }
 
     max_power_cl = max(totalPower, key=totalPower.get)
     machines_max_cl = SDP_mapping[max_power_cl]
-
-    # print("Machines max CL:", machines_max_cl)
-    # print("Keys in isRunning:", list(isRunning.keys()))
+    print("Machines max CL:", machines_max_cl)
 
 
     # CONSTRAINTS
@@ -315,7 +295,7 @@ def buat_model(orders, order_specs):
         for m in mesin_list:
             for d in days:
                 for t in istirahat_intervals:
-                    prob += isRunning[m][t] + r[m][d] <= 1, f"Rest_vs_Run_{m}_{d}_{t}"
+                    prob += isRunning[(m,t)] + r[m][d] <= 1, f"Rest_vs_Run_{m}_{d}_{t}"
 
 
     # 2. Kapasitas & durasi mesin
@@ -404,7 +384,7 @@ def buat_model(orders, order_specs):
     mesin_index = 0
     bngwa_to_machine = defaultdict(list)
 
-    for o in sorted_tgl:
+    for o in sorted_jumlah:
         assigned_machines[o] = []
         used_machines = set()
 
@@ -443,7 +423,7 @@ def buat_model(orders, order_specs):
         # Assuming prob is defined and you want to add constraints
             prob += lpSum(x[m][o][d][s] for m in machines for o in valid_orders for d in days for s in all_intervals) >= 1
 
-    print(assigned_machines)
+    # print(assigned_machines)
 
     # 7. Mesin di SDP CL5, CL6 tidak bisa istirahat, selain itu bisa istirahat
     for m in (CL5 + CL6):
@@ -452,7 +432,7 @@ def buat_model(orders, order_specs):
             if m in assigned_machines[o]:
                 for t in istirahat_intervals:
                     # Mesin ini tidak bisa rest pada interval t jika digunakan di order
-                    prob += isRunning[m][t] == 1
+                    prob += isRunning[(m,t)] == 1
 
     # 8. Atur jam mulai di shift pagi hari Day 0
     for o in valid_orders:
@@ -467,13 +447,13 @@ def buat_model(orders, order_specs):
         m
         for mesin_list in assigned_machines.values()
         for m in mesin_list
-        if m in machines_max_cl
+        if m in machines_max_cl and m in isRunning
     }
 
     # Constraint untuk mesin dari CL tertinggi yang bekerja pada interval sore (19:00-21:00) harus istirahat
     for m in mesin_terpakai_sore:
         for t in istirahat_intervals:
-            prob += isRunning[m][t] == 0, f"Machine_{m}_RestDuringSore_{t}"
+            prob += isRunning[(m,t)] == 0, f"Machine_{m}_RestDuringSore_{t}"
 
     # Constraint untuk mesin yang ada di SDP_mapping dan tidak termasuk mesin_terpakai_sore
     for mesin_list in SDP_mapping.values():
@@ -482,23 +462,23 @@ def buat_model(orders, order_specs):
                 for t in istirahat_intervals:
                     if m in assigned_machines and m not in mesin_terpakai_sore:  # Mesin digunakan tapi bukan di mesin_terpakai_sore
                         # Mesin tidak bisa istirahat jika ter-assign untuk order
-                        prob += isRunning[m][t] == 1, f"Machine_{m}_MustRun_IfAssigned_{d}_{t}"
+                        prob += isRunning[(m,t)] == 1, f"Machine_{m}_MustRun_IfAssigned_{d}_{t}"
                     elif m not in assigned_machines:
                         # Mesin tidak digunakan, bisa istirahat
-                        prob += isRunning[m][t] + r[m][d] <= 1, f"Rest_vs_Run_{m}_{d}_{t}"
-
-
+                        prob += isRunning[(m,t)] + r[m][d] <= 1
 
 
     # Fungsi objektif: Minimalkan jumlah mesin CL tertinggi yang aktif saat waktu istirahat
+    mesin_dipakai = set(m for lst in assigned_machines.values() for m in lst)
+
     prob += lpSum(
-        isRunning[m][t]
-        for m in assigned_machines  # Semua mesin yang digunakan
-        for t in istirahat_intervals  # Semua interval waktu istirahat
-        if m not in mesin_terpakai_sore  # Mesin yang tidak terpakai sore bisa beristirahat
+        isRunning[(m,t)]
+        for m in mesin_dipakai
+        for t in istirahat_intervals
+        if m not in mesin_terpakai_sore
     ) + lpSum(
-        isRunning[m][t]
-        for m in mesin_terpakai_sore  # Mesin yang terpakai sore harus tetap istirahat pada jam 19-21
+        isRunning[(m,t)]
+        for m in mesin_terpakai_sore
         for t in istirahat_intervals
     ), "Minimize_MachinesRunningDuringBreak"
 
@@ -509,28 +489,23 @@ def buat_model(orders, order_specs):
     start_time = time.time()
 
     # SOLVE
-    # solver = CPLEX_CMD(path="D:\Apps\IBM ILOG CPLEX Optimization Studio\cplex\bin\x64_win64\cplex.exe")
-
+    # solver = CPLEX_CMD(path=r"D:\Apps\IBM ILOG CPLEX Optimization Studio\cplex\bin\x64_win64\cplex.exe")
+    # prob.solve(CPLEX_CMD(msg=True))
     solver = PULP_CBC_CMD(presolve=False)
     solver = PULP_CBC_CMD(gapRel=0.005) # solution is within 5% of the best possible
     prob.solve(solver)
 
     end_time = time.time()
+    excTime = end_time - start_time
     print("Status:", LpStatus[prob.status])
     print("Objective value =", value(prob.objective)) # Semakin kecil nilai objektif ini, semakin baik jadwal menghindari operasi mesin saat waktu istirahat.
-    print("Execution time: {:.2f} seconds".format(end_time - start_time))
-
-
-    # print("Status:", prob.status)
-    # for v in prob.variables():
-    #     print(v.name, v.varValue)
 
 
     # Generate jadwal
     jadwal_produksi = []
     waktu_terpakai = {}
 
-    for o in sorted_tgl:
+    for o in sorted_jumlah:
         for m in assigned_machines[o]:
             aktif_slots = []
             sisa_durasi = durasi_pekerjaan[o] * 60  # dalam menit
@@ -625,94 +600,126 @@ def buat_model(orders, order_specs):
     mesin_dipakai = df_jadwal['Mesin'].unique()
     mesin_terpakai_max_cl = [m for m in mesin_dipakai if m in machines_max_cl]
 
-    # Urutkan berdasarkan urutan dari belakang dalam daftar `machines`
-    machines_reversed = machines[::-1]
-    mesin_terurut = [m for m in machines_reversed if m in mesin_terpakai_max_cl]
-
-    # Ambil 3 mesin terakhir
-    target_mesin = mesin_terurut[:3]
-
-    jadwal_diperbaiki = []
     istirahat_awal = 19 * 60
     istirahat_akhir = 21 * 60
-    delay = 120  # dalam menit
 
-    for _, row in df_jadwal.iterrows():
+    # Filter hanya mesin yang aktif saat istirahat
+    mesin_aktif_istirahat = set()
+    for i, row in df_jadwal.iterrows():
+        if row['Mesin'] not in mesin_terpakai_max_cl:
+            continue
         jam_mulai = to_minutes(row['Jam Mulai'])
         jam_selesai = to_minutes(row['Jam Selesai'])
 
-        if jam_selesai <= istirahat_awal or jam_mulai >= istirahat_akhir:
-            # Tidak konflik dengan jam istirahat
+        # Cek apakah job aktif saat istirahat
+        if jam_mulai < istirahat_akhir and jam_selesai > istirahat_awal:
+            mesin_aktif_istirahat.add(row['Mesin'])
+
+    # Urutkan berdasarkan urutan dari belakang `machines`
+    machines_reversed = machines[::-1]
+    mesin_terurut = [m for m in machines_reversed if m in mesin_aktif_istirahat]
+    # print('urut: ',mesin_terurut)
+
+    # Ambil 3 mesin terakhir yang aktif saat istirahat
+    target_mesin = mesin_terurut[:3]
+    # print('target: ',target_mesin)
+
+    jadwal_diperbaiki = []
+
+    delay = 120  # dalam menit
+
+    for i, row in df_jadwal.iterrows():
+        # print(f"[DEBUG] Row {i}: {row['Jam Mulai']} - {row['Jam Selesai']}")
+        # print(row['Order'], row['Mesin'], jam_mulai, jam_selesai)
+
+        jam_mulai = to_minutes(row['Jam Mulai'])
+        jam_selesai = to_minutes(row['Jam Selesai'])
+
+        if row['Mesin'] not in target_mesin:
+            # Mesin bukan target, tidak perlu diproses istirahat/delay
             jadwal_diperbaiki.append(row.to_dict())
+            continue
 
-        else:
-            if row['Mesin'] not in target_mesin:
-                # Mesin bukan target, tidak perlu dipecah
-                jadwal_diperbaiki.append(row.to_dict())
-                continue
+        if jam_selesai <= istirahat_awal or jam_mulai >= istirahat_akhir:
+            # Tidak konflik dengan istirahat → tambahkan delay
+            jam_selesai += delay
 
-            # Hitung durasi total dan bagian sebelum istirahat
-            durasi_total = jam_selesai - jam_mulai
-            durasi_awal = max(0, istirahat_awal - jam_mulai)
-            durasi_sisa = durasi_total - durasi_awal
-
-            # Bagian sebelum istirahat
-            if jam_mulai < istirahat_awal:
+            # Cek apakah selesai lewat tengah malam
+            if jam_selesai <= 1440:
                 jadwal_diperbaiki.append({
                     'Order': row['Order'],
                     'Mesin': row['Mesin'],
                     'Hari': row['Hari'],
                     'Jam Mulai': to_jam(jam_mulai),
-                    'Jam Selesai': to_jam(min(jam_selesai, istirahat_awal))
+                    'Jam Selesai': to_jam(jam_selesai)
+                })
+            else:
+                # Bagi ke hari berikutnya
+                hari_ini = row['Hari']
+                hari_besok = f"Day {int(hari_ini.split()[-1]) + 1}"
+                jadwal_diperbaiki.append({
+                    'Order': row['Order'],
+                    'Mesin': row['Mesin'],
+                    'Hari': hari_ini,
+                    'Jam Mulai': to_jam(jam_mulai),
+                    'Jam Selesai': "24:00"
+                })
+                jadwal_diperbaiki.append({
+                    'Order': row['Order'],
+                    'Mesin': row['Mesin'],
+                    'Hari': hari_besok,
+                    'Jam Mulai': "00:00",
+                    'Jam Selesai': to_jam(jam_selesai - 1440)
                 })
 
-             # Bagian setelah istirahat + delay
-            if jam_selesai > istirahat_akhir:
-                mulai_baru = istirahat_akhir
-                selesai_baru = mulai_baru + durasi_sisa + delay
+            continue  # Skip ke baris berikutnya
 
-                if selesai_baru <= 24 * 60:
-                    jadwal_diperbaiki.append({
-                        'Order': row['Order'],
-                        'Mesin': row['Mesin'],
-                        'Hari': row['Hari'],
-                        'Jam Mulai': to_jam(mulai_baru),
-                        'Jam Selesai': to_jam(selesai_baru)
-                    })
-                else:
-                    # Bagi ke hari berikutnya
-                    sisa_hari_ini = 24 * 60 - mulai_baru
-                    sisa_besok = selesai_baru - 24 * 60 + 120
-                    print('sisa besok: ', sisa_besok)
-                    hari_ini = row['Hari']
-                    hari_besok = f"Day {int(hari_ini.split()[-1]) + 1}"
+        # Mesin target & jam tumpang tindih istirahat → perlu pembagian
+        durasi_total = jam_selesai - jam_mulai
+        durasi_awal = max(0, istirahat_awal - jam_mulai)
+        durasi_sisa = durasi_total - durasi_awal
+        mulai_baru = istirahat_akhir
+        selesai_baru = mulai_baru + durasi_sisa + delay
 
-                    jadwal_diperbaiki.append({
-                        'Order': row['Order'],
-                        'Mesin': row['Mesin'],
-                        'Hari': hari_ini,
-                        'Jam Mulai': to_jam(mulai_baru),
-                        'Jam Selesai': "24:00"
-                    })
+        # Bagian sebelum istirahat
+        if jam_mulai < istirahat_awal:
+            jadwal_diperbaiki.append({
+                'Order': row['Order'],
+                'Mesin': row['Mesin'],
+                'Hari': row['Hari'],
+                'Jam Mulai': to_jam(jam_mulai),
+                'Jam Selesai': to_jam(min(jam_selesai, istirahat_awal))
+            })
 
-                    # jadwal_diperbaiki = [
-                    #     r for r in jadwal_diperbaiki
-                    #     if not waktu_tumpang_tindih(r, row['Mesin'], row['Order'], hari_besok, 0, sisa_besok + delay)
-                    # ]
+        # Bagian setelah istirahat (cek apakah perlu dipindahkan ke hari berikutnya)
+        if selesai_baru <= 3 * 60:
+            # Masih cukup di hari yang sama
+            jadwal_diperbaiki.append({
+                'Order': row['Order'],
+                'Mesin': row['Mesin'],
+                'Hari': row['Hari'],
+                'Jam Mulai': to_jam(mulai_baru),
+                'Jam Selesai': to_jam(selesai_baru)
+            })
+            print(jadwal_diperbaiki)
 
-                    # # Tambahkan entri hasil pecahan ke hari_besok
-                    # jadwal_diperbaiki.append({
-                    #     'Order': row['Order'],
-                    #     'Mesin': row['Mesin'],
-                    #     'Hari': hari_besok,
-                    #     'Jam Mulai': "00:00",
-                    #     'Jam Selesai': to_jam(int(round(sisa_besok + delay)))
-                    # })
+        else:
+            # Harus dibagi ke hari berikutnya
+            hari_ini = row['Hari']
+            hari_besok = f"Day {int(hari_ini.split()[-1]) + 1}"
+            sisa_besok = selesai_baru - 24 * 60
 
+            jadwal_diperbaiki.append({
+                'Order': row['Order'],
+                'Mesin': row['Mesin'],
+                'Hari': hari_ini,
+                'Jam Mulai': to_jam(mulai_baru),
+                'Jam Selesai': "24:00"
+            })
 
 
     df_jadwal_final = pd.DataFrame(jadwal_diperbaiki)
-    print(df_jadwal_final)
+    # print(df_jadwal_final)
 
     jam_mulai_semua = []
     jam_selesai_semua = []
@@ -730,5 +737,5 @@ def buat_model(orders, order_specs):
 
 
     # Menampilkan DataFrame dalam format tabel
-    return df_jadwal_final.to_dict(orient='records'), makespan_jam
+    return df_jadwal_final.to_dict(orient='records'), makespan_jam, excTime
 

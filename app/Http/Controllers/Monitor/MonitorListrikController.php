@@ -61,7 +61,10 @@ class MonitorListrikController extends Controller
             foreach ($kwh as $detailRef) {
                 $data_kwh[] = [
                     'Date'  => $detailRef->Date,
-                    'Power' => $detailRef->Power
+                    'Power' => $detailRef->Power,
+                    'Power2' => $detailRef->Power2,
+                    'Power3' => $detailRef->Power3,
+                    'Power4' => $detailRef->Power4
                 ];
             }
             // dd($data_kwh);
