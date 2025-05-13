@@ -1,8 +1,8 @@
 from flask import request, jsonify, Blueprint
 # from app import app
 from app.preprocess import main as preprocess_main
-from app.model import main as model_main, buat_model
-# from app.trial import main as model_main, buat_model
+# from app.model import main as model_main, buat_model
+from app.trial import main as model_main, buat_model
 from io import BytesIO
 import json
 import subprocess
@@ -32,7 +32,7 @@ def process_excel_route():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@app_routes.route('/model', methods=['POST'])
+@app_routes.route('/trial', methods=['POST'])
 def model_endpoint():
     data = request.get_json()
 

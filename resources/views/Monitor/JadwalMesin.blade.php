@@ -48,7 +48,8 @@
                         </div>
 
                         <div class="col-md-2 pl-0 pt-4">
-                            <label for="hasil">Hasil Jadwal</label>
+                            <h5 for="hasil">Hasil Jadwal</h5>
+                            <label id="makespan"></label>
                         </div>
                         <div class="col-md-12" id="charts-container">
                         </div>
@@ -66,6 +67,8 @@
     <link rel="stylesheet" href="{{ asset('css/sweetalert2.min.css') }}">
     <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chroma-js@2.4.2/chroma.min.js"></script>
+
 
     <!-- Script kamu -->
     {{-- <script src="{{ asset('js/chart.js') }}"></script> --}}

@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     var fileInput = document.getElementById("fileUpload");
     var fileNameDisplay = document.getElementById("fileName");
+    var makespan = document.getElementById("makespan");
     var btn_proses = document.getElementById("btn_proses");
     var btn_fileUpload = document.getElementById("btn_fileUpload");
     var btn_ok = document.getElementById("btn_ok");
@@ -315,7 +316,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-
     function formatDate(dateString) {
         if (!dateString) return '';
 
@@ -334,7 +334,7 @@ document.addEventListener("DOMContentLoaded", function () {
             paging: false,
             searching: false,
             info: false,
-            ordering: false,
+            ordering: true,
             columns: [
                 { title: 'NoOrder' },
                 { title: 'Lebar' },
@@ -489,25 +489,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 $("#charts-container").empty();
 
-                // Warna default untuk tiap Order
-                const colorList = ["#007bff", "#ff5733", "#28a745", "#f39c12", "#8e44ad", "#1abc9c", "#34495e", "#e74c3c"];
-                const orderColors = {};
-                let colorIndex = 0;
-
                 // Panggil ke backend Flask
                 $.ajax({
-                    url: "http://127.0.0.1:5000/model",
+                    url: "http://127.0.0.1:5000/trial",
                     type: "POST",
                     contentType: "application/json",
                     data: JSON.stringify({ data: formattedData }),
                     success: function (response) {
-                        const data = response.result;
-
-                        const result = response.result;
-                        console.table(result);
+                        const data = response.result[0];
+                        console.log(data);
 
                         Swal.close();
                         Swal.fire('Berhasil!', 'Jadwal sudah jadi', 'success');
+
+                        makespan.textContent = 'Makespan: ' +parseFloat(response.result[1]).toFixed(2)+ ' jam';
 
                         function jamKeFloat(jamStr) {
                             const [jam, menit] = jamStr.split(':').map(Number);
@@ -526,7 +521,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         Object.entries(groupedByDay).forEach(([hari, items]) => {
                             // Tambah elemen div untuk chart hari tersebut
                             const chartId = `chart-${hari.replace(/\s+/g, '-')}`;
-                            $("#charts-container").append(`<h4>${hari}</h4><div id="${chartId}" style="height: 400px; margin-bottom: 10px;"></div>`);
+                            $("#charts-container").append(`<h6>${hari}</h6><div id="${chartId}" style="height: 400px; margin-bottom: 10px;"></div>`);
 
                             const tracesMap = {};
 
@@ -538,10 +533,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                 const duration = end - start;
 
-                                if (!orderColors[order]) {
-                                    orderColors[order] = colorList[colorIndex % colorList.length];
-                                    colorIndex++;
-                                }
+                                const uniqueOrders = [...new Set(data.map(item => item.Order || "No Order"))];
+                                const colorScale = chroma.scale('Set2').colors(uniqueOrders.length);
+                                const orderColors = {};
+                                uniqueOrders.forEach((order, i) => {
+                                    orderColors[order] = colorScale[i];
+                                });
+
 
                                 if (!tracesMap[order]) {
                                     tracesMap[order] = {

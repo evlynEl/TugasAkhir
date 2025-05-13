@@ -1,4 +1,4 @@
-import pulp
+from pulp import PULP_CBC_CMD, LpVariable, LpProblem, LpMinimize, lpSum, LpBinary, LpStatus, value
 import numpy as np
 import pandas as pd
 from datetime import datetime, timedelta
@@ -146,41 +146,16 @@ def add_mesin(order_specs):
 def generate_shift_intervals(start_hour, end_hour):
     return [f"{str(h%24).zfill(2)}:00-{str((h+1)%24).zfill(2)}:00" for h in range(start_hour, end_hour)]
 
-# def job_desc(valid_orders, order_specs, machines, jumlah_order):
-    kapasitas_mesin = {}
-    durasi_pekerjaan = {}
-    assigned_machines = {}  # Menggunakan dictionary
-    job = []
-
-    for o in valid_orders:
-        assigned_machines[o] = []  # Inisialisasi list untuk setiap order
-        for spec in order_specs[o]:
-            mesin_dibutuhkan = extract_mesin(spec["Mesin"])
-
-            for m in machines:  # Pilih mesin sesuai jumlah yang dibutuhkan
-                if len(assigned_machines[o]) < mesin_dibutuhkan:
-                    assigned_machines[o].append(m)
-
-            RjtWE = float(spec['RjtWE'])  # Ambil Weft dari order_specs
-
-            # Hitung kapasitas mesin dan durasi total pekerjaan untuk order ini
-            kapasitas_mesin[o] = ((100 * 6 * 2.54) / RjtWE) * 60  # Kapasitas mesin dalam meter/jam
-            durasi_total = jumlah_order[o] / kapasitas_mesin[o]
-            durasi_pekerjaan[o] = durasi_total / mesin_dibutuhkan  # Durasi per mesin
-
-            # Menyimpan informasi pekerjaan dalam format yang benar
-            job.append({
-                'Ord': o,
-                'JmlMesin': mesin_dibutuhkan,
-                'Durasi': durasi_pekerjaan[o],
-                'Mesin': assigned_machines[o]
-            })
-
-    return job
+def hari_ke_menit(hari: str, jam: str) -> int:
+    """Konversi 'Day X' dan jam (HH:MM) ke total menit sejak Day 0 jam 00:00"""
+    hari_ke = int(hari.split()[1])
+    jam_ke, menit_ke = map(int, jam.split(":"))
+    return hari_ke * 1440 + jam_ke * 60 + menit_ke
 
 def waktu_ke_menit(jam_str, day_index):
     jam, menit = map(int, jam_str.split(":"))
     return day_index * 24 * 60 + jam * 60 + menit
+
 
 def buat_model(orders, order_specs):
     # print("Orders:", orders)
@@ -231,18 +206,33 @@ def buat_model(orders, order_specs):
     # job = job_desc(valid_orders, order_specs, machines, jumlah_order)
     # print(job)
 
+    totalPower = {
+        'CL1': 167.0,
+        'CL2': 10.4,
+        'CL3': 8.0,
+        'CL4': 12.7
+    }
+
     # PROBLEM
-    prob = pulp.LpProblem("Scheduling_Minimize_Max_SDP_Load", pulp.LpMinimize)
+    prob = LpProblem("Minimize_CL1_Energy", LpMinimize)
 
     # VARIABLES
     intervals = [f"{str(h).zfill(2)}:00-{str((h+1)%24).zfill(2)}:00" for h in range(24)]
     istirahat_intervals = ['19:00-20:00', '20:00-21:00']
 
+    isRunning = {
+        m: {
+            t: LpVariable(f'isRunning_{m}_{t}', cat=LpBinary)
+            for t in intervals
+        }
+        for m in machines
+    }
+
     x = {
         m: {
             o: {
                 d: {
-                    s: pulp.LpVariable(f"x_{m}_{o}_{d}_{s}", cat="Binary")
+                    s: LpVariable(f"x_{m}_{o}_{d}_{s}", cat="Binary")
                     for s in intervals
                 }
                 for d in days
@@ -251,11 +241,11 @@ def buat_model(orders, order_specs):
         }
         for m in machines
     }
-    # y = pulp.LpVariable.dicts("y", (machines, valid_orders), cat="Binary")
+    # y = LpVariable.dicts("y", (machines, valid_orders), cat="Binary")
 
 
-    r = pulp.LpVariable.dicts("rest", (machines, days), cat="Binary")
-    # start = pulp.LpVariable.dicts("start", (machines, orders, days, intervals), cat="Binary")
+    r = LpVariable.dicts("rest", (machines, days), cat="Binary")
+    # start = LpVariable.dicts("start", (machines, orders, days, intervals), cat="Binary")
 
     # waktu 24 jam
     all_intervals = [
@@ -264,13 +254,13 @@ def buat_model(orders, order_specs):
     ]
 
     # Per hari, daya listrik maksimum SDP
-    max_load_per_day = pulp.LpVariable.dicts("max_load", days, cat="Continuous", lowBound=0)
+    max_load_per_day = LpVariable.dicts("max_load", days, cat="Continuous", lowBound=0)
 
     # INTERNAL: total aktif mesin di setiap SDP setiap hari
-    # load_SDP_day = pulp.LpVariable.dicts("load_SDP_day", (SDP_names, days), cat="Continuous", lowBound=0)
+    # load_SDP_day = LpVariable.dicts("load_SDP_day", (SDP_names, days), cat="Continuous", lowBound=0)
 
     # Tambahkan variabel sisa waktu kerja
-    # sisa_pekerjaan = pulp.LpVariable.dicts("sisa_pekerjaan", (machines, orders, days), lowBound=0)
+    # sisa_pekerjaan = LpVariable.dicts("sisa_pekerjaan", (machines, orders, days), lowBound=0)
 
     assigned_machines = defaultdict(list)
 
@@ -278,30 +268,36 @@ def buat_model(orders, order_specs):
 
     # for o in valid_orders:
     #     for m in assigned_machines.get(o, []):
-    #         start_time[o][m] = pulp.LpVariable(f"start_time_{o}_{m}", lowBound=0, cat='Continuous')
+    #         start_time[o][m] = LpVariable(f"start_time_{o}_{m}", lowBound=0, cat='Continuous')
 
     # OBJECTIVE
-    prob += pulp.lpSum(max_load_per_day[d] for d in days)
+    prob += lpSum(max_load_per_day[d] for d in days)
 
     # CONSTRAINTS
+    for t in ['19:00', '20:00', '21:00']:
+        prob += lpSum(isRunning[m][t] for m in SDP_CL1) <= 13
+
     # 1. Mesin khusus ST07, ST08, ST25-32 hanya boleh kerjakan order Lebar > 110 dan Denier > 1000
     for m in special_machines:
         for o in orders:
-            for spec in order_specs[o]:
-                if float(spec['Lebar']) <= 110 or float(spec['Denier']) <= 1000:
-                    assigned_machines[o].append(m)
-                    for d in days:
-                        for s in intervals:
-                            prob += x[m][o][d][s] == 0
+            for d in days:
+                for s in intervals:
+                    should_be_zero = False
+                    for spec in order_specs[o]:
+                        if float(spec['Lebar']) <= 110 or float(spec['Denier']) <= 1000:
+                            should_be_zero = True
+                            break
+                    if should_be_zero:
+                        prob += x[m][o][d][s] == 0
 
     # 2. Mesin dari SDP CL1-CL4 bisa istirahat, jika mesin beristirahat mulai jam 19.00, update r[m][d] menjadi 1
     for m in SDP_rest_allowed:
         for d in days:
             istirahat = [interval for interval in shift_intervals['sore'] if interval in istirahat_intervals]
             # Menambahkan constraint untuk memeriksa apakah mesin mengerjakan order pada shift istirahat
-            prob += r[m][d] == pulp.lpSum(x[m][o][d][s] for o in orders for s in istirahat)  # Periksa apakah mesin mengerjakan order di shift istirahat
+            prob += r[m][d] == lpSum(x[m][o][d][s] for o in orders for s in istirahat)  # Periksa apakah mesin mengerjakan order di shift istirahat
             # Mengatur r[m][d] menjadi 1 jika ada pekerjaan pada interval istirahat
-            prob += r[m][d] >= pulp.lpSum(x[m][o][d][s] for o in orders for s in istirahat)
+            prob += r[m][d] >= lpSum(x[m][o][d][s] for o in orders for s in istirahat)
 
 
     # 3. Mesin di SDP CL5, CL6 tidak bisa istirahat
@@ -311,7 +307,7 @@ def buat_model(orders, order_specs):
 
     # 4. Jumlah mesin istirahat per hari hanya boleh 3
     for d in days:
-        prob += pulp.lpSum(r[m][d] for m in SDP_rest_allowed) == 3
+        prob += lpSum(r[m][d] for m in SDP_rest_allowed) == 3
 
     # 5. Kapasitas, durasi
     kapasitas_mesin = {}
@@ -334,7 +330,7 @@ def buat_model(orders, order_specs):
             durasi_pekerjaan[o] = durasi_total / mesin_dibutuhkan[o]
 
             # Constraint total alokasi waktu untuk order ini
-            prob += pulp.lpSum(
+            prob += lpSum(
                 x[m][o][d][s]
                 for d in days
                 for m in assigned_machines[o]
@@ -348,7 +344,7 @@ def buat_model(orders, order_specs):
     for m in machines:
         for d in days:
             for h in range(24):
-                prob += pulp.lpSum(x[m][o][d][s] for o in valid_orders if m in assigned_machines[o]
+                prob += lpSum(x[m][o][d][s] for o in valid_orders if m in assigned_machines[o]
                                     for s in all_intervals if int(s.split('-')[0].split(':')[0]) == h
                                     ) <= 1
 
@@ -356,7 +352,7 @@ def buat_model(orders, order_specs):
     for m in machines:
         for d in days:
             for s in all_intervals:
-                prob += pulp.lpSum(
+                prob += lpSum(
                     x[m][o][d][s] for o in valid_orders if m in assigned_machines[o]) <= 1
 
 
@@ -364,14 +360,14 @@ def buat_model(orders, order_specs):
     for o in valid_orders:
         for m in assigned_machines[o]:
             if 'pagi' in shift_intervals:
-                prob += pulp.lpSum(x[m][o][0][interval] for interval in shift_intervals['pagi']) >= 1
+                prob += lpSum(x[m][o][0][interval] for interval in shift_intervals['pagi']) >= 1
 
     # 9. Prioritas Jumlah
     # Urutkan order berdasarkan Jumlah secara descending
     sorted_jumlah = sorted(valid_orders, key=lambda o: jumlah_order[o], reverse=True)
 
     # Assign mesin
-    assigned_machines = {}
+    # assigned_machines = {}
     mesin_index = 0
     bngwe_to_machine = {}       # Simpan mesin yang sudah digunakan untuk BngWE tertentu
 
@@ -399,7 +395,7 @@ def buat_model(orders, order_specs):
                 used_machines.add(m)  # Tandai mesin telah digunakan untuk order ini
                 mesin_index += 1
 
-            prob += pulp.lpSum(x[m][o][d][s] for m in machines for o in valid_orders for d in days for s in all_intervals)
+            prob += lpSum(x[m][o][d][s] for m in machines for o in valid_orders for d in days for s in all_intervals)
     print(assigned_machines)
 
     # FIFO
@@ -432,8 +428,8 @@ def buat_model(orders, order_specs):
             if mesin_sama:
                 for m in mesin_sama:
                     jam_awal = s.split('-')[0]
-                    start_oi = pulp.lpSum(x[m][oi][d][s] * waktu_ke_menit(jam_awal, d) for d in days for s in all_intervals)
-                    start_oj = pulp.lpSum(x[m][oj][d][s] * waktu_ke_menit(jam_awal, d) for d in days for s in all_intervals)
+                    start_oi = lpSum(x[m][oi][d][s] * waktu_ke_menit(jam_awal, d) for d in days for s in all_intervals)
+                    start_oj = lpSum(x[m][oj][d][s] * waktu_ke_menit(jam_awal, d) for d in days for s in all_intervals)
                     prob += start_oi <= start_oj
 
     # #13. Alokasikan mesin dan order untuk interval tertentu
@@ -444,16 +440,16 @@ def buat_model(orders, order_specs):
     #                 prev = all_intervals[i - 1]
     #                 curr = all_intervals[i]
     #                 # Jika interval sekarang aktif, maka interval sebelumnya harus aktif juga
-    #                 prob += x[m][o][d][curr] <= x[m][o][d][prev] + (1 - pulp.lpSum(start[m][o][d][s] for s in all_intervals))  # allow first active block
+    #                 prob += x[m][o][d][curr] <= x[m][o][d][prev] + (1 - lpSum(start[m][o][d][s] for s in all_intervals))  # allow first active block
 
 
     # 16. Menghitung beban tertinggi untuk setiap SDP pada setiap hari
     # for d in days:
     #     for sdp in SDP_names:
-    #         max_beban = pulp.lpSum(load_SDP_day[sdp][d] for m in machines if m in SDP_rest_allowed)  # Beban tertinggi di SDP CL1-4
+    #         max_beban = lpSum(load_SDP_day[sdp][d] for m in machines if m in SDP_rest_allowed)  # Beban tertinggi di SDP CL1-4
     #         for m in machines:
     #             # Jika mesin adalah mesin dengan beban tertinggi pada SDP CL
-    #             if pulp.lpSum(load_SDP_day[sdp][d] for m in machines if m == m) == max_beban and m in SDP_rest_allowed:
+    #             if lpSum(load_SDP_day[sdp][d] for m in machines if m == m) == max_beban and m in SDP_rest_allowed:
     #                 prob += r[m][d] == 1  # Mesin bisa diistirahatkan
     #             else:
     #                 prob += r[m][d] == 0  # Mesin tetap bekerja
@@ -462,7 +458,7 @@ def buat_model(orders, order_specs):
     # for m in machines:
     #     for d in days:
     #         for interval in intervals_by_day[d]:
-    #             prob += pulp.lpSum(x[m][o][d][interval] for o in orders) <= (1 - r[m][d])
+    #             prob += lpSum(x[m][o][d][interval] for o in orders) <= (1 - r[m][d])
 
     # # No overlap constraint
     # for o in valid_orders:
@@ -472,14 +468,14 @@ def buat_model(orders, order_specs):
     #             for interval in all_intervals:
     #                 hour = int(interval.split('-')[0].split(':')[0])
     #                 interval_expr.append(hour * start[m][o][d][interval])
-    #         prob += start_time[o][m] == pulp.lpSum(interval_expr)
+    #         prob += start_time[o][m] == lpSum(interval_expr)
 
     # big_M = 200
     # for m in machines:
     #     for i, o1 in enumerate(valid_orders):
     #         for o2 in valid_orders[i + 1:]:
     #             if m in assigned_machines[o1] and m in assigned_machines[o2]:
-    #                 before = pulp.LpVariable(f"before_{m}_{o1}_{o2}", cat='Binary')
+    #                 before = LpVariable(f"before_{m}_{o1}_{o2}", cat='Binary')
 
     #                 dur1 = int(round(durasi_pekerjaan[o1]))
     #                 dur2 = int(round(durasi_pekerjaan[o2]))
@@ -508,8 +504,10 @@ def buat_model(orders, order_specs):
 
 
     # SOLVE
-    prob.solve()
-    print("Status:", pulp.LpStatus[prob.status])
+    solver = PULP_CBC_CMD(timeLimit=600, gapRel=0.005)
+    prob.solve(solver)
+
+    print("Status:", LpStatus[prob.status])
 
     # Generate jadwal
     jadwal_produksi = []
@@ -522,7 +520,7 @@ def buat_model(orders, order_specs):
 
             # for d in days:
             #     for s in all_intervals:
-            #         if pulp.value(x[m][o][d][s]) == 1:
+            #         if value(x[m][o][d][s]) == 1:
             #             aktif_slots.append((d, s))
 
             # aktif_slots.sort(key=lambda x: (x[0], waktu_ke_menit(x[1], x[0])))  # benar-benar urut waktu
@@ -533,7 +531,7 @@ def buat_model(orders, order_specs):
 
                 for shift in ['pagi']:
                     for interval in shift_intervals[shift]:
-                        if pulp.value(x[m][o][d][interval]) is not None:
+                        if value(x[m][o][d][interval]) is not None:
                             aktif_slots.append((d, interval))
 
             if not aktif_slots:
@@ -627,6 +625,14 @@ def buat_model(orders, order_specs):
     df_jadwal = pd.DataFrame(jadwal_produksi)
     print(df_jadwal)
 
+    # Hitung waktu selesai terakhir (dalam menit)
+    waktu_selesai_terakhir = max(
+        waktu_ke_menit(item['Hari'], item['Jam Selesai']) for item in jadwal_produksi
+    )
+
+    # Ubah ke satuan jam desimal
+    makespan_jam = waktu_selesai_terakhir / 60
+
     # Menampilkan DataFrame dalam format tabel
-    return df_jadwal.to_dict(orient='records')
+    return df_jadwal.to_dict(orient='records'), makespan_jam
 
