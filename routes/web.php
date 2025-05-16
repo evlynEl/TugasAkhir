@@ -102,6 +102,7 @@ Route::group(['middleware' => ['auth']], function () {
     #region TA
     Route::get('SDP', 'App\Http\Controllers\HomeController@SDP');
     Route::resource('MonitorListrik', MonitorListrikController::class);
+
     Route::resource('JadwalMesin', JadwalMesinController::class);
 
     #region Laporan Stok

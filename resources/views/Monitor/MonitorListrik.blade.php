@@ -14,21 +14,25 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <h5 style="text-align: center;">SDP CL 1</h5>
+                                <center><p id="tglCL1"></p></center>
                                 <canvas class='bordered align-items-center justify-content-center' id="dataChart1"></canvas>
                                 <p id="totalPower1" style="text-align: center; margin-top: 5px; font-weight: bold;"></p>
                             </div>
                             <div class="col-md-3">
                                 <h5 style="text-align: center;">SDP CL 2</h5>
+                                <center><p id="tglCL2"></p></center>
                                 <canvas class='bordered align-items-center justify-content-center' id="dataChart2"></canvas>
                                 <p id="totalPower2" style="text-align: center; margin-top: 5px; font-weight: bold;"></p>
                             </div>
                             <div class="col-md-3">
                                 <h5 style="text-align: center;">SDP CL 3</h5>
+                                <center><p id="tglCL3"></p></center>
                                 <canvas class='bordered align-items-center justify-content-center' id="dataChart3"></canvas>
                                 <p id="totalPower3" style="text-align: center; margin-top: 5px; font-weight: bold;"></p>
                             </div>
                             <div class="col-md-3">
                                 <h5 style="text-align: center;">SDP CL 4</h5>
+                                <center><p id="tglCL4"></p></center>
                                 <canvas class='bordered align-items-center justify-content-center' id="dataChart4"></canvas>
                                 <p id="totalPower4" style="text-align: center; margin-top: 5px; font-weight: bold;"></p>
                             </div>
@@ -41,14 +45,14 @@
                                     </div>
                                     <div class="col-md-1">
                                         <select id="filterDropdown">
-                                            <option value="30m">30 Menit</option>
+                                            {{-- <option value="30m">30 Menit</option> --}}
                                             <option value="1h">1 Jam</option>
                                             <option value="day">Hari</option>
                                             <option value="month">Bulan</option>
                                             <option value="year">Tahun</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-1">
+                                    {{-- <div class="col-md-2">
                                         <select id="powerDropdown">
                                             <option value="total4CL">Total Power</option>
                                             <option value="CL1">CL 1</option>
@@ -56,7 +60,7 @@
                                             <option value="CL3">CL 3</option>
                                             <option value="CL4">CL 4</option>
                                         </select>
-                                    </div>
+                                    </div> --}}
                                 </div>
 
                                 <canvas class='bordered align-items-center justify-content-center' id="dataChart5"

@@ -8,6 +8,10 @@ document.addEventListener("DOMContentLoaded", function () {
     var btn_proses = document.getElementById("btn_proses");
     var btn_fileUpload = document.getElementById("btn_fileUpload");
     var btn_ok = document.getElementById("btn_ok");
+    var excelButton = document.getElementById('excelButton');
+    var printPdf = document.getElementById('printPdf');
+    var showPreview = document.querySelector('.preview');
+
     var dataUpload;
 
     btn_fileUpload.focus();
@@ -349,7 +353,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     $(document).ready(function () {
-        $('#tableData').DataTable({
+        const tabel = $('#tableData').DataTable({
             paging: false,
             searching: false,
             info: false,
@@ -428,6 +432,112 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
+    // export datatable jadi excel
+    excelButton.addEventListener("click", async function () {
+        const table = $('#tableData').DataTable();
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Data Order');
+
+        // Header sesuai definisi kolom
+        const headerData = [
+            ["NoOrder", "Lebar", "RjtWA", "RjtWE", "Denier", "Corak", "BngWA", "BngWE", "Jumlah", "TglMulai", "Mesin", "PnjPotong", "Keterangan"]
+        ];
+        headerData.forEach(row => worksheet.addRow(row));
+
+        // Data baris
+        table.rows().every(function () {
+            const row = this.data();
+            const rowData = row.map((cell, index) => {
+                // Tipe angka
+                const numericCols = [1, 2, 3, 11];
+                if (numericCols.includes(index)) {
+                    const cleaned = String(cell).replace(/[^\d.-]/g, '');
+                    return isNaN(cleaned) || cleaned === '' ? cell : Number(cleaned);
+                }
+
+                // Tanggal
+                if (index === 9) {
+                    const date = new Date(cell);
+                    return isNaN(date.getTime()) ? cell : date.toLocaleDateString("en-CA"); // YYYY-MM-DD
+                }
+
+                return cell;
+            });
+            worksheet.addRow(rowData);
+        });
+
+        // Tambahkan border dan bold ke header
+        const borderStyle = {
+            top: { style: 'thin' },
+            left: { style: 'thin' },
+            bottom: { style: 'thin' },
+            right: { style: 'thin' }
+        };
+
+        const boldStyle = { font: { bold: true } };
+
+        worksheet.getRow(1).eachCell(cell => {
+            cell.border = borderStyle;
+            cell.font = boldStyle.font;
+        });
+
+        // Atur lebar kolom otomatis
+        function calculateColumnWidths(data) {
+            const colWidths = [];
+            data.forEach(row => {
+                row.forEach((cell, index) => {
+                    const cellLength = String(cell).length;
+                    if (!colWidths[index] || cellLength > colWidths[index]) {
+                        colWidths[index] = cellLength;
+                    }
+                });
+            });
+            return colWidths.map(length => length + 2);
+        }
+
+        const fullData = headerData.concat(table.rows().data().toArray());
+        const colWidths = calculateColumnWidths(fullData);
+        worksheet.columns.forEach((col, i) => {
+            col.width = colWidths[i];
+        });
+
+        // Simpan file
+        const buffer = await workbook.xlsx.writeBuffer();
+        const blob = new Blob([buffer], {
+            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'DataOrder.xlsx';
+        link.click();
+    });
+
+    printPdf.addEventListener('click', function () {
+        const data = $('#tableData').DataTable().rows().data().toArray();
+        const tbody = document.querySelector('#previewTable tbody');
+        tbody.innerHTML = ''; // Kosongkan dulu
+
+        data.forEach(row => {
+            const tr = document.createElement('tr');
+            row.forEach((cell, index) => {
+                const td = document.createElement('td');
+                td.innerHTML = cell;
+
+                tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+        });
+
+
+        // Tampilkan div
+        document.getElementById('printArea').classList.remove('d-none');
+
+        // Cetak
+        window.print();
+    });
+
+
+
     function decodeHtmlEntities(text) {
         var txt = document.createElement("textarea");
         txt.innerHTML = text;
@@ -480,6 +590,50 @@ document.addEventListener("DOMContentLoaded", function () {
         return value;
     }
 
+
+    function getTotalPowerPerDay() {
+        $.ajax({
+            url: 'JadwalMesin/getHighestCL',
+            type: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                let totalPerDay = totalRealPowerPerDay(response);
+                let latestData = getLatestDateAndValue(totalPerDay);
+                console.log(totalPerDay, latestData);
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX Error:', error);
+            }
+        });
+    }
+
+    function totalRealPowerPerDay(data) {
+        const totals = {};
+
+        data.forEach(item => {
+            const day = item.Date_Time.substring(0, 10);
+
+            if (!totals[day]) {
+                totals[day] = 0;
+            }
+
+            totals[day] += parseFloat(item.Real_Power) || 0;
+        });
+
+        return totals;
+    }
+
+    function getLatestDateAndValue(totals) {
+        const dates = Object.keys(totals);
+        dates.sort();
+        const latestDate = dates[dates.length - 1];
+        return {
+            date: latestDate,
+            totalPower: parseFloat(totals[latestDate]).toFixed(2)
+        };
+    }
+
+    getTotalPowerPerDay();
 
     // button unk menghasilkan jadwal
     btn_ok.addEventListener("click", function () {
@@ -534,7 +688,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         Swal.close();
                         Swal.fire('Berhasil!', 'Jadwal sudah jadi', 'success');
 
-                        btn_ok.focus();
+                        // btn_ok.focus();
 
                         makespan.textContent = 'Makespan: ' +parseFloat(response.result[1]).toFixed(2)+ ' jam';
                         excTime.textContent = 'Execute time: ' +parseFloat(response.result[2]).toFixed(2)+ ' s';

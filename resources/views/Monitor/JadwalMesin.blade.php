@@ -32,8 +32,17 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2 pl-0">
-                            <label for="hasil">Data Order</label>
+                        <div class="row pb-1">
+                            <div class="col-md-2">
+                                <label for="hasil">Data Order</label>
+                            </div>
+                            <div class="col-md-8"></div>
+                            <div class="col-md-1">
+                                <button type="button" class="btn btn-light" id="printPdf" style="width: 100%">Print</button>
+                            </div>
+                            <div class="col-md-1">
+                                <button type="button" class="btn btn-light" id="excelButton" style="width: 100%">Excel</button>
+                            </div>
                         </div>
 
                         <div class="col-sm-12">
@@ -54,9 +63,35 @@
                             <div class="col-md-3 pl-3"><label id="makespan"></label></div>
                             <div class="col-md-3"><label id="excTime"></label></div>
                         </div>
-                        <div class="col-md-12" id="charts-container">
-                        </div>
+                        <div class="col-md-12" id="charts-container"></div>
 
+
+
+                        {{-- preview --}}
+                        <div class="container preview" id="printArea">
+                            <h4 class="mb-3">Data Order {{ \Carbon\Carbon::today()->format('d-m-Y') }}</h4>
+
+                            <table class="table table-bordered table-sm" id="previewTable">
+                                <thead class="text-center align-middle">
+                                    <tr>
+                                        <th>No Order</th>
+                                        <th>Lebar</th>
+                                        <th>RjtWA</th>
+                                        <th>RjtWE</th>
+                                        <th>Denier</th>
+                                        <th class="col-corak">Corak</th>
+                                        <th class="col-bngwa">BngWA</th>
+                                        <th class="col-bngwe">BngWE</th>
+                                        <th>Jumlah</th>
+                                        <th>Tgl Mulai</th>
+                                        <th>Mesin</th>
+                                        <th>Pnj Potong</th>
+                                        <th>Keterangan</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
 
                     </div>
                 </div>
@@ -65,18 +100,14 @@
     </div>
     </div>
     <script type="text/javascript" src="{{ asset('js\Monitor\JadwalMesin.js') }}"></script>
-    <link rel="stylesheet" href="{{ asset('css/Inventory/Informasi/TransaksiBulanan.css') }}">
+    <link rel="stylesheet" href="{{ asset('css\SDP\JadwalMesin.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="{{ asset('css/sweetalert2.min.css') }}">
     <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.30.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chroma-js@2.4.2/chroma.min.js"></script>
 
-
-    <!-- Script kamu -->
-    {{-- <script src="{{ asset('js/chart.js') }}"></script> --}}
-
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
 
     <link rel="stylesheet" href="{{ asset('css/colResizeDatatable.css') }}">
     <script src="{{ asset('js/colResizeDatatable.js') }}"></script>

@@ -85,6 +85,17 @@ class JadwalMesinController extends Controller
             }
             return datatables($noOrder)->make(true);
         }
+
+        else if ($id == 'getHighestCL') {
+            $cl1 = DB::connection('mysql_cl1')->table('set_15m')
+                ->select('Date_Time', 'Real_Power')
+                ->orderByDesc('Date_Time') // Urutkan berdasarkan waktu
+                ->get();
+
+            // dd($cl1);
+
+            return response()->json($cl1->toArray());
+        }
     }
 
     public function edit($id)

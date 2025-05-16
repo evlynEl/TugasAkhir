@@ -29,46 +29,42 @@ class MonitorListrikController extends Controller
 
     public function show($id, Request $request)
     {
-        // if ($id == 'getKwh') {
-        //     $kwh = DB::connection('ConnCircular')
-        //         ->table('dbo.KWH')
-        //         ->select('*')
-        //         ->get();
+        if ($id == 'getCL1') {
+            $data_cl = DB::connection('mysql_cl1')->table('set_raw')
+            ->select('Date_Time', 'Device_ID', 'Current_Avg', 'Voltage_LN_Avg', 'Active_Power_Total', 'Real_Power')
+            ->get();
 
+            // dd($data_cl);
+            return response()->json($data_cl);
+        }
 
-        //     $data_kwh = [];
-        //     foreach ($kwh as $detailRef) {
-        //         $data_kwh[] = [
-        //             'Tanggal'   => $detailRef->Tanggal,
-        //             'CL1_Jml'   => $detailRef->CL1_Jml,
-        //             'CL2_Jml'   => $detailRef->CL2_Jml,
-        //             'CL3_Jml'   => $detailRef->CL3_Jml,
-        //             'CL4_Jml'   => $detailRef->CL4_Jml
-        //         ];
-        //     }
-        //     dd($data_kwh);
-        //     return response()->json($data_kwh);
-        // }
+        else if ($id == 'getCL2') {
+            $data_cl = DB::connection('mysql_cl2')->table('set_raw2')
+            ->select('Date_Time', 'Device_ID', 'Current_Avg', 'Voltage_LN_Avg', 'Active_Power_Total', 'Real_Power')
+            ->get();
 
-        // else
-        if ($id == 'getKwh2') {
-            $kwh = DB::connection('ConnCircular')
-                ->table('dbo.MikroCL1')
-                ->select(DB::raw('[Power (kWatt)] as Power'), 'Date')
+            // dd($data_cl);
+            return response()->json($data_cl);
+        }
+
+        else if ($id == 'getCL3') {
+            $data_cl = DB::connection('mysql_cl3')->table('set_raw3')
+            ->select('Date_Time', 'Device_ID', 'Current_Avg', 'Voltage_LN_Avg', 'Active_Power_Total', 'Real_Power')
+            ->get();
+
+            // dd($data_cl);
+            return response()->json($data_cl);
+        }
+
+        else if ($id == 'getTotalCL') {
+            $cl1 = DB::connection('mysql_cl1')->table('set_15m')
+                ->select('Date_Time', 'Real_Power')
+                ->orderByDesc('Date_Time') // Urutkan berdasarkan waktu
                 ->get();
 
-            $data_kwh = [];
-            foreach ($kwh as $detailRef) {
-                $data_kwh[] = [
-                    'Date'  => $detailRef->Date,
-                    'Power' => $detailRef->Power,
-                    'Power2' => $detailRef->Power2,
-                    'Power3' => $detailRef->Power3,
-                    'Power4' => $detailRef->Power4
-                ];
-            }
-            // dd($data_kwh);
-            return response()->json($data_kwh);
+            // dd($cl1);
+
+            return response()->json($cl1);
         }
     }
 

@@ -1,0 +1,124 @@
+.col-md-1,
+.col-md-9 {
+    padding-left: 0;
+}
+
+.table-responsive.fixed-height tbody {
+    background-color: white;
+}
+
+.table-responsive.fixed-height {
+    border-radius: 8px;
+    border: 2px solid black;
+    background-color: white;
+}
+
+.no-wrap-header thead th {
+    white-space: nowrap;
+    background-color: lightgoldenrodyellow;
+    padding: 0;
+}
+
+.table-responsive.fixed-height tbody td {
+    background-color: white;
+    padding: 4px 5px;
+}
+
+.fixed-width {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0;
+}
+
+table.dataTable {
+    table-layout: fixed;
+    width: 100%;
+}
+
+#table_list th,
+#table_list td {
+    padding-top: 0;
+    padding-bottom: 0;
+    font-size: 16px;
+}
+
+.col-md-05 {
+    flex: 0 0 auto;
+    width: 4.16666667%; /* 0.5 dari 12 kolom */
+    max-width: 4.16666667%;
+}
+
+.bordered {
+    border: 1px solid black;
+    padding: 0;
+}
+
+.preview {
+    margin: 0;
+    padding: 0 5px;
+    display: none;
+}
+
+@media print {
+    /* Hide everything by default */
+    body, .container, #printArea  {
+        visibility: hidden;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Show only elements with the class 'preview' */
+    .preview, .preview * {
+        visibility: visible;
+    }
+
+    /* Ensure that the element with the class 'preview' is visible and properly formatted */
+    .preview {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        transform: scale(0.9);
+        transform-origin: top left;
+    }
+
+    #previewTable {
+        page-break-inside: auto;
+    }
+
+    #previewTable tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+    }
+}
+#previewTable td {
+    max-height: none;
+}
+
+
+#previewTable,
+#previewTable th,
+#previewTable td {
+    border: 1px solid black !important;
+}
+
+#previewTable {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#previewTable th,
+#previewTable td {
+    padding: 5px 10px;
+    color: black !important;
+    white-space: nowrap;
+}
+
+#previewTable td:nth-child(6),
+#previewTable th:nth-child(6),
+#previewTable td:nth-child(13),
+#previewTable th:nth-child(13) {
+    max-width: 250px;
+    white-space: normal;
+}
