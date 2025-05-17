@@ -34,80 +34,59 @@ def main(data_list):
     return {'orders': orders, 'order_specs': order_specs}
 
 # fungsi ambil semua jumlah dan pilah jumlah yg ada +MESIN
+from collections import defaultdict
+
 def proses_jumlah_orders(orders, order_specs):
-    seen = set()
-    unique_orders = []
+    jumlah_all   = defaultdict(list)   # rekam original string
+    jumlah_order = {}                  # total per order (float)
+    valid_orders = []                  # list order final
 
-    for o in orders:
-        if o not in seen:
-            unique_orders.append(o)
-            seen.add(o)
-
-    jumlah_all = defaultdict(list)
-    jumlah_order = {}
-    valid_orders = []
-
-    # Loop untuk mengiterasi unique orders
-    for o in unique_orders:
-        base_spec = None  # Menyimpan base spec
-        mesin_plus = 0    # Jumlah mesin tambahan
-        total_jumlah = 0  # Total jumlah untuk menggabungkan +MESIN atau +ORDER
+    for o in dict.fromkeys(orders):    # urut unik sambil jaga urutan
+        total_jumlah = 0.0             # akumulasi meter
+        total_mesin  = 0               # akumulasi mesin
+        base_spec    = None
 
         for spec in order_specs[o]:
-            jumlah_str = spec['Jumlah'].upper()
-            jumlah_all[o].append(jumlah_str)
+            jstr = spec['Jumlah'].strip().upper()
+            jumlah_all[o].append(jstr)
 
-            # Proses jika jumlah tidak mengandung '+MESIN' atau '+ORDER'
-            if '+MESIN' not in jumlah_str and 'MSN' not in jumlah_str:
-                if '+' in jumlah_str:  # Jika jumlah adalah penambahan (misalnya '+20,000')
-                    # print(f"[SKIP] Order {o} memiliki jumlah tambahan, tidak bisa diproses.")
-                    continue  # Skip jika jumlahnya adalah penambahan
+            # --- kasus Jumlah reguler (tidak diawali '+') -----------------
+            if not jstr.startswith('+'):
                 try:
-                    jumlah = float(jumlah_str.replace('.', '').replace(',', '').strip())
-                    if base_spec is None:  # Jika belum ada base spec, tentukan base spec
-                        base_spec = spec
-                    total_jumlah += jumlah  # Tambahkan jumlahnya
+                    val = float(jstr.replace('.', '').replace(',', ''))
+                    total_jumlah += val
+                    total_mesin  += extract_mesin(spec['Mesin'])
+                    if base_spec is None:               # simpan salah satu sebagai template
+                        base_spec = spec.copy()
                 except ValueError:
-                    print(f"[SKIP] Jumlah tidak valid di order {o}: '{jumlah_str}'")
+                    print(f"[SKIP] Jumlah tak valid di {o}: '{jstr}'")
+                continue
 
-            # Proses jika +MESIN ditemukan
-            elif '+MESIN' in jumlah_str:
-                if o in jumlah_order:  # Pastikan jumlah_order sebelumnya ada
-                    # try:
-                        mesin_plus += extract_mesin(spec['Mesin'])  # Ambil jumlah mesin dari Mesin
-                    # except ValueError:
-                        # print(f"[SKIP] Jumlah mesin tidak valid di order {o}: '{jumlah_str}'")
-                else:
-                    print(f"[SKIP] Tidak ada jumlah sebelumnya untuk order {o} - tidak bisa proses +MESIN")
+            # --- kasus '+MESIN' (tak menambah Jumlah, hanya mesin) --------
+            if '+MESIN' in jstr:
+                total_mesin += extract_mesin(spec['Mesin'])
+                continue
 
-        # Gabungkan jumlah dan mesin hanya jika ada base_spec
-        if base_spec and total_jumlah > 0:
-            # Hitung total mesin dari semua baris valid (meskipun tidak ada +MESIN)
-            valid_specs = [s for s in order_specs[o] if '+' not in s['Jumlah'].upper()]
-            mesin_total = sum(extract_mesin(s['Mesin']) for s in valid_specs)
+            # --- kasus '+<angka>' menambah jumlah -------------------------
+            try:
+                inc = float(jstr[1:].replace('.', '').replace(',', ''))
+                total_jumlah += inc
+                total_mesin += extract_mesin(spec['Mesin'])
+            except ValueError:
+                print(f"[SKIP] Jumlah plus tak valid di {o}: '{jstr}'")
 
-            base_spec['Mesin'] = f"{mesin_total} MESIN"
-
-            # Tambahkan mesin jika ada
-            if mesin_plus > 0:
-                mesin_base = extract_mesin(base_spec['Mesin'])
-                mesin_total = mesin_base + mesin_plus
-                base_spec['Mesin'] = f"{mesin_total} MESIN"
-
-            # Update jumlah dan masukkan ke valid_orders jika ada base_spec
-            base_spec['Jumlah'] = str(total_jumlah)
-            jumlah_order[o] = total_jumlah
+        # kalau punya basis & total_jumlah >0 -> simpan
+        if base_spec and total_jumlah:
+            base_spec['Jumlah'] = str(int(total_jumlah) if total_jumlah.is_integer() else total_jumlah)
+            base_spec['Mesin']  = f"{total_mesin} MESIN"
+            order_specs[o]      = [base_spec]
+            jumlah_order[o]     = total_jumlah
             valid_orders.append(o)
-            jumlah_all[o] = [str(total_jumlah)]  # Update jumlah order dengan yang sudah digabung
-
-        # Jika base_spec tidak ada, artinya order ini tidak valid untuk penggabungan
         else:
-            print(f"[SKIP] Order {o} tidak valid untuk digabungkan.")
-
-        order_specs[o] = [base_spec]
-
+            print(f"[SKIP] Order {o} tidak bisa digabung.")
 
     return jumlah_all, jumlah_order, valid_orders
+
 
 # Fungsi untuk mengambil jumlah mesin dari string
 def extract_mesin(jumlah_mesin_str):
@@ -183,7 +162,6 @@ def clean_waktu(t):
         print(f"[clean_waktu] Error parsing float '{t}': {e}")
         return None  # ← lebih baik kembalikan None, bukan "00:00"
 
-
 def to_jam(menit_total):
     return f"{str(menit_total // 60).zfill(2)}:{str(menit_total % 60).zfill(2)}"
 
@@ -207,7 +185,7 @@ def buat_model(orders, order_specs):
     print(valid_orders)
 
     # SETS
-    days = [0, 1, 2, 3, 4, 5, 6]
+    days = [1, 2, 3, 4, 5, 6, 7]
 
     # mesin berdasarkan adjusted eff
     mesin = r"C:\Users\Evelyn\Downloads\summary_adjusted_eff.csv"
@@ -278,8 +256,8 @@ def buat_model(orders, order_specs):
     }
 
     totalPower = {
-        'CL1': 67.0,
-        'CL2': 110.4,
+        'CL1': 167.0,
+        'CL2': 10.4,
         'CL3': 8.0,
         'CL4': 12.7
     }
@@ -438,7 +416,7 @@ def buat_model(orders, order_specs):
     for o in valid_orders:
         for m in assigned_machines[o]:
             if 'pagi' in shift_intervals:
-                prob += lpSum(x[m][o][0][interval] for interval in shift_intervals['pagi']) >= 1
+                prob += lpSum(x[m][o][1][interval] for interval in shift_intervals['pagi']) >= 1
 
 
     # 9. Atur mesin yg ada di machines_max_cl dan bekerja pada interval sore jam 19, 20, 21 diistirahatkan
@@ -483,8 +461,8 @@ def buat_model(orders, order_specs):
     ), "Minimize_MachinesRunningDuringBreak"
 
 
-    print("Variables:", len(prob.variables()))
-    print("Constraints:", len(prob.constraints))
+    # print("Variables:", len(prob.variables()))
+    # print("Constraints:", len(prob.constraints))
 
     start_time = time.time()
 
@@ -497,8 +475,8 @@ def buat_model(orders, order_specs):
 
     end_time = time.time()
     excTime = end_time - start_time
-    print("Status:", LpStatus[prob.status])
-    print("Objective value =", value(prob.objective)) # Semakin kecil nilai objektif ini, semakin baik jadwal menghindari operasi mesin saat waktu istirahat.
+    # print("Status:", LpStatus[prob.status])
+    # print("Objective value =", value(prob.objective)) # Semakin kecil nilai objektif ini, semakin baik jadwal menghindari operasi mesin saat waktu istirahat.
 
 
     # Generate jadwal
@@ -620,12 +598,11 @@ def buat_model(orders, order_specs):
     mesin_terurut = [m for m in machines_reversed if m in mesin_aktif_istirahat]
     # print('urut: ',mesin_terurut)
 
-    # Ambil 3 mesin terakhir yang aktif saat istirahat
-    target_mesin = mesin_terurut[:3]
+    # Ambil 5 mesin terakhir yang aktif saat istirahat
+    target_mesin = mesin_terurut[:5]
     # print('target: ',target_mesin)
 
     jadwal_diperbaiki = []
-
     delay = 120  # dalam menit
 
     for i, row in df_jadwal.iterrows():
@@ -640,82 +617,54 @@ def buat_model(orders, order_specs):
             jadwal_diperbaiki.append(row.to_dict())
             continue
 
-        if jam_selesai <= istirahat_awal or jam_mulai >= istirahat_akhir:
-            # Tidak konflik dengan istirahat → tambahkan delay
-            jam_selesai += delay
+        # Job aktif saat istirahat, cek apakah perlu dipotong
+        if jam_mulai < istirahat_akhir and jam_selesai > istirahat_awal:
+            durasi_setelah_istirahat = jam_selesai - istirahat_awal
 
-            # Cek apakah selesai lewat tengah malam
-            if jam_selesai <= 1440:
-                jadwal_diperbaiki.append({
-                    'Order': row['Order'],
-                    'Mesin': row['Mesin'],
-                    'Hari': row['Hari'],
-                    'Jam Mulai': to_jam(jam_mulai),
-                    'Jam Selesai': to_jam(jam_selesai)
-                })
+            if durasi_setelah_istirahat < 30:
+                # Sisanya terlalu sedikit, biarkan jalan terus
+                jadwal_diperbaiki.append(row.to_dict())
+                continue
             else:
-                # Bagi ke hari berikutnya
                 hari_ini = row['Hari']
                 hari_besok = f"Day {int(hari_ini.split()[-1]) + 1}"
+                durasi_sisa = jam_selesai - istirahat_awal
+                jam_mulai_lanjutan = istirahat_akhir
+                jam_selesai_lanjutan = jam_mulai_lanjutan + durasi_sisa + delay
+
+                # Bagian sebelum istirahat
                 jadwal_diperbaiki.append({
                     'Order': row['Order'],
                     'Mesin': row['Mesin'],
                     'Hari': hari_ini,
                     'Jam Mulai': to_jam(jam_mulai),
-                    'Jam Selesai': "24:00"
-                })
-                jadwal_diperbaiki.append({
-                    'Order': row['Order'],
-                    'Mesin': row['Mesin'],
-                    'Hari': hari_besok,
-                    'Jam Mulai': "00:00",
-                    'Jam Selesai': to_jam(jam_selesai - 1440)
+                    'Jam Selesai': to_jam(istirahat_awal)
                 })
 
-            continue  # Skip ke baris berikutnya
-
-        # Mesin target & jam tumpang tindih istirahat → perlu pembagian
-        durasi_total = jam_selesai - jam_mulai
-        durasi_awal = max(0, istirahat_awal - jam_mulai)
-        durasi_sisa = durasi_total - durasi_awal
-        mulai_baru = istirahat_akhir
-        selesai_baru = mulai_baru + durasi_sisa + delay
-
-        # Bagian sebelum istirahat
-        if jam_mulai < istirahat_awal:
-            jadwal_diperbaiki.append({
-                'Order': row['Order'],
-                'Mesin': row['Mesin'],
-                'Hari': row['Hari'],
-                'Jam Mulai': to_jam(jam_mulai),
-                'Jam Selesai': to_jam(min(jam_selesai, istirahat_awal))
-            })
-
-        # Bagian setelah istirahat (cek apakah perlu dipindahkan ke hari berikutnya)
-        if selesai_baru <= 3 * 60:
-            # Masih cukup di hari yang sama
-            jadwal_diperbaiki.append({
-                'Order': row['Order'],
-                'Mesin': row['Mesin'],
-                'Hari': row['Hari'],
-                'Jam Mulai': to_jam(mulai_baru),
-                'Jam Selesai': to_jam(selesai_baru)
-            })
-            print(jadwal_diperbaiki)
-
-        else:
-            # Harus dibagi ke hari berikutnya
-            hari_ini = row['Hari']
-            hari_besok = f"Day {int(hari_ini.split()[-1]) + 1}"
-            sisa_besok = selesai_baru - 24 * 60
-
-            jadwal_diperbaiki.append({
-                'Order': row['Order'],
-                'Mesin': row['Mesin'],
-                'Hari': hari_ini,
-                'Jam Mulai': to_jam(mulai_baru),
-                'Jam Selesai': "24:00"
-            })
+                # Bagian sesudah istirahat
+                if jam_selesai_lanjutan <= 1440:
+                    jadwal_diperbaiki.append({
+                        'Order': row['Order'],
+                        'Mesin': row['Mesin'],
+                        'Hari': hari_ini,
+                        'Jam Mulai': to_jam(istirahat_akhir),
+                        'Jam Selesai': to_jam(jam_selesai_lanjutan)
+                    })
+                else:
+                    jadwal_diperbaiki.append({
+                        'Order': row['Order'],
+                        'Mesin': row['Mesin'],
+                        'Hari': hari_ini,
+                        'Jam Mulai': to_jam(istirahat_akhir),
+                        'Jam Selesai': "24:00"
+                    })
+                    jadwal_diperbaiki.append({
+                        'Order': row['Order'],
+                        'Mesin': row['Mesin'],
+                        'Hari': hari_besok,
+                        'Jam Mulai': "00:00",
+                        'Jam Selesai': to_jam(jam_selesai_lanjutan - 1440)
+                    })
 
 
     df_jadwal_final = pd.DataFrame(jadwal_diperbaiki)

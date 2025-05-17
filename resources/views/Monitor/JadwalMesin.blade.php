@@ -62,6 +62,8 @@
                         <div class="row">
                             <div class="col-md-3 pl-3"><label id="makespan"></label></div>
                             <div class="col-md-3"><label id="excTime"></label></div>
+                            <div class="col-md-3"><label id="pwrHemat"></label></div>
+                            <div class="col-md-3"><label id="hargaHemat"></label></div>
                         </div>
                         <div class="col-md-12" id="charts-container"></div>
 

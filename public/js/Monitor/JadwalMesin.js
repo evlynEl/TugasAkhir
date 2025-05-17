@@ -5,12 +5,14 @@ document.addEventListener("DOMContentLoaded", function () {
     var fileNameDisplay = document.getElementById("fileName");
     var makespan = document.getElementById("makespan");
     var excTime = document.getElementById("excTime");
+    var pwrHemat = document.getElementById("pwrHemat");
+    var hargaHemat = document.getElementById("hargaHemat");
+
     var btn_proses = document.getElementById("btn_proses");
     var btn_fileUpload = document.getElementById("btn_fileUpload");
     var btn_ok = document.getElementById("btn_ok");
     var excelButton = document.getElementById('excelButton');
     var printPdf = document.getElementById('printPdf');
-    var showPreview = document.querySelector('.preview');
 
     var dataUpload;
 
@@ -512,6 +514,7 @@ document.addEventListener("DOMContentLoaded", function () {
         link.click();
     });
 
+    // print jadi pdf atau printer
     printPdf.addEventListener('click', function () {
         const data = $('#tableData').DataTable().rows().data().toArray();
         const tbody = document.querySelector('#previewTable tbody');
@@ -536,13 +539,6 @@ document.addEventListener("DOMContentLoaded", function () {
         window.print();
     });
 
-
-
-    function decodeHtmlEntities(text) {
-        var txt = document.createElement("textarea");
-        txt.innerHTML = text;
-        return txt.value;
-    }
 
     function escapeHtml(text) {
         if (text === null || text === undefined) return '';
@@ -692,6 +688,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
                         makespan.textContent = 'Makespan: ' +parseFloat(response.result[1]).toFixed(2)+ ' jam';
                         excTime.textContent = 'Execute time: ' +parseFloat(response.result[2]).toFixed(2)+ ' s';
+                        pwrHemat.textContent = 'Power Hemat: ' + ' kWh';
+                        hargaHemat.textContent = 'Tarif Hemat: Rp ' ;
 
                         function jamKeFloat(jamStr) {
                             const [jam, menit] = jamStr.split(':').map(Number);

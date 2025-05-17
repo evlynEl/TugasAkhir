@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\HakAksesController;
+use Illuminate\Support\Collection;
 
 class MonitorListrikController extends Controller
 {
@@ -57,14 +58,43 @@ class MonitorListrikController extends Controller
         }
 
         else if ($id == 'getTotalCL') {
-            $cl1 = DB::connection('mysql_cl1')->table('set_15m')
-                ->select('Date_Time', 'Real_Power')
-                ->orderByDesc('Date_Time') // Urutkan berdasarkan waktu
-                ->get();
+            $jenis = $request->input('jenis');
 
-            // dd($cl1);
+            $getDataPerJam = function ($data) {
+                return collect($data)->groupBy(function ($item) {
+                    return \Carbon\Carbon::parse($item->Date_Time)->format('Y-m-d H:00:00');
+                })->map(function ($group) {
+                    return $group->sum('Real_Power');
+                });
+            };
 
-            return response()->json($cl1);
+            switch ($jenis) {
+                case 'CL1':
+                    $cl1 = DB::connection('mysql_cl1')->table('set_raw')->select('Date_Time', 'Real_Power')->get();
+                    return response()->json($getDataPerJam($cl1));
+
+                case 'CL2':
+                    $cl2 = DB::connection('mysql_cl2')->table('set_raw')->select('Date_Time', 'Real_Power')->get();
+                    return response()->json($getDataPerJam($cl2));
+
+                case 'CL3':
+                    $cl3 = DB::connection('mysql_cl3')->table('set_raw')->select('Date_Time', 'Real_Power')->get();
+                    return response()->json($getDataPerJam($cl3));
+
+                // case 'CL4':
+                //     $cl4 = DB::connection('mysql_cl4')->table('set_raw')->select('Date_Time', 'Real_Power')->get();
+                //     return response()->json($getDataPerJam($cl4));
+
+                case 'total4CL':
+                default:
+                    $cl1 = DB::connection('mysql_cl1')->table('set_raw')->select('Date_Time', 'Real_Power')->get();
+                    $cl2 = DB::connection('mysql_cl2')->table('set_raw')->select('Date_Time', 'Real_Power')->get();
+                    $cl3 = DB::connection('mysql_cl3')->table('set_raw')->select('Date_Time', 'Real_Power')->get();
+                    // $cl4 = DB::connection('mysql_cl4')->table('set_raw')->select('Date_Time', 'Real_Power')->get();
+
+                    $merged = collect($cl1)->merge($cl2)->merge($cl3);
+                    return response()->json($getDataPerJam($merged));
+            }
         }
     }
 

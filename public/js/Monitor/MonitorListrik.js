@@ -5,6 +5,9 @@ var tglCL1 = document.getElementById('tglCL1');
 var tglCL2 = document.getElementById('tglCL2');
 var tglCL3 = document.getElementById('tglCL3');
 var tglCL4 = document.getElementById('tglCL4');
+var selected;
+var printPdf = document.getElementById('printPdf');
+
 
 let index = 0;
 let totalPower = 0;
@@ -14,10 +17,9 @@ let aggregatedData = {};
 let formattedDate;
 let lastDateTime = null;
 let realPower, dataDate, latestData, newDateTime;
-let cl1Data = [];
 
 document.addEventListener('DOMContentLoaded', function () {
-    fetchTotalPowerData(currentFilter);
+    fetchTotalPowerData(currentFilter, selected);
 });
 
 $(document).ready(function () {
@@ -35,10 +37,8 @@ $(document).ready(function () {
 
     setInterval(() => {
         const currentFilter = filterDropdown.value;
-        fetchTotalPowerData(currentFilter);
+        fetchTotalPowerData(currentFilter, selected);
     }, 600000); // cek setiap 10 menit
-
-
 });
 
 function formatDate(date) {
@@ -169,14 +169,22 @@ function updateChart(chartId, dataValue) {
     });
 }
 
+// dropdown CL
+powerDropdown.addEventListener('change', function () {
+    selected = $(this).val();
+    console.log(selected);
+});
+
 // fungsi ambil total daya CL
-function fetchTotalPowerData(filter = '1h') {
+function fetchTotalPowerData(filter = '1h', selected) {
     $.ajax({
         url: 'MonitorListrik/getTotalCL',
         type: 'GET',
+        data: { jenis: selected },
         dataType: 'json',
         success: function (response) {
-            cl1Data = response; // simpan global
+            console.log(response);
+
             handleFilterChange(filter);
 
             let filteredData = [];
@@ -330,7 +338,7 @@ function handleFilterChange(filterType) {
     updateLineChart(aggregatedData, `Total Power (${filterType})`, filterType);
 }
 
-
+// set max time unk filter
 function filterByTimeRange(data, filter) {
     const now = new Date();
     let cutoff;
@@ -371,3 +379,16 @@ function calculateAverageLine(powerValues) {
 
     return new Array(powerValues.length).fill(avg);
 }
+
+printPdf.addEventListener('click', function () {
+    let canvas = document.getElementById('dataChart5');
+
+    let win = window.open('', '_blank');
+    win.document.write('<html><head><title>Print Chart</title></head><body>');
+    win.document.write('<h3 style="text-align:center;">Power Chart</h3>');
+    win.document.write('<img src="' + canvas.toDataURL() + '" style="width:100%;"/>');
+    win.document.write('</body></html>');
+    win.document.close();
+    win.focus();
+    win.print();
+});
