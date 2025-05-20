@@ -39,8 +39,8 @@ def model_endpoint():
     if not data or 'data' not in data:
         return jsonify({'error': 'No data received'}), 400
 
-    # Merge orders terlebih dahulu
-    # merged_data = merge_orders(data['data'])  # Panggil merge_orders terlebih dahulu
+    resultCL = data['resultCL']
+    hitungAvgDaya = data['hitungAvgDaya']
 
     # Panggil fungsi main() dari model.py dengan data yang sudah digabung
     hasil = model_main(data['data'])
@@ -48,6 +48,6 @@ def model_endpoint():
     order_specs = hasil['order_specs']
 
     # >>> Kirim ke model.py
-    result_model = buat_model(orders, order_specs)
+    result_model = buat_model(orders, order_specs, resultCL, hitungAvgDaya)
 
     return jsonify({'message': 'Data processed successfully', 'result': result_model}), 200

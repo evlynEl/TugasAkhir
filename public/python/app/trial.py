@@ -178,7 +178,7 @@ def jam_total(hari, jam_string):
         raise ValueError(f"Gagal parsing jam_string '{jam_string}': {e}")
 
 
-def buat_model(orders, order_specs):
+def buat_model(orders, order_specs, resultCL, hitungAvgDaya):
     order_specs = add_mesin(order_specs)
     # print(order_specs)
     jumlah_all, jumlah_order, valid_orders = proses_jumlah_orders(orders, order_specs)
@@ -255,16 +255,12 @@ def buat_model(orders, order_specs):
         'CL4': CL4
     }
 
-    totalPower = {
-        'CL1': 167.0,
-        'CL2': 10.4,
-        'CL3': 8.0,
-        'CL4': 12.7
-    }
+    totalPower = {item['cl']: item['totalPerDay'] for item in resultCL}
 
     max_power_cl = max(totalPower, key=totalPower.get)
     machines_max_cl = SDP_mapping[max_power_cl]
-    print("Machines max CL:", machines_max_cl)
+    print('Total Power: ', totalPower)
+    print('Machines max CL: ', machines_max_cl)
 
 
     # CONSTRAINTS
@@ -467,8 +463,6 @@ def buat_model(orders, order_specs):
     start_time = time.time()
 
     # SOLVE
-    # solver = CPLEX_CMD(path=r"D:\Apps\IBM ILOG CPLEX Optimization Studio\cplex\bin\x64_win64\cplex.exe")
-    # prob.solve(CPLEX_CMD(msg=True))
     solver = PULP_CBC_CMD(presolve=False)
     solver = PULP_CBC_CMD(gapRel=0.005) # solution is within 5% of the best possible
     prob.solve(solver)
@@ -684,7 +678,11 @@ def buat_model(orders, order_specs):
     if jam_mulai_semua and jam_selesai_semua:
         makespan_jam = max(jam_selesai_semua) - min(jam_mulai_semua)
 
+    dayaIst1Mesin = hitungAvgDaya['daya_per_menit'] * 120          # 120 menit istirahat
+    dayaIstTotal = dayaIst1Mesin * len(target_mesin)               # daya semua mesin yg diistirahatkan
+    tarif = hitungAvgDaya['tarif_pln'] * dayaIstTotal              # tarif mesin yg diistirahatkan
+
 
     # Menampilkan DataFrame dalam format tabel
-    return df_jadwal_final.to_dict(orient='records'), makespan_jam, excTime
+    return df_jadwal_final.to_dict(orient='records'), makespan_jam, excTime, dayaIstTotal, tarif
 

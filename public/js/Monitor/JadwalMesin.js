@@ -586,23 +586,35 @@ document.addEventListener("DOMContentLoaded", function () {
         return value;
     }
 
-
+    // ambil total power 1 hari tanggal terbaru
     function getTotalPowerPerDay() {
         $.ajax({
             url: 'JadwalMesin/getHighestCL',
             type: 'GET',
             dataType: 'json',
-            success: function(response) {
-                let totalPerDay = totalRealPowerPerDay(response);
-                let latestData = getLatestDateAndValue(totalPerDay);
-                console.log(totalPerDay, latestData);
+            success: function (response) {
+                let resultCL = [];
+
+                for (let clName in response) {
+                    const data = response[clName];
+                    const totalPerDay = totalRealPowerPerDay(data);
+                    const latestData = getLatestDateAndValue(totalPerDay);
+
+                    resultCL.push({
+                        cl: clName,
+                        totalPerDay: parseFloat(latestData.totalPower).toFixed(2)
+                    });
+                }
+                resolve(resultCL);
+                console.log('Daya mesin CL: ', resultCL);
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 console.error('AJAX Error:', error);
             }
         });
     }
 
+    // cari total daya per hari
     function totalRealPowerPerDay(data) {
         const totals = {};
 
@@ -619,6 +631,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return totals;
     }
 
+    // ambil date terbaru
     function getLatestDateAndValue(totals) {
         const dates = Object.keys(totals);
         dates.sort();
@@ -629,7 +642,34 @@ document.addEventListener("DOMContentLoaded", function () {
         };
     }
 
-    getTotalPowerPerDay();
+    function getAvgHighestCL(resultCL) {
+        return new Promise((resolve, reject) => {
+            const maxCL = resultCL.reduce((prev, curr) =>
+                parseFloat(curr.totalPerDay) > parseFloat(prev.totalPerDay) ? curr : prev
+            );
+
+            console.log("CL dengan total daya tertinggi:", maxCL.cl);
+            console.log("Total per day:", maxCL.totalPerDay);
+
+            $.ajax({
+                url: 'JadwalMesin/rupiahHemat',
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    maxCL: maxCL.cl
+                },
+                success: function (response) {
+                    const hitungAvgDaya = response; // langsung objek rata-rata daya & tarif
+                    resolve(hitungAvgDaya);
+                },
+                error: function (xhr, status, error) {
+                    console.error('AJAX Error:', error);
+                    reject(error);
+                }
+            });
+        });
+    }
+
 
     // button unk menghasilkan jadwal
     btn_ok.addEventListener("click", function () {
@@ -672,116 +712,128 @@ document.addEventListener("DOMContentLoaded", function () {
                 $("#charts-container").empty();
 
                 // Panggil ke backend Flask
-                $.ajax({
-                    url: "http://127.0.0.1:5000/trial",
-                    type: "POST",
-                    contentType: "application/json",
-                    data: JSON.stringify({ data: formattedData }),
-                    success: function (response) {
-                        const data = response.result[0];
-                        console.log(data);
-
-                        Swal.close();
-                        Swal.fire('Berhasil!', 'Jadwal sudah jadi', 'success');
-
-                        // btn_ok.focus();
-
-                        makespan.textContent = 'Makespan: ' +parseFloat(response.result[1]).toFixed(2)+ ' jam';
-                        excTime.textContent = 'Execute time: ' +parseFloat(response.result[2]).toFixed(2)+ ' s';
-                        pwrHemat.textContent = 'Power Hemat: ' + ' kWh';
-                        hargaHemat.textContent = 'Tarif Hemat: Rp ' ;
-
-                        function jamKeFloat(jamStr) {
-                            const [jam, menit] = jamStr.split(':').map(Number);
-                            return jam + (menit / 60);
-                        }
-
-                        // 1. Kelompokkan berdasarkan Hari
-                        const groupedByDay = {};
-                        data.forEach(item => {
-                            const day = item.Hari;
-                            if (!groupedByDay[day]) groupedByDay[day] = [];
-                            groupedByDay[day].push(item);
+                getTotalPowerPerDay()
+                    .then(resultCL => {
+                        return getAvgHighestCL(resultCL).then(hitungAvgDaya => {
+                            return { resultCL, hitungAvgDaya };
                         });
+                    })
+                    .then(({ resultCL, hitungAvgDaya }) => {
+                        $.ajax({
+                            url: "http://127.0.0.1:5000/trial",
+                            type: "POST",
+                            contentType: "application/json",
+                            data: JSON.stringify({
+                                data: formattedData,
+                                resultCL: resultCL,
+                                hitungAvgDaya: hitungAvgDaya
+                            }),
+                            success: function (response) {
+                                const data = response.result[0];
+                                console.log(data);
 
-                        // 2. Loop setiap Hari, buat chart
-                        Object.entries(groupedByDay).forEach(([hari, items]) => {
-                            // Tambah elemen div untuk chart hari tersebut
-                            const chartId = `chart-${hari.replace(/\s+/g, '-')}`;
-                            $("#charts-container").append(`<h6>${hari}</h6><div id="${chartId}" style="height: 400px; margin-bottom: 10px;"></div>`);
+                                Swal.close();
+                                Swal.fire('Berhasil!', 'Jadwal sudah jadi', 'success');
 
-                            const tracesMap = {};
+                                // btn_ok.focus();
 
-                            items.forEach(item => {
-                                const order = item.Order || "No Order";
-                                const mesin = item.Mesin;
-                                const start = jamKeFloat(item["Jam Mulai"]);
-                                const end = jamKeFloat(item["Jam Selesai"]);
-
-                                const duration = end - start;
-
-                                const uniqueOrders = [...new Set(data.map(item => item.Order || "No Order"))];
-                                const colorScale = chroma.scale('Set2').colors(uniqueOrders.length);
-                                const orderColors = {};
-                                uniqueOrders.forEach((order, i) => {
-                                    orderColors[order] = colorScale[i];
-                                });
+                                makespan.textContent = 'Makespan: ' + parseFloat(response.result[1]).toFixed(2) + ' jam';
+                                excTime.textContent = 'Execute time: ' + parseFloat(response.result[2]).toFixed(2) + ' s';
+                                pwrHemat.textContent = 'Power Hemat: ' + parseFloat(response.result[3]).toFixed(3) + ' kWh';
+                                hargaHemat.textContent = 'Tarif Hemat: Rp '+parseFloat(response.result[4]).toFixed(2);
 
 
-                                if (!tracesMap[order]) {
-                                    tracesMap[order] = {
-                                        x: [],
-                                        y: [],
-                                        base: [],
-                                        name: order,
-                                        type: "bar",
-                                        orientation: "h",
-                                        marker: { color: orderColors[order] },
-                                        text: [],
-                                        textposition: "inside",
-                                        insidetextanchor: "start",
-                                        hovertemplate: [],
-                                        width: 0.5,
-                                        showlegend: true
-                                    };
+                                function jamKeFloat(jamStr) {
+                                    const [jam, menit] = jamStr.split(':').map(Number);
+                                    return jam + (menit / 60);
                                 }
 
-                                tracesMap[order].x.push(duration);           // panjang bar
-                                tracesMap[order].y.push(mesin);              // posisi vertikal (mesin)
-                                tracesMap[order].base.push(start);           // jam mulai sebagai base
-                                tracesMap[order].text.push(order);           // teks dalam bar
-                                tracesMap[order].hovertemplate.push(
-                                    `Mesin: ${mesin}<br>Order: ${order}<br>Jam: ${item["Jam Mulai"]} - ${item["Jam Selesai"]}<extra></extra>`
-                                );
-                            });
+                                // 1. Kelompokkan berdasarkan Hari
+                                const groupedByDay = {};
+                                data.forEach(item => {
+                                    const day = item.Hari;
+                                    if (!groupedByDay[day]) groupedByDay[day] = [];
+                                    groupedByDay[day].push(item);
+                                });
 
-                            const traces = Object.values(tracesMap);
-                            Plotly.newPlot(chartId, Object.values(tracesMap), {
-                                title: `Jadwal Mesin - ${hari}`,
-                                barmode: "stack",
-                                xaxis: {
-                                    title: "Jam",
-                                    tickmode: "linear",
-                                    dtick: 1, // tiap 1 jam
-                                    range: [0, 24] // bisa kamu sesuaikan jika butuh lebih dari 24 jam
-                                },
-                                yaxis: {
-                                    title: "Mesin",
-                                    automargin: true
-                                },
-                                margin: { l: 80, r: 20, t: 50, b: 40 },
-                                showlegend: true
-                            });
+                                // 2. Loop setiap Hari, buat chart
+                                Object.entries(groupedByDay).forEach(([hari, items]) => {
+                                    // Tambah elemen div untuk chart hari tersebut
+                                    const chartId = `chart-${hari.replace(/\s+/g, '-')}`;
+                                    $("#charts-container").append(`<h6>${hari}</h6><div id="${chartId}" style="height: 400px; margin-bottom: 10px;"></div>`);
+
+                                    const tracesMap = {};
+
+                                    items.forEach(item => {
+                                        const order = item.Order || "No Order";
+                                        const mesin = item.Mesin;
+                                        const start = jamKeFloat(item["Jam Mulai"]);
+                                        const end = jamKeFloat(item["Jam Selesai"]);
+
+                                        const duration = end - start;
+
+                                        const uniqueOrders = [...new Set(data.map(item => item.Order || "No Order"))];
+                                        const colorScale = chroma.scale('Set2').colors(uniqueOrders.length);
+                                        const orderColors = {};
+                                        uniqueOrders.forEach((order, i) => {
+                                            orderColors[order] = colorScale[i];
+                                        });
+
+
+                                        if (!tracesMap[order]) {
+                                            tracesMap[order] = {
+                                                x: [],
+                                                y: [],
+                                                base: [],
+                                                name: order,
+                                                type: "bar",
+                                                orientation: "h",
+                                                marker: { color: orderColors[order] },
+                                                text: [],
+                                                textposition: "inside",
+                                                insidetextanchor: "start",
+                                                hovertemplate: [],
+                                                width: 0.5,
+                                                showlegend: true
+                                            };
+                                        }
+
+                                        tracesMap[order].x.push(duration);           // panjang bar
+                                        tracesMap[order].y.push(mesin);              // posisi vertikal (mesin)
+                                        tracesMap[order].base.push(start);           // jam mulai sebagai base
+                                        tracesMap[order].text.push(order);           // teks dalam bar
+                                        tracesMap[order].hovertemplate.push(
+                                            `Mesin: ${mesin}<br>Order: ${order}<br>Jam: ${item["Jam Mulai"]} - ${item["Jam Selesai"]}<extra></extra>`
+                                        );
+                                    });
+
+                                    const traces = Object.values(tracesMap);
+                                    Plotly.newPlot(chartId, Object.values(tracesMap), {
+                                        title: `Jadwal Mesin - ${hari}`,
+                                        barmode: "stack",
+                                        xaxis: {
+                                            title: "Jam",
+                                            tickmode: "linear",
+                                            dtick: 1, // tiap 1 jam
+                                            range: [0, 24] // bisa kamu sesuaikan jika butuh lebih dari 24 jam
+                                        },
+                                        yaxis: {
+                                            title: "Mesin",
+                                            automargin: true
+                                        },
+                                        margin: { l: 80, r: 20, t: 50, b: 40 },
+                                        showlegend: true
+                                    });
+
+                                });
+                            },
+                            error: function (xhr, status, error) {
+                                console.error("Error:", error);
+                                Swal.fire('Gagal', 'Ada kesalahan saat mengirim data.', 'error');
+                            }
 
                         });
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("Error:", error);
-                        Swal.fire('Gagal', 'Ada kesalahan saat mengirim data.', 'error');
-                    }
-
-                });
-
+                    })
             }
         });
 

@@ -89,13 +89,74 @@ class JadwalMesinController extends Controller
         else if ($id == 'getHighestCL') {
             $cl1 = DB::connection('mysql_cl1')->table('set_15m')
                 ->select('Date_Time', 'Real_Power')
-                ->orderByDesc('Date_Time') // Urutkan berdasarkan waktu
+                ->orderByDesc('Date_Time')
                 ->get();
 
-            // dd($cl1);
+            $cl2 = DB::connection('mysql_cl2')->table('set_15m')
+                ->select('Date_Time', 'Real_Power')
+                ->orderByDesc('Date_Time')
+                ->get();
 
-            return response()->json($cl1->toArray());
+            $cl3 = DB::connection('mysql_cl3')->table('set_15m')
+                ->select('Date_Time', 'Real_Power')
+                ->orderByDesc('Date_Time')
+                ->get();
+
+            return response()->json([
+                'CL1' => $cl1->toArray(),
+                'CL2' => $cl2->toArray(),
+                'CL3' => $cl3->toArray(),
+            ]);
         }
+
+
+        else if ($id == 'rupiahHemat') {
+            $maxCL = $request->input('maxCL');
+
+            if (!$maxCL) {
+                return response()->json(['error' => 'maxCL is required'], 400);
+            }
+
+            $tarifPln = env('PLN_TARIF');
+
+            $connectionMap = [
+                'CL1' => 'mysql_cl1',
+                'CL2' => 'mysql_cl2',
+                'CL3' => 'mysql_cl3'
+            ];
+
+            if (!isset($connectionMap[$maxCL])) {
+                return response()->json(['error' => 'Unknown CL name'], 400);
+            }
+
+            // Ambil hanya data untuk CL yang diminta
+            $data = DB::connection($connectionMap[$maxCL])
+                ->table('set_15m')
+                ->select('Date_Time', 'Real_Power')
+                ->orderByDesc('Date_Time')
+                ->get();
+
+            $total = 0;
+            $count = count($data);
+
+            foreach ($data as $row) {
+                $total += floatval($row->Real_Power);
+            }
+
+            $average = $count > 0 ? $total / $count : 0;
+            $dayaPerMenit = $average / 315; // asumsi mesin jalan 5 jam 15 menit = 315 menit
+
+            $result = [
+                'cl' => $maxCL,
+                'average_power' => round($average, 3),
+                'daya_per_menit' => round($dayaPerMenit, 4),
+                'tarif_pln' => round($tarifPln, 2)
+            ];
+
+            return response()->json($result);
+        }
+
+
     }
 
     public function edit($id)
