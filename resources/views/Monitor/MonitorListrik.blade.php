@@ -44,7 +44,7 @@
                                         <button type="button" class="btn btn-light" id="printPdf" style="width: 100%">Print</button>
                                     </div>
                                     <div class="col-md-8">
-                                        <h5 style="text-align: center;">TOTAL POWER CL1-CL4</h5>
+                                        <h5 style="text-align: center;" id="title"></h5>
                                     </div>
                                     <div class="col-md-1">
                                         <select id="filterDropdown">
@@ -61,7 +61,7 @@
                                             <option value="CL1">CL 1</option>
                                             <option value="CL2">CL 2</option>
                                             <option value="CL3">CL 3</option>
-                                            {{-- <option value="CL4">CL 4</option> --}}
+                                            <option value="CL4">CL 4</option>
                                         </select>
                                     </div>
                                 </div>

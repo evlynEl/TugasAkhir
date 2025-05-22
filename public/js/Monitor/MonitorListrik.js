@@ -7,11 +7,13 @@ var tglCL3 = document.getElementById('tglCL3');
 var tglCL4 = document.getElementById('tglCL4');
 var selected;
 var printPdf = document.getElementById('printPdf');
+var title = document.getElementById('title');
 
 
 let index = 0;
 let totalPower = 0;
-let currentFilter = '1h'; // Default
+let currentFilter = '1h'; // Default waktu
+let selected = 'total4CL'; // Default CL
 let charts = {};
 let aggregatedData = {};
 let formattedDate;
@@ -173,6 +175,20 @@ function updateChart(chartId, dataValue) {
 powerDropdown.addEventListener('change', function () {
     selected = $(this).val();
     console.log(selected);
+
+    if (selected == 'total4CL') {
+        title.value = 'TOTAL POWER CL1-CL4';
+    } else if (selected == 'CL1') {
+        title.value = 'TOTAL POWER CL1';
+    } else if (selected == 'CL2') {
+        title.value = 'TOTAL POWER CL2';
+    } else if (selected == 'CL3') {
+        title.value = 'TOTAL POWER CL3';
+    } else if (selected == 'CL4') {
+        title.value = 'TOTAL POWER CL4';
+    }
+
+    fetchTotalPowerData(currentFilter, selected);
 });
 
 // fungsi ambil total daya CL

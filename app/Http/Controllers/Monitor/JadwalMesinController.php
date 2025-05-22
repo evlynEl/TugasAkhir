@@ -39,7 +39,7 @@ class JadwalMesinController extends Controller
         $Corak = $request->input('Corak');
 
         if ($id === 'getCocok') {
-
+            
             function bersihkanTeks($teks) {
                 if (is_null($teks)) return '';
                 $teks = (string) $teks;
@@ -73,6 +73,7 @@ class JadwalMesinController extends Controller
             return response()->json(['NoOrder' => $cocok]);
         }
 
+
         else if ($id === 'getNoorder') {
             $noOrder = DB::connection('ConnPurchase')->select('exec Sp_Mohon_Beli @MyType = 7');
             $data_noOrder = [];
@@ -85,6 +86,7 @@ class JadwalMesinController extends Controller
             }
             return datatables($noOrder)->make(true);
         }
+
 
         else if ($id == 'getHighestCL') {
             $cl1 = DB::connection('mysql_cl1')->table('set_15m')
@@ -117,7 +119,8 @@ class JadwalMesinController extends Controller
                 return response()->json(['error' => 'maxCL is required'], 400);
             }
 
-            $tarifPln = env('PLN_TARIF');
+            $tarifPln = env('PLN_K') * env('PLN_TARIF');
+            // dd($tarifPln);
 
             $connectionMap = [
                 'CL1' => 'mysql_cl1',
@@ -152,6 +155,8 @@ class JadwalMesinController extends Controller
                 'daya_per_menit' => round($dayaPerMenit, 4),
                 'tarif_pln' => round($tarifPln, 2)
             ];
+
+            // dd($result);
 
             return response()->json($result);
         }
