@@ -178,7 +178,8 @@ def jam_total(hari, jam_string):
         raise ValueError(f"Gagal parsing jam_string '{jam_string}': {e}")
 
 
-def buat_model(orders, order_specs, resultCL, hitungAvgDaya):
+def buat_model(orders, order_specs):
+# def buat_model(orders, order_specs, resultCL, hitungAvgDaya):
     order_specs = add_mesin(order_specs)
     # print(order_specs)
     jumlah_all, jumlah_order, valid_orders = proses_jumlah_orders(orders, order_specs)
@@ -255,7 +256,14 @@ def buat_model(orders, order_specs, resultCL, hitungAvgDaya):
         'CL4': CL4
     }
 
-    totalPower = {item['cl']: item['totalPerDay'] for item in resultCL}
+    totalPower = {
+        'CL1': 167.0,
+        'CL2': 10.4,
+        'CL3': 8.0,
+        'CL4': 12.7
+    }
+
+    # totalPower = {item['cl']: item['totalPerDay'] for item in resultCL}
 
     max_power_cl = max(totalPower, key=totalPower.get)
     machines_max_cl = SDP_mapping[max_power_cl]
@@ -598,6 +606,8 @@ def buat_model(orders, order_specs, resultCL, hitungAvgDaya):
 
     jadwal_diperbaiki = []
     delay = 120  # dalam menit
+    mesin_delay = set()  # Menyimpan nama mesin yang terkena delay
+
 
     for i, row in df_jadwal.iterrows():
         # print(f"[DEBUG] Row {i}: {row['Jam Mulai']} - {row['Jam Selesai']}")
@@ -620,6 +630,7 @@ def buat_model(orders, order_specs, resultCL, hitungAvgDaya):
                 jadwal_diperbaiki.append(row.to_dict())
                 continue
             else:
+                mesin_delay.add(row['Mesin'])
                 hari_ini = row['Hari']
                 hari_besok = f"Day {int(hari_ini.split()[-1]) + 1}"
                 durasi_sisa = jam_selesai - istirahat_awal
@@ -678,11 +689,17 @@ def buat_model(orders, order_specs, resultCL, hitungAvgDaya):
     if jam_mulai_semua and jam_selesai_semua:
         makespan_jam = max(jam_selesai_semua) - min(jam_mulai_semua)
 
-    dayaIst1Mesin = hitungAvgDaya['daya_per_menit'] * 120          # 120 menit istirahat
-    dayaIstTotal = dayaIst1Mesin * len(target_mesin)               # daya semua mesin yg diistirahatkan
-    tarif = hitungAvgDaya['tarif_pln'] * dayaIstTotal              # tarif mesin yg diistirahatkan
+
+    dayaPerMenit = (30.37 * 5.25)/(5.25 * 60)
+    dayaIst1Mesin = dayaPerMenit * 120
+    dayaIstTotal = dayaIst1Mesin * len(mesin_delay)               # daya semua mesin yg diistirahatkan
+
+    # dayaIst1Mesin = hitungAvgDaya['average_power_per_minute'] * 120
+    # dayaIstTotal = dayaIst1Mesin * len(mesin_delay)               # daya semua mesin yg diistirahatkan
+
+    # print('mesin delay', mesin_delay, 'per menit: ', dayaPerMenit, 'selama 2 jam: ', dayaIst1Mesin)
 
 
     # Menampilkan DataFrame dalam format tabel
-    return df_jadwal_final.to_dict(orient='records'), makespan_jam, excTime, dayaIstTotal, tarif
+    return df_jadwal_final.to_dict(orient='records'), makespan_jam, excTime, dayaIstTotal
 

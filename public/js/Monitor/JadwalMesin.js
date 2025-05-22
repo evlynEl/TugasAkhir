@@ -6,6 +6,8 @@ document.addEventListener("DOMContentLoaded", function () {
     var makespan = document.getElementById("makespan");
     var excTime = document.getElementById("excTime");
     var pwrHemat = document.getElementById("pwrHemat");
+    var hargaLabel = document.getElementById("hargaLabel");
+    var tarifInput = document.getElementById('tarifInput');
     var hargaHemat = document.getElementById("hargaHemat");
 
     var btn_proses = document.getElementById("btn_proses");
@@ -13,6 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var btn_ok = document.getElementById("btn_ok");
     var excelButton = document.getElementById('excelButton');
     var printPdf = document.getElementById('printPdf');
+    var printJadwal = document.getElementById('printJadwal');
 
     var dataUpload;
 
@@ -46,6 +49,8 @@ document.addEventListener("DOMContentLoaded", function () {
         if (files.length > 0) {
             fileInput.files = files;
             fileNameDisplay.textContent = files[0].name;
+
+            btn_proses.focus();
         }
     });
 
@@ -514,30 +519,62 @@ document.addEventListener("DOMContentLoaded", function () {
         link.click();
     });
 
-    // print jadi pdf atau printer
     printPdf.addEventListener('click', function () {
         const data = $('#tableData').DataTable().rows().data().toArray();
         const tbody = document.querySelector('#previewTable tbody');
-        tbody.innerHTML = ''; // Kosongkan dulu
+        tbody.innerHTML = ''; // kosongkan dulu
 
         data.forEach(row => {
             const tr = document.createElement('tr');
-            row.forEach((cell, index) => {
+            row.forEach(cell => {
                 const td = document.createElement('td');
                 td.innerHTML = cell;
-
                 tr.appendChild(td);
             });
             tbody.appendChild(tr);
         });
 
+        // Tampilkan printArea dan sembunyikan charts-container
+        const printArea = document.getElementById('printArea');
+        const chartsContainer = document.getElementById('charts-container');
 
-        // Tampilkan div
-        document.getElementById('printArea').classList.remove('d-none');
+        printArea.classList.remove('d-none');
+        printArea.classList.add('print-chart');
 
-        // Cetak
+        // chartsContainer.classList.add('d-none');
+        // chartsContainer.classList.remove('print-chart');
+
         window.print();
+
+        // Reset setelah print selesai
+        setTimeout(() => {
+            printArea.classList.add('d-none');
+            printArea.classList.remove('print-chart');
+            // chartsContainer.classList.remove('d-none');
+        }, 50);
     });
+
+    printJadwal.addEventListener('click', function () {
+        const printArea = document.getElementById('printArea');
+        const chartsContainer = document.getElementById('charts-container');
+
+        chartsContainer.classList.remove('d-none');
+        chartsContainer.classList.add('print-chart');
+
+        printArea.classList.add('d-none');
+        printArea.classList.remove('print-chart');
+
+        window.print();
+
+        setTimeout(() => {
+            chartsContainer.classList.remove('print-chart');
+            // Tergantung, boleh tetap tampil atau disembunyikan kembali:
+            // chartsContainer.classList.add('d-none');
+        }, 50);
+    });
+
+
+
 
 
     function escapeHtml(text) {
@@ -652,14 +689,14 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log("Total per day:", maxCL.totalPerDay);
 
             $.ajax({
-                url: 'JadwalMesin/rupiahHemat',
+                url: 'JadwalMesin/dayaHemat',
                 type: 'GET',
                 dataType: 'json',
                 data: {
                     maxCL: maxCL.cl
                 },
                 success: function (response) {
-                    const hitungAvgDaya = response; // langsung objek rata-rata daya & tarif
+                    const hitungAvgDaya = response; // langsung objek rata-rata daya
                     resolve(hitungAvgDaya);
                 },
                 error: function (xhr, status, error) {
@@ -667,6 +704,24 @@ document.addEventListener("DOMContentLoaded", function () {
                     reject(error);
                 }
             });
+        });
+    }
+
+    tarifInput.addEventListener("input", function () {
+        const dayaHemat = parseFloat(hargaHemat.dataset.dayaHemat) || 0;
+        updateHargaHemat(dayaHemat);
+    });
+
+    function updateHargaHemat(dayaHemat) {
+        const tarif = parseFloat(tarifInput.value);
+        const total = tarif * dayaHemat;
+
+        hargaHemat.dataset.dayaHemat = dayaHemat;
+
+        hargaLabel.textContent = 'Tarif WBP = Rp';
+        hargaHemat.textContent = 'Rp ' + total.toLocaleString('id-ID', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
         });
     }
 
@@ -712,21 +767,21 @@ document.addEventListener("DOMContentLoaded", function () {
                 $("#charts-container").empty();
 
                 // Panggil ke backend Flask
-                getTotalPowerPerDay()
-                    .then(resultCL => {
-                        return getAvgHighestCL(resultCL).then(hitungAvgDaya => {
-                            return { resultCL, hitungAvgDaya };
-                        });
-                    })
-                    .then(({ resultCL, hitungAvgDaya }) => {
+                // getTotalPowerPerDay()
+                //     .then(resultCL => {
+                //         return getAvgHighestCL(resultCL).then(hitungAvgDaya => {
+                //             return { resultCL, hitungAvgDaya };
+                //         });
+                //     })
+                //     .then(({ resultCL, hitungAvgDaya }) => {
                         $.ajax({
                             url: "http://127.0.0.1:5000/trial",
                             type: "POST",
                             contentType: "application/json",
                             data: JSON.stringify({
                                 data: formattedData,
-                                resultCL: resultCL,
-                                hitungAvgDaya: hitungAvgDaya
+                                // resultCL: resultCL,
+                                // hitungAvgDaya: hitungAvgDaya
                             }),
                             success: function (response) {
                                 const data = response.result[0];
@@ -735,18 +790,15 @@ document.addEventListener("DOMContentLoaded", function () {
                                 Swal.close();
                                 Swal.fire('Berhasil!', 'Jadwal sudah jadi', 'success');
 
-                                // btn_ok.focus();
 
                                 makespan.textContent = 'Makespan: ' + parseFloat(response.result[1]).toFixed(2) + ' jam';
                                 excTime.textContent = 'Execute time: ' + parseFloat(response.result[2]).toFixed(2) + ' s';
                                 pwrHemat.textContent = 'Power Hemat: ' + parseFloat(response.result[3]).toFixed(3) + ' kWh';
-                                hargaHemat.textContent = 'Tarif Hemat: Rp '+parseFloat(response.result[4]).toFixed(2);
 
+                                tarifInput.style.display = 'block';
+                                const dayaHemat = parseFloat(response.result[3]);
+                                updateHargaHemat(dayaHemat);
 
-                                function jamKeFloat(jamStr) {
-                                    const [jam, menit] = jamStr.split(':').map(Number);
-                                    return jam + (menit / 60);
-                                }
 
                                 // 1. Kelompokkan berdasarkan Hari
                                 const groupedByDay = {};
@@ -833,10 +885,15 @@ document.addEventListener("DOMContentLoaded", function () {
                             }
 
                         });
-                    })
+                    // })
             }
         });
 
     });
+
+    function jamKeFloat(jamStr) {
+        const [jam, menit] = jamStr.split(':').map(Number);
+        return jam + (menit / 60);
+    }
 
 })

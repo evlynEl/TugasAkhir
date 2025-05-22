@@ -56,21 +56,36 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2 pl-0 pt-4 pb-1">
-                            <h5 for="hasil">Hasil Jadwal</h5>
+                        <div class="row pt-4 pb-1">
+                            <div class="col-md-2 justify-content-center align-items-center">
+                                <h5 for="hasil">Hasil Jadwal</h5>
+                            </div>
+                            <div class="col-md-8"></div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-light" id="printJadwal">Print Jadwal</button>
+                            </div>
                         </div>
+
                         <div class="row">
-                            <div class="col-md-3 pl-3"><label id="makespan"></label></div>
-                            <div class="col-md-3"><label id="excTime"></label></div>
+                            <div class="col-md-2 pl-3"><label id="makespan"></label></div>
+                            <div class="col-md-2"><label id="excTime"></label></div>
                             <div class="col-md-3"><label id="pwrHemat"></label></div>
-                            <div class="col-md-3"><label id="hargaHemat"></label></div>
+                            <div class="col-md-2 d-flex justify-content-end align-items-center">
+                                <label id="hargaLabel" class="mb-0 me-2"></label>
+                            </div>
+                            <div class="col-md-1">
+                                <input type="number" class="form-control" id="tarifInput" value="1553.67" style="display: none; padding: 5px;">
+                            </div>
+                            <div class="col-md-2 pl-0 d-flex justify-content-begin align-items-center">
+                                <label id="hargaHemat" class="mb-0 me-2"></label>
+                            </div>
                         </div>
                         <div class="col-md-12" id="charts-container"></div>
 
 
 
                         {{-- preview --}}
-                        <div class="container preview" id="printArea">
+                        <div class= "preview d-none" id="printArea">
                             <h4 class="mb-3">Data Order {{ \Carbon\Carbon::today()->format('d-m-Y') }}</h4>
 
                             <table class="table table-bordered table-sm" id="previewTable">

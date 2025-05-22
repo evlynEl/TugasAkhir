@@ -45,7 +45,8 @@ table.dataTable {
 
 .col-md-05 {
     flex: 0 0 auto;
-    width: 4.16666667%; /* 0.5 dari 12 kolom */
+    width: 4.16666667%;
+    /* 0.5 dari 12 kolom */
     max-width: 4.16666667%;
 }
 
@@ -57,41 +58,61 @@ table.dataTable {
 .preview {
     margin: 0;
     padding: 0 5px;
-    display: none;
+    /* display: none; */
 }
 
 @media print {
+     .preview {
+        display: block !important; /* override display:none */
+        visibility: visible !important;
+    }
     /* Hide everything by default */
-    body, .container, #printArea  {
+    body,
+    .container,
+    #printArea,
+    #charts-container {
         visibility: hidden;
         margin: 0;
         padding: 0;
     }
 
-    /* Show only elements with the class 'preview' */
-    .preview, .preview * {
-        visibility: visible;
+    /* Show only elements with the class 'print-chart' */
+    .print-chart,
+    .print-chart * {
+        visibility: visible !important;
     }
 
-    /* Ensure that the element with the class 'preview' is visible and properly formatted */
-    .preview {
+    /* Posisi dan ukuran untuk elemen print */
+    .print-chart {
         position: absolute;
-        left: 0;
         top: 0;
+        left: 0;
         width: 100%;
-        transform: scale(0.9);
-        transform-origin: top left;
+        /* jika mau skalakan, bisa tambahkan transform */
+        /* transform: scale(0.9); */
+        /* transform-origin: top left; */
     }
 
+    /* Khusus untuk tabel preview di print */
     #previewTable {
         page-break-inside: auto;
     }
-
     #previewTable tr {
         page-break-inside: avoid;
         page-break-after: auto;
     }
+
 }
+
+#printArea {
+  display: none;  /* disembunyikan di layar biasa */
+}
+
+.d-none {
+  display: none !important;
+}
+
+
 #previewTable td {
     max-height: none;
 }
