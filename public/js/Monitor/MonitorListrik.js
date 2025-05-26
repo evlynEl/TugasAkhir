@@ -5,15 +5,14 @@ var tglCL1 = document.getElementById('tglCL1');
 var tglCL2 = document.getElementById('tglCL2');
 var tglCL3 = document.getElementById('tglCL3');
 var tglCL4 = document.getElementById('tglCL4');
-var selected;
+var selected = 'total4CL'; // Default CL
 var printPdf = document.getElementById('printPdf');
 var title = document.getElementById('title');
 
 
 let index = 0;
 let totalPower = 0;
-let currentFilter = '1h'; // Default waktu
-let selected = 'total4CL'; // Default CL
+// let currentFilter = '1h'; // Default waktu
 let charts = {};
 let aggregatedData = {};
 let formattedDate;
@@ -21,27 +20,57 @@ let lastDateTime = null;
 let realPower, dataDate, latestData, newDateTime;
 
 document.addEventListener('DOMContentLoaded', function () {
-    fetchTotalPowerData(currentFilter, selected);
+    if (filterDropdown) {
+        filterDropdown.value = '1h';
+        title.textContent = 'TOTAL POWER CL1-CL4';
+        fetchTotalPowerData(filterDropdown.value, selected); // panggil data awal
+    }
 });
 
 $(document).ready(function () {
     fetchKwhData1();
     fetchKwhData2();
     fetchKwhData3();
-    setInterval(fetchKwhData1, 20000); // cek setiap 20 detik
-    setInterval(fetchKwhData2, 20000);
-    setInterval(fetchKwhData3, 20000);
-
-    filterDropdown.addEventListener('change', function () {
-        const filterType = $(this).val();
-        handleFilterChange(filterType);
-    });
-
-    setInterval(() => {
-        const currentFilter = filterDropdown.value;
-        fetchTotalPowerData(currentFilter, selected);
-    }, 600000); // cek setiap 10 menit
+    setInterval(fetchKwhData1, 10000); // cek setiap 10 detik
+    setInterval(fetchKwhData2, 10000);
+    setInterval(fetchKwhData3, 10000);
 });
+
+filterDropdown.addEventListener('change', function () {
+    const filterType = $(this).val();
+    handleFilterChange(filterType);
+    // fetchTotalPowerData(currentFilter, selected);
+});
+
+setInterval(() => {
+    const currentFilter = filterDropdown.value;
+    fetchTotalPowerData(currentFilter, selected);
+}, 600000); // cek setiap 10 menit
+
+// dropdown CL
+powerDropdown.addEventListener('change', function () {
+    selected = $(this).val();
+    console.log(selected);
+
+    const currentFilter = filterDropdown.value;
+    console.log(currentFilter);
+
+
+    if (selected == 'total4CL') {
+        title.textContent = 'TOTAL POWER CL1-CL4';
+    } else if (selected == 'CL1') {
+        title.textContent = 'TOTAL POWER CL1';
+    } else if (selected == 'CL2') {
+        title.textContent = 'TOTAL POWER CL2';
+    } else if (selected == 'CL3') {
+        title.textContent = 'TOTAL POWER CL3';
+    } else if (selected == 'CL4') {
+        title.textContent = 'TOTAL POWER CL4';
+    }
+
+    fetchTotalPowerData(currentFilter, selected);
+});
+
 
 function formatDate(date) {
     let month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -171,79 +200,48 @@ function updateChart(chartId, dataValue) {
     });
 }
 
-// dropdown CL
-powerDropdown.addEventListener('change', function () {
-    selected = $(this).val();
-    console.log(selected);
 
-    if (selected == 'total4CL') {
-        title.value = 'TOTAL POWER CL1-CL4';
-    } else if (selected == 'CL1') {
-        title.value = 'TOTAL POWER CL1';
-    } else if (selected == 'CL2') {
-        title.value = 'TOTAL POWER CL2';
-    } else if (selected == 'CL3') {
-        title.value = 'TOTAL POWER CL3';
-    } else if (selected == 'CL4') {
-        title.value = 'TOTAL POWER CL4';
-    }
-
-    fetchTotalPowerData(currentFilter, selected);
-});
+let clData = [];
 
 // fungsi ambil total daya CL
-function fetchTotalPowerData(filter = '1h', selected) {
+function fetchTotalPowerData(filter, selected) {
     $.ajax({
         url: 'MonitorListrik/getTotalCL',
         type: 'GET',
         data: { jenis: selected },
         dataType: 'json',
         success: function (response) {
-            console.log(response);
+            if (!response || response.length === 0) return;
 
-            handleFilterChange(filter);
+            clData = response;
 
-            let filteredData = [];
+            response.sort((a, b) => new Date(b.Date_Time.replace(' ', 'T')) - new Date(a.Date_Time.replace(' ', 'T')));
 
-            // Konversi dan filter data sesuai rentang waktu
-            let now = new Date(response[0].Date_Time);
+            let now = new Date(response[0].Date_Time.replace(' ', 'T'));
             let threshold = new Date(now);
 
             switch (filter) {
                 case '1h':
                     threshold.setDate(threshold.getDate() - 3);
                     break;
-                case 'day':
-                    threshold.setDate(threshold.getDate() - 7);
-                    break;
-                case 'month':
-                    threshold.setMonth(threshold.getMonth() - 3);
-                    break;
-                case 'year':
-                    threshold.setFullYear(threshold.getFullYear() - 2);
-                    break;
             }
 
-            for (let item of response) {
-                let date = new Date(item.Date_Time);
-                if (date >= threshold) {
-                    filteredData.push({
-                        date: date,
-                        value: item.Real_Power
-                    });
-                } else {
-                    break; // karena sudah urut desc, setelah lewat threshold bisa berhenti
-                }
-            }
+            // Step 1: Filter data by threshold
+            let filteredData = response.filter(item => {
+                let date = new Date(item.Date_Time.replace(' ', 'T'));
+                return date >= threshold;
+            });
 
-            // Agregasi data berdasarkan filter
+            // Step 2: Aggregate if needed
             let aggregated = {};
             let tempGroups = {};
 
-            filteredData.forEach(({ date, value }) => {
+            filteredData.forEach(({ Date_Time, Real_Power }) => {
+                let date = new Date(Date_Time);
                 let key = getAggregationKey(date, filter);
+
                 if (!tempGroups[key]) tempGroups[key] = [];
-                tempGroups[key].push(value);
+                tempGroups[key].push(Real_Power);
             });
 
             for (let key in tempGroups) {
@@ -251,30 +249,40 @@ function fetchTotalPowerData(filter = '1h', selected) {
                 aggregated[key] = avg;
             }
 
-            // Urutkan berdasarkan key timestamp ASC
+            // Step 3: Sort ascending
             let sortedAggregated = Object.fromEntries(
                 Object.entries(aggregated).sort(([a], [b]) => new Date(a) - new Date(b))
             );
 
+            // Step 4: Update chart
             updateLineChart(sortedAggregated, "Total Power", filter);
         }
     });
 }
 
+
+function pad2(n) {
+    return n < 10 ? '0' + n : n;
+}
+
 function getAggregationKey(date, filter) {
+    const d = new Date(date);
+    let year = d.getFullYear();
+    let month = pad2(d.getMonth() + 1);
+    let day = pad2(d.getDate());
+    let hour = pad2(d.getHours());
+
     switch (filter) {
         case '1h':
-            return date.getFullYear() + '-' + (date.getMonth()+1).toString().padStart(2, '0') +
-                   '-' + date.getDate().toString().padStart(2, '0') + ' ' +
-                   date.getHours().toString().padStart(2, '0') + ":00";
+            return `${year}-${month}-${day} ${hour}:00`;
         case 'day':
-            return date.toISOString().slice(0, 10); // YYYY-MM-DD
+            return `${year}-${month}-${day}`;
         case 'month':
-            return date.getFullYear() + '-' + (date.getMonth()+1).toString().padStart(2, '0');
+            return `${year}-${month}-01`;
         case 'year':
-            return date.getFullYear().toString();
+            return `${year}-01-01`;
         default:
-            return date.toISOString();
+            return `${year}-${month}-${day} ${hour}:${pad2(d.getMinutes())}`;
     }
 }
 
@@ -296,10 +304,14 @@ function updateLineChart(aggregatedData, label = "Total Power (kWh)", filter = '
         const ctx = document.getElementById('dataChart5').getContext('2d');
         charts['dataChart5'] = new Chart(ctx, {
             type: 'line',
-            data: lineChartData,
+            data: {
+                labels: [],
+                datasets: []
+            },
             options: {
                 responsive: true,
                 animation: { duration: 0 },
+                parsing: false,
                 scales: {
                     x: { title: { display: true, text: "Date" } },
                     y: { title: { display: true, text: "Total kWh" }, beginAtZero: true }
@@ -310,25 +322,27 @@ function updateLineChart(aggregatedData, label = "Total Power (kWh)", filter = '
 
     let timestamps = Object.keys(aggregatedData);
     let powerValues = Object.values(aggregatedData);
-    let avgLine = calculateAverageLine(powerValues); // <-- pakai average biasa
+    let avgLine = calculateAverageLine(powerValues);
 
-    lineChartData.labels = timestamps;
-    lineChartData.datasets = [
+    charts['dataChart5'].data.labels = timestamps;
+    charts['dataChart5'].data.datasets = [
         {
             label: label,
-            data: powerValues,
+            data: timestamps.map((time, idx) => ({ x: time, y: powerValues[idx] })),
             borderColor: "blue",
             backgroundColor: "rgba(0, 0, 255, 0.2)",
             borderWidth: 2,
-            fill: true
+            fill: true,
+            tension: 0.1
         },
         {
             label: "Average",
-            data: avgLine,
+            data: timestamps.map((time, idx) => ({ x: time, y: avgLine[idx] })),
             borderColor: "red",
             borderDash: [5, 5],
             borderWidth: 2,
-            fill: false
+            fill: false,
+            tension: 0.1
         }
     ];
 
@@ -336,7 +350,7 @@ function updateLineChart(aggregatedData, label = "Total Power (kWh)", filter = '
 }
 
 function handleFilterChange(filterType) {
-    const filteredData = filterByTimeRange(cl1Data, filterType);
+    const filteredData = filterByTimeRange(clData, filterType);
     const aggregatedData = {};
 
     filteredData.forEach(item => {
@@ -366,7 +380,7 @@ function filterByTimeRange(data, filter) {
             break;
         case 'day':
             cutoff = new Date(now);
-            cutoff.setDate(now.getDate() - 7);
+            cutoff.setDate(now.getDate() - 6);
             break;
         case 'month':
             cutoff = new Date(now);
@@ -380,9 +394,9 @@ function filterByTimeRange(data, filter) {
             return data;
     }
 
-    return data.filter(item => new Date(item.Date_Time) >= cutoff).sort((a, b) =>
-        new Date(a.Date_Time) - new Date(b.Date_Time) // sort ascending
-    );
+    return data
+        .filter(item => new Date(item.Date_Time) >= cutoff)
+        .sort((a, b) => new Date(a.Date_Time) - new Date(b.Date_Time));
 }
 
 
@@ -397,14 +411,9 @@ function calculateAverageLine(powerValues) {
 }
 
 printPdf.addEventListener('click', function () {
-    let canvas = document.getElementById('dataChart5');
-
-    let win = window.open('', '_blank');
-    win.document.write('<html><head><title>Print Chart</title></head><body>');
-    win.document.write('<h3 style="text-align:center;">Power Chart</h3>');
-    win.document.write('<img src="' + canvas.toDataURL() + '" style="width:100%;"/>');
-    win.document.write('</body></html>');
-    win.document.close();
-    win.focus();
-    win.print();
+    window.print();
 });
+
+
+
+

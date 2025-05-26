@@ -44,7 +44,6 @@
                                         <button type="button" class="btn btn-light" id="printPdf" style="width: 100%">Print</button>
                                     </div>
                                     <div class="col-md-8">
-                                        <h5 style="text-align: center;" id="title"></h5>
                                     </div>
                                     <div class="col-md-1">
                                         <select id="filterDropdown">
@@ -66,8 +65,10 @@
                                     </div>
                                 </div>
 
-                                <canvas class='bordered align-items-center justify-content-center' id="dataChart5"
-                                    style="max-height: 400px"></canvas>
+                                <div id="printArea">
+                                    <h5 style="text-align: center;" id="title"></h5>
+                                    <canvas class='bordered align-items-center justify-content-center' id="dataChart5" style="max-height: 400px"></canvas>
+                                </div>
                             </div>
                         </div>
 
@@ -78,8 +79,12 @@
     </div>
     </div>
     <script type="text/javascript" src="{{ asset('js\Monitor\MonitorListrik.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('css\SDP\MonitorListrik.css') }}">
     <link rel="stylesheet" href="{{ asset('css/sweetalert2.min.css') }}">
     <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="{{ asset('js/chart.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 @endsection

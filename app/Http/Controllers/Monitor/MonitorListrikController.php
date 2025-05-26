@@ -61,41 +61,92 @@ class MonitorListrikController extends Controller
             $jenis = $request->input('jenis');
 
             $getDataPerJam = function ($data) {
-                return collect($data)->groupBy(function ($item) {
-                    return \Carbon\Carbon::parse($item->Date_Time)->format('Y-m-d H:00:00');
-                })->map(function ($group) {
-                    return $group->sum('Real_Power');
-                });
+                return collect($data)
+                    ->groupBy(function ($item) {
+                        return \Carbon\Carbon::parse($item->Date_Time)->format('Y-m-d H:00:00');
+                    })
+                    ->map(function ($group) {
+                        return $group->sum('Real_Power');
+                    });
             };
 
             switch ($jenis) {
                 case 'CL1':
-                    $cl1 = DB::connection('mysql_cl1')->table('set_raw')->select('Date_Time', 'Real_Power')->get();
-                    return response()->json($getDataPerJam($cl1));
+                    $cl1 = DB::connection('mysql_cl1')->table('set_15m')->select('Date_Time', 'Real_Power')->get();
+                    $data = $getDataPerJam($cl1)->map(function ($value, $key) {
+                        return [
+                            'Date_Time' => $key,
+                            'Real_Power' => $value
+                        ];
+                    })->values();
+                    return response()->json($data);
 
                 case 'CL2':
-                    $cl2 = DB::connection('mysql_cl2')->table('set_raw')->select('Date_Time', 'Real_Power')->get();
-                    return response()->json($getDataPerJam($cl2));
+                    $cl2 = DB::connection('mysql_cl2')->table('set_15m2')->select('Date_Time', 'Real_Power')->get();
+                    $data = $getDataPerJam($cl2)->map(function ($value, $key) {
+                        return [
+                            'Date_Time' => $key,
+                            'Real_Power' => $value
+                        ];
+                    })->values();
+                    return response()->json($data);
 
                 case 'CL3':
-                    $cl3 = DB::connection('mysql_cl3')->table('set_raw')->select('Date_Time', 'Real_Power')->get();
-                    return response()->json($getDataPerJam($cl3));
+                    $cl3 = DB::connection('mysql_cl3')->table('set_15m3')->select('Date_Time', 'Real_Power')->get();
+                    $data = $getDataPerJam($cl3)->map(function ($value, $key) {
+                        return [
+                            'Date_Time' => $key,
+                            'Real_Power' => $value
+                        ];
+                    })->values();
+                    return response()->json($data);
 
                 // case 'CL4':
-                //     $cl4 = DB::connection('mysql_cl4')->table('set_raw')->select('Date_Time', 'Real_Power')->get();
-                //     return response()->json($getDataPerJam($cl4));
+                //     $cl3 = DB::connection('mysql_cl4')->table('set_15m4')->select('Date_Time', 'Real_Power')->get();
+                //     $data = $getDataPerJam($cl3)->map(function ($value, $key) {
+                //         return [
+                //             'Date_Time' => $key,
+                //             'Real_Power' => $value
+                //         ];
+                //     })->values();
+                //     return response()->json($data);
 
                 case 'total4CL':
                 default:
-                    $cl1 = DB::connection('mysql_cl1')->table('set_raw')->select('Date_Time', 'Real_Power')->get();
-                    $cl2 = DB::connection('mysql_cl2')->table('set_raw')->select('Date_Time', 'Real_Power')->get();
-                    $cl3 = DB::connection('mysql_cl3')->table('set_raw')->select('Date_Time', 'Real_Power')->get();
-                    // $cl4 = DB::connection('mysql_cl4')->table('set_raw')->select('Date_Time', 'Real_Power')->get();
+                    $cl1 = DB::connection('mysql_cl1')->table('set_15m')->select('Date_Time', 'Real_Power')->get();
+                    $cl2 = DB::connection('mysql_cl2')->table('set_15m2')->select('Date_Time', 'Real_Power')->get();
+                    $cl3 = DB::connection('mysql_cl3')->table('set_15m3')->select('Date_Time', 'Real_Power')->get();
+                    // $cl4 = DB::connection('mysql_cl4')->table('set_15m')->select('Date_Time', 'Real_Power')->get();
 
-                    $merged = collect($cl1)->merge($cl2)->merge($cl3);
-                    return response()->json($getDataPerJam($merged));
+
+                    $aggCL1 = $getDataPerJam($cl1);
+                    $aggCL2 = $getDataPerJam($cl2);
+                    $aggCL3 = $getDataPerJam($cl3);
+                    // $aggCL4 = $getDataPerJam($cl4);
+
+                    // Gabungkan per jam
+                    $total = $aggCL1->mergeRecursive($aggCL2)->mergeRecursive($aggCL3)
+                        ->reduce(function ($carry, $value, $key) use ($aggCL1, $aggCL2, $aggCL3) {
+                            $carry[$key] = ($aggCL1[$key] ?? 0) + ($aggCL2[$key] ?? 0) + ($aggCL3[$key] ?? 0);  //+ ($aggCL4[$key] ?? 0);
+                            return $carry;
+                        }, []);
+
+                    ksort($total);
+
+                    $data = collect($total)->map(function ($value, $key) {
+                        return [
+                            'Date_Time' => $key,
+                            'Real_Power' => $value
+                        ];
+                    })->values();
+
+                    // dd($data);
+
+                    return response()->json($data);
             }
         }
+
+
     }
 
     public function edit($id)

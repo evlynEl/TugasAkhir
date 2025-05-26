@@ -94,24 +94,30 @@ class JadwalMesinController extends Controller
                 ->orderByDesc('Date_Time')
                 ->get();
 
-            $cl2 = DB::connection('mysql_cl2')->table('set_15m')
+            $cl2 = DB::connection('mysql_cl2')->table('set_15m2')
                 ->select('Date_Time', 'Real_Power')
                 ->orderByDesc('Date_Time')
                 ->get();
 
-            $cl3 = DB::connection('mysql_cl3')->table('set_15m')
+            $cl3 = DB::connection('mysql_cl3')->table('set_15m3')
                 ->select('Date_Time', 'Real_Power')
                 ->orderByDesc('Date_Time')
                 ->get();
+
+            // $cl4 = DB::connection('mysql_cl4')->table('set_15m4')
+            //     ->select('Date_Time', 'Real_Power')
+            //     ->orderByDesc('Date_Time')
+            //     ->get();
 
             return response()->json([
                 'CL1' => $cl1->toArray(),
                 'CL2' => $cl2->toArray(),
                 'CL3' => $cl3->toArray(),
+                // 'CL4' => $cl3->toArray(),
             ]);
         }
 
-
+        
         else if ($id == 'dayaHemat') {
             $maxCL = $request->input('maxCL');
 
@@ -120,9 +126,9 @@ class JadwalMesinController extends Controller
             }
 
             $connectionMap = [
-                'CL1' => ['db' => 'mysql_cl1', 'interval' => 60], // menit
-                'CL2' => ['db' => 'mysql_cl2', 'interval' => 30],
-                'CL3' => ['db' => 'mysql_cl3', 'interval' => 30]
+                'CL1' => ['db' => 'mysql_cl1', 'interval' => 60, 'table' => 'set_15m'],
+                'CL2' => ['db' => 'mysql_cl2', 'interval' => 30, 'table' => 'set_15m2'],
+                'CL3' => ['db' => 'mysql_cl3', 'interval' => 30, 'table' => 'set_15m3'],
             ];
 
             if (!isset($connectionMap[$maxCL])) {
@@ -134,20 +140,35 @@ class JadwalMesinController extends Controller
             $intervalHours = $intervalMinutes / 60;
 
             $data = DB::connection($connInfo['db'])
-                ->table('set_15m')
+                ->table($connInfo['table'])
                 ->select('Date_Time', 'Real_Power')
                 ->orderByDesc('Date_Time')
                 ->get();
 
-            $totalEnergy = 0;
+            $groupedByDate = [];
+
             foreach ($data as $row) {
-                $totalEnergy += floatval($row->Real_Power); // sudah dalam kWh
+                $dateOnly = substr($row->Date_Time, 0, 10);
+                if (!isset($groupedByDate[$dateOnly])) {
+                    $groupedByDate[$dateOnly] = [];
+                }
+                $groupedByDate[$dateOnly][] = floatval($row->Real_Power);
             }
 
-            $count = count($data);
-            $totalHours = $count * $intervalHours;
+            $dayPowerPerHour = [];
 
-            $averagePerHour = $totalHours > 0 ? $totalEnergy / $totalHours : 0;
+            foreach ($groupedByDate as $date => $powers) {
+                $totalPower = array_sum($powers);
+                $numRecords = count($powers);
+                $totalHours = $numRecords * $intervalHours;
+
+                if ($totalHours > 0) {
+                    $powerPerHour = $totalPower / $totalHours;
+                    $dayPowerPerHour[] = $powerPerHour;
+                }
+            }
+
+            $averagePerHour = count($dayPowerPerHour) > 0 ? array_sum($dayPowerPerHour) / count($dayPowerPerHour) : 0;
 
             $result = [
                 'cl' => $maxCL,
@@ -157,6 +178,57 @@ class JadwalMesinController extends Controller
 
             return response()->json($result);
         }
+
+
+
+        // else if ($id == 'dayaHemat') {
+        //     $maxCL = $request->input('maxCL');
+
+        //     if (!$maxCL) {
+        //         return response()->json(['error' => 'maxCL is required'], 400);
+        //     }
+
+        //     $connectionMap = [
+        //         'CL1' => ['db' => 'mysql_cl1', 'interval' => 60, 'table' => 'set_15m'],
+        //         'CL2' => ['db' => 'mysql_cl2', 'interval' => 30, 'table' => 'set_15m2'],
+        //         'CL3' => ['db' => 'mysql_cl3', 'interval' => 30, 'table' => 'set_15m3'],
+        //         // 'CL4' => ['db' => 'mysql_cl4', 'interval' => 30, 'table' => 'set_15m4'],
+        //     ];
+
+
+        //     if (!isset($connectionMap[$maxCL])) {
+        //         return response()->json(['error' => 'Unknown CL name'], 400);
+        //     }
+
+        //     $connInfo = $connectionMap[$maxCL];
+        //     $intervalMinutes = $connInfo['interval'];
+        //     $intervalHours = $intervalMinutes / 60;
+
+        //     $data = DB::connection($connInfo['db'])
+        //         ->table($connInfo['table'])
+        //         ->select('Date_Time', 'Real_Power')
+        //         ->orderByDesc('Date_Time')
+        //         ->get();
+
+
+        //     $totalEnergy = 0;
+        //     foreach ($data as $row) {
+        //         $totalEnergy += floatval($row->Real_Power); // sudah dalam kWh
+        //     }
+
+        //     $count = count($data);
+        //     $totalHours = $count * $intervalHours;
+
+        //     $averagePerHour = $totalHours > 0 ? $totalEnergy / $totalHours : 0;
+
+        //     $result = [
+        //         'cl' => $maxCL,
+        //         'average_power_per_hour' => round($averagePerHour, 3),
+        //         'average_power_per_minute' => round($averagePerHour / 60, 4)
+        //     ];
+
+        //     return response()->json($result);
+        // }
 
     }
 

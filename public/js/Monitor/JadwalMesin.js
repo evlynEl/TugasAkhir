@@ -16,7 +16,6 @@ document.addEventListener("DOMContentLoaded", function () {
     var excelButton = document.getElementById('excelButton');
     var printPdf = document.getElementById('printPdf');
     var printJadwal = document.getElementById('printJadwal');
-
     var dataUpload;
 
     btn_fileUpload.focus();
@@ -573,10 +572,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }, 50);
     });
 
-
-
-
-
     function escapeHtml(text) {
         if (text === null || text === undefined) return '';
         text = text.toString(); // pastikan string
@@ -624,32 +619,53 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // ambil total power 1 hari tanggal terbaru
-    function getTotalPowerPerDay() {
-        $.ajax({
-            url: 'JadwalMesin/getHighestCL',
-            type: 'GET',
-            dataType: 'json',
-            success: function (response) {
-                let resultCL = [];
+    function getTotalPowerDayBeforeLatest() {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                url: 'JadwalMesin/getHighestCL',
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
 
-                for (let clName in response) {
-                    const data = response[clName];
-                    const totalPerDay = totalRealPowerPerDay(data);
-                    const latestData = getLatestDateAndValue(totalPerDay);
+                    let resultCL = [];
 
-                    resultCL.push({
-                        cl: clName,
-                        totalPerDay: parseFloat(latestData.totalPower).toFixed(2)
-                    });
+                    for (let clName in response) {
+                        const data = response[clName];
+                        const totalPerDay = totalRealPowerPerDay(data);
+                        const secondLatestData = getSecondLatestDateAndValue(totalPerDay);
+
+                        resultCL.push({
+                            cl: clName,
+                            totalPerDay: parseFloat(secondLatestData.totalPower).toFixed(2)
+                        });
+                    }
+
+                    resolve(resultCL);
+                    console.log(resultCL);
+
+                },
+                error: function (xhr, status, error) {
+                    console.error('AJAX Error:', error);
+                    reject(error);
                 }
-                resolve(resultCL);
-                console.log('Daya mesin CL: ', resultCL);
-            },
-            error: function (xhr, status, error) {
-                console.error('AJAX Error:', error);
-            }
+            });
         });
     }
+
+    function getSecondLatestDateAndValue(totals) {
+        const dates = Object.keys(totals);
+        dates.sort(); // ascending
+        if (dates.length < 2) {
+            return { date: null, totalPower: 0 }; // fallback
+        }
+        const secondLatestDate = dates[dates.length - 2];
+        return {
+            date: secondLatestDate,
+            totalPower: totals[secondLatestDate]
+        };
+    }
+
+
 
     // cari total daya per hari
     function totalRealPowerPerDay(data) {
@@ -696,6 +712,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     maxCL: maxCL.cl
                 },
                 success: function (response) {
+                    console.log(response);
+
                     const hitungAvgDaya = response; // langsung objek rata-rata daya
                     resolve(hitungAvgDaya);
                 },
@@ -767,13 +785,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 $("#charts-container").empty();
 
                 // Panggil ke backend Flask
-                // getTotalPowerPerDay()
+                // getTotalPowerDayBeforeLatest()
                 //     .then(resultCL => {
                 //         return getAvgHighestCL(resultCL).then(hitungAvgDaya => {
                 //             return { resultCL, hitungAvgDaya };
                 //         });
                 //     })
-                //     .then(({ resultCL, hitungAvgDaya }) => {
+                    // .then(({ resultCL, hitungAvgDaya }) => {
                         $.ajax({
                             url: "http://127.0.0.1:5000/trial",
                             type: "POST",
@@ -850,10 +868,10 @@ document.addEventListener("DOMContentLoaded", function () {
                                             };
                                         }
 
-                                        tracesMap[order].x.push(duration);           // panjang bar
-                                        tracesMap[order].y.push(mesin);              // posisi vertikal (mesin)
-                                        tracesMap[order].base.push(start);           // jam mulai sebagai base
-                                        tracesMap[order].text.push(order);           // teks dalam bar
+                                        tracesMap[order].x.push(duration);
+                                        tracesMap[order].y.push(mesin);
+                                        tracesMap[order].base.push(start);
+                                        tracesMap[order].text.push(order);
                                         tracesMap[order].hovertemplate.push(
                                             `Mesin: ${mesin}<br>Order: ${order}<br>Jam: ${item["Jam Mulai"]} - ${item["Jam Selesai"]}<extra></extra>`
                                         );
@@ -866,8 +884,8 @@ document.addEventListener("DOMContentLoaded", function () {
                                         xaxis: {
                                             title: "Jam",
                                             tickmode: "linear",
-                                            dtick: 1, // tiap 1 jam
-                                            range: [0, 24] // bisa kamu sesuaikan jika butuh lebih dari 24 jam
+                                            dtick: 1,
+                                            range: [0, 24]
                                         },
                                         yaxis: {
                                             title: "Mesin",
