@@ -364,6 +364,7 @@ document.addEventListener("DOMContentLoaded", function () {
             searching: false,
             info: false,
             ordering: true,
+            order: [[8, 'desc']],
             columns: [
                 { title: 'NoOrder' },
                 { title: 'Lebar' },
@@ -517,7 +518,7 @@ document.addEventListener("DOMContentLoaded", function () {
         link.download = 'DataOrder.xlsx';
         link.click();
     });
-
+    // print data tabel
     printPdf.addEventListener('click', function () {
         const data = $('#tableData').DataTable().rows().data().toArray();
         const tbody = document.querySelector('#previewTable tbody');
@@ -552,7 +553,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // chartsContainer.classList.remove('d-none');
         }, 50);
     });
-
+    // print gantt chart
     printJadwal.addEventListener('click', function () {
         const printArea = document.getElementById('printArea');
         const chartsContainer = document.getElementById('charts-container');
@@ -663,9 +664,7 @@ document.addEventListener("DOMContentLoaded", function () {
             date: secondLatestDate,
             totalPower: totals[secondLatestDate]
         };
-    }
-
-
+    } 
 
     // cari total daya per hari
     function totalRealPowerPerDay(data) {

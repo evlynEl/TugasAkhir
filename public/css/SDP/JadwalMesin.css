@@ -92,6 +92,13 @@ table.dataTable {
         /* transform: scale(0.9); */
         /* transform-origin: top left; */
     }
+    
+    .chart-wrapper {
+        page-break-inside: avoid;
+        page-break-after: always;
+        break-inside: avoid;
+        break-after: page;
+    }
 
     /* Khusus untuk tabel preview di print */
     #previewTable {
