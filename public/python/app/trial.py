@@ -449,7 +449,7 @@ def buat_model(orders, order_specs):
                 prob += lpSum(x[m][o][1][interval] for interval in shift_intervals['pagi']) >= 1
 
 
-    # 9. Atur mesin yg ada di machines_max_cl dan bekerja pada interval sore jam 22,23,24 diistirahatkan
+    # 9. Atur mesin yg ada di machines_max_cl dan bekerja pada interval sore jam 19, 20, 21 diistirahatkan
     # Ambil mesin dari CL tertinggi yang digunakan pada interval sore-malam
     mesin_terpakai_wbp = {
         m
@@ -458,7 +458,7 @@ def buat_model(orders, order_specs):
         if m in machines_max_cl and m in isRunning
     }
 
-    # 10. Mesin dari CL tertinggi yang bekerja pada 22:00-24:00 harus istirahat
+    # 10. Mesin dari CL tertinggi yang bekerja pada 19:00-21:00 harus istirahat
     for m in mesin_terpakai_wbp:
         for t in istirahat_intervals:
             prob += isRunning[m][t] == 0, f"Machine_{m}_RestDuringSore_{t}"

@@ -1,8 +1,8 @@
 from flask import request, jsonify, Blueprint
 # from app import app
 from app.preprocess import main as preprocess_main
-# from app.model import main as model_main, buat_model
-from app.trial import main as model_main, buat_model
+from app.model import main as model_main, buat_model
+# from app.trial import main as model_main, buat_model
 from io import BytesIO
 import json
 import subprocess
@@ -32,7 +32,28 @@ def process_excel_route():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@app_routes.route('/trial', methods=['POST'])
+# @app_routes.route('/trial', methods=['POST'])
+# def model_endpoint():
+#     data = request.get_json()
+
+#     if not data or 'data' not in data:
+#         return jsonify({'error': 'No data received'}), 400
+
+#     # resultCL = data['resultCL']
+#     # hitungAvgDaya = data['hitungAvgDaya']
+
+#     # Panggil fungsi main() dari model.py dengan data yang sudah digabung
+#     hasil = model_main(data['data'])
+#     orders = hasil['orders']
+#     order_specs = hasil['order_specs']
+
+#     # >>> Kirim ke model.py
+#     # result_model = buat_model(orders, order_specs, resultCL, hitungAvgDaya)
+#     result_model = buat_model(orders, order_specs)
+
+#     return jsonify({'message': 'Data processed successfully', 'result': result_model}), 200
+
+@app_routes.route('/model', methods=['POST'])
 def model_endpoint():
     data = request.get_json()
 

@@ -664,7 +664,7 @@ document.addEventListener("DOMContentLoaded", function () {
             date: secondLatestDate,
             totalPower: totals[secondLatestDate]
         };
-    } 
+    }
 
     // cari total daya per hari
     function totalRealPowerPerDay(data) {
@@ -792,7 +792,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 //     })
                     // .then(({ resultCL, hitungAvgDaya }) => {
                         $.ajax({
-                            url: "http://127.0.0.1:5000/trial",
+                            // url: "http://127.0.0.1:5000/trial",
+                            url: "http://127.0.0.1:5000/model",
                             type: "POST",
                             contentType: "application/json",
                             data: JSON.stringify({
@@ -829,7 +830,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                 Object.entries(groupedByDay).forEach(([hari, items]) => {
                                     // Tambah elemen div untuk chart hari tersebut
                                     const chartId = `chart-${hari.replace(/\s+/g, '-')}`;
-                                    $("#charts-container").append(`<h6>${hari}</h6><div id="${chartId}" style="height: 400px; margin-bottom: 10px;"></div>`);
+                                    $("#charts-container").append(`<h6>${hari}</h6><div id="${chartId}" style="height: 500px; margin-bottom: 10px;"></div>`);
 
                                     const tracesMap = {};
 
