@@ -209,7 +209,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // Helper function to scroll selected row into view
     function scrollRowIntoView(rowElement) {
         rowElement.scrollIntoView({ block: 'nearest' });
     }
@@ -568,8 +567,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         setTimeout(() => {
             chartsContainer.classList.remove('print-chart');
-            // Tergantung, boleh tetap tampil atau disembunyikan kembali:
-            // chartsContainer.classList.add('d-none');
         }, 50);
     });
 
@@ -657,7 +654,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const dates = Object.keys(totals);
         dates.sort(); // ascending
         if (dates.length < 2) {
-            return { date: null, totalPower: 0 }; // fallback
+            return { date: null, totalPower: 0 };
         }
         const secondLatestDate = dates[dates.length - 2];
         return {
@@ -724,6 +721,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    // ubah harga WBP
     tarifInput.addEventListener("input", function () {
         const dayaHemat = parseFloat(hargaHemat.dataset.dayaHemat) || 0;
         updateHargaHemat(dayaHemat);
@@ -761,16 +759,13 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                 });
 
-                // Ambil semua data dari DataTable
                 var allData = $('#tableData').DataTable().rows().data().toArray();
 
-                // Ambil header dari DataTable
                 var header = [];
                 $('#tableData thead th').each(function () {
                     header.push($(this).text().trim());
                 });
 
-                // Ubah array menjadi array of object
                 var formattedData = allData.map(function (row) {
                     var obj = {};
                     for (var i = 0; i < header.length; i++) {
@@ -783,7 +778,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 $("#charts-container").empty();
 
-                // Panggil ke backend Flask
+                // Panggil Flask
                 // getTotalPowerDayBeforeLatest()
                 //     .then(resultCL => {
                 //         return getAvgHighestCL(resultCL).then(hitungAvgDaya => {
@@ -792,8 +787,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 //     })
                     // .then(({ resultCL, hitungAvgDaya }) => {
                         $.ajax({
-                            // url: "http://127.0.0.1:5000/trial",
-                            url: "http://127.0.0.1:5000/model",
+                            url: "http://127.0.0.1:5000/trial",
+                            // url: "http://127.0.0.1:5000/model",
                             type: "POST",
                             contentType: "application/json",
                             data: JSON.stringify({
@@ -828,7 +823,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                 // 2. Loop setiap Hari, buat chart
                                 Object.entries(groupedByDay).forEach(([hari, items]) => {
-                                    // Tambah elemen div untuk chart hari tersebut
                                     const chartId = `chart-${hari.replace(/\s+/g, '-')}`;
                                     $("#charts-container").append(`<h6>${hari}</h6><div id="${chartId}" style="height: 500px; margin-bottom: 10px;"></div>`);
 

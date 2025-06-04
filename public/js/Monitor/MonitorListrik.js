@@ -12,64 +12,63 @@ var title = document.getElementById('title');
 
 let index = 0;
 let totalPower = 0;
-// let currentFilter = '1h'; // Default waktu
 let charts = {};
 let aggregatedData = {};
 let formattedDate;
 let lastDateTime = null;
 let realPower, dataDate, latestData, newDateTime;
 
-document.addEventListener('DOMContentLoaded', function () {
-    if (filterDropdown) {
-        filterDropdown.value = '1h';
-        title.textContent = 'TOTAL POWER CL1-CL4';
-        fetchTotalPowerData(filterDropdown.value, selected); // panggil data awal
-    }
-});
+// document.addEventListener('DOMContentLoaded', function () {
+//     if (filterDropdown) {
+//         filterDropdown.value = '1h';
+//         title.textContent = 'TOTAL POWER CL1-CL4';
+//         fetchTotalPowerData(filterDropdown.value, selected); // panggil data awal
+//     }
+// });
 
-$(document).ready(function () {
-    fetchKwhData1();
-    fetchKwhData2();
-    fetchKwhData3();
-    setInterval(fetchKwhData1, 10000); // cek setiap 10 detik
-    setInterval(fetchKwhData2, 10000);
-    setInterval(fetchKwhData3, 10000);
-});
+// $(document).ready(function () {
+//     fetchKwhData1();
+//     fetchKwhData2();
+//     fetchKwhData3();
+//     setInterval(fetchKwhData1, 10000); // cek setiap 10 detik
+//     setInterval(fetchKwhData2, 10000);
+//     setInterval(fetchKwhData3, 10000);
+// });
 
-filterDropdown.addEventListener('change', function () {
-    const filterType = $(this).val();
-    handleFilterChange(filterType);
-    // fetchTotalPowerData(currentFilter, selected);
-});
+// filterDropdown.addEventListener('change', function () {
+//     const filterType = $(this).val();
+//     handleFilterChange(filterType);
+//     // fetchTotalPowerData(currentFilter, selected);
+// });
 
-setInterval(() => {
-    const currentFilter = filterDropdown.value;
-    fetchTotalPowerData(currentFilter, selected);
-}, 600000); // cek setiap 10 menit
+// setInterval(() => {
+//     const currentFilter = filterDropdown.value;
+//     fetchTotalPowerData(currentFilter, selected);
+// }, 600000); // cek setiap 10 menit
 
-// dropdown CL
-powerDropdown.addEventListener('change', function () {
-    selected = $(this).val();
-    console.log(selected);
+// // dropdown CL
+// powerDropdown.addEventListener('change', function () {
+//     selected = $(this).val();
+//     console.log(selected);
 
-    const currentFilter = filterDropdown.value;
-    console.log(currentFilter);
+//     const currentFilter = filterDropdown.value;
+//     console.log(currentFilter);
 
 
-    if (selected == 'total4CL') {
-        title.textContent = 'TOTAL POWER CL1-CL4';
-    } else if (selected == 'CL1') {
-        title.textContent = 'TOTAL POWER CL1';
-    } else if (selected == 'CL2') {
-        title.textContent = 'TOTAL POWER CL2';
-    } else if (selected == 'CL3') {
-        title.textContent = 'TOTAL POWER CL3';
-    } else if (selected == 'CL4') {
-        title.textContent = 'TOTAL POWER CL4';
-    }
+//     if (selected == 'total4CL') {
+//         title.textContent = 'TOTAL POWER CL1-CL4';
+//     } else if (selected == 'CL1') {
+//         title.textContent = 'TOTAL POWER CL1';
+//     } else if (selected == 'CL2') {
+//         title.textContent = 'TOTAL POWER CL2';
+//     } else if (selected == 'CL3') {
+//         title.textContent = 'TOTAL POWER CL3';
+//     } else if (selected == 'CL4') {
+//         title.textContent = 'TOTAL POWER CL4';
+//     }
 
-    fetchTotalPowerData(currentFilter, selected);
-});
+//     fetchTotalPowerData(currentFilter, selected);
+// });
 
 
 function formatDate(date) {
@@ -226,13 +225,11 @@ function fetchTotalPowerData(filter, selected) {
                     break;
             }
 
-            // Step 1: Filter data by threshold
             let filteredData = response.filter(item => {
                 let date = new Date(item.Date_Time.replace(' ', 'T'));
                 return date >= threshold;
             });
 
-            // Step 2: Aggregate if needed
             let aggregated = {};
             let tempGroups = {};
 
@@ -249,12 +246,10 @@ function fetchTotalPowerData(filter, selected) {
                 aggregated[key] = avg;
             }
 
-            // Step 3: Sort ascending
             let sortedAggregated = Object.fromEntries(
                 Object.entries(aggregated).sort(([a], [b]) => new Date(a) - new Date(b))
             );
 
-            // Step 4: Update chart
             updateLineChart(sortedAggregated, "Total Power", filter);
         }
     });
@@ -400,7 +395,7 @@ function filterByTimeRange(data, filter) {
 }
 
 
-//Function to calculate the moving average for the selected filter.
+// Fungsi hitung avg unk filter waktu
 function calculateAverageLine(powerValues) {
     if (powerValues.length === 0) return [];
 

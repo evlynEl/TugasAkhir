@@ -117,7 +117,7 @@ class JadwalMesinController extends Controller
             ]);
         }
 
-        
+
         else if ($id == 'dayaHemat') {
             $maxCL = $request->input('maxCL');
 
@@ -178,57 +178,6 @@ class JadwalMesinController extends Controller
 
             return response()->json($result);
         }
-
-
-
-        // else if ($id == 'dayaHemat') {
-        //     $maxCL = $request->input('maxCL');
-
-        //     if (!$maxCL) {
-        //         return response()->json(['error' => 'maxCL is required'], 400);
-        //     }
-
-        //     $connectionMap = [
-        //         'CL1' => ['db' => 'mysql_cl1', 'interval' => 60, 'table' => 'set_15m'],
-        //         'CL2' => ['db' => 'mysql_cl2', 'interval' => 30, 'table' => 'set_15m2'],
-        //         'CL3' => ['db' => 'mysql_cl3', 'interval' => 30, 'table' => 'set_15m3'],
-        //         // 'CL4' => ['db' => 'mysql_cl4', 'interval' => 30, 'table' => 'set_15m4'],
-        //     ];
-
-
-        //     if (!isset($connectionMap[$maxCL])) {
-        //         return response()->json(['error' => 'Unknown CL name'], 400);
-        //     }
-
-        //     $connInfo = $connectionMap[$maxCL];
-        //     $intervalMinutes = $connInfo['interval'];
-        //     $intervalHours = $intervalMinutes / 60;
-
-        //     $data = DB::connection($connInfo['db'])
-        //         ->table($connInfo['table'])
-        //         ->select('Date_Time', 'Real_Power')
-        //         ->orderByDesc('Date_Time')
-        //         ->get();
-
-
-        //     $totalEnergy = 0;
-        //     foreach ($data as $row) {
-        //         $totalEnergy += floatval($row->Real_Power); // sudah dalam kWh
-        //     }
-
-        //     $count = count($data);
-        //     $totalHours = $count * $intervalHours;
-
-        //     $averagePerHour = $totalHours > 0 ? $totalEnergy / $totalHours : 0;
-
-        //     $result = [
-        //         'cl' => $maxCL,
-        //         'average_power_per_hour' => round($averagePerHour, 3),
-        //         'average_power_per_minute' => round($averagePerHour / 60, 4)
-        //     ];
-
-        //     return response()->json($result);
-        // }
 
     }
 
