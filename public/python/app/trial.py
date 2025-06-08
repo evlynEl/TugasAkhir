@@ -146,14 +146,175 @@ def slot_to_datetime(slot, slot_per_hour):
     minute = minutes_in_day % 60
     return f"Day {day+1}", f"{hour:02d}:{minute:02d}"
 
+# Break
+def apply_manual_break(jadwal_list, mesin_terpakai_wbp, max_break_per_hari=5):
+    if mesin_terpakai_wbp:
+        mesin_index = {m: i for i, m in enumerate(mesin_terpakai_wbp)}
+        jadwal_list = sorted(jadwal_list, key=lambda row: mesin_index.get(row["Mesin"], float('inf')))
+
+    ISTIRAHAT_AWAL, ISTIRAHAT_AKHIR = 19*60, 21*60
+    AKHIR_HARI = 24*60
+    to_min  = lambda t: int(t[:2])*60 + int(t[3:])
+    to_str  = lambda m: f'{m//60:02d}:{m%60:02d}'
+
+    # ==========================
+    # HANDLE JADWAL > 24:00
+    # ==========================
+    jadwal_dibagi = []
+    for row in jadwal_list:
+        jam_mulai = to_min(row["Jam Mulai"])
+        jam_selesai = to_min(row["Jam Selesai"])
+        hari = int(row["Hari"].split()[-1])
+
+        if jam_selesai <= 1440:
+            jadwal_dibagi.append(row)
+        else:
+            # Tambah bagian Day sekarang
+            jadwal_dibagi.append({
+                "Order": row["Order"],
+                "Mesin": row["Mesin"],
+                "Hari": f"Day {hari}",
+                "Jam Mulai": row["Jam Mulai"],
+                "Jam Selesai": "24:00"
+            })
+            # Tambah bagian Day berikutnya
+            jam_selesai_besok = jam_selesai - 1440
+            jadwal_dibagi.append({
+                "Order": row["Order"],
+                "Mesin": row["Mesin"],
+                "Hari": f"Day {hari + 1}",
+                "Jam Mulai": "00:00",
+                "Jam Selesai": to_str(jam_selesai_besok)
+            })
+
+    # ==========================
+    # LANJUT PROSES NORMAL
+    # ==========================
+    jadwal_baru, break_counter = [], {}
+    occupied_until = defaultdict(lambda: defaultdict(int))
+
+    for row in jadwal_dibagi:
+        o, m = row["Order"], row["Mesin"]
+        hari = int(row["Hari"].replace("Day ", "")) if isinstance(row["Hari"], str) else row["Hari"]
+        jam_mulai = to_min(row["Jam Mulai"])
+        sisa      = to_min(row["Jam Selesai"]) - jam_mulai
+
+        if m not in mesin_terpakai_wbp:
+            jadwal_baru.append(row)
+            continue
+
+        while sisa > 0:
+            if jam_mulai >= AKHIR_HARI:
+                shift, jam_mulai = divmod(jam_mulai, AKHIR_HARI)
+                hari += shift
+                continue
+            jam_mulai = max(jam_mulai, occupied_until[m][hari])
+
+            if jam_mulai < ISTIRAHAT_AWAL:
+                blok = min(sisa, ISTIRAHAT_AWAL - jam_mulai)
+                jadwal_baru.append(dict(Order=o, Mesin=m, Hari=f"Day {hari}",
+                                        **{"Jam Mulai": to_str(jam_mulai),
+                                           "Jam Selesai": to_str(jam_mulai + blok)}))
+                jam_mulai += blok
+                sisa      -= blok
+                occupied_until[m][hari] = jam_mulai
+
+                if sisa == 0:
+                    break
+                if jam_mulai == ISTIRAHAT_AWAL:
+                    jam_mulai = ISTIRAHAT_AKHIR
+                continue
+
+            if jam_mulai >= ISTIRAHAT_AKHIR:
+                if sisa <= 15:
+                    jam_mulai = max(ISTIRAHAT_AWAL, occupied_until[m][hari])
+                    jadwal_baru.append(dict(Order=o, Mesin=m, Hari=f"Day {hari}",
+                                            **{"Jam Mulai": to_str(jam_mulai),
+                                               "Jam Selesai": to_str(jam_mulai + sisa)}))
+                    occupied_until[m][hari] = jam_mulai + sisa
+                    break
+
+                break_counter.setdefault(hari, [])
+                if (m not in break_counter[hari] and len(break_counter[hari]) < max_break_per_hari):
+                    break_counter[hari].append(m)
+                else:
+                    jam_mulai = max(ISTIRAHAT_AWAL, occupied_until[m][hari])
+                    jadwal_baru.append(dict(Order=o, Mesin=m, Hari=f"Day {hari}",
+                                            **{"Jam Mulai": to_str(jam_mulai),
+                                               "Jam Selesai": to_str(jam_mulai + sisa)}))
+                    occupied_until[m][hari] = jam_mulai + sisa
+                    break
+
+                kapasitas_today = AKHIR_HARI - jam_mulai
+                blok = min(sisa, kapasitas_today)
+                jadwal_baru.append(dict(Order=o, Mesin=m, Hari=f"Day {hari}",
+                                        **{"Jam Mulai": to_str(jam_mulai),
+                                           "Jam Selesai": to_str(jam_mulai + blok)}))
+                jam_mulai += blok
+                sisa      -= blok
+                occupied_until[m][hari] = jam_mulai
+
+                if jam_mulai >= AKHIR_HARI and sisa:
+                    hari     += 1
+                    jam_mulai = occupied_until[m][hari]
+
+    # ==========================
+    # MERGE BLOK BERPOTONGAN
+    # ==========================
+    merged_jadwal = []
+    for row in jadwal_baru:
+        if (merged_jadwal and
+            row["Mesin"] == merged_jadwal[-1]["Mesin"] and
+            row["Order"] == merged_jadwal[-1]["Order"] and
+            row["Hari"] == merged_jadwal[-1]["Hari"] and
+            row["Jam Mulai"] == merged_jadwal[-1]["Jam Selesai"]):
+            merged_jadwal[-1]["Jam Selesai"] = row["Jam Selesai"]
+        else:
+            merged_jadwal.append(row)
+
+    # ==========================
+    # HITUNG WAKTU BREAK PER ORDER+MESIN+HARI
+    # ==========================
+    istirahat_per_order = {}
+    grouped = defaultdict(list)
+    for r in merged_jadwal:
+        hari = int(r["Hari"].split()[-1])
+        key = (r["Order"], r["Mesin"], hari)
+        grouped[key].append(r)
+
+    for (order, mesin, hari), items in grouped.items():
+        items.sort(key=lambda x: to_min(x["Jam Mulai"]))
+
+        last_before_break = None
+        first_after_break = None
+
+        for item in items:
+            start = to_min(item["Jam Mulai"])
+            end = to_min(item["Jam Selesai"])
+            if end <= ISTIRAHAT_AWAL:
+                last_before_break = end
+            elif start >= ISTIRAHAT_AKHIR and first_after_break is None:
+                first_after_break = start
+                break
+
+        if last_before_break is not None and first_after_break is not None:
+            actual_break = first_after_break - max(last_before_break, ISTIRAHAT_AWAL)
+            istirahat_per_order[(order, mesin, hari)] = actual_break
+
+    return (
+        merged_jadwal,
+        {h: set(v) for h, v in break_counter.items()},
+        istirahat_per_order
+    )
+
+
+
 
 def buat_model(orders, order_specs):
     order_specs = add_mesin(order_specs)
     # print(order_specs)
     jumlah_all, jumlah_order, valid_orders = proses_jumlah_orders(orders, order_specs)
     print(valid_orders)
-
-    # SETS
 
     # mesin berdasarkan adjusted eff
     mesin = r"C:\Users\Evelyn\Downloads\summary_adjusted_eff.csv"
@@ -191,14 +352,15 @@ def buat_model(orders, order_specs):
 
     totalPower = {
         'CL1': 67.0,
-        'CL2': 10.4,
-        'CL3': 8.0,
+        'CL2': 110.4,
+        'CL3': 18.0,
         'CL4': 12.7
     }
 
     # totalPower = {item['cl']: float(item['totalPerDay']) for item in resultCL}
     max_power_cl = max(totalPower, key=totalPower.get)
     machines_max_cl = SDP_mapping[max_power_cl]
+    print(machines_max_cl)
 
     model = LpProblem("MachineOrderScheduling", LpMinimize)
 
@@ -263,7 +425,10 @@ def buat_model(orders, order_specs):
         for m in all_machines:
             model += start_slot[o][m] >= DAY1_START_SLOT
 
+
     sorted_jumlah = sorted(valid_orders, key=lambda o: jumlah_order[o], reverse=True)
+    print('sorted_jumlah : ', sorted_jumlah)
+
     # Mesin yang belum dipakai & sesuai BngWA
     used_machines = set()
     machine_bngwa = {}  # machine → assigned BngWA
@@ -294,6 +459,7 @@ def buat_model(orders, order_specs):
                 if mesin_dipakai == jumlah_mesin:
                     break
 
+
     for i in range(len(sorted_jumlah)):
         o1 = sorted_jumlah[i]
         b1 = order_specs[o1][0]['BngWA']
@@ -316,7 +482,6 @@ def buat_model(orders, order_specs):
     #     model += lpSum([lpSum(group) for group in assigned_bngwa.values()]) <= 1
 
 
-
     # for o in valid_orders:
     #     for m in all_machines:
     #         for d in range(7):
@@ -325,22 +490,29 @@ def buat_model(orders, order_specs):
     #                 if d == 0 and t < DAY1_START_SLOT:  # Day 1, before 07:00
     #                     model += x[o][m][global_slot] == 0
 
-    # for o in valid_orders:
-    #         for m in all_machines:
-    #             model += lpSum(x[o][m][t] for t in range(TOTAL_SLOTS)) == y[o][m] * durasi_slot[o]
 
     for o in valid_orders:
         for m in all_machines:
             model += end_slot[o][m] == start_slot[o][m] + durasi_slot[o] - 1
 
-    # for o in valid_orders:
-    #     for m in all_machines:
-    #         model += lpSum(z[o][m][t] for t in range(TOTAL_SLOTS)) == y[o][m]
 
-    # for t in range(TOTAL_SLOTS):
-    #     model += x[o][m][t] <= y[o][m]
-    #     model += x[o][m][t] <= (t >= start_slot[o][m])
-    #     model += x[o][m][t] <= (t <= end_slot[o][m])
+    # M = TOTAL_SLOTS
+
+    # for o in valid_orders:
+    #     for m in machines:
+    #         for t in range(TOTAL_SLOTS):
+    #             model += x[o][m][t] <= y[o][m]
+    #             model += x[o][m][t] <= ((t - start_slot[o][m]) / M) + 1
+    #             model += x[o][m][t] <= ((end_slot[o][m] - t) / M) + 1
+    # # semua slot dari start sampai end benar-benar bernilai 1 dan berjumlah sesuai duras
+    # for o in valid_orders:
+    #         for m in all_machines:
+    #             model += lpSum(x[o][m][t] for t in range(TOTAL_SLOTS)) == y[o][m] * durasi_slot[o]
+
+
+
+    print("Rows:", len(model.constraints))
+    print("Cols:", len(model.variables()))
 
 
     start_time = time.time()
@@ -353,8 +525,11 @@ def buat_model(orders, order_specs):
     end_time = time.time()
     excTime = end_time - start_time
 
-    # print("Status:", LpStatus[model.status])
-    # print("Nilai objektif (objective value):", value(model.objective))
+    print("Variables:", len(model.variables()))
+    print("Constraints:", len(model.constraints))
+
+    print("Status:", LpStatus[model.status])
+    print("Nilai objektif (objective value):", value(model.objective))
 
     def hhmm_to_minutes(hhmm: str) -> int:
         jam, menit = map(int, hhmm.split(":"))
@@ -415,11 +590,15 @@ def buat_model(orders, order_specs):
         reverse=True
     )
 
-    mesin_terpakai_wbp = mesin_terurut[:5]
-    print('mesin_terpakai_wbp ', mesin_terpakai_wbp)
+    print('mesin_terurut ', mesin_terurut)
 
 
+    jadwal_final, mesin_kena_break_per_hari, breaks = apply_manual_break(df_hasil.to_dict(orient="records"), mesin_terurut)
+    merged_jadwal = sorted(jadwal_final, key=lambda x: (int(x['Hari'].split()[-1]), mesin_ranking.get(x['Mesin'], 71.04)))
 
+
+    df_hasil_break = pd.DataFrame(merged_jadwal)
+    print(df_hasil_break)
 
 
     #  hitung makespan
@@ -440,8 +619,33 @@ def buat_model(orders, order_specs):
     if jam_mulai_semua and jam_selesai_semua:
         makespan_jam = max(jam_selesai_semua) - min(jam_mulai_semua)
 
+    total_menit = 0
+    for (order, mesin, hari), menit in breaks.items():
+        print(f"{order} ({mesin}) – Day {hari}: break {menit // 60} jam {menit % 60} menit")
+        total_menit += menit
 
-    return df_hasil.to_dict(orient='records'), makespan_jam, excTime
+    print(total_menit)
+
+    total_mesin_kena_break = sum(len(mesin_set) for mesin_set in mesin_kena_break_per_hari.values())
+    print('total_mesin_kena_break ', total_mesin_kena_break)
+
+
+    # dayaPerMenit = 151.25/60                  # (avg CL1, CL2, CL3) / 60
+    dayaPerMenit = 28.52 / 60                  # (avg CL1, CL2, CL3) / 60
+    # dayaIst1Mesin = dayaPerMenit * 120
+    # dayaIstTotal = dayaIst1Mesin * total_mesin_kena_break
+    dayaIstTotal = dayaPerMenit * total_menit
+
+    # REAL
+    # print("DEBUG: hitungAvgDaya =", hitungAvgDaya)
+
+    # dayaIst1Mesin = hitungAvgDaya['average_power_per_minute'] * 120
+    # dayaIstTotal = dayaIst1Mesin * total_mesin_kena_break
+
+    # print('mesin delay', mesin_delay, 'per menit: ', dayaPerMenit, 'selama 2 jam: ', dayaIst1Mesin)
+
+
+    return df_hasil_break.to_dict(orient='records'), makespan_jam, excTime, dayaIstTotal
 
 
 

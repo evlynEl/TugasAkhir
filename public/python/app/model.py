@@ -276,6 +276,7 @@ def x_to_jadwal_final(x, assigned_machines, durasi_pekerjaan, all_intervals, val
                         slot_terakhir[key] = jam_selesai
                         sisa -= durasi_hari_ini
                         jam_mulai = ISTIRAHAT_AKHIR
+
                     elif jam_mulai >= ISTIRAHAT_AKHIR:
                         if sisa <= 15:
                             jam_mulai = ISTIRAHAT_AWAL
