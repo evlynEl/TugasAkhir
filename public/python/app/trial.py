@@ -146,6 +146,10 @@ def slot_to_datetime(slot, slot_per_hour):
     minute = minutes_in_day % 60
     return f"Day {day+1}", f"{hour:02d}:{minute:02d}"
 
+def hhmm_to_minutes(hhmm: str) -> int:
+        jam, menit = map(int, hhmm.split(":"))
+        return jam * 60 + menit
+
 # Break
 def apply_manual_break(jadwal_list, mesin_terpakai_wbp, max_break_per_hari=5):
     if mesin_terpakai_wbp:
@@ -310,23 +314,18 @@ def apply_manual_break(jadwal_list, mesin_terpakai_wbp, max_break_per_hari=5):
 
 
 
-def buat_model(orders, order_specs):
+def buat_model(orders, order_specs, mesin_df):
     order_specs = add_mesin(order_specs)
     # print(order_specs)
     jumlah_all, jumlah_order, valid_orders = proses_jumlah_orders(orders, order_specs)
     print(valid_orders)
 
     # mesin berdasarkan adjusted eff
-    mesin = r"C:\Users\Evelyn\Downloads\summary_adjusted_eff.csv"
-    df = pd.read_csv(mesin)
-    sorted_mesin = df.sort_values(by='AdjustedEff', ascending=False)
-    mesin_raw = sorted_mesin['NoMesin'].tolist()
-    all_machines = [m.replace('-', '') for m in mesin_raw]
-    # print(machines)
+    # print(mesin_df.head(5))
+    all_machines = mesin_df['NoMesin'].tolist()
     special_machines = ['ST07', 'ST08', 'ST28', 'ST32', 'ST27', 'ST30', 'ST26', 'ST31',  'ST29', 'ST25'] # mesin Lebar & Dn besar
-    # Exclude special_machines from machines
     machines = [m for m in all_machines if m not in special_machines]
-    mesin_ranking = {mesin: idx for idx, mesin in enumerate(machines)}
+    mesin_ranking = {mesin: idx for idx, mesin in enumerate(mesin_df['NoMesin'])}
 
     SLOT_PER_HOUR = 60  # 10-minute slots
     SLOT_PER_DAY = 24 * SLOT_PER_HOUR
@@ -352,8 +351,8 @@ def buat_model(orders, order_specs):
 
     totalPower = {
         'CL1': 67.0,
-        'CL2': 110.4,
-        'CL3': 18.0,
+        'CL2': 10.4,
+        'CL3': 118.0,
         'CL4': 12.7
     }
 
@@ -445,7 +444,7 @@ def buat_model(orders, order_specs):
             if lebar > 110 and denier > 1000:
                 mesin_kandidat = [m for m in special_machines]
             else:
-                mesin_kandidat = [m for m in mesin_ranking]
+                mesin_kandidat = [m for m in machines]
 
             for m in mesin_kandidat:
                 # Mesin belum dipakai atau BngWA-nya sama
@@ -511,8 +510,8 @@ def buat_model(orders, order_specs):
 
 
 
-    print("Rows:", len(model.constraints))
-    print("Cols:", len(model.variables()))
+    # print("Rows:", len(model.constraints))
+    # print("Cols:", len(model.variables()))
 
 
     start_time = time.time()
@@ -529,11 +528,9 @@ def buat_model(orders, order_specs):
     print("Constraints:", len(model.constraints))
 
     print("Status:", LpStatus[model.status])
-    print("Nilai objektif (objective value):", value(model.objective))
+    # print("Nilai objektif (objective value):", value(model.objective))
 
-    def hhmm_to_minutes(hhmm: str) -> int:
-        jam, menit = map(int, hhmm.split(":"))
-        return jam * 60 + menit
+
 
 
     mesin_kandidat_break = set()
@@ -557,7 +554,6 @@ def buat_model(orders, order_specs):
                     hari, jam_mulai = slot_to_datetime(seg_start, SLOT_PER_HOUR)
                     _, jam_selesai = slot_to_datetime(seg_end + 1, SLOT_PER_HOUR)
 
-                    # Perbaikan: jika selesai di akhir hari, ubah ke "24:00"
                     if (seg_end + 1) % SLOT_PER_DAY == 0:
                         jam_selesai = "24:00"
                         selesai_menit = 1440
@@ -582,7 +578,7 @@ def buat_model(orders, order_specs):
 
 
     df_hasil = pd.DataFrame(schedule_data)
-    print(df_hasil)
+    # print(df_hasil)
 
     mesin_terurut = sorted(
         [m for m in mesin_kandidat_break if m in mesin_ranking],
@@ -590,11 +586,11 @@ def buat_model(orders, order_specs):
         reverse=True
     )
 
-    print('mesin_terurut ', mesin_terurut)
+    # print('mesin_terurut ', mesin_terurut)
 
 
     jadwal_final, mesin_kena_break_per_hari, breaks = apply_manual_break(df_hasil.to_dict(orient="records"), mesin_terurut)
-    merged_jadwal = sorted(jadwal_final, key=lambda x: (int(x['Hari'].split()[-1]), mesin_ranking.get(x['Mesin'], 71.04)))
+    merged_jadwal = sorted(jadwal_final, key=lambda x: (int(x['Hari'].split()[-1]), mesin_ranking[x['Mesin']]))
 
 
     df_hasil_break = pd.DataFrame(merged_jadwal)
@@ -621,17 +617,17 @@ def buat_model(orders, order_specs):
 
     total_menit = 0
     for (order, mesin, hari), menit in breaks.items():
-        print(f"{order} ({mesin}) – Day {hari}: break {menit // 60} jam {menit % 60} menit")
+        # print(f"{order} ({mesin}) – Day {hari}: break {menit // 60} jam {menit % 60} menit")
         total_menit += menit
 
-    print(total_menit)
+    print('Mesin beristirahat selama: ', total_menit)
 
     total_mesin_kena_break = sum(len(mesin_set) for mesin_set in mesin_kena_break_per_hari.values())
-    print('total_mesin_kena_break ', total_mesin_kena_break)
+    # print('total_mesin_kena_break ', total_mesin_kena_break)
 
 
-    # dayaPerMenit = 151.25/60                  # (avg CL1, CL2, CL3) / 60
-    dayaPerMenit = 28.52 / 60                  # (avg CL1, CL2, CL3) / 60
+    dayaPerMenit = 151.25/60                  # (avg CL1, CL2, CL3) / 60
+    # dayaPerMenit = 28.52 / 60                  # (avg CL1, CL2, CL3) / 60
     # dayaIst1Mesin = dayaPerMenit * 120
     # dayaIstTotal = dayaIst1Mesin * total_mesin_kena_break
     dayaIstTotal = dayaPerMenit * total_menit
@@ -640,7 +636,7 @@ def buat_model(orders, order_specs):
     # print("DEBUG: hitungAvgDaya =", hitungAvgDaya)
 
     # dayaIst1Mesin = hitungAvgDaya['average_power_per_minute'] * 120
-    # dayaIstTotal = dayaIst1Mesin * total_mesin_kena_break
+    # dayaIstTotal = hitungAvgDaya['average_power_per_minute'] * total_menit
 
     # print('mesin delay', mesin_delay, 'per menit: ', dayaPerMenit, 'selama 2 jam: ', dayaIst1Mesin)
 

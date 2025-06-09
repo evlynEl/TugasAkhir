@@ -179,6 +179,25 @@ class JadwalMesinController extends Controller
             return response()->json($result);
         }
 
+        else if ($id == 'getMesin') {
+            $mesin = DB::connection('ConnCircular')->table('machine_adjusted_eff')
+                ->select('NoMesin', 'AdjustedEff')
+                ->orderByDesc('AdjustedEff')
+                ->get();
+
+            $data_mesin = [];
+            foreach ($mesin as $detail_mesin) {
+                $data_mesin[] = [
+                    'NoMesin' => str_replace('-', '', $detail_mesin->NoMesin), 
+                    'AdjustedEff' => $detail_mesin->AdjustedEff
+                ];
+            }
+
+            return response()->json(['data' => $data_mesin]);
+        }
+
+
+
     }
 
     public function edit($id)

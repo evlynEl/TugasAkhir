@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var excelButton = document.getElementById('excelButton');
     var printPdf = document.getElementById('printPdf');
     var printJadwal = document.getElementById('printJadwal');
-    var dataUpload;
+    var dataUpload, dataMesin;
 
     btn_fileUpload.focus();
 
@@ -740,6 +740,23 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    function getMesin() {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                url: 'JadwalMesin/getMesin',
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    resolve(response.data);
+                },
+                error: function (xhr, status, error) {
+                    console.error('AJAX Error:', error);
+                    reject(error);
+                }
+            });
+        });
+    }
+
 
     // button unk menghasilkan jadwal
     btn_ok.addEventListener("click", function () {
@@ -782,120 +799,123 @@ document.addEventListener("DOMContentLoaded", function () {
                 // getTotalPowerDayBeforeLatest()
                 //     .then(resultCL => {
                 //         return getAvgHighestCL(resultCL).then(hitungAvgDaya => {
-                //             return { resultCL, hitungAvgDaya };
+                //             return { resultCL, hitungAvgDaya };  
                 //         });
                 //     })
-                    // .then(({ resultCL, hitungAvgDaya }) => {
-                        $.ajax({
-                            url: "http://127.0.0.1:5000/trial",
-                            // url: "http://127.0.0.1:5000/model",
-                            type: "POST",
-                            contentType: "application/json",
-                            data: JSON.stringify({
-                                data: formattedData,
-                                // resultCL: resultCL,
-                                // hitungAvgDaya: hitungAvgDaya
-                            }),
-                            success: function (response) {
-                                const data = response.result[0];
-                                console.log(data);
+                //     .then(({ resultCL, hitungAvgDaya }) => {
+                        getMesin().then(dataMesin => {
+                            $.ajax({
+                                url: "http://127.0.0.1:5000/trial",
+                                // url: "http://127.0.0.1:5000/model",
+                                type: "POST",
+                                contentType: "application/json",
+                                data: JSON.stringify({
+                                    data: formattedData,
+                                    dataMesin: dataMesin,
+                                    // resultCL: resultCL,
+                                    // hitungAvgDaya: hitungAvgDaya
+                                }),
+                                success: function (response) {
+                                    const data = response.result[0];
+                                    console.log(data);
 
-                                Swal.close();
-                                Swal.fire('Berhasil!', 'Jadwal sudah jadi', 'success');
-
-
-                                makespan.textContent = 'Makespan: ' + parseFloat(response.result[1]).toFixed(2) + ' jam';
-                                excTime.textContent = 'Execute time: ' + parseFloat(response.result[2]).toFixed(2) + ' s';
-                                pwrHemat.textContent = 'Power Hemat: ' + parseFloat(response.result[3]).toFixed(3) + ' kWh';
-
-                                tarifInput.style.display = 'block';
-                                const dayaHemat = parseFloat(response.result[3]);
-                                updateHargaHemat(dayaHemat);
+                                    Swal.close();
+                                    Swal.fire('Berhasil!', 'Jadwal sudah jadi', 'success');
 
 
-                                // 1. Kelompokkan berdasarkan Hari
-                                const groupedByDay = {};
-                                data.forEach(item => {
-                                    const day = item.Hari;
-                                    if (!groupedByDay[day]) groupedByDay[day] = [];
-                                    groupedByDay[day].push(item);
-                                });
+                                    makespan.textContent = 'Makespan: ' + parseFloat(response.result[1]).toFixed(2) + ' jam';
+                                    excTime.textContent = 'Execute time: ' + parseFloat(response.result[2]).toFixed(2) + ' s';
+                                    pwrHemat.textContent = 'Power Hemat: ' + parseFloat(response.result[3]).toFixed(3) + ' kWh';
 
-                                // 2. Loop setiap Hari, buat chart
-                                Object.entries(groupedByDay).forEach(([hari, items]) => {
-                                    const chartId = `chart-${hari.replace(/\s+/g, '-')}`;
-                                    $("#charts-container").append(`<h6>${hari}</h6><div id="${chartId}" style="height: 500px; margin-bottom: 10px;"></div>`);
+                                    tarifInput.style.display = 'block';
+                                    const dayaHemat = parseFloat(response.result[3]);
+                                    updateHargaHemat(dayaHemat);
 
-                                    const tracesMap = {};
 
-                                    items.forEach(item => {
-                                        const order = item.Order || "No Order";
-                                        const mesin = item.Mesin;
-                                        const start = jamKeFloat(item["Jam Mulai"]);
-                                        const end = jamKeFloat(item["Jam Selesai"]);
+                                    // 1. Kelompokkan berdasarkan Hari
+                                    const groupedByDay = {};
+                                    data.forEach(item => {
+                                        const day = item.Hari;
+                                        if (!groupedByDay[day]) groupedByDay[day] = [];
+                                        groupedByDay[day].push(item);
+                                    });
 
-                                        const duration = end - start;
+                                    // 2. Loop setiap Hari, buat chart
+                                    Object.entries(groupedByDay).forEach(([hari, items]) => {
+                                        const chartId = `chart-${hari.replace(/\s+/g, '-')}`;
+                                        $("#charts-container").append(`<h6>${hari}</h6><div id="${chartId}" style="height: 500px; margin-bottom: 10px;"></div>`);
 
-                                        const uniqueOrders = [...new Set(data.map(item => item.Order || "No Order"))];
-                                        const colorScale = chroma.scale('Set2').colors(uniqueOrders.length);
-                                        const orderColors = {};
-                                        uniqueOrders.forEach((order, i) => {
-                                            orderColors[order] = colorScale[i];
+                                        const tracesMap = {};
+
+                                        items.forEach(item => {
+                                            const order = item.Order || "No Order";
+                                            const mesin = item.Mesin;
+                                            const start = jamKeFloat(item["Jam Mulai"]);
+                                            const end = jamKeFloat(item["Jam Selesai"]);
+
+                                            const duration = end - start;
+
+                                            const uniqueOrders = [...new Set(data.map(item => item.Order || "No Order"))];
+                                            const colorScale = chroma.scale('Set2').colors(uniqueOrders.length);
+                                            const orderColors = {};
+                                            uniqueOrders.forEach((order, i) => {
+                                                orderColors[order] = colorScale[i];
+                                            });
+
+
+                                            if (!tracesMap[order]) {
+                                                tracesMap[order] = {
+                                                    x: [],
+                                                    y: [],
+                                                    base: [],
+                                                    name: order,
+                                                    type: "bar",
+                                                    orientation: "h",
+                                                    marker: { color: orderColors[order] },
+                                                    text: [],
+                                                    textposition: "inside",
+                                                    insidetextanchor: "start",
+                                                    hovertemplate: [],
+                                                    width: 0.5,
+                                                    showlegend: true
+                                                };
+                                            }
+
+                                            tracesMap[order].x.push(duration);
+                                            tracesMap[order].y.push(mesin);
+                                            tracesMap[order].base.push(start);
+                                            tracesMap[order].text.push(order);
+                                            tracesMap[order].hovertemplate.push(
+                                                `Mesin: ${mesin}<br>Order: ${order}<br>Jam: ${item["Jam Mulai"]} - ${item["Jam Selesai"]}<extra></extra>`
+                                            );
                                         });
 
+                                        const traces = Object.values(tracesMap);
+                                        Plotly.newPlot(chartId, Object.values(tracesMap), {
+                                            title: `Jadwal Mesin - ${hari}`,
+                                            barmode: "stack",
+                                            xaxis: {
+                                                title: "Jam",
+                                                tickmode: "linear",
+                                                dtick: 1,
+                                                range: [0, 24]
+                                            },
+                                            yaxis: {
+                                                title: "Mesin",
+                                                automargin: true
+                                            },
+                                            margin: { l: 80, r: 20, t: 50, b: 40 },
+                                            showlegend: true
+                                        });
 
-                                        if (!tracesMap[order]) {
-                                            tracesMap[order] = {
-                                                x: [],
-                                                y: [],
-                                                base: [],
-                                                name: order,
-                                                type: "bar",
-                                                orientation: "h",
-                                                marker: { color: orderColors[order] },
-                                                text: [],
-                                                textposition: "inside",
-                                                insidetextanchor: "start",
-                                                hovertemplate: [],
-                                                width: 0.5,
-                                                showlegend: true
-                                            };
-                                        }
-
-                                        tracesMap[order].x.push(duration);
-                                        tracesMap[order].y.push(mesin);
-                                        tracesMap[order].base.push(start);
-                                        tracesMap[order].text.push(order);
-                                        tracesMap[order].hovertemplate.push(
-                                            `Mesin: ${mesin}<br>Order: ${order}<br>Jam: ${item["Jam Mulai"]} - ${item["Jam Selesai"]}<extra></extra>`
-                                        );
                                     });
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error("Error:", error);
+                                    Swal.fire('Gagal', 'Ada kesalahan saat mengirim data.', 'error');
+                                }
 
-                                    const traces = Object.values(tracesMap);
-                                    Plotly.newPlot(chartId, Object.values(tracesMap), {
-                                        title: `Jadwal Mesin - ${hari}`,
-                                        barmode: "stack",
-                                        xaxis: {
-                                            title: "Jam",
-                                            tickmode: "linear",
-                                            dtick: 1,
-                                            range: [0, 24]
-                                        },
-                                        yaxis: {
-                                            title: "Mesin",
-                                            automargin: true
-                                        },
-                                        margin: { l: 80, r: 20, t: 50, b: 40 },
-                                        showlegend: true
-                                    });
-
-                                });
-                            },
-                            error: function (xhr, status, error) {
-                                console.error("Error:", error);
-                                Swal.fire('Gagal', 'Ada kesalahan saat mengirim data.', 'error');
-                            }
-
+                            });
                         });
                     // })
             }

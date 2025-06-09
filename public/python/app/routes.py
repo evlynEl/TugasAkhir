@@ -5,6 +5,8 @@ from app.trial import main as model_main, buat_model
 from io import BytesIO
 import json
 import subprocess
+import pandas as pd
+
 
 app_routes = Blueprint('app_routes', __name__)
 
@@ -54,11 +56,13 @@ def model_endpoint():
     if not data or 'data' not in data:
         return jsonify({'error': 'No data received'}), 400
 
+    mesin_df = pd.DataFrame(data['dataMesin'])
+
     hasil = model_main(data['data'])
     orders = hasil['orders']
     order_specs = hasil['order_specs']
 
     # result_model = buat_model(orders, order_specs, resultCL, hitungAvgDaya)           # REAL
-    result_model = buat_model(orders, order_specs)                                      # SIMULASI
+    result_model = buat_model(orders, order_specs, mesin_df)                                      # SIMULASI
 
     return jsonify({'message': 'Data processed successfully', 'result': result_model}), 200
