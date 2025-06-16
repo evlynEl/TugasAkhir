@@ -46,7 +46,6 @@ def proses_jumlah_orders(orders, order_specs):
             jstr = spec['Jumlah'].strip().upper()
             jumlah_all[o].append(jstr)
 
-            # Jumlah reguler (tidak diawali '+')
             if not jstr.startswith('+'):
                 try:
                     val = float(jstr.replace('.', '').replace(',', ''))
@@ -58,12 +57,10 @@ def proses_jumlah_orders(orders, order_specs):
                     print(f"[SKIP] Jumlah tak valid di {o}: '{jstr}'")
                 continue
 
-            # '+MESIN' (tak menambah Jumlah, hanya mesin)
             if '+MESIN' in jstr:
                 total_mesin += extract_mesin(spec['Mesin'])
                 continue
 
-            # '+<angka>' menambah jumlah
             try:
                 inc = float(jstr[1:].replace('.', '').replace(',', ''))
                 total_jumlah += inc
@@ -71,7 +68,6 @@ def proses_jumlah_orders(orders, order_specs):
             except ValueError:
                 print(f"[SKIP] Jumlah plus tak valid di {o}: '{jstr}'")
 
-        # kalau punya basis & total_jumlah >0 -> simpan
         if base_spec and total_jumlah:
             base_spec['Jumlah'] = str(int(total_jumlah) if total_jumlah.is_integer() else total_jumlah)
             base_spec['Mesin']  = f"{total_mesin} MESIN"

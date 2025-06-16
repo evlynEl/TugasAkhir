@@ -1,4 +1,4 @@
-from pulp import PULP_CBC_CMD, LpVariable, LpProblem, LpMinimize, lpSum, LpBinary, value, LpStatusInfeasible
+from pulp import PULP_CBC_CMD, LpVariable, LpProblem, LpMinimize, lpSum
 from pulp import *
 import pandas as pd
 from collections import defaultdict
@@ -53,10 +53,10 @@ def proses_jumlah_orders(orders, order_specs):
                     if base_spec is None:
                         base_spec = spec.copy()
                 except ValueError:
-                    print(f"[SKIP] Jumlah tak valid di {o}: '{jstr}'")
+                    print(f"[SKIP] Jumlah tidak valid di {o}: '{jstr}'")
                 continue
 
-            # '+MESIN' (tak menambah Jumlah, hanya mesin)
+            # '+MESIN' (tidak menambah Jumlah, hanya mesin)
             if '+MESIN' in jstr:
                 total_mesin += extract_mesin(spec['Mesin'])
                 continue
@@ -67,7 +67,7 @@ def proses_jumlah_orders(orders, order_specs):
                 total_jumlah += inc
                 total_mesin += extract_mesin(spec['Mesin'])
             except ValueError:
-                print(f"[SKIP] Jumlah plus tak valid di {o}: '{jstr}'")
+                print(f"[SKIP] Jumlah plus tidak valid di {o}: '{jstr}'")
 
         # kalau punya basis & total_jumlah >0 -> simpan
         if base_spec and total_jumlah:
@@ -147,7 +147,7 @@ def hhmm_to_minutes(hhmm: str) -> int:
         jam, menit = map(int, hhmm.split(":"))
         return jam * 60 + menit
 
-# Break
+# Break & alokasi jam kerja
 def apply_manual_break(jadwal_list, mesin_terpakai_wbp, max_break_per_hari=5):
     if mesin_terpakai_wbp:
         mesin_index = {m: i for i, m in enumerate(mesin_terpakai_wbp)}
@@ -158,9 +158,7 @@ def apply_manual_break(jadwal_list, mesin_terpakai_wbp, max_break_per_hari=5):
     to_min  = lambda t: int(t[:2])*60 + int(t[3:])
     to_str  = lambda m: f'{m//60:02d}:{m%60:02d}'
 
-    # ==========================
-    # HANDLE JADWAL > 24:00
-    # ==========================
+
     jadwal_dibagi = []
     for row in jadwal_list:
         jam_mulai = to_min(row["Jam Mulai"])
@@ -188,9 +186,7 @@ def apply_manual_break(jadwal_list, mesin_terpakai_wbp, max_break_per_hari=5):
                 "Jam Selesai": to_str(jam_selesai_besok)
             })
 
-    # ==========================
-    # LANJUT PROSES NORMAL
-    # ==========================
+
     jadwal_baru, break_counter = [], {}
     occupied_until = defaultdict(lambda: defaultdict(int))
 
@@ -263,9 +259,7 @@ def apply_manual_break(jadwal_list, mesin_terpakai_wbp, max_break_per_hari=5):
                     hari     += 1
                     jam_mulai = occupied_until[m][hari]
 
-    # ==========================
-    # MERGE BLOK BERPOTONGAN
-    # ==========================
+    # merge blok order sama
     merged_jadwal = []
     for row in jadwal_baru:
         if (merged_jadwal and
@@ -277,9 +271,7 @@ def apply_manual_break(jadwal_list, mesin_terpakai_wbp, max_break_per_hari=5):
         else:
             merged_jadwal.append(row)
 
-    # ==========================
-    # HITUNG WAKTU BREAK PER ORDER+MESIN+HARI
-    # ==========================
+    # hitung break per order, mesin, hari
     AFTER_TOLERANCE = 15
 
     istirahat_per_order = {}
@@ -308,9 +300,7 @@ def apply_manual_break(jadwal_list, mesin_terpakai_wbp, max_break_per_hari=5):
             actual_break = first_after_break - max(last_before_break, ISTIRAHAT_AWAL)
             istirahat_per_order[(order, mesin, hari)] = actual_break
 
-    # ==========================
-    # DETEKSI MESIN YANG IDLE SAAT BREAK
-    # ==========================
+    # idle saat break
     mesin_per_hari = defaultdict(list)
     for row in merged_jadwal:
         hari = int(row["Hari"].split()[-1])
@@ -321,13 +311,11 @@ def apply_manual_break(jadwal_list, mesin_terpakai_wbp, max_break_per_hari=5):
         last_end = 0
         for item in items:
             start = to_min(item["Jam Mulai"])
-            # Cek jika ada idle period yang mencakup jam istirahat
             if last_end <= ISTIRAHAT_AWAL and start >= ISTIRAHAT_AKHIR:
                 if mesin not in break_counter.get(hari, []):
                     break_counter.setdefault(hari, []).append(mesin)
             last_end = to_min(item["Jam Selesai"])
 
-        # Cari jika ada idle di antara dua order berbeda
         for i in range(len(items) - 1):
             end_i = to_min(items[i]["Jam Selesai"])
             start_j = to_min(items[i+1]["Jam Mulai"])
@@ -336,7 +324,6 @@ def apply_manual_break(jadwal_list, mesin_terpakai_wbp, max_break_per_hari=5):
             idle_start = max(end_i, ISTIRAHAT_AWAL)
             idle_end   = min(start_j, ISTIRAHAT_AKHIR)
 
-            # Jika mesin idle antara order berbeda dan durasi idle valid
             if end_i >= ISTIRAHAT_AWAL and end_i <= ISTIRAHAT_AWAL + AFTER_TOLERANCE and \
             start_j >= ISTIRAHAT_AKHIR and order_i != order_j and idle_start < idle_end:
 
@@ -356,13 +343,12 @@ def apply_manual_break(jadwal_list, mesin_terpakai_wbp, max_break_per_hari=5):
 
 
 def buat_model(orders, order_specs, mesin_df):
+# def buat_model(orders, order_specs, mesin_df, resultCL, hitungAvgDaya):
     order_specs = add_mesin(order_specs)
     # print(order_specs)
     jumlah_all, jumlah_order, valid_orders = proses_jumlah_orders(orders, order_specs)
     print(valid_orders)
 
-    # mesin berdasarkan adjusted eff
-    # print(mesin_df.head(5))
     all_machines = mesin_df['NoMesin'].tolist()
     special_machines = ['ST07', 'ST08', 'ST28', 'ST32', 'ST27', 'ST30', 'ST26', 'ST31',  'ST29', 'ST25'] # mesin Lebar & Dn besar
     machines = [m for m in all_machines if m not in special_machines]
@@ -419,15 +405,14 @@ def buat_model(orders, order_specs, mesin_df):
             durasi_pekerjaan[o] = (durasi_total / mesin_dibutuhkan[o])
         print(f"Order: {o}, Jumlah: {jumlah_order[o]}, Mesin Dibutuhkan: {mesin_dibutuhkan[o]}, Durasi Pekerjaan: {durasi_pekerjaan[o]}")
 
-    # Calculate duration and capacity
     durasi_slot = {}
     for o in valid_orders:
         durasi_slot[o] = math.ceil(durasi_pekerjaan[o] * SLOT_PER_HOUR)
         # print(o, durasi_slot[o])
 
-    # Create variables
-    x = {}  # x[o][m][t] = 1 if machine m processes order o at time t
-    y = {}  # y[o][m] = 1 if machine m is assigned to order o
+    # Variable
+    x = {}
+    y = {}
 
 
     start_slot = {
@@ -469,9 +454,8 @@ def buat_model(orders, order_specs, mesin_df):
     sorted_jumlah = sorted(valid_orders, key=lambda o: jumlah_order[o], reverse=True)
     print('sorted_jumlah : ', sorted_jumlah)
 
-    # Mesin yang belum dipakai & sesuai BngWA
     used_machines = set()
-    machine_bngwa = {}  # machine → assigned BngWA
+    machine_bngwa = {}
 
     for o in sorted_jumlah:
         for spec in order_specs[o]:
@@ -481,7 +465,7 @@ def buat_model(orders, order_specs, mesin_df):
             denier = float(spec['Denier'])
             mesin_dipakai = 0
 
-             # PILIH MESIN SESUAI SPESIFIKASI
+             # seleksi mesin
             if lebar > 110 and denier > 1000:
                 mesin_kandidat = [m for m in special_machines]
             else:
@@ -510,7 +494,6 @@ def buat_model(orders, order_specs, mesin_df):
 
             if b1 == b2:
                 for m in all_machines:
-                    # If both o1 and o2 use the same machine
                     model += start_slot[o2][m] >= end_slot[o1][m] + 1 - (1 - y[o1][m]) * TOTAL_SLOTS - (1 - y[o2][m]) * TOTAL_SLOTS
 
     # # Constraint: each machine only assigned to one BngWA
@@ -651,7 +634,7 @@ def buat_model(orders, order_specs, mesin_df):
     if jam_mulai_semua and jam_selesai_semua:
         makespan_jam = max(jam_selesai_semua) - min(jam_mulai_semua)
 
-        
+
 
     total_menit = 0
     for (order, mesin, hari), menit in breaks.items():

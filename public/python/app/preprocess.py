@@ -5,10 +5,6 @@ import re
 
 
 def main(file_stream):
-
-    # File path
-    # file_excel = r"D:\Kuliah\Semester 8\Data\MARIO EVELYN-20241219T024622Z-001\ORDER WB\2024\L-DESEMBER\5 DES.xlsx"
-    # file_excel = pd.read_excel(file_path)
     xls = pd.ExcelFile(file_stream)
     sheet_names = xls.sheet_names
 
@@ -31,27 +27,22 @@ def main(file_stream):
             keterangan_col = 'Unnamed: 37'
 
         if last_col is not None:
-            # Potong dataframe hanya sampai idx jika ditemukan
             df = df.iloc[:, :last_col + 1]
 
-        # Pastikan kolom Potong dan Keterangan tetap ada
         for col in [potong_col, keterangan_col]:
             if col not in df.columns:
                 df[col] = pd.NA
 
-        # Hapus kolom A jika semua nilainya kosong
         if df.iloc[:, 0].isna().all():
             df = df.drop(columns=df.columns[0])
 
         df = df.reset_index(drop=True)
 
-        # Hapus kolom kosong antar kolom yang memiliki data
         df = df.dropna(axis=1, how='all')
 
         def is_kosong(val):
             return pd.isna(val) or str(val).strip() == ""
 
-        # Pastikan index baris aman
         for i in range(len(df) - 1):
             if str(df.iat[i, 0]).strip().upper() == "AWAL":
                 if i + 1 < len(df):
@@ -73,36 +64,24 @@ def main(file_stream):
                         if is_kosong(df.at[i+1, keterangan_col]):
                             df.at[i+1, keterangan_col] = ket
 
-                    # Kosongkan isi baris 'AWAL
                     df.at[i, 'MULAI'] = np.nan
                     df.at[i, mesin_col] = np.nan
                     df.at[i, potong_col] = np.nan
                     df.at[i, keterangan_col] = np.nan
 
-        # Hapus kolom dengan header 'x'
         if 'x' in df.columns:
             df = df.drop(columns=['x'])
 
-        # Hapus baris yang seluruhnya kosong (NaN di semua kolom)
         df = df.dropna(how='all')
 
         df = df[df.iloc[:, 0] != 'AWAL']
 
         hasil_semua_sheet.append(df)
 
-    # Gabungkan semua sheet
     df_final = pd.concat(hasil_semua_sheet, ignore_index=True)
-
-    # Hapus kolom pertama
     df_final.drop(df_final.columns[0], axis=1, inplace=True)
-
-    # Hapus baris yang seluruhnya kosong
     df_final.dropna(how='all', inplace=True)
-
-    # Set header kolom
     df_final.columns = ['Lebar', 'RjtWA', 'RjtWE', 'Denier', 'Corak', 'BngWA', 'BngWE', 'Jumlah', 'TglMulai', 'Mesin', 'PnjPotong', 'Keterangan']
-
-    # Tambahkan kolom 'NoOrder' paling kiri
     df_final.insert(0, 'NoOrder', '')
 
     for kol in ['Corak']:
@@ -110,14 +89,12 @@ def main(file_stream):
 
     # Fungsi untuk membersihkan teks pada kolom 'Jumlah'
     def bersihkan_jumlah(jumlah):
-        # Pastikan jumlah dalam format string
-        if pd.isnull(jumlah): return ''  # Jika NaN, kembalikan string kosong
+        if pd.isnull(jumlah): return ''
         jumlah = str(jumlah).strip()
-        jumlah = re.sub(r'[\s]', '', jumlah)  # Hapus semua spasi
-        jumlah = re.sub(r'(?<=\+|\-)\s*', '', jumlah)  # Hapus spasi setelah tanda + atau -
-        jumlah = re.sub(r'\b(mesin|mesim|msn|mesn)\b', lambda m: 'MESIN', jumlah, flags=re.IGNORECASE)  # Ganti mesin, mesim, msn jadi uppercase
+        jumlah = re.sub(r'[\s]', '', jumlah)
+        jumlah = re.sub(r'(?<=\+|\-)\s*', '', jumlah)
+        jumlah = re.sub(r'\b(mesin|mesim|msn|mesn)\b', lambda m: 'MESIN', jumlah, flags=re.IGNORECASE)
 
-        # Coba cari angka di awal string, dan format dengan koma
         match = re.match(r'^([+-]?)([\d.,]+)(\s*(MESIN|MSN|MESIM|MESN))?$', jumlah, re.IGNORECASE)
 
         if match:
@@ -130,15 +107,15 @@ def main(file_stream):
             # Case: Angka hanya pakai titik
             if '.' in angka_str and ',' not in angka_str:
                 parts = angka_str.split('.')
-                if all(len(part) == 3 for part in parts[1:]):  # contoh: 1.000 atau 1.000.000
-                    angka_str = angka_str.replace('.', '')  # titik = ribuan
+                if all(len(part) == 3 for part in parts[1:]):
+                    angka_str = angka_str.replace('.', '')
 
 
             # Case: Angka hanya pakai koma
             elif ',' in angka_str and '.' not in angka_str:
                 parts = angka_str.split(',')
-                if all(len(part) == 3 for part in parts[1:]):  # contoh: 1,000 atau 1,000,000
-                    angka_str = angka_str.replace(',', '')  # koma = ribuan
+                if all(len(part) == 3 for part in parts[1:]):
+                    angka_str = angka_str.replace(',', '')
 
             try:
                 angka_float = float(angka_str)
@@ -161,13 +138,10 @@ def main(file_stream):
         if pd.isnull(mesin): return ''
         mesin = str(mesin)
 
-        # Gabungkan dan perbaiki pola: + mesn -> +MESIN, -msn -> -MESIN
         mesin = re.sub(r'(?<=[\+\-])\s*(mesin|mesim|msn|mesn)\b', 'MESIN', mesin, flags=re.IGNORECASE)
 
-        # Ganti berdiri sendiri (tanpa + atau -) menjadi MESIN
         mesin = re.sub(r'\b(mesin|mesim|msn|mesn)\b', 'MESIN', mesin, flags=re.IGNORECASE)
 
-        # Ganti variasi 'order' ke ORDER
         mesin = re.sub(r'\b(0rder|orde|ord|order)\b', 'ORDER', mesin, flags=re.IGNORECASE)
 
         return mesin.strip()
@@ -175,7 +149,7 @@ def main(file_stream):
     df_final['Jumlah'] = df_final['Jumlah'].apply(bersihkan_jumlah)
     df_final['Mesin'] = df_final['Mesin'].apply(bersihkan_mesin)
 
-    # Replace NaN with None before returning
+
     df_final = df_final.replace({np.nan: None})
     return df_final.to_dict(orient='records')
 
