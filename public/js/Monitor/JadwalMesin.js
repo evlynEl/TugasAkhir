@@ -799,14 +799,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 // getTotalPowerDayBeforeLatest()
                 //     .then(resultCL => {
                 //         return getAvgHighestCL(resultCL).then(hitungAvgDaya => {
-                //             return { resultCL, hitungAvgDaya };  
+                //             return { resultCL, hitungAvgDaya };
                 //         });
                 //     })
                 //     .then(({ resultCL, hitungAvgDaya }) => {
                         getMesin().then(dataMesin => {
                             $.ajax({
-                                url: "http://127.0.0.1:5000/trial",
-                                // url: "http://127.0.0.1:5000/model",
+                                url: "http://127.0.0.1:5000/milp",
                                 type: "POST",
                                 contentType: "application/json",
                                 data: JSON.stringify({
