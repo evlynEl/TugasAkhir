@@ -496,46 +496,12 @@ def buat_model(orders, order_specs, mesin_df):
                 for m in all_machines:
                     model += start_slot[o2][m] >= end_slot[o1][m] + 1 - (1 - y[o1][m]) * TOTAL_SLOTS - (1 - y[o2][m]) * TOTAL_SLOTS
 
-    # # Constraint: each machine only assigned to one BngWA
-    # for m in all_machines:
-    #     assigned_bngwa = {}
-    #     for o in valid_orders:
-    #         b = order_specs[o][0]['BngWA']
-    #         assigned_bngwa.setdefault(b, []).append(y[o][m])
-    #     model += lpSum([lpSum(group) for group in assigned_bngwa.values()]) <= 1
-
-
-    # for o in valid_orders:
-    #     for m in all_machines:
-    #         for d in range(7):
-    #             for t in range(SLOT_PER_DAY):
-    #                 global_slot = d * SLOT_PER_DAY + t
-    #                 if d == 0 and t < DAY1_START_SLOT:  # Day 1, before 07:00
-    #                     model += x[o][m][global_slot] == 0
-
 
     for o in valid_orders:
         for m in all_machines:
             model += end_slot[o][m] == start_slot[o][m] + durasi_slot[o] - 1
 
 
-    # M = TOTAL_SLOTS
-
-    # for o in valid_orders:
-    #     for m in machines:
-    #         for t in range(TOTAL_SLOTS):
-    #             model += x[o][m][t] <= y[o][m]
-    #             model += x[o][m][t] <= ((t - start_slot[o][m]) / M) + 1
-    #             model += x[o][m][t] <= ((end_slot[o][m] - t) / M) + 1
-    # # semua slot dari start sampai end benar-benar bernilai 1 dan berjumlah sesuai duras
-    # for o in valid_orders:
-    #         for m in all_machines:
-    #             model += lpSum(x[o][m][t] for t in range(TOTAL_SLOTS)) == y[o][m] * durasi_slot[o]
-
-
-
-    # print("Rows:", len(model.constraints))
-    # print("Cols:", len(model.variables()))
 
 
     start_time = time.time()
