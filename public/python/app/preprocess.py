@@ -87,7 +87,6 @@ def main(file_stream):
     for kol in ['Corak']:
         df_final[kol] = df_final[kol].astype(str).str.upper()
 
-    # Fungsi untuk membersihkan teks pada kolom 'Jumlah'
     def bersihkan_jumlah(jumlah):
         if pd.isnull(jumlah): return ''
         jumlah = str(jumlah).strip()
@@ -104,14 +103,12 @@ def main(file_stream):
 
             original = angka_str
 
-            # Case: Angka hanya pakai titik
             if '.' in angka_str and ',' not in angka_str:
                 parts = angka_str.split('.')
                 if all(len(part) == 3 for part in parts[1:]):
                     angka_str = angka_str.replace('.', '')
 
 
-            # Case: Angka hanya pakai koma
             elif ',' in angka_str and '.' not in angka_str:
                 parts = angka_str.split(',')
                 if all(len(part) == 3 for part in parts[1:]):
@@ -139,9 +136,7 @@ def main(file_stream):
         mesin = str(mesin)
 
         mesin = re.sub(r'(?<=[\+\-])\s*(mesin|mesim|msn|mesn)\b', 'MESIN', mesin, flags=re.IGNORECASE)
-
         mesin = re.sub(r'\b(mesin|mesim|msn|mesn)\b', 'MESIN', mesin, flags=re.IGNORECASE)
-
         mesin = re.sub(r'\b(0rder|orde|ord|order)\b', 'ORDER', mesin, flags=re.IGNORECASE)
 
         return mesin.strip()

@@ -16,7 +16,9 @@ document.addEventListener("DOMContentLoaded", function () {
     var excelButton = document.getElementById('excelButton');
     var printPdf = document.getElementById('printPdf');
     var printJadwal = document.getElementById('printJadwal');
+    var exportExcel = document.getElementById('exportExcel');
     var dataUpload, dataMesin;
+    let dfHasilBreakData = [];
 
     btn_fileUpload.focus();
 
@@ -24,7 +26,9 @@ document.addEventListener("DOMContentLoaded", function () {
     fileInput.addEventListener("change", function () {
         if (fileInput.files.length > 0) {
             fileNameDisplay.textContent = fileInput.files[0].name;
-            btn_proses.focus();
+            if (fileNameDisplay.textContent !== '') {
+                btn_proses.focus();
+            }
         }
     });
 
@@ -111,7 +115,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                     updateDataTable(dataUpload);
                                     fileInput.value = '';
                                     fileNameDisplay.textContent = '';
-                                    btn_ok.focus();
+                                    // btn_ok.focus();
                                 }
                             },
                             error: function (xhr, status, error) {
@@ -300,6 +304,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         // Update data di DataTable
                         data[0] = result.value.D_TEK0; // NoOrder assumed di kolom pertama
                         table.row(rowIndex).data(data).draw(false); // update baris
+                        btn_ok.focus();
                     }
                 });
             } catch (error) {
@@ -321,6 +326,8 @@ document.addEventListener("DOMContentLoaded", function () {
             }).then((result) => {
                 if (result.isConfirmed) {
                     table.cell(this).data(result.value).draw(false); // hanya update sel yg diklik
+                    btn_ok.focus();
+
                 }
             });
         }
@@ -339,6 +346,8 @@ document.addEventListener("DOMContentLoaded", function () {
             }).then((result) => {
                 if (result.isConfirmed) {
                     table.cell(this).data(result.value).draw(false); // hanya update sel yg diklik
+                    btn_ok.focus();
+
                 }
             });
         }
@@ -568,6 +577,30 @@ document.addEventListener("DOMContentLoaded", function () {
         setTimeout(() => {
             chartsContainer.classList.remove('print-chart');
         }, 50);
+    });
+
+    exportExcel.addEventListener('click', function () {
+        if (dfHasilBreakData.length === 0) {
+            alert("No data available to export!");
+            return;
+        }
+
+        // Rename headers if needed
+        const formattedData = dfHasilBreakData.map(row => ({
+            'Order': row['Order'],
+            'Mesin': row['Mesin'],
+            'Hari': row['Hari'],
+            'Jam Mulai': row['Jam Mulai'],
+            'Jam Selesai': row['Jam Selesai'],
+        }));
+
+        // Convert to worksheet
+        const ws = XLSX.utils.json_to_sheet(formattedData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Jadwal Mesin");
+
+        // Export to Excel
+        XLSX.writeFile(wb, "Jadwal_Mesin.xlsx");
     });
 
     function escapeHtml(text) {
@@ -816,6 +849,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                 }),
                                 success: function (response) {
                                     const data = response.result[0];
+                                    dfHasilBreakData = response.result[0];
                                     console.log(data);
 
                                     Swal.close();

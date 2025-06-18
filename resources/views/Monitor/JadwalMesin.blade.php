@@ -60,7 +60,10 @@
                             <div class="col-md-2 justify-content-center align-items-center">
                                 <h5 for="hasil">Hasil Jadwal</h5>
                             </div>
-                            <div class="col-md-8"></div>
+                            <div class="col-md-6"></div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-light" id="exportExcel">Export Excel</button>
+                            </div>
                             <div class="col-md-2">
                                 <button type="button" class="btn btn-light" id="printJadwal">Print Jadwal</button>
                             </div>
@@ -128,5 +131,7 @@
 
     <link rel="stylesheet" href="{{ asset('css/colResizeDatatable.css') }}">
     <script src="{{ asset('js/colResizeDatatable.js') }}"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+
 
 @endsection
